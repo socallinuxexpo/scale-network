@@ -1,5 +1,8 @@
 # scale-network
-configurations, tooling and scripts for SCALE's on-site expo network
+configurations, tooling and scripts for [SCALE's](https://www.socallinuxexpo.org/) on-site expo network
+
+## Table of Contents
+* [CONTRIBUTING](./CONTRIBUTING.md)
 
 ## Requirements
 To use this git repo you will need the following pkgs:
