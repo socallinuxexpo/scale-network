@@ -1,2 +1,4 @@
+# Ignore openwrt build dir
+openwrt/build
 *.swp
 *.DS_Store
