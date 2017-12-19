@@ -1,0 +1,49 @@
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option channel '$freq2g'
+	option hwmode '11g'
+	option path 'pci0000:00/0000:00:11.0'
+	option htmode 'HT20'
+	option txpower '$power2g'
+	option country 'US'
+ 
+config wifi-device 'radio1'
+	option type 'mac80211'
+	option hwmode '11a'
+	option path 'pci0000:00/0000:00:12.0'
+	option htmode 'HT20'
+	option channel '$freq5g'
+	option txpower '$power5g'
+	option country 'US'
+ 
+config wifi-iface
+	option device 'radio1'
+	option mode 'ap'
+	option ssid '$staffssid5'
+	option encryption 'psk2'
+	option key '$staffpassword'
+	option network 'vlan60'
+ 
+config wifi-iface
+	option device 'radio0'
+	option mode 'ap'
+	option ssid '$staffssid24'
+	option encryption 'psk2'
+	option key '$staffpassword'
+	option network 'vlan60'
+ 
+config wifi-iface
+	option device 'radio1'
+	option mode 'ap'
+	option ssid '$publicssid5'
+	option network 'vlan43'
+	option encryption 'psk2'
+	option key '$publicpassword'
+ 
+config wifi-iface
+	option device 'radio0'
+	option mode 'ap'
+	option ssid '{{ (datasource "openwrt").wireless.four.ssid }}'
+	option network 'vlan42'
+	option encryption 'psk2'
+	option key '$publicpassword'
