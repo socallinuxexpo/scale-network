@@ -40,4 +40,4 @@ clean:
 
 template:
 	rm -rf $(BUILD_DIR)/lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64/files
-	gomplate -d openwrt=../facts/secrets/openwrt.json --input-dir=files --output-dir=$(BUILD_DIR)/lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64/files
+	gomplate -d openwrt=../facts/secrets/openwrt.yaml --input-dir=files --output-dir=$(BUILD_DIR)/lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64/files
