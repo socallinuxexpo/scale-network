@@ -8,10 +8,24 @@ DEFAULT_PACKAGES = -dnsmasq -firewall -ip6tables -iptables -odhcp6c -odhcpd-ipv6
 BUILD_3700_FLAGS = PROFILE=wndr3700v2 PACKAGES="$(DEFAULT_PACKAGES)"
 BUILD_3800_FLAGS = PROFILE=wndr3800 PACKAGES="$(DEFAULT_PACKAGES)"
 BUILD_3800CH_FLAGS = PROFILE=wndr3800ch PACKAGES="$(DEFAULT_PACKAGES)"
+BUILD_SECRETS = ../facts/secrets/openwrt.yaml
+
+# bins
+GOMPLATE := $(shell command -v gomplate 2> /dev/null)
+CURL := $(shell command -v curl 2> /dev/null)
 
 LEDE_VER = 17.01.4
 IMAGEBUILDER = lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64
 TAR_EXT = .tar.xz
+
+TMPL_SRC = $(wildcard files/etc/*.tmpl)
+TMPL_OBJ = $(addprefix $(BUILD_DIR)/$(IMAGEBUILDER)/, $(TMPL_SRC:.tmpl=))
+
+ifndef CURL
+  $(error "curl is not available please install it")
+endif
+
+PHONY: download-image extract template clean clean-templates
 
 download-image: $(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT)
 
@@ -38,6 +52,13 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 
-template:
-	rm -rf $(BUILD_DIR)/lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64/files
-	gomplate -d openwrt=../facts/secrets/openwrt.yaml --input-dir=files --output-dir=$(BUILD_DIR)/lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64/files
+clean-templates:
+	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)/files
+
+templates: $(TMPL_OBJ)
+
+$(TMPL_OBJ): $(TMPL_SRC) $(BUILD_DIR)/$(IMAGEBUILDER) $(BUILD_SECRETS)
+ifndef GOMPLATE
+  $(error "gomplate is not available please install it")
+endif
+	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --file=$< --out=$@
