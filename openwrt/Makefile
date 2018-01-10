@@ -18,8 +18,8 @@ LEDE_VER = 17.01.4
 IMAGEBUILDER = lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64
 TAR_EXT = .tar.xz
 
-TMPL_SRC = $(wildcard files/etc/*.tmpl)
-TMPL_OBJ = $(addprefix $(BUILD_DIR)/$(IMAGEBUILDER)/, $(TMPL_SRC:.tmpl=))
+TMPL_SRC_DIR = files
+TMPL_OUT_DIR = $(BUILD_DIR)/$(IMAGEBUILDER)/files
 
 ifndef CURL
   $(error "curl is not available please install it")
@@ -55,10 +55,11 @@ clean:
 clean-templates:
 	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)/files
 
-templates: $(TMPL_OBJ)
+templates: $(TMPL_OUT_DIR)
 
-$(TMPL_OBJ): $(TMPL_SRC) $(BUILD_DIR)/$(IMAGEBUILDER) $(BUILD_SECRETS)
+$(TMPL_OUT_DIR): $(TMPL_SRC_DIR) $(BUILD_SECRETS) | $(BUILD_DIR)/$(IMAGEBUILDER)
 ifndef GOMPLATE
   $(error "gomplate is not available please install it")
 endif
-	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --file=$< --out=$@
+	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
+	touch $(TMPL_OUT_DIR)
