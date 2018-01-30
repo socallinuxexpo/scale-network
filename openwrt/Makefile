@@ -25,7 +25,7 @@ ifndef CURL
   $(error "curl is not available please install it")
 endif
 
-PHONY: download-image extract template clean clean-templates
+PHONY: download-image extract templates clean clean-templates
 
 download-image: $(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT)
 
