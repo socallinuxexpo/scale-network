@@ -4,7 +4,7 @@
 #
 
 BUILD_DIR = build
-DEFAULT_PACKAGES = -dnsmasq -firewall -ip6tables -iptables -odhcp6c -odhcpd-ipv6only -odhcpd -ppp -ppp-mod-pppoe kmod-usb-serial kmod-usb-serial-ftdi kmod-usb-serial-pl2303
+DEFAULT_PACKAGES = -dnsmasq -firewall -odhcpd-ipv6only -odhcpd -ppp -ppp-mod-pppoe kmod-usb-serial kmod-usb-serial-ftdi kmod-usb-serial-pl2303
 BUILD_3700_FLAGS = PROFILE=wndr3700v2 PACKAGES="$(DEFAULT_PACKAGES)"
 BUILD_3800_FLAGS = PROFILE=wndr3800 PACKAGES="$(DEFAULT_PACKAGES)"
 BUILD_3800CH_FLAGS = PROFILE=wndr3800ch PACKAGES="$(DEFAULT_PACKAGES)"
