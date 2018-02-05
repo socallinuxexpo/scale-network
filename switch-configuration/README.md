@@ -24,8 +24,8 @@ The syntax of a config/vlans file (either master or within an included file) is 
 ```
 #include <filename>				Include <filename> from vlans.d a la macro substitution
 VLAN <vlan_name> <vlan_number> <comment>	Defines a VLAN.
-[<directive>] // <text>				Any text after a double slash is considered a comment to end of line.
-						It is ignored by the parser.
+[<directive>] // <text>				Any text after a double slash is considered a comment
+						to the end of line.  It is ignored by the parser.
 ```
 
 ## config/types/<name>
