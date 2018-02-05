@@ -19,10 +19,12 @@ makes sense to subdivide the configuration (e.g. Conference, Expo, etc.). If so,
 be stored in the config/vlans.d directory.
 
 The syntax of a config/vlans file (either master or within an included file) is as fillows:
+```
 \#include <filename>				Include <filename> from vlans.d a la macro substitution
 VLAN <vlan_name> <vlan_number> <comment>	Defines a VLAN.
 [<directive>] // <text>				Any text after a double slash is considered a comment to end of line.
 						It is ignored by the parser.
+```
 
 ## config/types/<name>
 These files contain the configuration information for each type of switch
