@@ -8,9 +8,11 @@ PERL 5
 ## config/switchtypes
 This file defines the name and type of each switch. It is a whitespace delimeted file (tab8
 formatting preferred) containing the following fields:
+```
 	Name	The name of the switch (e.g. conf214a)
 	Number	Unique number identifying the switch and its location on the storage cart
 	Type	Type of switch (must match a file in config/types/, e.g. Room for a Room switch)
+```
 
 ## config/vlans
 ## config/vlans.d/<name>
