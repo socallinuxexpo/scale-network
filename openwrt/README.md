@@ -2,7 +2,11 @@
 
 Make sure you have the prereqs for the [LEDE Image Builder](https://lede-project.org/docs/user-guide/imagebuilder#prerequisites)
 
-# Build image
+If you are building images with templates you'll also need:
+* gomplate 2.2.0: https://github.com/hairyhenderson/gomplate/releases/tag/v2.2.0
+
+# Build
+## Stock Image
 
 To build an image just specify the model to build for. Currently we support
 Netgear `3700v2`, `3800`, & `3800ch` images. To build for `3800ch`:
@@ -14,8 +18,26 @@ make build-3800ch
 > from their mirrors.
 
 You will find the images in `./build/lede-imagebuilder-<version>-ar71xx-generic.Linux-x86_64/bin/targets/ar71xx/generic/`
-The `*sysupgrade.bin` file that matches the AP model should have been generated
-.
+The `*sysupgrade.bin` file that matches the AP model should have been generated.
+
+## Image with Templates
+
+Copy over the default secrets:
+```bash
+cd ./openwrt/
+cp ../facts/secrets/openwrt.yaml.example ../facts/secrets/openwrt.yaml
+```
+
+Update the default to represent actual values then:
+```bash
+cd ./openwrt/
+make templates build-3800ch
+```
+
+This will populate the templates with the necessary values and include them
+into the lede build
+
+# Upgrading
 Assuming openwrt or LEDE is already installed:
 
 ```sh

@@ -1,0 +1,22 @@
+{{range (datasource "openwrt").wireless.radios }}
+config wifi-device '{{.name}}'
+	option type '{{.type}}'
+	option hwmode '{{.hwmode}}'
+	option path '{{.path}}'
+	option htmode '{{.htmode}}'
+	option channel '{{.channel}}'
+	option txpower '{{.txpower}}'
+	option country 'US'
+{{end}}
+
+{{range $index, $element := (datasource "openwrt").wireless.radios}}
+{{- range .networks}}
+config wifi-iface
+        option ssid '{{.ssid}}'
+	option mode 'ap'
+	option mode '{{$element.name}}'
+	option network '{{.vlan}}'
+	option encryption 'psk2'
+	option key '{{.password}}'
+{{end}}
+{{- end}}
