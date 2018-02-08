@@ -1,5 +1,4 @@
 import sys
-import ipdb
 from getpass import getpass
 from jnpr.junos import Device
 from jnpr.junos.utils.config import Config
@@ -16,25 +15,45 @@ def cli(verbose):
     VERBOSE = verbose
 
 @cli.command()
-@click.option('--host', '-H', help='host to connect to')
+@click.option('-H', '--host', help='host to connect to')
 @click.option('--user', '-u', default='root',
               help='Username to log in via SSH')
-def compare(host, user):
+@click.option('--sshkey', '-i', default=None,
+              help='Full path to sshkey to use for auth')
+@click.option('--config', '-c', default=None,
+              help='Full path to switch config')
+@click.option('--yes', '-y', default=False,
+              help='Skip prompting the user')
+def compare(host, user, sshkey, config, yes):
     """Simple config check"""
     try:
         password = getpass("Device password: ")
-	with Device(host=host, user=username, passwd=password) as dev:
-	    config = Config(dev)
-	    config.lock()
-	    config.load(path='./test.conf', format="text", overwrite=True)
-	    #config.commit()
-	    #print(config.diff())
-            log(0, 'DIFF:', 'yellow', str(config.diff()))
-	    ipdb.set_trace()
-	    config.unlock()
+	with Device(host=host, user=username, passwd=password, ssh_private_key_file=sshkey) as dev:
+	    device_config = Config(dev)
+	    device_config.lock()
+	    device_config.load(path=config, format="text", overwrite=True)
+            log(0, 'DIFF:', 'yellow', str(device_config.diff()))
+            if yes:
+	      device_config.commit()
+            elif question('Would you like to commit the config?\n'):
+	      device_config.commit()
+	    device_config.unlock()
     except Exception as err:
 	print (err)
 	sys.exit(1)
+
+def question(text):
+    yes = {'yes','y'}
+    no = {'no','n'}
+
+    choice = raw_input(text).lower()
+    if choice in yes:
+       return True
+    elif choice in no:
+       return False
+    else:
+       sys.stdout.write("Please respond with 'yes' or 'no'")
+    return False
 
 def warn(msg, indent=0):
     log(0, '{}DRY-RUN:'.format(' ' * indent), 'yellow', msg)
@@ -64,6 +83,4 @@ def log(level, prefix, prefix_color, msg):
 
 
 if __name__ == '__main__':
-    username = 'root'
-    #compare_config()
     cli()
