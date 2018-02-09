@@ -1,0 +1,61 @@
+// Expo Center Catwalk Switch Configuration
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/18	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/19	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/20	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/21	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/22	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/23	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/24	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/25	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF
+TRUNK	ge-0/0/26	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomG
+TRUNK	ge-0/0/27	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomH
+TRUNK	ge-0/0/28	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/29	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,HAM_BRIDGE // Downlink to BallroomF

@@ -1,0 +1,6 @@
+1.	Network Prefixes (assign and add to VLANS)
+2.	DNS -- Domain name for show network, Onsite Authoritative for Show Network and in-addr/ip6.arpa
+3.	L3 Interfaces for management VLAN on switches
+4.	Scripts to build configuration files
+5.	Scripts for switch installation and maintenance
+
