@@ -1,7 +1,8 @@
 // Conference Center IDF Switch Configuration
 TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfCTF,cfAVLAN,cfNOC, \
 			cfStaff,CFSigns,cfHam_N6S,HAM_BRIDGE // Link to CF Router
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
+TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfCTF,cfAVLAN,cfNOC, \
+			cfStaff,CFSigns,cfHam_N6S,HAM_BRIDGE // Link to CF Router
 TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
@@ -16,4 +17,6 @@ TRUNK	ge-0/0/12	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSi
 TRUNK	ge-0/0/13	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/14	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
+TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
+TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff,cfSigns
 
