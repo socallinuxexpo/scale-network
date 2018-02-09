@@ -1,0 +1,15 @@
+// Registration Desk Switch Template
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff
+TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+RSRVD	6
+VLAN	exSigns		2					//ge-0/0/{16,17}
+RSRVD	2
+VLAN	exRegistration	20					//ge-0/0/20 thru ge-0/0/39
+

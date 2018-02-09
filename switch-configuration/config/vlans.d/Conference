@@ -1,2 +1,12 @@
 // Conference Center -- VLANS 500-899
+cfSCALE-SLOW	500	2.4G Wireless Network in Conference Center
+cfSCALE-FAST	501	5G Wireless Network in Conference Center
+cfSpeaker	502	Speaker Network
+cfAdmin		503	SCALE Network Administration (Conference Center)
+cfCTF		504	Capture the Flag
+cfAVLAN		505	Audio Visual Network (DHCP Helper to AV server)
+cfNOC		506	Wired network in NOC
+cfStaff		507	Staff Wireless Network (Conference Center)
+cfSigns		508	Signs network (Conference Center) IPv6 Only
+cfHam_N6S	509	HAM radio station in Conference Center
 

@@ -5,8 +5,38 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 PERL 5
 
 # Configuration Files (User Servicable)
+All files have the following features unless expressly stated otherwise:
+
+```
++	All text after // is treated as a comment and ignored by the parser.
++	Any line ending in a space followed by a backslash (matches /\s\\$/)
+	will result in the next line being treated as a continuation of the
+	existing line. Whitespace at the end of this line and the beginning of the
+	next line will be collapsed to a single space by the parser during joining.
+	The parser will then parse the entire line as normal, including this treatment
+	if the resulting line still ends in a space followed by a backslash.
+
+	e.g.:
+		foo \
+		bar
+
+	is parsed as 'foo bar'
+
+		this \
+		line \
+		is \
+		continued
+
+	is parsed as 'this line is continued'
+```
+## config/defaults
+This file sets various defaults. All scripts will parse this file first before parsing any others.
+Any configuration directive not applicable to the parsing script is ignored silently.
+```
+JUNOS	<junos_version>				Default JunOS version
+```
 ## config/switchtypes
-This file defines the name and type of each switch. It is a whitespace delimeted file (tab8
+This file defines the name and type of each switch. It is a  tab delimeted file (tab8
 formatting preferred) containing the following fields:
 ```
 	Name	The name of the switch (e.g. conf214a)
@@ -29,12 +59,23 @@ VLAN <vlan_name> <vlan_number> <comment>	Defines a VLAN.
 ```
 
 ## config/types/<name>
-These files contain the configuration information for each type of switch
+These files contain the configuration information for each type of switch. They are  tab
+delimited (tab8 formatting preferred).
+
+Configuration elements include:
+```
+RSRVD	<number_of_ports>
+VLAN	<vlan_name> <number_of_ports> [<ip6_address> [<ip4_address>]]
+TRUNK	<port> <vlan_name>[,<vlan_name>...]
+JUNOS	<junos_version>
+
 
 
 # Scripts (No User Serviceable Parts inside)
 
 # How to build a set of switch configurations
+
+# How to mass-update a set of switches
 
 # How to build and push a new configuration to a single switch
 

@@ -1,0 +1,19 @@
+// Expo Center IDF Switch Configuration
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exCTF,exAVLAN,exNOC,exStaff, \
+			exSigns,exHam_N6S,HAM_BRIDGE // Link to EX Router
+TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exAdmin,exAVLAN,exStaff,exSigns
+

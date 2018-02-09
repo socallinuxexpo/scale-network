@@ -1,0 +1,12 @@
+// Conference Hallway switch Template
+TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfAdmin,cfAVLAN,cfStaff
+TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/5	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/6	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/7	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/8	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/9	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+RSRVD	6
+VLAN	cfSIGNS		2		// ge-0/0/{16,17}

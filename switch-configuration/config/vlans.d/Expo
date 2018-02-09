@@ -1,1 +1,11 @@
 // Expo Center -- VLANS 100-499
+exSCALE-SLOW	100	2.4G Wireless Network in Expo Center
+exSCALE-FAST	101	5G Wireless Network in Expo Center
+exSpeaker	102	Speaker Network
+exAdmin		103	SCALE Network Administration (Expo Center)
+exAVLAN		105	Audio Visual Network (DHCP Helper to AV server)
+exStaff		107	Staff Wireless Network (Expo Center)
+exSigns		108	Signs network (Expo Center) IPv6 Only
+exRegistration	109	Registration Network (Expo Center) IPv6 Only
+
+
