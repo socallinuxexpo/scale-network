@@ -58,12 +58,18 @@ The syntax of a config/vlans file (either master or within an included file) is 
 ```
 #include <filename>				Include <filename> from vlans.d a la macro substitution
 
-VLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
+<vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
 						Defines a VLAN.
 
 [<directive>] // <text>				Any text after a double slash is considered a comment
 						to the end of line.  It is ignored by the parser.
 ```
+prefix6 and prefix4 are only needed for LANs that will have in-addr, ip6.arpa, DHCP,
+or RADVD managed by the SCALE Tech team.
+
+For other VLANs, they should be set to ::/0 and 0.0.0.0/0, respectively, which will
+flag the parser not to create any L3 interfaces or IP related configuration for these
+networks.
 
 ## config/types/<name>
 These files contain the configuration information for each type of switch. They are  tab
