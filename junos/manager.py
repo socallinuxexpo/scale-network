@@ -28,7 +28,7 @@ def compare(host, user, sshkey, config, yes):
     """Simple config check"""
     try:
         password = getpass("Device password: ")
-	with Device(host=host, user=username, passwd=password, ssh_private_key_file=sshkey) as dev:
+	with Device(host=host, user=user, passwd=password, ssh_private_key_file=sshkey) as dev:
 	    device_config = Config(dev)
 	    device_config.lock()
 	    device_config.load(path=config, format="text", overwrite=True)
@@ -38,6 +38,22 @@ def compare(host, user, sshkey, config, yes):
             elif question('Would you like to commit the config?\n'):
 	      device_config.commit()
 	    device_config.unlock()
+    except Exception as err:
+	print (err)
+	sys.exit(1)
+
+@cli.command()
+@click.option('-H', '--host', help='host to connect to')
+@click.option('--user', '-u', default='root',
+              help='Username to log in via SSH')
+@click.option('--sshkey', '-i', default=None,
+              help='Full path to sshkey to use for auth')
+def get_config(host, user, sshkey):
+    """Simple config check"""
+    try:
+        password = getpass("Device password: ")
+	with Device(host=host, user=user, passwd=password, ssh_private_key_file=sshkey) as dev:
+            print(dev.rpc.get_config(model=True, options={'format': 'json'}))
     except Exception as err:
 	print (err)
 	sys.exit(1)
