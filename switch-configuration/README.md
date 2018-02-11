@@ -4,6 +4,27 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 # Prereqs
 PERL 5
 
+# Firmware
+The latest version of the firmware can be downloaded from `s3`
+
+## Models
+### 4200EX
+We are running the following versions of `junos` and its `bootloader`:
+  * [jloader 12.1R3](http://sarcasticadmin.com/scale/junos/jloader-ex-3242-12.1R3-signed.tgz)
+  * [jinstall 15.1R6.7](http://sarcasticadmin.com/scale/junos/jinstall-ex-4200-15.1R6.7-domestic-signed.tgz)
+
+### SRX300
+We are running the following versions of `junos` on the router:
+  * [junos 15.1X49-D120.3](http://sarcasticadmin.com/scale/junos/junos-srxsme-15.1X49-D120.3-domestic.tgz)
+
+### Validate
+Grab the `SHA256` to check the image validity:
+```
+cd <toimagedir>
+curl -O http://sarcasticadmin.com/scale/junos/SHA256SUMS
+shasum -c SHA256SUMS
+```
+
 # Configuration Files (User Servicable)
 All files have the following features unless expressly stated otherwise:
 
