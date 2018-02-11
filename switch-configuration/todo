@@ -4,3 +4,21 @@
 4.	Scripts to build configuration files
 5.	Scripts for switch installation and maintenance
 
+
+
+#### Notes
+
+Minimal switch configuration to enable management port via DHCP and retrieve address
+---
+set system root-authentication encrypted-password "$1$pYRuS5Lf$7kaB/a3Qiez7alkFcZbXz0"
+set system services ssh protocol-version v2
+set system services dhcp traceoptions file dhcp_logfile
+set system services dhcp traceoptions level all
+set system services dhcp traceoptions flag all
+set interfaces me0 unit 0 family inet dhcp
+set interfaces vme unit 0 family inet dhcp vendor-id Juniper-ex4200-48p
+set poe interface all
+commit and-quit
+show interfaces me0.0 terse
+---
+
