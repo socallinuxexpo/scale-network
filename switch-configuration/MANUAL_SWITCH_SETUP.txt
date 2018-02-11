@@ -1,6 +1,9 @@
 # Base configuration:
+set date 201802101200
 edit
 set system root-authentication encrypted-password "$1$pYRuS5Lf$7kaB/a3Qiez7alkFcZbXz0"
+delete system services telnet
+set system services netconf ssh
 set system services ssh protocol-version v2
 set system services dhcp traceoptions file dhcp_logfile
 set system services dhcp traceoptions level all
@@ -35,7 +38,8 @@ request system reboot
 
 # Housekeeping:
 request system snapshot slice alternate
+yes
 edit
-set system host-name  
+set system host-name  ##
 commit and-quit
 
