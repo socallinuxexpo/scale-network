@@ -1,0 +1,41 @@
+# Base configuration:
+edit
+set system root-authentication encrypted-password "$1$pYRuS5Lf$7kaB/a3Qiez7alkFcZbXz0"
+set system services ssh protocol-version v2
+set system services dhcp traceoptions file dhcp_logfile
+set system services dhcp traceoptions level all
+set system services dhcp traceoptions flag all
+set interfaces me0 unit 0 family inet dhcp
+set interfaces vme unit 0 family inet dhcp vendor-id Juniper-ex4200-48p
+set poe interface all
+commit and-quit
+request system configuration rescue save
+show interfaces me0.0 terse
+
+
+# Firmware Check:
+show chassis firmware
+# Check for:
+#   Part                     Type       Version
+#   FPC 0                    uboot      U-Boot 1.1.6 (Jul  5 2012 - 11:58:22) 1.0.0
+#                            loader     FreeBSD/PowerPC U-Boot bootstrap loader 2.4
+# If you get something else:
+# scp jloader-ex-3242-12.1R3-signed.tgz to the switch in /var/tmp
+# then:
+request system software add /var/tmp/jloader-ex-3242-12.1R3-signed.tgz
+# After installation completes:
+request system reqboot
+#
+# Software update
+# scp jinstall-ex-4200-15.1R6.7-domestic-signed.tgz to switch in /var/tmp
+# then:
+request system software add /var/tmp/jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
+# After installation is staged:
+request system reboot
+
+# Housekeeping:
+request system snapshot slice alternate
+edit
+set system host-name  
+commit and-quit
+
