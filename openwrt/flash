@@ -1,0 +1,27 @@
+#!/usr/bin/expect
+spawn /usr/sbin/arp -d 192.168.1.1
+spawn ping -n 192.168.1.1
+expect {
+  Unreachable exp_continue
+  "taking countermeasures"
+}
+close
+send_user "enter the name of this AP: "
+expect_user -re "(.*)\n"
+set ap $expect_out(1,string)
+spawn /usr/sbin/arp -n 192.168.1.1
+expect -re "192.168.1.1 *ether *(\[^ \]*) "
+set mac $expect_out(1,string)
+set file [open aplist a]
+puts $file "$ap,$mac"
+close $file
+spawn tftp 192.168.1.1
+expect tftp
+send "bin\n"
+expect tftp
+send "put factory.img\n"
+expect tftp
+send "quit\n"
+close
+spawn /usr/sbin/arp -d 192.168.1.1
+send_user "\n\nfinished, do the next AP\n\n"
