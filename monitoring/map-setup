@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+
+#use strict;
+use warnings;
+use 5.010;
+
+use Zabbix::API;
+use Zabbix::API::Map;
+
+use YAML::Any qw/Dump LoadFile/;
+use Data::Dumper;
+
+## This script loads all hosts from the server and dumps their data to YAML
+## documents.
+
+my $config = LoadFile("$ENV{HOME}/.zabbixrpc");
+
+#my $zabber = Zabbix::API->new(server => $config->{host}, verbosity => '2');
+my $zabber = Zabbix::API->new(server => $config->{host});
+
+#print $zabber->api_version,"\n";
+eval { $zabber->login(user => $config->{user}, password => $config->{password}) };
+
+if ($@) {
+
+    my $error = $@;
+    die "Could not log in: $error";
+
+}
+
+
+$hosts{$_->{data}->{host}}=$_->{data}->{hostid} foreach @{$zabber->fetch('Host')};
+undef %params;
+
+# which map id's to update
+@maps=('2','3');
+foreach $map (@maps) {
+  print "updating map $map\n";
+  $params{sysmapid}=$map;
+  @return = @{$zabber->query(method => "map.get", params => { output => 'extend', selectSelements => "extend", selectLinks => "extend",filter => {sysmapid =>  $map}})};
+  @mapelements = $return[0]->{selements};
+  while ($#{@mapelements[0]}) {
+    $j=shift @{@mapelements[0]};
+  }
+  open(infile,'<aplist.location') or die "unable to open aplist";
+  while (<infile>){
+    chomp;
+    ($server,$mac,$ip,$ch24,$ch5,$hostmap,$x,$y,$notes)=split(',',$_);
+    if ($hostmap == $map and $hosts{$server} and $x and $y ){
+      print "$server\n";
+      push @mapelements[0], {
+            'iconid_on' => '0',
+            'iconid_disabled' => '0',
+            'width' => '200',
+            'urls' => [],
+            'areatype' => '0',
+            'label' => $server,
+            'x' => $x,
+            'elementid' => $hosts{$server},
+            'iconid_off' => '153',
+            'use_iconmap' => '0',
+            'iconid_maintenance' => '0',
+            'height' => '200',
+            'label_location' => '-1',
+            'y' => $y,
+            'sysmapid' => '2',
+            'elementsubtype' => '0',
+            'application' => '',
+            'viewtype' => '0',
+            'elementtype' => '0'
+      };
+    }
+  }
+  close(infile);
+#  for ($i=0,$i<$#mapelements,$i++){
+#    undef $mapelements[$i]{sysmapid};
+#  }
+#print Dumper(@mapelements);
+  $return = $zabber->query(method => "map.update", params => { sysmapid => $map, selements => @mapelements});
+#  print Dumper($return);
+}
+#{
+#    "jsonrpc": "2.0",
+#    "method": "map.update",
+#    "params": {
+#        "sysmapid": "8",
+#        "width": 1200,
+#        "height": 1200
+#    }
+#}
+
+eval { $zabber->logout };
+if ($@) {
+    my $error = $@;
+    given ($error) {
+        when (/Invalid method parameters/) {
+            # business as usual
+        }
+        default {
+            die "Unexpected exception while logging out: $error";
+        }
+    }
+}
+
