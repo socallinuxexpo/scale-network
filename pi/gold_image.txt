@@ -1,5 +1,9 @@
 # Steps used to build the gold image
 
+# TODO
+- disable screensaver
+- configure autologin for pi user
+
 # Create bootable SDCARD:
 1. Download Raspbian Stretch with desktop 2017-11-29 
 2. Write to 4GB SD Card
