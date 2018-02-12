@@ -1,0 +1,65 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+playbook = "etc/ansible/scale.yml"
+boxname = "fso/artful64-desktop"
+memmb = "1024"
+numcpu = "1"
+
+boxes = [
+  {
+    :name => "server1",
+    :eth1 => "10.128.3.5",
+    :description => "DNS & DHCP & SYSLOG & NTP in NOC",
+  },
+  {
+    :name => "server2",
+    :eth1 => "10.0.3.5",
+    :description => "DNS & DHCP & SYSLOG & NTP in Expo Hall MDF",
+  },
+  {
+    :name => "server3",
+    :eth1 => "10.128.3.6",
+     :description => "MONITORING Server in NOC",
+  },
+  {
+    :name => "server4",
+    :eth1 => "10.128.3.7",
+    :description => "AUTOMATION & SIGN Server in NOC",
+  },
+]
+
+Vagrant.configure(2) do |config|
+
+  boxes.each_with_index do |box, index|
+    config.vm.define box[:name] do |config|
+
+      config.vm.box = boxname
+
+      config.ssh.insert_key = false
+      config.vm.hostname = box[:name]
+
+      config.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--memory", memmb]
+        v.customize ["modifyvm", :id, "--cpus", numcpu]
+      end
+
+      config.vm.network :private_network, ip: box[:eth1]
+
+      if index == boxes.size - 1
+        config.vm.provision "ansible" do |ansible|
+            ansible.verbose = ""
+            ansible.playbook = playbook
+            ansible.limit = "all"
+            ansible.inventory_path = "etc/ansible/hosts"
+            ansible.host_key_checking = false
+            ansible.raw_ssh_args = ['-i ~/.vagrant.d/insecure_private_key']
+	          ansible.raw_arguments = ['--forks=10']
+            ansible.extra_vars = {
+              environment_name: "vagrant"
+            }
+        end
+      end
+    end
+  end
+end

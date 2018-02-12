@@ -1,0 +1,12 @@
+# DNS / DHCP / NTP / SYSLOG (per building, ship from server 2 to server1)
+[core]
+server1 ansible_host=10.128.3.5 ansible_host_ipv6=2001:470:f325:503::5 dns_srv2=10.0.3.5 syslog_role="master" 
+server2 ansible_host=10.0.3.5 ansible_host_ipv6=2001:470:f325:103::5 dns_srv2=10.128.3.5 
+
+# Zabbix
+[monitoring]
+server3 ansible_host=10.128.3.6 ansible_host_ipv6=2001:470:f325:503::6
+
+# Ansible / Signs
+[automation]
+server4 ansible_host=10.128.3.7 ansible_host_ipv6=2001:470:f325:503::7

@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: yes
+  roles:
+    - { role: noapparmor }
+
+- hosts: core
+  become: yes 
+  roles: 
+    - { role: dnsserver }
+    - { role: dhcpserver }
+    - { role: syslogserver }

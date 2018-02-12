@@ -1,0 +1,20 @@
+---
+
+- name: install unbound package
+  apt: 
+    name: unbound
+    state: present
+
+- name: copy unbound.conf
+  copy:
+    src: unbound.conf
+    dest: /etc/unbound/unbound.conf
+    group: root
+    mode: 0644
+  notify: restart unbound
+  
+- name: start unbound service
+  service:
+    name: unbound
+    enabled: yes
+    state: started

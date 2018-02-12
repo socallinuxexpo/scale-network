@@ -1,0 +1,22 @@
+---
+
+- name: install isc-dhcp-server package
+  apt:
+    name: isc-dhcp-server
+    state: present
+
+- name: copy dhcpd.conf
+  template: 
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root 
+    group: root
+    mode: 0644 
+  notify: restart isc-dhcp-server
+
+- name: start isc-dhcp-server service
+  service:
+    name: isc-dhcp-server
+    enabled: no
+    state: started
+  changed_when: false
