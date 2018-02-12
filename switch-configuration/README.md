@@ -8,7 +8,7 @@ PERL 5
 The latest version of the firmware can be downloaded from `s3`
 
 ## Models
-### 4200EX
+### EX4200
 We are running the following versions of `junos` and its `bootloader`:
   * [jloader 12.1R3](http://sarcasticadmin.com/scale/junos/jloader-ex-3242-12.1R3-signed.tgz)
   * [jinstall 15.1R6.7](http://sarcasticadmin.com/scale/junos/jinstall-ex-4200-15.1R6.7-domestic-signed.tgz)
@@ -17,7 +17,14 @@ We are running the following versions of `junos` and its `bootloader`:
 We are running the following versions of `junos` on the router:
   * [junos 15.1X49-D120.3](http://sarcasticadmin.com/scale/junos/junos-srxsme-15.1X49-D120.3-domestic.tgz)
 
-### Validate
+## Validate
+Current `SHA256` for the juniper firmware:
+```
+bddc7d8a0571e3ed7a7379366b55595664300fbd564cf157be20ff4781ef6add  jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
+44e1fa5d7b1a09eef4772189cb2c0c0d6e8c0492f655bc5e840bbe0056e2a361  jloader-ex-3242-12.1R3-signed.tgz
+9e21098d685eb5a4034645ce5a457c13384003accaa7e0e1e92dd637b6c3021f  junos-srxsme-15.1X49-D120.3-domestic.tgz
+```
+### Remote
 Grab the `SHA256` to check the image validity:
 ```
 cd <toimagedir>
