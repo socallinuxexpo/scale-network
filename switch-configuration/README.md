@@ -37,7 +37,8 @@ All files have the following features unless expressly stated otherwise:
 This file sets various defaults. All scripts will parse this file first before parsing any others.
 Any configuration directive not applicable to the parsing script is ignored silently.
 ```
-JUNOS	<junos_version>				Default JunOS version
+SW_JUNOS	<junos_version>				Default JunOS version for switches
+RT_JUNOS	<junos_version>				Default JunOS version for routers
 ```
 ## config/switchtypes
 This file defines the name and type of each switch. It is a  tab delimeted file (tab8
@@ -45,8 +46,8 @@ formatting preferred) containing the following fields:
 ```
 	Name	The name of the switch (e.g. conf214a)
 	Number	Unique number identifying the switch and its location on the storage cart
-    MgtVLAN Management VLAN Number for switch
-    IPv6    IPv6 Address for Switch on Management VLAN
+		MgtVLAN Management VLAN Number for switch
+	IPv6	IPv6 Address for Switch on Management VLAN
 	Type	Type of switch (must match a file in config/types/, e.g. Room for a Room switch)
 ```
 
@@ -85,6 +86,8 @@ TRUNK	<port> <vlan_name>[,<vlan_name>...]
 JUNOS	<junos_version>
 ```
 
+## Source for Vendor Booth Information:
+https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuYxmU/edit?ts=5a80d55a#gid=1023875758
 
 # Scripts (No User Serviceable Parts inside)
 scripts/
