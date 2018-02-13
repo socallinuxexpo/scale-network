@@ -1,0 +1,54 @@
+# Steps used to build the gold image
+
+# TODO
+- disable screensaver
+- configure autologin for pi user
+
+# Create bootable SDCARD:
+1. Download Raspbian Stretch with desktop 2017-11-29 
+2. Write to 4GB SD Card
+
+# Boot and update system:
+1. Boot up
+2. run `sudo apt-get update`
+3. run `sudo apt-get upgrade -y`
+4. run `sudo apt-get dist-upgrade -y`
+5. run `sudo reboot`
+
+# Run raspi-config
+- Localization
+1. in Localization, disable en_GB.UTF-8 
+2. in Localization, enable en_US.UTF-8
+3. choose en_US.UTF-8 as the default
+- Interfacing Options
+1. Enable SSH server
+2. Disable VNC server
+3. Disable access via serial
+- Advanced Options
+1. Change memory split to 16 (for video, rest for system)
+
+# Setup user credentials:
+1. set root password with `passwd root`
+2. set pi password with `passwd pi`
+
+# disable TTYs
+1. run `sed -i 's/#NAutoVTs=6/NAutoVTs=0/' /etc/systemd/logind.conf
+2. run `sed -i 's/#ReserveVT=6/ReserveVT=N/' /etc/systemd/logind.conf
+
+# Set video memory in boot/config.txt (if not done via raspi-config)
+1. run `sudo echo "gpu_mem=16" >> /boot/config.txt`
+
+# Setup home directories and python scripts
+1. run `sudo apt-get install -y git openbox xwit`
+2. cd /tmp 
+3. run `git clone https://github.com/socallinuxexpo/scale-signs`
+4. `cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
+5. `cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
+6. `sudo chown -R pi:pi /home/pi`
+7. `sudo chown -R root:root /home/pi.save`
+8. `sudo cp scale-signs/client/pi-python/usr/bin/* /usr/bin/`
+9. `sudo apt-get install python-gtk2 python-webkit -y`
+10. `echo "#!/bin/bash" >> /etc/rc.local`
+11. `echo "/usr/bin/resethome.sh" >> /etc/rc.local`
+12. `chmod +x /etc/rc.d/rc.local`
+13. `systemctl enable rc-local.service
