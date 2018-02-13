@@ -45,6 +45,8 @@ formatting preferred) containing the following fields:
 ```
 	Name	The name of the switch (e.g. conf214a)
 	Number	Unique number identifying the switch and its location on the storage cart
+    MgtVLAN Management VLAN Number for switch
+    IPv6    IPv6 Address for Switch on Management VLAN
 	Type	Type of switch (must match a file in config/types/, e.g. Room for a Room switch)
 ```
 
