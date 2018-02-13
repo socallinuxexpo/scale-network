@@ -1,0 +1,12 @@
+---
+
+- name: install rsyslog package
+  apt:
+    name: rsyslog
+    state: present
+
+- name: start rsyslog service
+  service:
+    name: rsyslog
+    enabled: yes
+    state: started

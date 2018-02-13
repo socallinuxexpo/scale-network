@@ -1,0 +1,7 @@
+---
+
+- name: restart isc-dhcp-server
+  service:
+    name: isc-dhcp-server
+    enabled: yes
+    state: started

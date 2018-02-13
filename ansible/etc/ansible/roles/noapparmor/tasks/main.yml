@@ -1,0 +1,13 @@
+---
+
+- name: stop apparmor service
+  service: 
+    name: apparmor
+    state: stopped
+    enabled: no
+  changed_when: false
+
+- name: remove apparmor packages
+  apt:
+    name: apparmor
+    state: absent
