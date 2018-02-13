@@ -1,24 +1,19 @@
-1.	Network Prefixes (assign and add to VLANS)
-2.	DNS -- Domain name for show network, Onsite Authoritative for Show Network and in-addr/ip6.arpa
-3.	L3 Interfaces for management VLAN on switches
-4.	Scripts to build configuration files
-5.	Scripts for switch installation and maintenance
-
-
+x   1.	Network Prefixes (assign and add to VLANS)
+    2.	DNS -- scale.lan local domain, Authoritative servers for Show Network and in-addr/ip6.arpa
+x       Set up local servers
+        Produce data to feed to Kyle
+        Point RDNS to appropriate servers
+x   3.	L3 Interfaces for management VLAN on switches
+    4.	Scripts to build configuration files
+    5.	Scripts for switch installation and maintenance (Robert)
+    6.  PVLAN support for Expo floor
+x   7.  V6 only VLANs (Staff, Signs, Registration, 
+    8.  Firewall Rules
+    9.  Zach's DWCC
+        Partially done. VLANs specified, Addresses assigned. Need to assign ports to switches
+   10.  Verify Tabs in TDF (vim on Mac tends to produce spaces instead)
 
 #### Notes
 
-Minimal switch configuration to enable management port via DHCP and retrieve address
----
-set system root-authentication encrypted-password "$1$pYRuS5Lf$7kaB/a3Qiez7alkFcZbXz0"
-set system services ssh protocol-version v2
-set system services dhcp traceoptions file dhcp_logfile
-set system services dhcp traceoptions level all
-set system services dhcp traceoptions flag all
-set interfaces me0 unit 0 family inet dhcp
-set interfaces vme unit 0 family inet dhcp vendor-id Juniper-ex4200-48p
-set poe interface all
-commit and-quit
-show interfaces me0.0 terse
----
+Minimal switch configuration instructions moved into MANUAL_SWITCH_SETUP.txt file.
 
