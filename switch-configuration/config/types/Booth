@@ -1,4 +1,4 @@
-// Expo Hallway switch Template
+// Expo Booth Area switch Template
 TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exDWCC
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exDWCC
 TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
@@ -10,5 +10,7 @@ TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 RSRVD	6
-VLAN	cfSigns		2		// ge-0/0/{16,17}
+VLAN	exSigns		2		// ge-0/0/{16,17}
+RSRVD	6
+PVLAN	exVendor	20		// be-0/0/{24-43}				// Vendor VLAN
 
