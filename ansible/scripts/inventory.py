@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 
-# Dynamic inventory script used to slurp in various 
+# Dynamic inventory script used to slurp in various
 # SCaLE specific text files to produce a sane inventory to ansible
-
-# use of OOP, encapsulation, and non-standard libraries is purposly omitted to aide 
-# in ease of support; "global" list variable are used with a dedicated function 
-# for each 
 
 import os
 import re
@@ -17,16 +13,42 @@ serverfile = "../../facts/servers/serverlist.tsv"
 
 # globals
 #
-# vlans = []{name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask, building, description}
+# vlans = []{name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask,
+# building, description}
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
 # servers = []{name, mac-address, ipv6, ipv4, ansiblerole, vlanname}
 servers = []
-# listinv = {group: {hosts: [], vars: {var1: x, var2: y}}}
-listinv = {}
-# hostinv = {host: {var1: x, var2: y}}
-hostinv = {}
+# inv = {
+#    "group": {
+#        "hosts": [
+#            "192.168.28.71",
+#            "192.168.28.72"
+#        ],
+#        "vars": {
+#            "ansible_ssh_user": "johndoe",
+#            "ansible_ssh_private_key_file": "~/.ssh/mykey",
+#            "example_variable": "value"
+#        }
+#    },
+#    "_meta": {
+#        "hostvars": {
+#            "192.168.28.71": {
+#                "host_specific_var": "bar"
+#            },
+#            "192.168.28.72": {
+#                "host_specific_var": "foo"
+#            }
+#        }
+#    }
+# }
+inv = {
+    "_meta": {
+        "hostvars": {}
+    }
+}
+
 
 # populatevlans() will populate the vlans list
 def populatevlans():
@@ -51,6 +73,7 @@ def populatevlans():
                     "description": elems[4].split('\n')[0],
                 })
 
+
 # populateswitches() will populate the switch list
 def populateswitches():
     f = open(switchesfile, 'r')
@@ -64,6 +87,7 @@ def populateswitches():
                 "ipv6": elems[3],
             })
 
+
 # populateservers() will populate the server list
 def populateservers():
     f = open(serverfile, 'r')
@@ -73,21 +97,40 @@ def populateservers():
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
             if len(elems) > 2:
-                ipv6 = elems[2] 
+                ipv6 = elems[2]
                 for v in vlans:
                     vlan = ""
                     if ipv6.find(v["ipv6prefix"]) > -1:
                         vlan = v["name"]
                     servers.append({
-                    "name": elems[0],
-                    "macaddress": elems[1],
-                    "ipv6": ipv6,
-                    "ipv4": elems[3],
-                    "ansiblerole": elems[4].split('\n')[0],
-                    "vlan": vlan,
+                        "name": elems[0],
+                        "macaddress": elems[1],
+                        "ipv6": ipv6,
+                        "ipv4": elems[3],
+                        "ansiblerole": elems[4].split('\n')[0],
+                        "vlan": vlan,
                     })
 
-def Main():
+
+# populateinv() will populate the master inventory dictionary
+def populateinv():
+    for s in servers:
+        if s["ansiblerole"] not in inv.keys():
+            s["ansiblerole"] = {
+                "hosts": [],
+                "vars": {},
+            }
+        inv[s["ansiblerole"]["hosts"]].append(s["name"])
+        inv["_meta"]["hostvars"][s["name"]] = {
+                "ansible_host": s["ipv6"],
+                "ansible_host_ipv6": s["ipv6"],
+                "ansible_host_ipv4": s["ipv4"],
+                "macaddress": s["macaddress"],
+                "vlan": s["vlan"],
+        }
+
+
+def main():
     populatevlans()
     print(vlans)
     populateswitches()
@@ -95,6 +138,6 @@ def Main():
     populateservers()
     print(servers)
 
+
 if __name__ == "__main__":
-    Main()
-        
+    main()
