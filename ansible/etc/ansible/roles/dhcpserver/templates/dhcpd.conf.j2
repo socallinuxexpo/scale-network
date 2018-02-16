@@ -8,7 +8,8 @@
 
 # option definitions common to all supported networks...
 option domain-name "scale.lan";
-option domain-name-servers {{ ansible_host }}, {{ dns_srv2 }};
+# temporarily hard code until next pass
+option domain-name-servers 10.0.3.5, 10.128.3.5;
 
 default-lease-time 600;
 max-lease-time 1800;
