@@ -38,27 +38,20 @@ def populatevlans():
         for line in flines:
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
-                name = elems[0]
-                id = elems[1]
                 ipv6 = elems[2].split('/')
-                ipv6pre = ipv6[0]
-                ipv6bm = ipv6[1]
                 ipv4 = elems[3].split('/')
-                ipv4pre = ipv4[0]
-                ipv4bm = ipv4[1]
-                build = file
-                desc = elems[4].split('\n')[0]
                 vlans.append({
-                    "name": name,
-                    "id": id,
-                    "ipv6prefix": ipv6pre,
-                    "ipv6bitmask": ipv6bm,
-                    "ipv4prefix": ipv4pre,
-                    "ipv4bitmask": ipv4bm,
-                    "building": build,
-                    "description": desc,
+                    "name": elems[0],
+                    "id": elems[1],
+                    "ipv6prefix": ipv6[0],
+                    "ipv6bitmask": ipv6[1],
+                    "ipv4prefix": ipv4[0],
+                    "ipv4bitmask": ipv4[1],
+                    "building": file,
+                    "description": elems[4].split('\n')[0],
                 })
 
+# populateswitches() will populate the switch list
 def populateswitches():
     f = open(switchesfile, 'r')
     flines = f.readlines()
@@ -66,13 +59,12 @@ def populateswitches():
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
-            name = elems[0]
-            ipv6 = elems[3]
             switches.append({
-                "name": name,
-                "ipv6": ipv6,
+                "name": elems[0],
+                "ipv6": elems[3],
             })
 
+# populateservers() will populate the server list
 def populateservers():
     f = open(serverfile, 'r')
     flines = f.readlines()
@@ -81,22 +73,19 @@ def populateservers():
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
             if len(elems) > 2:
-                name = elems[0]            
-                mac = elems[1]
                 ipv6 = elems[2] 
-                ipv4 = elems[3]
                 for v in vlans:
+                    vlan = ""
                     if ipv6.find(v["ipv6prefix"]) > -1:
                         vlan = v["name"]
-                ans = elems[4].split('\n')[0]
-                servers.append({
-                    "name": name,
-                    "macaddress": mac,
+                    servers.append({
+                    "name": elems[0],
+                    "macaddress": elems[1],
                     "ipv6": ipv6,
-                    "ipv4": ipv4,
-                    "ansiblerole": ans,
+                    "ipv4": elems[3],
+                    "ansiblerole": elems[4].split('\n')[0],
                     "vlan": vlan,
-                })
+                    })
 
 def Main():
     populatevlans()
