@@ -7,9 +7,9 @@ import os
 import re
 
 # constants with locations to files or directories within the repo
-vlansddir = "../../switch-configuration/config/vlans.d/"
-switchesfile = "../../switch-configuration/config/switchtypes"
-serverfile = "../../facts/servers/serverlist.tsv"
+vlansddir = "../switch-configuration/config/vlans.d/"
+switchesfile = "../switch-configuration/config/switchtypes"
+serverfile = "../facts/servers/serverlist.tsv"
 
 # globals
 #
@@ -61,7 +61,11 @@ def populatevlans():
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
                 ipv6 = elems[2].split('/')
+                if ipv6[1] == "0":
+                    ipv6 = [" ", " "]
                 ipv4 = elems[3].split('/')
+                if ipv4[1] == "0":
+                    ipv4 = [" ", " "]
                 vlans.append({
                     "name": elems[0],
                     "id": elems[1],
@@ -98,31 +102,31 @@ def populateservers():
             elems = re.split(r'\t+', line)
             if len(elems) > 2:
                 ipv6 = elems[2]
+                vlan = ""
                 for v in vlans:
-                    vlan = ""
                     if ipv6.find(v["ipv6prefix"]) > -1:
                         vlan = v["name"]
-                    servers.append({
-                        "name": elems[0],
-                        "macaddress": elems[1],
-                        "ipv6": ipv6,
-                        "ipv4": elems[3],
-                        "ansiblerole": elems[4].split('\n')[0],
-                        "vlan": vlan,
-                    })
+                servers.append({
+                    "name": elems[0],
+                    "macaddress": elems[1],
+                    "ipv6": ipv6,
+                    "ipv4": elems[3],
+                    "ansiblerole": elems[4].split('\n')[0],
+                    "vlan": vlan,
+                })
 
 
 # populateinv() will populate the master inventory dictionary
 def populateinv():
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
-            s["ansiblerole"] = {
+            inv[s["ansiblerole"]] = {
                 "hosts": [],
                 "vars": {},
             }
-        inv[s["ansiblerole"]["hosts"]].append(s["name"])
+        inv[s["ansiblerole"]]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
-                "ansible_host": s["ipv6"],
+                "ansible_host": s["ipv4"],
                 "ansible_host_ipv6": s["ipv6"],
                 "ansible_host_ipv4": s["ipv4"],
                 "macaddress": s["macaddress"],
@@ -132,11 +136,10 @@ def populateinv():
 
 def main():
     populatevlans()
-    print(vlans)
     populateswitches()
-    print(switches)
     populateservers()
-    print(servers)
+    populateinv()
+    print(inv)
 
 
 if __name__ == "__main__":

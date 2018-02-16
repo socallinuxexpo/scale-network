@@ -1,0 +1,15 @@
+todo:
+  * switch dns from unbound to bind
+  * implement scale.lan zone in bind
+  * generate A, AAAA, and PTR records dynamically for switches
+  * generate A, AAAA, and PTR records dynamically for servers
+  * generate DNS views based on source building for scale.lan
+  * generate DHCP zones dynamically for vlans
+  * supply per building DNS priority, loghost, ntp via DHCP
+  * implement rsyslog dual collectors, ship to single master
+  * implement rsyslog client on all servers
+  * implement ntpd servers
+  * implement ntpd client on all servers
+  * implement zabbix
+  * implement zabbix checks from dynamic lists
+  * implement sign server

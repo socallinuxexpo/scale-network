@@ -1,30 +1,34 @@
-## Playbook for SCaLE Server Infrastructure
+# Ansible CM for SCaLE Server Infrastructure
 
-This playbook is used for deploying and maintaining the SCaLE Server Infrastructure. 
+This playbook is used for deploying and maintaining the SCaLE Server Infrastructure using Ansible. 
 
-Status:
+#### Status:
   * Vagrant environment built with 4 VMs, IPv4 assigned for test, IPv6 pre-assigned
+  * Dynamic inventory script for Ansible
   * Some basic roles implemented but none considered complete.
 
-Target Features:
-  * DNS services with unbound
-  * DNS views to support per building responses for loghost record
-  * DHCP with ISC DHCP Server with per building vlans/pools
+#### Target Features:
+  * DNS services using BIND
+  * DHCP services using ISC DHCP Server 
   * NTP with openntpd
-  * Syslog with per building logging, then ship from expo to conference
-  * Zabbix host additions done dynamically (awaiting Pi, AP, and Switch IP lists to consume)
+  * Syslog 
+  * Zabbix Monitoring with dynamic host addition
   * Central server for ansible and image building tools
+  * Signs server deployment 
 
-Requirements:
+#### Requirements:
   * vagrant 2.0.1
   * virtualbox 5.2
   * ansible 2.4
+  * python 2.7
 
 ### Usage
 
-#### At SCaLE:
+##### At SCaLE:
 
-Process TBD
+* change "ansible_host": s["ipv4"] to "ansible_host": s["ipv6] in the inventory.py
+
+further processes TBD
 
 #### Vagrant:
 
@@ -32,15 +36,13 @@ Issuing the __vagrant up__ command will build all vms and kick off the ansible p
 
 After the files are modified issue the __vagrant up__ command followed by the __vagrant provision__ command.
 
-Due to the way the Vagrantfile is structured, issuing the __vagrant__ command followed by the vm name will not kick off the ansible playbook.
+The vagrant environment uses ipv4 for management. The inventory will be modified during the show to use ipv6.
 
-todo:
-  * fix DNS views in unbound
-  * implement scale.lan zone in unbound
-  * implement dynamic inventory scripts to consume AP, pi, and switch lists once they exist
-  * implement rsyslog shipping
-  * implement rsyslog client
-  * implement ntpd client
-  * implement zabbix
-  * implement zabbix checks from dynamic lists
-  * implement sign server
+#### invetory.py
+
+inventory.py is dynamic inventory script written in python. it generates json in a format ansible
+expects generated dynamically by reading in the following files:
+
+* vlansddir = "../switch-configuration/config/vlans.d/"
+* switchesfile = "../switch-configuration/config/switchtypes"
+* serverfile = "../facts/servers/serverlist.tsv"
