@@ -5,7 +5,3 @@ zone "scale.lan" {
 	file "/etc/bind/db.scale.lan";
 	};
 
-zone "0.in-addr.arpa" {
-    type master;
-    file "/etc/bind/db.0";
-    };    
