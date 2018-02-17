@@ -26,7 +26,7 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
 
 ##### At SCaLE:
 
-* change "ansible_host": s["ipv4"] to "ansible_host": s["ipv6] in the inventory.py
+* change "ansible_host": s["ipv4"] to "ansible_host": s["ipv6"] in the inventory.py
 
 further processes TBD
 

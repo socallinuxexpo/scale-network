@@ -1,6 +1,9 @@
 ---
 
-- name: restart unbound
-  service:
-    name: unbound
+- name: restart bind9
+  systemd:
+    name: bind9
     state: restarted
+    masked: no
+    enabled: yes
+    daemon_reload: yes

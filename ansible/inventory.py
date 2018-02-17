@@ -44,6 +44,13 @@ servers = []
 #    }
 # }
 inv = {
+    "servers": {
+        "hosts": [],
+        "vars": {},
+    },
+    "switches": {
+        "hosts": [],
+    },
     "_meta": {
         "hostvars": {}
     }
@@ -118,19 +125,26 @@ def populateservers():
 
 # populateinv() will populate the master inventory dictionary
 def populateinv():
+    for s in switches:
+        inv["switches"]["hosts"].append(s["name"])
+        inv["_meta"]["hostvars"][s["name"]] = {
+            "ipv6": s["ipv6"],
+        }
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
             inv[s["ansiblerole"]] = {
                 "hosts": [],
                 "vars": {},
             }
+        inv["servers"]["hosts"].append(s["name"])
         inv[s["ansiblerole"]]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
                 "ansible_host": s["ipv4"],
-                "ansible_host_ipv6": s["ipv6"],
-                "ansible_host_ipv4": s["ipv4"],
+                "ipv6": s["ipv6"],
+                "ipv4": s["ipv4"],
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
+                "fqdn": s["name"] + ".scale.lan",
         }
 
 

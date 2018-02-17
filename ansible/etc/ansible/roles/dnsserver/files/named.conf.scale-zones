@@ -1,0 +1,7 @@
+// named.conf.scale-zones managed by ansible
+
+zone "scale.lan" {
+	type master;
+	file "/etc/bind/db.scale.lan";
+	};
+

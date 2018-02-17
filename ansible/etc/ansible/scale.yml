@@ -1,14 +1,24 @@
 ---
 
-- hosts: all
+- hosts: servers
   become: yes
   roles:
     - { role: noapparmor }
 
+- hosts: servers
+  become: yes
+  serial: 1
+  roles:
+    - { role: aptupdate }
+
 - hosts: core
   become: yes 
+  serial: 1
   roles: 
-    # to be replaced with bind
-    #- { role: dnsserver }
-    - { role: dhcpserver }
+    - { role: dnsserver }
+
+- hosts: core
+  become: 
+  roles: 
+    #- { role: dhcpserver }
     - { role: syslogserver }

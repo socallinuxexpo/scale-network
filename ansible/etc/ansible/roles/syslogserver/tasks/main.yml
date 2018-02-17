@@ -6,7 +6,9 @@
     state: present
 
 - name: start rsyslog service
-  service:
+  systemd:
     name: rsyslog
     enabled: yes
     state: started
+    masked: no
+    daemon_reload: no

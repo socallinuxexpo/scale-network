@@ -1,0 +1,26 @@
+// named.conf.default-zones managed by ansible
+
+zone "." {
+	type hint;
+	file "/etc/bind/db.root";
+};
+
+zone "localhost" {
+	type master;
+	file "/etc/bind/db.local";
+};
+
+zone "0.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.0";
+    };    
+
+zone "127.in-addr.arpa" {
+	type master;
+	file "/etc/bind/db.127";
+};
+
+zone "255.in-addr.arpa" {
+	type master;
+	file "/etc/bind/db.255";
+};

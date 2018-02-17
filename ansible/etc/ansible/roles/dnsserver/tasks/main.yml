@@ -1,20 +1,57 @@
 ---
 
-- name: install unbound package
+- name: install bind9 package
   apt: 
-    name: unbound
-    state: present
+    name: bind9
+    state: latest
+    update_cache: no
+  register: bind_new_install
 
-- name: copy unbound.conf
+- name: generate zone serial number
+  shell: date +%y%m%d%H%M
+  register: date
+  changed_when: false
+
+- name: set fact zone serial
+  set_fact:
+    bind_zone_serial: "{{ date.stdout }}"
+
+- name: copy named.conf files
   copy:
-    src: unbound.conf
-    dest: /etc/unbound/unbound.conf
-    group: root
+    src: "{{ item }}"
+    dest: /etc/bind/
+    owner: root
+    group: bind
     mode: 0644
-  notify: restart unbound
+  notify: restart bind9
+  with_items:
+    - named.conf
+    - named.conf.default-zones
+    - named.conf.scale-zones
+
+- name: create zonefile backup directory
+  file:
+    path: /etc/bind/backup
+    state: directory
+    mode: 0700
+
+- name: copy scale zone files
+  template:
+    src: db.scale.lan.j2
+    dest: "{{ item }}"
+    owner: root
+    group: bind
+    mode: 0644
+  notify: restart bind9
+  with_items:
+    - /etc/bind/db.scale.lan
+    - /etc/bind/backup/db.scale.lan.{{ bind_zone_serial }}
   
-- name: start unbound service
-  service:
-    name: unbound
-    enabled: yes
+- name: start bind9 service
+  systemd: 
+    name: bind9
     state: started
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+  when: not bind_new_install.changed
