@@ -67,6 +67,7 @@ Any configuration directive not applicable to the parsing script is ignored sile
 ```
 SW_JUNOS	<junos_version>				Default JunOS version for switches
 RT_JUNOS	<junos_version>				Default JunOS version for routers
+rootpw		<encrypted password string>		Root Authentication Password
 ```
 ## config/switchtypes
 This file defines the name and type of each switch. It is a  tab delimeted file (tab8

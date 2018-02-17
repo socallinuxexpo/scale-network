@@ -1,0 +1,360 @@
+## Last changed: 2017-03-27 23:18:11 UTC
+version 12.3R6.6;
+system {
+    host-name delong-sw02;
+    root-authentication {
+        encrypted-password "$1$jLjmJdDw$uo3cF/AX5lBe94cTPPkyn.";
+    }
+    login {
+        user owen {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$1$MaaZPnhq$joHwbAF2NjWbNhvjRrPT01";
+                ssh-dsa "ssh-dss AAAAB3NzaC1kc3MAAACBAKmRo5kfW7pXWqkfLKQlUa+Q/ygs7yaIu3wV44uIjL5o4Jk3C+rcwftX2k7dE+iWh4ejtyMw921IWr04YLY4WZ1SuLZ2XmheCR7e1Dw1szsBNBJMSemvnvkXlT6AvRodJ/O+mOQ9kLn7LhEuZdDbF/0JwWSwvE0mB8Vq/K67HaqNAAAAFQCfv32u/keGMTVoySxiZZBhTtB/BwAAAIBUGSIdOqW47TNRCL9MkqaWgfmu/pXsvNtpYzA7r1UQXXgvBWy3/Ux9iSCilPbtzRyvfUBiRH6nP7cliM6Qc49VO9igaIbXlEUPlPjAQrKo8B79fATUEBI7osi7Mnncprrk7/2bC+OisfCBrPteWWfqk9b65O+x2IOJxtEY0F5I7QAAAIAzYSDJvb5mAousCvSQGVZdDqYr65NDuuoHKcZVRoWcwlgLfaIAMN8WDxysDF2q8hc7exyZZ/GCuEnD12wUSYIJifMszH1+d7I2Fx2Wq4G/ej9DkE7cCGH5lCi/e0rtfAF64QNAEKjVBzDvGPaS8KBhpwaJX4VaQAzG9kEWWjcqcA== owen@c2company.com";
+            }
+        }
+    }
+    services {
+        ssh {
+            protocol-version v2;
+        }
+        netconf {
+            ssh;
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+}
+interfaces {
+    interface-range Comcast {
+        member ge-0/0/1;
+        member ge-0/0/2;
+        member ge-0/0/3;
+        member ge-0/1/0;
+        member ge-0/1/1;
+        member ge-0/1/2;
+        member ge-0/1/3;
+        member ge-0/0/0;
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/4 {
+        description "Dining Room";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/5 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/6 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/7 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/8 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/9 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/10 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/11 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/12 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/13 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/14 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/15 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/16 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/17 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/18 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/19 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/20 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/21 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/22 {
+        description Portmaster;
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/23 {
+        description Printer;
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/24 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/25 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/26 {
+        description "airport (which one?)";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/27 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/28 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/29 {
+        description "master bedroom";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/30 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/31 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/32 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/33 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/34 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/35 {
+        description SRX-300;
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/36 {
+        description "MyQ Gateway";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/37 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/38 {
+        ether-options {
+            speed {
+                100m;
+            }
+        }
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/39 {
+        description Mikrotik;
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/40 {
+        description "TP-Link ??";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/41 {
+        description "exercise room ";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/42 {
+        description "Solar Edge Gateway";
+        ether-options {
+            speed {
+                100m;
+            }
+        }
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/43 {
+        description "Computer Room";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/44 {
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/45 {
+        description "Netgear GS724T -- Obsolete Switch";
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/46 {
+        description "Living Room";
+        ether-options {
+            speed {
+                100m;
+            }
+        }
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    ge-0/0/47 {
+        description "WiFi (which one)";
+        ether-options {
+            speed {
+                100m;
+            }
+        }
+        unit 0 {
+            family ethernet-switching;
+        }
+    }
+    vlan {
+        unit 0 {
+            family inet {
+                address 192.159.10.242/24;
+            }
+            family inet6 {
+                address 2620:0:930::f2/128;
+            }
+        }
+        unit 100;
+    }
+}
+routing-options {
+    rib inet6.0 {
+        static {
+            route ::/0 next-hop 2620:0:930::dead:beef;
+        }
+    }
+    static {
+        route 0.0.0.0/0 next-hop 192.159.10.254;
+    }
+}
+protocols {
+    igmp-snooping {
+        vlan all;
+    }
+    rstp;
+    lldp {
+        interface all;
+    }
+    lldp-med {
+        interface all;
+    }
+}
+ethernet-switching-options {
+    storm-control {
+        interface all;
+    }
+}
+vlans {
+    comcast {
+        description "Cable Modems";
+        vlan-id 100;
+        interface {
+            Comcast;
+        }
+        l3-interface vlan.100;
+    }
+    default {
+        vlan-id 1;
+        l3-interface vlan.0;
+    }
+}
