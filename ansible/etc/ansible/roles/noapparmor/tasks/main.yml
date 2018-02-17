@@ -1,13 +1,16 @@
 ---
 
 - name: stop apparmor service
-  service: 
+  systemd: 
     name: apparmor
     state: stopped
     enabled: no
+    masked: yes
+    daemon_reload: yes
   changed_when: false
 
 - name: remove apparmor packages
   apt:
     name: apparmor
     state: absent
+    update_cache: yes

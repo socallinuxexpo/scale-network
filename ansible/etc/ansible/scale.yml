@@ -5,9 +5,20 @@
   roles:
     - { role: noapparmor }
 
+- hosts: servers
+  become: yes
+  serial: 1
+  roles:
+    - { role: aptupdate }
+
 - hosts: core
   become: yes 
+  serial: 1
   roles: 
     - { role: dnsserver }
+
+- hosts: core
+  become: 
+  roles: 
     #- { role: dhcpserver }
-    #- { role: syslogserver }
+    - { role: syslogserver }

@@ -3,7 +3,8 @@
 - name: install bind9 package
   apt: 
     name: bind9
-    state: present
+    state: latest
+    update_cache: no
   register: bind_new_install
 
 - name: generate zone serial number
@@ -47,8 +48,10 @@
     - /etc/bind/backup/db.scale.lan.{{ bind_zone_serial }}
   
 - name: start bind9 service
-  service: 
+  systemd: 
     name: bind9
     state: started
     enabled: yes
+    masked: no
+    daemon_reload: yes
   when: not bind_new_install.changed

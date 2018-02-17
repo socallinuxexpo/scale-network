@@ -1,6 +1,9 @@
 ---
 
 - name: restart bind9
-  service:
+  systemd:
     name: bind9
     state: restarted
+    masked: no
+    enabled: yes
+    daemon_reload: yes
