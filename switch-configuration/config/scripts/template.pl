@@ -1,6 +1,29 @@
 #!/usr/bin/perl
 use strict;
 
+my %Switchtypes;
+
+sub get_switchtype
+{
+  my $hostname = shift(@_);
+  if (defined($Switchtypes{$hostname}))
+  {
+    return(@{$Switchtypes{$hostname}});
+  }
+  else
+  {
+    # Read configuration file and build cache
+    open SWITCHTYPES, "<config/switchtypes" || die("Failed to open switchtypes file\n");
+    foreach(<SWITCHTYPES>)
+    {
+      chomp;
+      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = split(/\t/, $_)
+      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type ];
+    }
+    return(@{$Switchtypes{$hostname}});
+}
+  
+
 sub build_users_from_auth
 {
   my %Keys;
@@ -60,6 +83,10 @@ EOF
 sub build_interfaces_from_config
 {
   my $hostname = shift @_;
+  my $OUTPUT = "";
+  # Retrieve Switch Type Information
+  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  # Read Type file and produce interface configuration
   return("            ##### Interface configuration goes here\n");
 }
 
