@@ -28,14 +28,23 @@
     - named.conf.default-zones
     - named.conf.scale-zones
 
+- name: create zonefile backup directory
+  file:
+    path: /etc/bind/backup
+    state: directory
+    mode: 0700
+
 - name: copy scale zone files
   template:
     src: db.scale.lan.j2
-    dest: /etc/bind/db.scale.lan
+    dest: "{{ item }}"
     owner: root
     group: bind
     mode: 0644
   notify: restart bind9
+  with_items:
+    - /etc/bind/db.scale.lan
+    - /etc/bind/backup/db.scale.lan.{{ bind_zone_serial }}
   
 - name: start bind9 service
   service: 
