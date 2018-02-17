@@ -8,7 +8,6 @@
 - hosts: core
   become: yes 
   roles: 
-    # to be replaced with bind
-    #- { role: dnsserver }
-    - { role: dhcpserver }
-    - { role: syslogserver }
+    - { role: dnsserver }
+    #- { role: dhcpserver }
+    #- { role: syslogserver }

@@ -1,6 +1,4 @@
 todo:
-  * switch dns from unbound to bind
-  * implement scale.lan zone in bind
   * generate A, AAAA, and PTR records dynamically for switches
   * generate A, AAAA, and PTR records dynamically for servers
   * generate DNS views based on source building for scale.lan
