@@ -30,15 +30,12 @@
 
 - name: copy scale zone files
   template:
-    src: "{{ item }}"
-    dest: /etc/bind/
+    src: db.scale.lan.j2
+    dest: /etc/bind/db.scale.lan
     owner: root
     group: bind
     mode: 0644
   notify: restart bind9
-  with_items:
-    - db.0
-    - db.scale.lan
   
 - name: start bind9 service
   service: 

@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: servers
   become: yes
   roles:
     - { role: noapparmor }
