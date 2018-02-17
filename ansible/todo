@@ -1,6 +1,4 @@
 todo:
-  * generate A, AAAA, and PTR records dynamically for switches
-  * generate A, AAAA, and PTR records dynamically for servers
   * generate DNS views based on source building for scale.lan
   * generate DHCP zones dynamically for vlans
   * supply per building DNS priority, loghost, ntp via DHCP
