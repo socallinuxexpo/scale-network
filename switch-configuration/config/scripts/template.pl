@@ -83,11 +83,52 @@ EOF
 sub build_interfaces_from_config
 {
   my $hostname = shift @_;
-  my $OUTPUT = "";
   # Retrieve Switch Type Information
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my $OUTPUT = "# Generated interface configuration for $hostname (Type: $Type)\n";
+  my $port = 0;
   # Read Type file and produce interface configuration
-  return("            ##### Interface configuration goes here\n");
+  open SWITCHTYPE, "<types/$Type" || die("No configuration file for type $Type (switch: $hostname)\n");
+  while ($_ = <SWITCHTYPE>)
+  {
+    chomp;
+    s@//.*@@;
+    while ($_ =~ /\s+\\\s*$/)
+    {
+      $_ =~ s/\s+\\\s*$/ /;
+      $_ .= <SWITCHTYPE>;
+      chomp;
+      s@//.*@@;
+    }
+    continue if ($_ =~ /^\s*$/);  # Skip effectively blank lines.
+    # Now we have a full line (including it's continuations)
+    my @tokens = split(/\t/, $_); # Split line into tokens
+    my $cmd = shift(@tokens);     # Command is always first token.
+    if ($cmd eq "RSRVD")
+    {
+      # Create empty ports matching reserved port count 
+      my $portcount = shift(@tokens);
+    }
+    elsif ($cmd eq "TRUNK")
+    {
+      # Create specified TRUNK port -- Warn if it doesn't match port counter
+      my $iface = shift(@tokens);
+      my $vlans = shift(@tokens);
+      my $portnum = $iface;
+      $portnum =~ s@^ge-0/0/(\d+)$@\1@;
+      if ($portnum != $port)
+      {
+        warn("Port number in Trunk: $_ does not match expected port $port (Host: $hostname, Type: $Type)\n");
+      }
+    }
+    elsif ($cmd eq "VLAN")
+    {
+      # Create specified number of interfaces as switchport members of specified VLAN
+      my $vlan = shift(@tokens);
+      my $count = shift(@tokens);
+    }
+  }
+  return($OUTPUT);
 }
 
 sub build_l3_from_config
