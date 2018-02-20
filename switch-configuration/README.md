@@ -110,9 +110,11 @@ delimited (tab8 formatting preferred).
 Configuration elements include:
 ```
 RSRVD	<number_of_ports>
-VLAN	<vlan_name> <number_of_ports> [<ip6_address> [<ip4_address>]]
+VLAN	<vlan_name> <number_of_ports>
 TRUNK	<port> <vlan_name>[,<vlan_name>...]
 JUNOS	<junos_version>
+PVLAN   <vlan_name> <number_of_ports>
+FIBER   <port> <vlan_name>[,<vlan_name>...]
 ```
 
 ## Source for Vendor Booth Information:
