@@ -9,5 +9,5 @@ VLAN	cfNOC			506	2001:470:f325:506::/64	10.128.6.0/24	Wired network in NOC
 VLAN	cfSigns			507	2001:470:f325:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only
 VLAN	cfStaff			508	2001:470:f325:508::/64	10.128.8.0/24	Staff Wifi Network
 VLAN	cfHam_N6S		509	2001:470:f325:509::/64	10.128.9.0/24	HAM radio station in Conference Center
-VLAN	//510-599 not used
+//510-599 not used
 VLAN	cfDWCC			600	2001:470:f325:600::/64	10.128.100.0/24	Zach's Distributed Wifi Capability Collector

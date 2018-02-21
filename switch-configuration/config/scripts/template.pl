@@ -1,4 +1,10 @@
 #!/usr/bin/perl
+#
+# This script must be run from the .../config directory (the parent directory
+# of the scripts directory where this script lives. All scripts are expected
+# to be run from this location for consistency and ease of use.
+
+
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
 
@@ -53,14 +59,15 @@ sub read_config_file
 {
   my $filename = shift(@_);
   my @OUTPUT;
-  open CONFIG, "<$filename" || die("Failed to open $filename as CONFIG\n");
-  while ($_ = <CONFIG>)
+  my $CONFIG;
+  open $CONFIG, "<$filename" || die("Failed to open $filename as CONFIG\n");
+  while ($_ = <$CONFIG>)
   {
     chomp;
     debug(5, "Based input: $_\n");
     while ($_ =~ s/ \\$/ /)
     {
-      my $x = <CONFIG>;
+      my $x = <$CONFIG>;
       chomp($x);
       $x =~ s/^\s*//;
       debug(5, "\tC->: $x\n");
@@ -73,15 +80,17 @@ sub read_config_file
     if ($_ =~ /^\s*#include (.*)/)
     {
         debug(5, "\tProcessing included file $1\n");
-        my @input = read_config_file($1);
+        my $input = read_config_file($1);
         debug(5, "\t End of included file $1\n");
-        push @OUTPUT, @input;
+        push @OUTPUT, @{$input};
     }
     else
     {
         push @OUTPUT, $_;
     }
   }
+  close $CONFIG;
+  debug(5, "Configuration file $filename total output lines: ", $#OUTPUT,"\n");
   return(\@OUTPUT);
 }
 sub get_switchtype
@@ -326,8 +335,126 @@ sub build_vlans_from_config
   # MgtVL is treated special because it has a layer 3 interface spec
   # to interface vlan.$MgtVL.
 
-  ##FIXME## Complete this section.
-  return("            #### VLAN configuration goes here\n");
+  my $VLANS = read_config_file("vlans");
+  # Convert configuration data to hash with VLAN ID as key
+  my %VLANS;         # Hash containing VLAN data structure as follows:
+                     # %VLANS = {
+                     #     <VLANID> => [ <type>, <name>, <IPv6>,
+                     #                   <IPv4>, <desc>, <prim> ],
+                     #     ...
+                     # }
+  my %VLANS_byname;  # Hash mapping VLAN Name => ID
+  my $OUTPUT = "";
+
+  my $type;   # Type of VLAN (VLAN, PRIM, ISOL, COMM)
+              # Where:
+              #    VLAN = Ordinary VLAN
+              #    PRIM = Primary PVLAN
+              #    ISOL = Isolated Secondary PVLAN
+              #    COMM = Community Secondary PVLAN
+  my $name;   # VLAN Name
+  my $vlid;   # VLAN ID (802.1q tag number)
+  my $IPv6;   # IPv6 Prefix (For reference and possible future consistency
+              #   checks). Not used in config generation for switches..
+  my $IPv4;   # IPv4 Prefix (For reference and possible future consistency
+              #   checks). Not used in config generation for switches..
+  my $desc;   # Description
+  my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
+  debug(5, "Got ", $#{$VLANS}, " Lines of VLAN configuraton\n");
+  foreach(@{$VLANS})
+  {
+    my @TOKENS;
+    @TOKENS = split(/\t/, $_);
+    $prim = 0;
+    $name = $TOKENS[1];
+    if ($TOKENS[0] eq "SVLAN") # Secondary PVLAN
+    {
+      $type = $TOKENS[2];
+      $vlid = $TOKENS[3];
+      $prim = $TOKENS[4];
+      $desc = $TOKENS[5];
+      # For Secondary VLANs, retrieve prefix from Primary
+      $IPv6 = ${$VLANS{$prim}[2]};
+      $IPv4 = ${$VLANS{$prim}[3]};
+    }
+    else
+    {
+      $type = $TOKENS[0]; # VLAN or PVLAN
+      $vlid = $TOKENS[2];
+      $desc = $TOKENS[5];
+      $IPv6 = $TOKENS[3];
+      $IPv4 = $TOKENS[4];
+    }
+    $type = "PRIM" if ($type eq "PVLAN"); # FIXUP Type
+    debug(5, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
+    $VLANS_byname{$name} = $vlid;
+    $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
+                      ($prim ? $prim : undef) ];
+  }
+
+  # Now that we have a hash containing all of the VLAN configurations, iterate
+  # through and write out the switch configuration vlans {} section.
+  ##FIXME## Need to figure out how to integrate interfaces and trunks,
+  ##FIXME## especially pvlan trunks. currently not handled. Manual config
+  ##FIXME## Edits will be required (This will be noted in generated config).
+  foreach(sort(keys(%VLANS)))
+  {
+    ($type, $name, $IPv6, $IPv4, $desc, $prim) = @{$VLANS{$_}};
+    if ($type eq "VLAN")
+    {
+      $OUTPUT .= <<EOF;
+    $name {
+        description "$desc";
+        vlan-id $_;
+EOF
+      $OUTPUT .= "        l3-interface vlan.$_;\n" if ($_ eq $MgtVL);
+      $OUTPUT .= "    }\n";
+    }
+    elsif ($type eq "PRIM")
+    {
+      $OUTPUT .= <<EOF;
+    $name {
+        description "$desc";
+        vlan-id $_;
+        interface {
+            ### WARNING ### Trunks must be manually configured
+            # ge-0/1/0.0 {
+            #     pvlan-trunk;
+            # }
+        }
+        no-local-switching;
+        isolation-id $_;
+      }
+EOF
+    }
+    elsif ($type eq "COMM")
+    {
+      $OUTPUT .= <<EOF;
+    $name {
+        description "COMMUNITY $desc";
+        vlan-id $_;
+        primary-vlan $prim;
+    }
+EOF
+    }
+    elsif ($type eq "ISOL")
+    {
+      $OUTPUT .= <<EOF;
+    $name {
+        description "ISOLATED $desc";
+        vlan-id $_;
+        primary-vlan $prim;
+        no-local-switching;
+        isolation-id $_;
+    }
+EOF
+    }
+    else
+    {
+        warn("Skipped unknown VLAN type ($_ => $name type=$type).\n");
+    }
+  }
+  return($OUTPUT);
 }
 
 
@@ -402,7 +529,7 @@ ethernet-switching-options {
     }
 }
 vlans {
-    $VLAN_CONFIGURATION
+$VLAN_CONFIGURATION
 }
 EOF
 

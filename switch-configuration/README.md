@@ -95,7 +95,7 @@ VLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
 
 PVLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
                         Defines a primary PVLAN.
-SVLAN <vlan_name> <ISOL|COMM> <vlan_number> <pvlan_number> <comment>
+SVLAN <vlan_name> <ISOL|COMM> <vlan_number> <pvlan_name> <comment>
                         Defines a secondary PVLAN. ISOL makes an isolated PVLAN. COMM makes a Community
                         PVLAN.
 
