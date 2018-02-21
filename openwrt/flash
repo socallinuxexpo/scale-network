@@ -1,4 +1,4 @@
-#!/usr/bin/expect
+#!/usr/bin/env expect
 spawn /usr/sbin/arp -d 192.168.1.1
 spawn ping -n 192.168.1.1
 expect {
