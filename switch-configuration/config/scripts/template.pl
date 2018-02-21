@@ -1,4 +1,7 @@
 #!/usr/bin/perl
+##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
+##FIXME## those defined in the types/* files.
+
 use strict;
 
 my $DEBUGLEVEL = 5;
@@ -10,6 +13,40 @@ sub debug
   my $lvl = shift(@_);
   my $msg = join("", @_);
   print STDERR $msg if ($lvl >= $DEBUGLEVEL);
+}
+
+sub expand_double_colon
+{
+  my $addr = shift(@_);
+  debug(5, "Expanding: $addr\n");
+  my ($left, $right) = split(/::/, $addr);
+  debug(5, "\t$left <-> $right\n");
+  my $lcount = 1;
+  my $rcount = 1;
+  $lcount ++ while ($left  =~ m/:/g);
+  $rcount ++ while ($right =~ m/:/g);
+  my $needful = 8 - ($lcount + $rcount); # Number of quartets needed
+  my $center = ":0" x $needful;
+  debug(5, "\t Needed $needful -> $center\n");
+  debug(5, "Returning: $left$center".":$right\n");
+  return ($left. $center. ":". $right);
+}
+
+sub expand_quartet
+{
+  my $quartet = shift(@_);
+  $quartet = "0".$quartet while length($quartet < 4);
+}
+
+sub get_default_gw
+{
+  # Assumes that the ::1 address of the /64 containing the given $addr
+  # is the default gateway. Returns that address.
+  my $addr = shift(@_);
+  $addr = expand_double_colon($addr) if ($addr =~ /::/);
+  my @quartets = split(/:/, $addr);
+  my $gw = join(":", @quartets[0 .. 3])."::"."1";
+  return($gw);
 }
 
 sub read_config_file
@@ -33,7 +70,17 @@ sub read_config_file
     next if ($_ =~ /^\s*$/); # Ignore blank lines
     $_ =~ s/\t+/\t/g;
     debug(5, "Cooked output: $_\n");
-    push @OUTPUT, $_;
+    if ($_ =~ /^\s*#include (.*)/)
+    {
+        debug(5, "\tProcessing included file $1\n");
+        my @input = read_config_file($1);
+        debug(5, "\t End of included file $1\n");
+        push @OUTPUT, @input;
+    }
+    else
+    {
+        push @OUTPUT, $_;
+    }
   }
   return(\@OUTPUT);
 }
@@ -143,8 +190,8 @@ EOF
 sub build_interfaces_from_config
 {
   ##FIXME## There are a number of places where this subroutine assumes
-  # that all interaces are ge-0/0/*
-  # Covers all but fiber ports for SCALE 16x.
+  ##FIXME## that all interaces are ge-0/0/*
+  ##FIXME## Covers all but fiber ports for SCALE 16x.
   my $hostname = shift @_;
   # Retrieve Switch Type Information
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
@@ -182,7 +229,8 @@ EOF
     {
       # Create specified TRUNK port -- Warn if it doesn't match port counter
       ##FIXME## This really should convert to using port counts like VLAN
-      # Access ports do (except for FIBER directive).
+      ##FIXME## Access ports do (except for FIBER directive).
+
       ##FIXME## Build interface ranges
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
@@ -226,7 +274,7 @@ EOF
       # For convenience, use the VLAN name as the interface range name.
       
       ##FIXME## Using the VLAN name means only one definition per VLAN
-      # in a types file is allowed, but this isn't validated.
+      ##FIXME## in a types file is allowed, but this isn't validated.
       my $MEMBERS = "";
       while ($count)
       {
@@ -248,19 +296,6 @@ $MEMBERS
     }
 EOF
     }
-    elsif ($cmd eq "PVLAN")
-    {
-      # Create specified number of PVLAN ports. Ideally, use Vendor booth
-      # information table and Expo switch location information to
-      # determine which vendors are served and allocate community VLANs
-      # and put 2 ports into each applicable community VLAN.
-      #
-      ##FIXME##
-      # In this version, just create ports in the global isolation VLAN
-      # and allow for moving them into community VLANs manually later.
-
-      ##FIXME## Finish this section
-    }
   }
   return($OUTPUT);
 }
@@ -268,13 +303,30 @@ EOF
 sub build_l3_from_config
 {
   my $hostname = shift @_;
-  return("            ##### Layer 3 configuration goes here\n",
-			"2001:470:dead:beef::1");
+  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my $OUTPUT = "    # Automatically Generated Layer 3 Configuration ".
+                "for $hostname (MGT: $MgtVL Addr: $IPv6addr Type: $Type\n";
+  $OUTPUT .= <<EOF;
+    vlan {
+        unit $MgtVL {
+            family inet6 {
+                address $IPv6addr/64;
+            }
+        }
+    }
+EOF
+  my $gw = get_default_gw($IPv6addr);
+  return($OUTPUT, $gw);
 }
 
 sub build_vlans_from_config
 {
   my $hostname = shift @_;
+  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  # MgtVL is treated special because it has a layer 3 interface spec
+  # to interface vlan.$MgtVL.
+
+  ##FIXME## Complete this section.
   return("            #### VLAN configuration goes here\n");
 }
 
@@ -324,7 +376,6 @@ $USER_AUTHENTICATION
 interfaces {
     $INTERFACES_PHYSICAL
     $INTERFACES_LAYER3
-    }
 }
 routing-options {
     rib inet6.0 {

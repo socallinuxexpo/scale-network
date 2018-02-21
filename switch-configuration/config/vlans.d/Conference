@@ -1,13 +1,13 @@
 //	Conference	Center	--	VLANS	500-899
-cfSCALE-SLOW		500	2001:470:f325:500::/64	10.128.128.0/21	2.4G Wireless Network in Conference Center
-cfSCALE-FAST		501	2001:470:f325:501::/64	10.128.136.0/21	5G Wireless Network in Conference Center
-cfSpeaker		502	2001:470:f325:502::/64	10.128.2.0/24	Speaker Network
-cfInfra			503	2001:470:f325:503::/64	0.0.0.0/0	SCALE Network Infrastructure and Servers (Conference Center)
-cfCTF			504	2001:470:f325:504::/64	10.128.4.0/24	Capture the Flag
-cfAVLAN			505	2001:470:f325:505::/64	10.128.5.0/24	Audio Visual Network (DHCP Helper to AV server)
-cfNOC			506	2001:470:f325:506::/64	10.128.6.0/24	Wired network in NOC
-cfSigns			507	2001:470:f325:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only
-cfStaff			508	2001:470:f325:508::/64	10.128.8.0/24	Staff Wifi Network
-cfHam_N6S		509	2001:470:f325:509::/64	10.128.9.0/24	HAM radio station in Conference Center
-//510-599 not used
-cfDWCC			600	2001:470:f325:600::/64	10.128.100.0/24	Zach's Distributed Wifi Capability Collector
+VLAN	cfSCALE-SLOW		500	2001:470:f325:500::/64	10.128.128.0/21	2.4G Wireless Network in Conference Center
+VLAN	cfSCALE-FAST		501	2001:470:f325:501::/64	10.128.136.0/21	5G Wireless Network in Conference Center
+VLAN	cfSpeaker		502	2001:470:f325:502::/64	10.128.2.0/24	Speaker Network
+VLAN	cfInfra			503	2001:470:f325:503::/64	0.0.0.0/0	SCALE Network Infrastructure and Servers (Conference Center)
+VLAN	cfCTF			504	2001:470:f325:504::/64	10.128.4.0/24	Capture the Flag
+VLAN	cfAVLAN			505	2001:470:f325:505::/64	10.128.5.0/24	Audio Visual Network (DHCP Helper to AV server)
+VLAN	cfNOC			506	2001:470:f325:506::/64	10.128.6.0/24	Wired network in NOC
+VLAN	cfSigns			507	2001:470:f325:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only
+VLAN	cfStaff			508	2001:470:f325:508::/64	10.128.8.0/24	Staff Wifi Network
+VLAN	cfHam_N6S		509	2001:470:f325:509::/64	10.128.9.0/24	HAM radio station in Conference Center
+VLAN	//510-599 not used
+VLAN	cfDWCC			600	2001:470:f325:600::/64	10.128.100.0/24	Zach's Distributed Wifi Capability Collector

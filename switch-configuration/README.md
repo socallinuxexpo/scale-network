@@ -90,8 +90,14 @@ The syntax of a config/vlans file (either master or within an included file) is 
 ```
 #include <filename>				Include <filename> from vlans.d a la macro substitution
 
-<vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
-						Defines a VLAN.
+VLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
+						Defines a Normal VLAN.
+
+PVLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
+                        Defines a primary PVLAN.
+SVLAN <vlan_name> <ISOL|COMM> <vlan_number> <pvlan_number> <comment>
+                        Defines a secondary PVLAN. ISOL makes an isolated PVLAN. COMM makes a Community
+                        PVLAN.
 
 [<directive>] // <text>				Any text after a double slash is considered a comment
 						to the end of line.  It is ignored by the parser.
@@ -113,9 +119,12 @@ RSRVD	<number_of_ports>
 VLAN	<vlan_name> <number_of_ports>
 TRUNK	<port> <vlan_name>[,<vlan_name>...]
 JUNOS	<junos_version>
-PVLAN   <vlan_name> <number_of_ports>
 FIBER   <port> <vlan_name>[,<vlan_name>...]
 ```
+
+Note: A PVLAN port and a VLAN port are identical here. PVLANs are defined in the VLANs portion of the configuration
+file which is controlled by the vlans and vlans.d/* files.
+
 
 ## Source for Vendor Booth Information:
 https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuYxmU/edit?ts=5a80d55a#gid=1023875758
