@@ -1,5 +1,7 @@
 # Ignore openwrt build dir
 openwrt/build
+openwrt/*.img
+openwrt/aplist
 *.swp
 
 # Created by https://www.gitignore.io/api/osx,vim,emacs,windows,libreoffice,sublimetext
