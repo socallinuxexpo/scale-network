@@ -55,6 +55,12 @@ cat /etc/os-release
 ```
 # Notes
 
+## Files
+### SSH
+1. `/root` - Must be permissions `755` (or less perm) or ssh-key auth wont work
+2. openssh needs to have both `/etc/passwd` and `/etc/hosts` to allow ssh login
+
+
 ## Make
 
 * http://makefiletutorial.com/
