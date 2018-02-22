@@ -9,32 +9,35 @@
 ##FIXME## those defined in the types/* files.
 
 use strict;
-
-my $DEBUGLEVEL = 5;
+my $DEBUGLEVEL = 0;
 
 my %Switchtypes;
 
+sub set_debug_level
+{
+    $DEBUGLEVEL = shift(@_);
+}
 sub debug
 {
   my $lvl = shift(@_);
   my $msg = join("", @_);
-  print STDERR $msg if ($lvl >= $DEBUGLEVEL);
+  print STDERR $msg if ($lvl <= $DEBUGLEVEL);
 }
 
 sub expand_double_colon
 {
   my $addr = shift(@_);
-  debug(5, "Expanding: $addr\n");
+  debug(8, "Expanding: $addr\n");
   my ($left, $right) = split(/::/, $addr);
-  debug(5, "\t$left <-> $right\n");
+  debug(8, "\t$left <-> $right\n");
   my $lcount = 1;
   my $rcount = 1;
   $lcount ++ while ($left  =~ m/:/g);
   $rcount ++ while ($right =~ m/:/g);
   my $needful = 8 - ($lcount + $rcount); # Number of quartets needed
   my $center = ":0" x $needful;
-  debug(5, "\t Needed $needful -> $center\n");
-  debug(5, "Returning: $left$center".":$right\n");
+  debug(9, "\t Needed $needful -> $center\n");
+  debug(8, "Returning: $left$center".":$right\n");
   return ($left. $center. ":". $right);
 }
 
@@ -64,24 +67,24 @@ sub read_config_file
   while ($_ = <$CONFIG>)
   {
     chomp;
-    debug(5, "Based input: $_\n");
+    debug(8, "Base input: $_\n");
     while ($_ =~ s/ \\$/ /)
     {
       my $x = <$CONFIG>;
       chomp($x);
       $x =~ s/^\s*//;
-      debug(5, "\tC->: $x\n");
+      debug(9, "\tC->: $x\n");
       $_ .= $x;
     }
     $_ =~ s@//.*@@; # Eliminate comments
     next if ($_ =~ /^\s*$/); # Ignore blank lines
     $_ =~ s/\t+/\t/g;
-    debug(5, "Cooked output: $_\n");
+    debug(8, "Cooked output: $_\n");
     if ($_ =~ /^\s*#include (.*)/)
     {
-        debug(5, "\tProcessing included file $1\n");
+        debug(8, "\tProcessing included file $1\n");
         my $input = read_config_file($1);
-        debug(5, "\t End of included file $1\n");
+        debug(8, "\t End of included file $1\n");
         push @OUTPUT, @{$input};
     }
     else
@@ -90,31 +93,58 @@ sub read_config_file
     }
   }
   close $CONFIG;
-  debug(5, "Configuration file $filename total output lines: ", $#OUTPUT,"\n");
+  debug(6, "Configuration file $filename total output lines: ", $#OUTPUT,"\n");
   return(\@OUTPUT);
 }
+
+sub get_switchlist
+{
+  my @list = sort(keys(%Switchtypes));
+  debug(5, "get_switchlist called\n");
+  if (scalar(@list))
+  {
+    debug(5, "Returning ",$#list," Switch Names.\n");
+    return \@list;
+  }
+  else
+  {
+    get_switchtype("anonymous");
+    my @list = sort(keys(%Switchtypes));
+    debug(5, "Returning ",scalar(@list)," Switch Names.\n");
+    return \@list;
+  }
+}
+
+
 sub get_switchtype
 {
   my $hostname = shift(@_);
+  my @list = sort(keys(%Switchtypes));
   if (defined($Switchtypes{$hostname}))
   {
     return(@{$Switchtypes{$hostname}});
   }
+  elsif($hostname ne "anonymous" && scalar(@list))
+  {
+      die("Name: $hostname not found in switchtypes file\n");
+  }
   else
   {
     # Read configuration file and build cache
+    debug(5, "Building switchtypes cache\n");
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
       my ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = split(/\t+/, $_);
-      debug(5,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type)\n");
+      debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type)\n");
       $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type ];
     }
-    if (!defined($Switchtypes{$hostname}))
+    if ($hostname ne "anonymous" && !defined($Switchtypes{$hostname}))
     {
       die("Name: $hostname not found in switchtypes file\n");
     }
-    return(@{$Switchtypes{$hostname}});
+    return(@{$Switchtypes{$hostname}}) unless($hostname eq "anonymous");
+    return(undef);
   }
 }
   
@@ -209,20 +239,20 @@ sub build_interfaces_from_config
   my $port = 0;
   # Read Type file and produce interface configuration
   my $switchtype = read_config_file("types/$Type");
-  debug(5, "$hostname: type: $Type, received ", $#{$switchtype},
+  debug(9, "$hostname: type: $Type, received ", $#{$switchtype},
       " lines of config\n");
   foreach(@{$switchtype})
   {
     my @tokens = split(/\t/, $_); # Split line into tokens
     my $cmd = shift(@tokens);     # Command is always first token.
-    debug(5, "\tCommand: $cmd ", join(",", @tokens), "\n");
+    debug(9, "\tCommand: $cmd ", join(",", @tokens), "\n");
     if ($cmd eq "RSRVD")
     {
       # Create empty ports matching reserved port count 
       my $portcount = shift(@tokens);
       while ($portcount)
       {
-        debug(5, "\t\tPort ge-0/0/$port\n");
+        debug(9, "\t\tPort ge-0/0/$port\n");
         $OUTPUT .= <<EOF;
     inactive: ge-0/0/$port {
         unit 0 {
@@ -243,7 +273,7 @@ EOF
       ##FIXME## Build interface ranges
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
-      debug(5, "\t\t$iface ($vlans)\n");
+      debug(9, "\t\t$iface ($vlans)\n");
       $vlans =~ s/\s*,\s*/ /g;
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
@@ -277,7 +307,7 @@ EOF
       # of specified VLAN
       my $vlan = shift(@tokens);
       my $count = shift(@tokens);
-      debug(5, "\t$count members of VLAN $vlan\n");
+      debug(9, "\t$count members of VLAN $vlan\n");
       # Use interface-ranges to make the configuration more readable
 
       # For convenience, use the VLAN name as the interface range name.
@@ -287,7 +317,7 @@ EOF
       my $MEMBERS = "";
       while ($count)
       {
-          debug(5, "\t\tMember ge-0/0/$port remaining $count\n");
+          debug(9, "\t\tMember ge-0/0/$port remaining $count\n");
           $MEMBERS.= "        ge-0/0/$port;\n";
           $count--;
           $port++;
@@ -360,7 +390,7 @@ sub build_vlans_from_config
               #   checks). Not used in config generation for switches..
   my $desc;   # Description
   my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
-  debug(5, "Got ", $#{$VLANS}, " Lines of VLAN configuraton\n");
+  debug(9, "Got ", $#{$VLANS}, " Lines of VLAN configuraton\n");
   foreach(@{$VLANS})
   {
     my @TOKENS;
@@ -386,7 +416,7 @@ sub build_vlans_from_config
       $IPv4 = $TOKENS[4];
     }
     $type = "PRIM" if ($type eq "PVLAN"); # FIXUP Type
-    debug(5, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
+    debug(9, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     $VLANS_byname{$name} = $vlid;
     $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
                       ($prim ? $prim : undef) ];
@@ -536,8 +566,8 @@ EOF
   return($OUTPUT);
 }
 
-my $cf = build_config_from_template("NW-IDF",
-    '$1$qQMsQS3c$DmHnv3mHPwDuE/ILQ.yLl.');
-print $cf;
+#my $cf = build_config_from_template("NW-IDF",
+#    '$1$qQMsQS3c$DmHnv3mHPwDuE/ILQ.yLl.');
+#print $cf;
 
 1;
