@@ -4,7 +4,6 @@ todo:
   * implement ntpd servers
   * implement ntp client on all servers
   * add ntp.scale.lan records to zone
-  * reduce a zonefile serial number from triggering a change (jinja cache)
   * extend inventory datastructure to support generating PTRs
   * implement PTR zones for ipv4 and ipv6
   * generate DNS views based on source building for scale.lan
@@ -18,7 +17,7 @@ todo:
   * implement existing php sign server (unless there's a suitable replacement)
   * seperate ssh keys into admin/normal contexts (might need to touch switch perl as well)
   * create users and automatically deploy ssh keys (same used for switches)
-  * deployer appropriate sudoers file
+  * deploy appropriate sudoers file
   * add APs to inventory
   * add PIs to inventory
   * for ipv6 setup an address per service (if possible)

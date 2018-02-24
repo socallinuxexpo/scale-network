@@ -7,14 +7,11 @@
     update_cache: no
   register: bind_new_install
 
-- name: generate zone serial number
-  shell: date +%y%m%d%H%M
-  register: date
-  changed_when: false
-
-- name: set fact zone serial
-  set_fact:
-    bind_zone_serial: "{{ date.stdout }}"
+- name: create zonefile backup directory
+  file:
+    path: /etc/bind/backup
+    state: directory
+    mode: 0700
 
 - name: copy named.conf files
   copy:
@@ -29,11 +26,28 @@
     - named.conf.default-zones
     - named.conf.scale-zones
 
-- name: create zonefile backup directory
-  file:
-    path: /etc/bind/backup
-    state: directory
-    mode: 0700
+- name: copy scale record files
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/bind/{{ item }}"
+    owner: root
+    group: bind
+    mode: 0644
+  register: records
+  with_items:
+    - db.scale.lan.records.servers
+    - db.scale.lan.records.switches
+
+- name: generate zone serial number
+  shell: date +%y%m%d%H%M
+  register: date
+  when: records.changed
+  changed_when: false
+
+- name: set fact zone serial
+  set_fact:
+    bind_zone_serial: "{{ date.stdout }}"
+  when: records.changed
 
 - name: copy scale zone files
   template:
@@ -43,9 +57,22 @@
     group: bind
     mode: 0644
   notify: restart bind9
+  when: records.changed
   with_items:
     - /etc/bind/db.scale.lan
     - /etc/bind/backup/db.scale.lan.{{ bind_zone_serial }}
+
+- name: copy scale record backup files
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/bind/backup/{{ item }}.{{ bind_zone_serial }}"
+    owner: root
+    group: bind
+    mode: 0644
+  when: records.changed
+  with_items:
+    - db.scale.lan.records.servers
+    - db.scale.lan.records.switches
   
 - name: start bind9 service
   systemd: 
