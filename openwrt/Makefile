@@ -4,19 +4,15 @@
 #
 
 BUILD_DIR = build
-DEFAULT_PACKAGES = -dnsmasq -firewall -odhcpd-ipv6only -odhcpd -ppp -ppp-mod-pppoe kmod-usb-serial kmod-usb-serial-ftdi kmod-usb-serial-pl2303
-BUILD_3700_FLAGS = PROFILE=wndr3700v2 PACKAGES="$(DEFAULT_PACKAGES)"
-BUILD_3800_FLAGS = PROFILE=wndr3800 PACKAGES="$(DEFAULT_PACKAGES)"
-BUILD_3800CH_FLAGS = PROFILE=wndr3800ch PACKAGES="$(DEFAULT_PACKAGES)"
 BUILD_SECRETS = ../facts/secrets/openwrt.yaml
 
 # bins
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-LEDE_VER = 17.01.4
-IMAGEBUILDER = lede-imagebuilder-$(LEDE_VER)-ar71xx-generic.Linux-x86_64
-TAR_EXT = .tar.xz
+LEDE_VER = 7da64807002cbe665176b125d8b2ee1a46d4e785
+IMAGEBUILDER = source-$(LEDE_VER)
+TAR_EXT = .tar.gz
 
 TMPL_SRC_DIR = files
 TMPL_OUT_DIR = $(BUILD_DIR)/$(IMAGEBUILDER)/files
@@ -27,24 +23,25 @@ endif
 
 PHONY: download-image extract templates clean clean-templates
 
-download-image: $(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT)
+download-image: $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
 
 extract: $(BUILD_DIR)/$(IMAGEBUILDER)
 
-$(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT): | $(BUILD_DIR)
-	curl -o $(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT) https://downloads.lede-project.org/releases/$(LEDE_VER)/targets/ar71xx/generic/$(IMAGEBUILDER)$(TAR_EXT)
+$(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT): | $(BUILD_DIR)
+	curl -L -o $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(LEDE_VER)$(TAR_EXT)
 
-$(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(IMAGEBUILDER)$(TAR_EXT)
-	@cd $(BUILD_DIR) && tar -xJmf  $(IMAGEBUILDER)$(TAR_EXT)
+$(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
+	@cd $(BUILD_DIR) && tar -zxmf  $(LEDE_VER)$(TAR_EXT)
 
-build-3700: extract
-	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) image $(BUILD_3700_FLAGS)
+$(BUILD_DIR)/$(IMAGEBUILDER)/.config: extract
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
+	  && ./scripts/feeds update -a \
+	  && ./scripts/feeds install -a	\
+	  && cp ../../diffconfig .config \
+	  && make defconfig
 
-build-3800: extract
-	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) image  $(BUILD_3800_FLAGS)
-
-build-3800ch: extract
-	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) image $(BUILD_3800CH_FLAGS)
+build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) download && $(MAKE) V=s j=4
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
