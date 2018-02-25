@@ -3,6 +3,7 @@ todo:
   * be able to derive IP of PIs and APs via SLAAC
   * implement ntpd servers
   * implement ntp client on all servers
+  * implement dnsclient type functionality for servers
   * generate DNS views based on source building for scale.lan
   * extend inventory datastructure to support vlan definitions
   * generate DHCP zones dynamically for vlans
