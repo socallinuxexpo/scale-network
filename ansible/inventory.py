@@ -67,21 +67,21 @@ def populatevlans():
         for line in flines:
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
-                ipv6 = elems[2].split('/')
+                ipv6 = elems[3].split('/')
                 if ipv6[1] == "0":
                     ipv6 = [" ", " "]
-                ipv4 = elems[3].split('/')
+                ipv4 = elems[4].split('/')
                 if ipv4[1] == "0":
                     ipv4 = [" ", " "]
                 vlans.append({
-                    "name": elems[0],
-                    "id": elems[1],
+                    "name": elems[1],
+                    "id": elems[2],
                     "ipv6prefix": ipv6[0],
                     "ipv6bitmask": ipv6[1],
                     "ipv4prefix": ipv4[0],
                     "ipv4bitmask": ipv4[1],
                     "building": file,
-                    "description": elems[4].split('\n')[0],
+                    "description": elems[5].split('\n')[0],
                 })
 
 
@@ -191,10 +191,7 @@ def populateinv():
 
 def main():
 
-    # the format of vlans.d files seems to have changed upstream
-    # commenting out for now, since still unsued here
-    # populatevlans()
-
+    populatevlans()
     populateswitches()
     populateservers()
     populateinv()
