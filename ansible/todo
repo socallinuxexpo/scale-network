@@ -4,8 +4,6 @@ todo:
   * supply per building DNS priority, loghost, ntp via DHCP
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
-  * implement ntpd servers
-  * implement ntpd client on all servers
   * implement zabbix
   * implement zabbix dynamic additions
   * implement sign server
