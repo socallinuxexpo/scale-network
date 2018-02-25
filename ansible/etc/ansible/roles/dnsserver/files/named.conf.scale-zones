@@ -5,3 +5,12 @@ zone "scale.lan" {
 	file "/etc/bind/db.scale.lan";
 	};
 
+zone "ip6.arpa" {
+	type master;
+	file "/etc/bind/db.ip6.arpa";
+	};
+
+zone "10.in-addr.arpa." {
+	type master;
+	file "/etc/bind/db.10.ip4.arpa";
+};
