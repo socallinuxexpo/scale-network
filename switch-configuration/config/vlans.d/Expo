@@ -14,6 +14,8 @@ VLAN	exRegistration		110	2001:470:f325:110::/64	0.0.0.0/0	Registration Network (
 VLAN	exDWCC			200	2001:470:f325:200::/64	10.0.100.0/24	Zach's Distributed Wifi Capability Collector
 //201 through 299 not used
 //300 through 499 Vendors
-PVLAN	Vendor			300	2001:470:f325:300::/64	10.100.0.0/20	Vendor PVLAN
+PVLAN	exVendor		300	2001:470:f325:300::/64	10.100.0.0/20	Vendor PVLAN
 //301-499 are dynamically generated from Booth information file as community VLANs.
+//		Name			Type	VLID	PVLAN		Comment
+SVLAN	V_Microsoft		COMM	301		exVendor	Sec. Comm. VLAN for Microsoft
 
