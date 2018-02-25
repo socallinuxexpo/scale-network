@@ -3,9 +3,6 @@ todo:
   * be able to derive IP of PIs and APs via SLAAC
   * implement ntpd servers
   * implement ntp client on all servers
-  * add ntp.scale.lan records to zone
-  * extend inventory datastructure to support generating PTRs
-  * implement PTR zones for ipv4 and ipv6
   * generate DNS views based on source building for scale.lan
   * extend inventory datastructure to support vlan definitions
   * generate DHCP zones dynamically for vlans
