@@ -18,8 +18,9 @@ todo:
   * add APs to inventory
   * add PIs to inventory
   * for ipv6 setup an address per service (if possible)
-   ** ::3.A - admin
-   ** ::3.B - DNS
-   ** ::3.C - DHCP
-   ** ::3.D - Log
-   ** ::3.E - NTP
+   ** 3.A - admin
+   ** 3.B - DNS
+   ** 3.C - DHCP
+   ** 3.D - Log
+   ** 3.E - NTP
+

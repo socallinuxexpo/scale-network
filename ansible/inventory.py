@@ -190,9 +190,11 @@ def populateinv():
 
 
 def main():
+
     # the format of vlans.d files seems to have changed upstream
     # commenting out for now, since still unsued here
     # populatevlans()
+
     populateswitches()
     populateservers()
     populateinv()

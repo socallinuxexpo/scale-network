@@ -1,6 +1,11 @@
 ---
 
-- name: install openntpd
-  apt:
-    name: ntp
-    ensure: latest
+
+- name: Copy ntp.conf
+  template:
+    src: ntp.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ntp
