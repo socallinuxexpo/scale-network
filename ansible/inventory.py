@@ -149,7 +149,7 @@ def populateinv():
 
 
 def main():
-    populatevlans()
+#    populatevlans()
     populateswitches()
     populateservers()
     populateinv()
