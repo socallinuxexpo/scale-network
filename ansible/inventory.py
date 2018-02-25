@@ -10,6 +10,8 @@ import re
 vlansddir = "../switch-configuration/config/vlans.d/"
 switchesfile = "../switch-configuration/config/switchtypes"
 serverfile = "../facts/servers/serverlist.tsv"
+apfile = "../facts/aps/aplist.tsv"
+pifiles = "../facts/pi/pilist.tsv"
 
 # globals
 #
@@ -20,6 +22,10 @@ vlans = []
 switches = []
 # servers = []{name, mac-address, ipv6, ipv4, ansiblerole, vlanname}
 servers = []
+# apfile = []{name, power5g?, freq5g?, power2g?, freq2g?, mac, building}
+aps = []
+# pis = []{name, mac-address, building }
+pis = []
 # inv = {
 #    "group": {
 #        "hosts": [
@@ -186,6 +192,7 @@ def populateinv():
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
+                "vlans": vlans,
         }
 
 
