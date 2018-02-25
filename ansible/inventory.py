@@ -85,6 +85,12 @@ def populatevlans():
                 })
 
 
+# ip4toptr() generate a PTR
+def ip4toptr(ipaddress):
+    splitip = re.split(r'\.', ipaddress)
+    return splitip[3] + "." + splitip[2] + "." + splitip[1]
+
+
 # ip6toptr() generates a PTR
 def ip6toptr(ipaddress):
     splitip = re.split(r'::', ipaddress)
@@ -176,6 +182,7 @@ def populateinv():
                 "ipv6": s["ipv6"],
                 "ipv6ptr": ip6toptr(s["ipv6"]),
                 "ipv4": s["ipv4"],
+                "ipv4ptr": ip4toptr(s["ipv4"]),
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
