@@ -1,6 +1,11 @@
 # Ignore openwrt build dir
 openwrt/build
+openwrt/*.img
+openwrt/aplist
 *.swp
+
+# Ignore built configuration files directory
+switch-configuration/config/output
 
 # Created by https://www.gitignore.io/api/osx,vim,emacs,windows,libreoffice,sublimetext
 

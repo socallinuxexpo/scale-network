@@ -1,9 +1,9 @@
 // Expo Center -- VLANS 100-499
-#include <Expo>
+#include vlans.d/Expo
 
 // Conference Center -- VLANS 500-899
-#include <Conference>
+#include vlans.d/Conference
 
 // Bridged -- VLANS 900-999 (carried across fiber between buildings)
-#include <Bridged>
+#include vlans.d/Bridged
 
