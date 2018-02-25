@@ -85,6 +85,43 @@ def populatevlans():
                 })
 
 
+# ip4toptr() generate a PTR
+def ip4toptr(ipaddress):
+    splitip = re.split(r'\.', ipaddress)
+    return splitip[3] + "." + splitip[2] + "." + splitip[1]
+
+
+# ip6toptr() generates a PTR
+def ip6toptr(ipaddress):
+    splitip = re.split(r'::', ipaddress)
+    ptr = []
+    for i in range(0, 32):
+        ptr.append(0)
+    ix = 0
+    for c in splitip[1][::-1]:
+        if not c == ":":
+            ptr[ix] = c
+            ix += 1
+        else:
+            while not ix % 4 == 0:
+                ptr[ix] = 0
+                ix += 1
+    iy = 31
+    for h in re.split(r':', splitip[0]):
+        while len(h) < 4:
+            h = "0" + str(h)
+        for c in h:
+            ptr[iy] = c
+            iy -= 1
+
+    retstr = ""
+    for i in range(0, 32):
+        retstr = retstr + str(ptr[i])
+        if not i == 31:
+            retstr = retstr + "."
+    return retstr
+
+
 # populateswitches() will populate the switch list
 def populateswitches():
     f = open(switchesfile, 'r')
@@ -129,6 +166,8 @@ def populateinv():
         inv["switches"]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
             "ipv6": s["ipv6"],
+            "ipv6ptr": ip6toptr(s["ipv6"]),
+            "fqdn": s["name"] + ".scale.lan"
         }
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
@@ -141,7 +180,9 @@ def populateinv():
         inv["_meta"]["hostvars"][s["name"]] = {
                 "ansible_host": s["ipv4"],
                 "ipv6": s["ipv6"],
+                "ipv6ptr": ip6toptr(s["ipv6"]),
                 "ipv4": s["ipv4"],
+                "ipv4ptr": ip4toptr(s["ipv4"]),
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
@@ -149,7 +190,11 @@ def populateinv():
 
 
 def main():
-    populatevlans()
+
+    # the format of vlans.d files seems to have changed upstream
+    # commenting out for now, since still unsued here
+    # populatevlans()
+
     populateswitches()
     populateservers()
     populateinv()

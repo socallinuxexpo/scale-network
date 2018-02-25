@@ -1,0 +1,11 @@
+{% for item in groups["core"] -%}
+@	    IN  NS     {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
+{% for item in groups["servers"] -%}
+{{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
+{% for item in groups["switches"] -%}
+{{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
+{% endfor -%}
