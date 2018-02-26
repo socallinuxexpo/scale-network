@@ -20,7 +20,7 @@ pifiles = "../facts/pi/pilist.tsv"
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
-# servers = []{name, mac-address, ipv6, ipv4, ansiblerole, vlanname}
+# servers = []{name, mac, ipv6, ipv4, role, vlanname, bldg, vlans}
 servers = []
 # apfile = []{name, power5g?, freq5g?, power2g?, freq2g?, mac, building}
 aps = []
@@ -156,6 +156,7 @@ def populateservers():
                 for v in vlans:
                     if ipv6.find(v["ipv6prefix"]) > -1:
                         vlan = v["name"]
+                        building = v["building"]
                 servers.append({
                     "name": elems[0],
                     "macaddress": elems[1],
@@ -163,6 +164,7 @@ def populateservers():
                     "ipv4": elems[3],
                     "ansiblerole": elems[4].split('\n')[0],
                     "vlan": vlan,
+                    "building": building,
                 })
 
 
@@ -193,6 +195,7 @@ def populateinv():
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
                 "vlans": vlans,
+                "building": s["building"],
         }
 
 
