@@ -10,6 +10,8 @@ import re
 vlansddir = "../switch-configuration/config/vlans.d/"
 switchesfile = "../switch-configuration/config/switchtypes"
 serverfile = "../facts/servers/serverlist.tsv"
+apfile = "../facts/aps/aplist.tsv"
+pifiles = "../facts/pi/pilist.tsv"
 
 # globals
 #
@@ -18,8 +20,12 @@ serverfile = "../facts/servers/serverlist.tsv"
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
-# servers = []{name, mac-address, ipv6, ipv4, ansiblerole, vlanname}
+# servers = []{name, mac, ipv6, ipv4, role, vlanname, bldg, vlans}
 servers = []
+# apfile = []{name, power5g?, freq5g?, power2g?, freq2g?, mac, building}
+aps = []
+# pis = []{name, mac-address, building }
+pis = []
 # inv = {
 #    "group": {
 #        "hosts": [
@@ -67,21 +73,21 @@ def populatevlans():
         for line in flines:
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
-                ipv6 = elems[2].split('/')
+                ipv6 = elems[3].split('/')
                 if ipv6[1] == "0":
                     ipv6 = [" ", " "]
-                ipv4 = elems[3].split('/')
+                ipv4 = elems[4].split('/')
                 if ipv4[1] == "0":
                     ipv4 = [" ", " "]
                 vlans.append({
-                    "name": elems[0],
-                    "id": elems[1],
+                    "name": elems[1],
+                    "id": elems[2],
                     "ipv6prefix": ipv6[0],
                     "ipv6bitmask": ipv6[1],
                     "ipv4prefix": ipv4[0],
                     "ipv4bitmask": ipv4[1],
                     "building": file,
-                    "description": elems[4].split('\n')[0],
+                    "description": elems[5].split('\n')[0],
                 })
 
 
@@ -150,6 +156,7 @@ def populateservers():
                 for v in vlans:
                     if ipv6.find(v["ipv6prefix"]) > -1:
                         vlan = v["name"]
+                        building = v["building"]
                 servers.append({
                     "name": elems[0],
                     "macaddress": elems[1],
@@ -157,6 +164,7 @@ def populateservers():
                     "ipv4": elems[3],
                     "ansiblerole": elems[4].split('\n')[0],
                     "vlan": vlan,
+                    "building": building,
                 })
 
 
@@ -186,15 +194,14 @@ def populateinv():
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
+                "vlans": vlans,
+                "building": s["building"],
         }
 
 
 def main():
 
-    # the format of vlans.d files seems to have changed upstream
-    # commenting out for now, since still unsued here
-    # populatevlans()
-
+    populatevlans()
     populateswitches()
     populateservers()
     populateinv()

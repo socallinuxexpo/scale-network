@@ -2,19 +2,15 @@
 
 This playbook is used for deploying and maintaining the SCaLE Server Infrastructure using Ansible. 
 
-#### Status:
-  * Vagrant environment built with 4 VMs, IPv4 assigned for test, IPv6 pre-assigned
-  * Dynamic inventory script for Ansible
-  * Some basic roles implemented but none considered complete.
-
-#### Target Features:
-  * DNS services using BIND
-  * DHCP services using ISC DHCP Server 
-  * NTP with openntpd
-  * Syslog 
-  * Zabbix Monitoring with dynamic host addition
-  * Central server for ansible and image building tools
-  * Signs server deployment 
+#### Features:
+  * DNS services using BIND9
+    * Dynamically generated zone files
+    * Supports NS, AAAA, A, and PTR records
+    * Zone files versioned and backed up locally
+    * Support for DNS views
+    * Dynamically generated view ACLs
+  * NTP services
+    * Single role supports client/server 
 
 #### Requirements:
   * vagrant 2.0.1
@@ -32,11 +28,15 @@ further processes TBD
 
 #### Vagrant:
 
+The vagrant environment is hardcoded with 4 VMs. It uses ipv4 for management. The inventory will be modified during the show to use ipv6.
+
+Issuing the __vagrant status__ command will display the state of the vms.
+
 Issuing the __vagrant up__ command will build all vms and kick off the ansible playbook.
 
-After the files are modified issue the __vagrant up__ command followed by the __vagrant provision__ command.
+Issuing the __vagrant provision__ command will rerun the playbook.
 
-The vagrant environment uses ipv4 for management. The inventory will be modified during the show to use ipv6.
+Issuing the __vagrant destroy -f__ command will destroy all running vms.
 
 #### invetory.py
 
@@ -46,3 +46,5 @@ expects generated dynamically by reading in the following files:
 * vlansddir = "../switch-configuration/config/vlans.d/"
 * switchesfile = "../switch-configuration/config/switchtypes"
 * serverfile = "../facts/servers/serverlist.tsv"
+* apfile = "../facts/aps/aplist.tsv"
+* pifiles = "../facts/pi/pilist.tsv"

@@ -1,25 +1,19 @@
 ---
 
-- hosts: servers
-  become: yes
-  roles:
-    - { role: noapparmor }
-
-- hosts: servers
-  become: yes
-  serial: 1
-  roles:
-    - { role: aptupdate }
-    - { role: ntpserver }
-
 - hosts: core
   become: yes 
   serial: 1
   roles: 
     - { role: dnsserver }
 
+- hosts: servers
+  become: yes
+  roles:
+    - { role: noapparmor }
+    - { role: aptupdate }
+    - { role: ntpserver }
+
 - hosts: core
-  become: 
+  become: yes
   roles: 
-    #- { role: dhcpserver }
-    - { role: syslogserver }
+    #- { role: syslogserver }
