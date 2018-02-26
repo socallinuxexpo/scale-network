@@ -6,10 +6,10 @@ options {
 };
 
 logging {
-channel b_query {
-file "/var/log/named/query.log" versions 2 size 1m;
-print-time yes;
-severity info;
-};
-category queries { b_query; };
+	channel b_query {
+		file "/var/log/named/query.log" versions 2 size 1m;
+		print-time yes;
+		severity info;
+	};
+	category queries { b_query; };
 };
