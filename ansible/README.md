@@ -6,7 +6,9 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
   * DNS services using BIND9
     * Dynamically generated zone files
     * Supports NS, AAAA, A, and PTR records
-    * Zone files versioned and backed up locally 
+    * Zone files versioned and backed up locally
+    * Support for DNS views
+    * Dynamically generated view ACLs
   * NTP services
     * Single role supports client/server 
 

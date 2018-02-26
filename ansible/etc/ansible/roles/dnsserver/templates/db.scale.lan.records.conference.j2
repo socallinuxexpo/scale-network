@@ -1,6 +1,6 @@
 {% for item in groups["core"] %}
- {% if hostvars[item].building == "Conference" %}
+{% if hostvars[item].building == "Conference" %}
 ntp IN  CNAME {{ hostvars[item].fqdn }}.
 loghost IN  CNAME   {{ hostvars[item].fqdn }}.
- {% endif -%}
+{% endif -%}
 {% endfor -%}
