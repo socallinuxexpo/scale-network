@@ -1,8 +1,6 @@
 todo:
-  * migrate last years list of AP macs to new tsv in fact
   * be able to derive IP of PIs and APs via SLAAC
   * implement dnsclient type functionality for servers
-  * generate DNS views based on source building for scale.lan
   * generate DHCP zones dynamically for vlans
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
@@ -14,10 +12,9 @@ todo:
   * deploy appropriate sudoers file
   * add APs to inventory
   * add PIs to inventory
-  * for ipv6 setup an address per service (if possible)
+  * for ipv6 setup an address per service (if possible)??
    ** 3.A - admin
    ** 3.B - DNS
    ** 3.C - DHCP
    ** 3.D - Log
    ** 3.E - NTP
-
