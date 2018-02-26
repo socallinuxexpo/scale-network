@@ -24,8 +24,9 @@
     - named.conf
     - named.conf.default-zones
     - named.conf.scale-zones
+    - named.conf.scale-ip-zones
 
-- name: copy scale record files
+- name: copy scale view, record, and acl files
   template:
     src: "{{ item }}.j2"
     dest: "/etc/bind/{{ item }}"
@@ -36,8 +37,12 @@
   with_items:
     - db.scale.lan.records.servers
     - db.scale.lan.records.switches
+    - db.scale.lan.records.conference
+    - db.scale.lan.records.expo
     - db.ip6.arpa.records
     - db.10.ip4.arpa.records
+    - db.scale.lan
+    - named.conf.scale-acls
 
 - name: generate zone serial number
   shell: date +%y%m%d%H%M
@@ -49,9 +54,9 @@
     bind_zone_serial: "{{ date.stdout }}"
   when: records.changed
 
-- name: copy scale zone files
+- name: copy scale conference view files
   template:
-    src: db.scale.lan.j2
+    src: db.scale.lan.conference.j2
     dest: "{{ item }}"
     owner: root
     group: bind
@@ -59,8 +64,21 @@
   notify: restart bind9
   when: records.changed
   with_items:
-    - /etc/bind/db.scale.lan
-    - /etc/bind/backup/db.scale.lan.{{ bind_zone_serial }}
+    - /etc/bind/db.scale.lan.conference
+    - /etc/bind/backup/db.scale.lan.conference.{{ bind_zone_serial }}
+
+- name: copy scale expo view files
+  template:
+    src: db.scale.lan.expo.j2
+    dest: "{{ item }}"
+    owner: root
+    group: bind
+    mode: 0644
+  notify: restart bind9
+  when: records.changed
+  with_items:
+    - /etc/bind/db.scale.lan.expo
+    - /etc/bind/backup/db.scale.lan.expo.{{ bind_zone_serial }}
 
 - name: copy ip6 ptr zone files
   template:
@@ -88,7 +106,7 @@
     - /etc/bind/db.10.ip4.arpa
     - /etc/bind/backup/db.10.ip4.arpa.{{ bind_zone_serial }}
 
-- name: copy scale record backup files
+- name: copy scale view, record, and acl backup files
   template:
     src: "{{ item }}.j2"
     dest: "/etc/bind/backup/{{ item }}.{{ bind_zone_serial }}"
@@ -99,8 +117,12 @@
   with_items:
     - db.scale.lan.records.servers
     - db.scale.lan.records.switches
+    - db.scale.lan.records.conference
+    - db.scale.lan.records.expo
     - db.ip6.arpa.records
     - db.10.ip4.arpa.records
+    - db.scale.lan
+    - named.conf.scale-acls
   
 - name: start bind9 service
   systemd: 

@@ -1,16 +1,33 @@
 // named.conf.scale-zones managed by ansible
 
-zone "scale.lan" {
-	type master;
-	file "/etc/bind/db.scale.lan";
+include "/etc/bind/named.conf.scale-acls";
+
+view expo {
+	
+	match-clients { expo; };
+	allow-recursion { any; };
+
+	include "/etc/bind/named.conf.default-zones";
+
+	zone "scale.lan" {
+		type master;
+		file "/etc/bind/db.scale.lan.expo";
 	};
 
-zone "ip6.arpa" {
-	type master;
-	file "/etc/bind/db.ip6.arpa";
+	include "/etc/bind/named.conf.scale-ip-zones";
+};
+
+view conference {
+
+	match-clients { conference; };
+	allow-recursion { any; };
+	
+	include "/etc/bind/named.conf.default-zones";
+
+	zone "scale.lan" {
+		type master;
+		file "/etc/bind/db.scale.lan.conference";
 	};
 
-zone "10.in-addr.arpa." {
-	type master;
-	file "/etc/bind/db.10.ip4.arpa";
+	include "/etc/bind/named.conf.scale-ip-zones";
 };

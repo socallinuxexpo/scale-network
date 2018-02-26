@@ -2,11 +2,6 @@
 @	    IN  NS     {{ item }}
 {% endfor -%}
 
-
-ntp IN  CNAME   {{ hostvars[ansible_hostname].fqdn }}.
-loghost IN  CNAME   {{ hostvars[ansible_hostname].fqdn }}.
-
-
 {% for item in groups["servers"] %}
 {{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }} 
 {{ item }}  IN  A       {{ hostvars[item].ipv4 }} 
