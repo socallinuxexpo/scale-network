@@ -11,11 +11,11 @@ config wifi-device '{{.name}}'
 
 {{range $index, $element := (datasource "openwrt").wireless.radios}}
 {{- range .networks}}
-config wifi-iface
+config wifi-iface '{{.interface}}_{{$element.name}}'
+	option device '{{$element.name}}'
         option ssid '{{.ssid}}'
 	option mode 'ap'
-	option mode '{{$element.name}}'
-	option network '{{.vlan}}'
+	option network '{{.interface}}'
 	option encryption 'psk2'
 	option key '{{.password}}'
 {{end}}
