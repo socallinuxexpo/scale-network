@@ -22,6 +22,7 @@ CONFIG_OPENSSL_WITH_SRP=y
 # CONFIG_PACKAGE_dropbear is not set
 # CONFIG_PACKAGE_firewall is not set
 CONFIG_PACKAGE_iperf3=y
+CONFIG_PACKAGE_jq=y
 CONFIG_PACKAGE_kmod-usb-serial=y
 CONFIG_PACKAGE_kmod-usb-serial-ftdi=y
 CONFIG_PACKAGE_kmod-usb-serial-pl2303=y
