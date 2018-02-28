@@ -2,6 +2,9 @@ todo:
   * be able to derive IP of PIs and APs via SLAAC
   * implement dnsclient type functionality for servers
   * generate DHCP zones dynamically for vlans
+  * resolve ntp issues from non core servers
+  * setup ntp peering between core servers
+  * setup proper acls for ntp
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
   * implement zabbix

@@ -10,8 +10,8 @@
   become: yes
   roles:
     - { role: noapparmor }
+    - { role: ntp }
     - { role: aptupdate }
-    - { role: ntpserver }
 
 - hosts: core
   become: yes
