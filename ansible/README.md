@@ -67,7 +67,7 @@ The `-u` option with `-k` omitted assumes your authorized_key is in the reposito
 
 `ansible -u steven -k -K -i myfile.txt pis -b -a "reboot"`
 
-`-b` denote become root. `-K` will prompt for the become password, which by default is your sudo auth. `--becomes-method su` will opt to prompt for the `su` auth instead. Can be omitted if keys and sudoers files are used.
+`-b` denote become root. `-K` will prompt for the become password, which by default is your sudo auth. `--become-method su` will opt to prompt for the `su` auth instead. Can be omitted if keys and sudoers files are used.
 
 `ansible -u david -i inventory.py servers -m file -a "path=/tmp/file state=touch"`
 
