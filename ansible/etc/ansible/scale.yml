@@ -9,6 +9,7 @@
 - hosts: servers
   become: yes
   roles:
+    - { role: dnsclient }
     - { role: noapparmor }
     - { role: ntp }
     - { role: aptupdate }

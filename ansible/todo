@@ -1,6 +1,6 @@
 todo:
   * be able to derive IP of PIs and APs via SLAAC
-  * implement dnsclient type functionality for servers
+  * lay down facts locally for better visibility into data
   * generate DHCP zones dynamically for vlans
   * resolve ntp issues from non core servers
   * setup ntp peering between core servers
