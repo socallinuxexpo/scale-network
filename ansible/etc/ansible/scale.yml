@@ -9,9 +9,11 @@
 - hosts: servers
   become: yes
   roles:
+    - { role: techteam }
+    - { role: dnsclient }
     - { role: noapparmor }
+    - { role: ntp }
     - { role: aptupdate }
-    - { role: ntpserver }
 
 - hosts: core
   become: yes

@@ -1,0 +1,26 @@
+---
+
+- name: install ntp package
+  apt:
+    name: ntp
+    state: latest
+    update_cache: no
+
+- name: Copy ntp.conf
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ntp
+  register: config
+
+- name: start ntp service
+  systemd:
+    name: ntp
+    state: started
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+  when: not config.changed

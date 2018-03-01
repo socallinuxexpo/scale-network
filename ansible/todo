@@ -1,20 +1,23 @@
 todo:
-  * be able to derive IP of PIs and APs via SLAAC
-  * implement dnsclient type functionality for servers
-  * generate DHCP zones dynamically for vlans
+  * be able to derive IP of PIs via SLAAC so they are plug, update pilist.tsv, and play
+  * lay down facts locally for better visibility into data
+  * generate DHCP zones dynamically using vlans.d files
+  * implement DHCPv6 for APs and whatever else can't be satisfied with standard IPv6
+  * implement failover DHCP 
+  * resolve ntp issues from non core servers (might be vagrant issue only)
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
-  * implement zabbix
+  * implement zabbix (I think Steve B is driving this)
   * implement zabbix dynamic additions
-  * implement existing php sign server (unless there's a suitable replacement)
-  * seperate ssh keys into admin/normal contexts (might need to touch switch perl as well)
-  * create users and automatically deploy ssh keys (same used for switches)
-  * deploy appropriate sudoers file
+  * create docker build role to build sign server
+  * implement existing php sign server with versioned docker images
   * add APs to inventory
   * add PIs to inventory
+  * convert PI instructions to ansible playbook(s)/role(s)
   * for ipv6 setup an address per service (if possible)??
    ** 3.A - admin
    ** 3.B - DNS
    ** 3.C - DHCP
    ** 3.D - Log
    ** 3.E - NTP
+  * create "bootstrap" playbook, role, and var to get SSH keys on APs, PIs, etc [as needed]

@@ -4,6 +4,7 @@
   apt:
     name: rsyslog
     state: present
+    update_cache: no
 
 - name: start rsyslog service
   systemd:
