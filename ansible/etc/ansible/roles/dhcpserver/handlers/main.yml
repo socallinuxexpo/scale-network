@@ -1,7 +1,17 @@
 ---
 
 - name: restart isc-dhcp-server
-  service:
+  systemd:
     name: isc-dhcp-server
+    state: restarted
     enabled: yes
-    state: started
+    masked: no
+    daemon_reload: yes
+
+- name: restart isc-dhcp-server6
+  systemd:
+    name: isc-dhcp-server6
+    state: restarted
+    enabled: yes
+    masked: no
+    daemon_reload: yes

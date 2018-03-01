@@ -5,6 +5,7 @@
   serial: 1
   roles: 
     - { role: dnsserver }
+    - { role: dhcpserver }
 
 - hosts: servers
   become: yes

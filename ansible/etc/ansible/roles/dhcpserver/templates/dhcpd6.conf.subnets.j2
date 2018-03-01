@@ -1,0 +1,8 @@
+{% for vlan in hostvars[ansible_hostname].vlans %}
+{% if vlan["ipv6prefix"] != " " and vlan["id"] not in ["103","503"] %}
+subnet6 {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"]}} {
+    range6 {{ vlan["ipv6prefix"] }} ;
+    option dhcp6.name-servers FIXME;
+}
+{% endif %}
+{% endfor %}
