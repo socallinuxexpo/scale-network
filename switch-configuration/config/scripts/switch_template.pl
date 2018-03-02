@@ -365,7 +365,7 @@ sub build_vlans_from_config
   # MgtVL is treated special because it has a layer 3 interface spec
   # to interface vlan.$MgtVL.
 
-  my $VLANS = read_config_file("vlans");
+  my $VL_CONFIG = read_config_file("vlans");
   # Convert configuration data to hash with VLAN ID as key
   my %VLANS;         # Hash containing VLAN data structure as follows:
                      # %VLANS = {
@@ -390,8 +390,8 @@ sub build_vlans_from_config
               #   checks). Not used in config generation for switches..
   my $desc;   # Description
   my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
-  debug(9, "Got ", $#{$VLANS}, " Lines of VLAN configuraton\n");
-  foreach(@{$VLANS})
+  debug(9, "Got ", $#{$VL_CONFIG}, " Lines of VLAN configuraton\n");
+  foreach(@{$VL_CONFIG})
   {
     my @TOKENS;
     @TOKENS = split(/\t/, $_);
@@ -403,9 +403,11 @@ sub build_vlans_from_config
       $vlid = $TOKENS[3];
       $prim = $TOKENS[4];
       $desc = $TOKENS[5];
+      my $pvlid = $VLANS_byname{$prim};
+      debug(1, "PVLAN Lookup for $prim\n");
       # For Secondary VLANs, retrieve prefix from Primary
-      $IPv6 = ${$VLANS{$prim}[2]};
-      $IPv4 = ${$VLANS{$prim}[3]};
+      $IPv6 = $VLANS{$pvlid}[2];
+      $IPv4 = $VLANS{$pvlid}[3];
     }
     else
     {
@@ -416,7 +418,7 @@ sub build_vlans_from_config
       $IPv4 = $TOKENS[4];
     }
     $type = "PRIM" if ($type eq "PVLAN"); # FIXUP Type
-    debug(9, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
+    debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     $VLANS_byname{$name} = $vlid;
     $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
                       ($prim ? $prim : undef) ];

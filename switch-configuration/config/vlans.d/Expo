@@ -3,17 +3,20 @@ VLAN	exSCALE-SLOW		100	2001:470:f325:100::/64	10.0.128.0/21	2.4G Wireless Networ
 VLAN	exSCALE-FAST		101	2001:470:f325:101::/64	10.0.136.0/21	5G Wireless Network in Expo Center
 VLAN	exSpeaker		102	2001:470:f325:102::/64	10.0.2.0/24	Speaker Network
 VLAN	exInfra			103	2001:470:f325:103::/64	10.0.3.0/24	SCALE Network Infrastructure and Servers (Expo Center)
-//104 not used
+VLAN	exMDF           104 2001:470:f325:104::/64  10.0.4.0/24	Link to MDF Router
 VLAN	exAVLAN			105	2001:470:f325:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
 //106 not used
 VLAN	exSigns			107	2001:470:f325:107::/64	0.0.0.0/0	Signs network (Expo Center) IPv6 Only
 VLAN	exStaff			108	2001:470:f325:108::/64	10.0.8.0/24	Staff Wireless Network
 //109 not used
-VLAN	exRegistration		110	2001:470:f325:110::/64	0.0.0.0/0	Registration Network (Expo Center) IPv6 Only
-//111 through 199 not used
+VLAN	exRegistration	110	2001:470:f325:110::/64	0.0.0.0/0	Registration Network (Expo Center) IPv6 Only
+VLAN	exAkamai		111 2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
+//112 through 199 not used
 VLAN	exDWCC			200	2001:470:f325:200::/64	10.0.100.0/24	Zach's Distributed Wifi Capability Collector
 //201 through 299 not used
 //300 through 499 Vendors
-PVLAN	Vendor			300	2001:470:f325:300::/64	10.100.0.0/20	Vendor PVLAN
+PVLAN	exVendor		300	2001:470:f325:300::/64	10.100.0.0/20	Vendor PVLAN
 //301-499 are dynamically generated from Booth information file as community VLANs.
+//		Name			Type	VLID	PVLAN		Comment
+SVLAN	V_Microsoft		COMM	301		exVendor	Sec. Comm. VLAN for Microsoft
 
