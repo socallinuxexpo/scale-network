@@ -1,0 +1,15 @@
+[Resolve]
+Domains=scale.lan
+MulticastDNS=no
+Cache=no
+{% set space = joiner(" ") -%}
+{% for item in groups["core"] -%}
+{% if hostvars[item].building == building -%}
+DNS={{ space() }}{{ hostvars[item].ipv6 }} {{ hostvars[item].ipv4}}
+{%- endif %}
+{%- endfor -%}
+{%- for item in groups["core"] -%}
+{%- if hostvars[item].building != building -%}
+{{ space() }}{{ hostvars[item].ipv6 }} {{ hostvars[item].ipv4}}
+{%- endif -%}
+{%- endfor -%}

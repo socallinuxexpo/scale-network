@@ -1,5 +1,7 @@
 # Ignore openwrt build dir
 openwrt/build
+openwrt/*.img
+openwrt/aplist
 *.swp
 
 # Ignore built configuration files directory

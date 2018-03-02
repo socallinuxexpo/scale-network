@@ -13,4 +13,4 @@
   apt:
     name: apparmor
     state: absent
-    update_cache: yes
+    update_cache: no

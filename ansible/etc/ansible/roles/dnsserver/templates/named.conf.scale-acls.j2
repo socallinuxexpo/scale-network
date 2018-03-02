@@ -1,0 +1,32 @@
+
+acl conference {
+{% if hostvars[ansible_hostname].building == "Conference" %}
+    localhost;
+{% endif %}
+{% for vlan in hostvars[ansible_hostname].vlans %}
+ {% if vlan["building"] == "Conference" %}
+  {% if vlan["ipv6prefix"] != " " %}
+   {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"]}};
+  {% endif %}
+  {% if vlan["ipv4prefix"] != " " %}
+   {{ vlan["ipv4prefix"] }}/{{ vlan["ipv4bitmask"] }};
+  {% endif %}
+ {% endif -%}
+{% endfor -%}
+};
+
+acl expo {
+{% if hostvars[ansible_hostname].building == "Expo" %}
+    localhost;
+{% endif %}
+{% for vlan in hostvars[ansible_hostname].vlans %}
+ {% if vlan["building"] != "Conference" %}
+  {% if vlan["ipv6prefix"] != " " %}
+   {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"]}};
+  {% endif %}
+  {% if vlan["ipv4prefix"] != " " %}
+   {{ vlan["ipv4prefix"] }}/{{ vlan["ipv4bitmask"] }};
+  {% endif %}
+ {% endif -%}
+{% endfor -%}
+};

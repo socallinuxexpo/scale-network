@@ -1,0 +1,9 @@
+---
+
+- name: restart resolved
+  systemd:
+    name: systemd-resolved
+    state: restarted
+    masked: no
+    enabled: yes
+    daemon_reload: yes

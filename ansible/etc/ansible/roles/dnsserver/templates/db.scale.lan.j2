@@ -1,21 +1,2 @@
-$TTL	86400
-@	IN	SOA	localhost. root.localhost. (
-                {{ bind_zone_serial }}  ; Serial
-                604800		; Refresh
-                86400		; Retry
-                2419200		; Expire
-                86400 )	; Negative Cache TTL
-;
-
-{% for item in groups["core"] -%}
-@	    IN  NS     {{ item }}
-{% endfor -%}
-
-{% for item in groups["servers"] -%}
-{{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }} 
-{{ item }}  IN  A       {{ hostvars[item].ipv4 }} 
-{% endfor -%}
-
-{% for item in groups["switches"] -%}
-{{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }}
-{% endfor -%}
+$INCLUDE /etc/bind/db.scale.lan.records.servers
+$INCLUDE /etc/bind/db.scale.lan.records.switches

@@ -1,0 +1,6 @@
+// List of PIs
+// IP can be determined by calculating SLAAC / building to get vlan prefix
+// name	mac-address	building
+testpi1	b8:27:eb:63:bc:a0	Expo
+testpi2	b8:27:eb:2e:31:f7	Conference
+testpi3	b8:27:eb:6b:5e:03	Expo

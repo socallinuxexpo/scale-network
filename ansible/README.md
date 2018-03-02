@@ -2,47 +2,84 @@
 
 This playbook is used for deploying and maintaining the SCaLE Server Infrastructure using Ansible. 
 
-#### Status:
-  * Vagrant environment built with 4 VMs, IPv4 assigned for test, IPv6 pre-assigned
-  * Dynamic inventory script for Ansible
-  * Some basic roles implemented but none considered complete.
+## Features:
+  * DNS servers - bind9
+    * Dynamically generated zone files
+    * Supports IPv4 and IPv6 forward and reverse zones
+    * Zone files versioned and backed up locally
+    * Support for DNS views
+    * Dynamically generated view ACLs
+  * DNS client - systemd-resolved
+    * Clients are configured to prefer IPv6 and the building local DNS server
+  * NTP services
+    * Single role supports client/server
+  * Tech Team
+    * Auto create team user accounts and home dirs
+    * Effortless passwordless sudo
+    * SSH keys are pulled down from Github
+  * Automatically updates via apt
 
-#### Target Features:
-  * DNS services using BIND
-  * DHCP services using ISC DHCP Server 
-  * NTP with openntpd
-  * Syslog 
-  * Zabbix Monitoring with dynamic host addition
-  * Central server for ansible and image building tools
-  * Signs server deployment 
-
-#### Requirements:
+## Requirements:
   * vagrant 2.0.1
   * virtualbox 5.2
   * ansible 2.4
   * python 2.7
 
-### Usage
+## Usage
 
-##### At SCaLE:
+#### At SCaLE:
 
 * change "ansible_host": s["ipv4"] to "ansible_host": s["ipv6"] in the inventory.py
 
 further processes TBD
 
-#### Vagrant:
+## Vagrant Commands:
 
-Issuing the __vagrant up__ command will build all vms and kick off the ansible playbook.
+The vagrant environment is hardcoded with 4 VMs. It uses ipv4 for management. The inventory will be modified during the show to use ipv6.
 
-After the files are modified issue the __vagrant up__ command followed by the __vagrant provision__ command.
+`vagrant status` - display the state of the vms
 
-The vagrant environment uses ipv4 for management. The inventory will be modified during the show to use ipv6.
+`vagrant up` - builds all vms and kick off the ansible playbook
+
+`vagrant provision` - rerun the playbook
+
+`vagrant destroy -f` - destroy all running vms
+
+`vagrant ssh $SERVER` - ssh into $SERVER as the vagrant user, status will show server names
+
+## Ansible Examples:
+
+Here are some sample Ansible commands to get you started.
+
+If `-u vagrant` enter password `vagrant` when prompted
+
+`ansible -u vagrant -k -i inventory.py servers -m ping`
+
+This "pings" the servers through ansible. It's not a network ping but rather an end to end test via ssh/python
+
+`ansible -u owen -i inventory.py servers -a "ping6 -c 1 server1.scale.lan"`
+
+The `-u` option with `-k` omitted assumes your authorized_key is in the repository and has been merged to master. Issues single ping sourced from each server destined for server1
+
+`ansible -u rob -i inventory.py core -a "tail -12 /var/log/query.log"`
+
+`-i` denotes the inventory to load followed by the group or host name
+
+`ansible -u steven -k -K -i myfile.txt pis -b -a "reboot"`
+
+`-b` denote become root. `-K` will prompt for the become password, which by default is your sudo auth. `--become-method su` will opt to prompt for the `su` auth instead. Can be omitted if keys and sudoers files are used.
+
+`ansible -u david -i inventory.py servers -m file -a "path=/tmp/file state=touch"`
+
+`-m` specifies the file module. `-a` is a list of options for the module. use the `ansible-doc -l` to list all modules. `ansible-doc $MODULE` to see module specific documentation.
 
 #### invetory.py
 
-inventory.py is dynamic inventory script written in python. it generates json in a format ansible
+`inventory.py` is dynamic inventory script written in python. it generates json in a format ansible
 expects generated dynamically by reading in the following files:
 
 * vlansddir = "../switch-configuration/config/vlans.d/"
 * switchesfile = "../switch-configuration/config/switchtypes"
 * serverfile = "../facts/servers/serverlist.tsv"
+* apfile = "../facts/aps/aplist.tsv"
+* pifiles = "../facts/pi/pilist.tsv"

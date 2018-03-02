@@ -1,0 +1,30 @@
+driftfile /var/lib/ntp/ntp.drift
+
+leapfile /usr/share/zoneinfo/leap-seconds.list
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+{% if ansible_fqdn in groups["core"] %}
+
+pool us.pool.ntp.org
+pool time.constant.com
+
+restrict 10.0.0.0/8 kod nomodify notrap nopeer
+restrict 2001:470:f325::/64 kod nomodify notrap nopeer
+
+{% else %}
+
+{% for item in groups["core"] %}
+pool {{ hostvars[item].fqdn }} iburst
+{% endfor -%}
+
+interface listen 127.0.0.1
+interface listen ::1
+
+{% endif %}
+
+restrict 127.0.0.1
+restrict ::1

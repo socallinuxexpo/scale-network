@@ -2,7 +2,7 @@
 VLAN	exSCALE-SLOW		100	2001:470:f325:100::/64	10.0.128.0/21	2.4G Wireless Network in Expo Center
 VLAN	exSCALE-FAST		101	2001:470:f325:101::/64	10.0.136.0/21	5G Wireless Network in Expo Center
 VLAN	exSpeaker		102	2001:470:f325:102::/64	10.0.2.0/24	Speaker Network
-VLAN	exInfra			103	2001:470:f325:103::/64	0.0.0.0/0	SCALE Network Infrastructure and Servers (Expo Center)
+VLAN	exInfra			103	2001:470:f325:103::/64	10.0.3.0/24	SCALE Network Infrastructure and Servers (Expo Center)
 VLAN	exMDF           104 2001:470:f325:104::/64  10.0.4.0/24	Link to MDF Router
 VLAN	exAVLAN			105	2001:470:f325:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
 //106 not used
