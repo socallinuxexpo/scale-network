@@ -123,8 +123,95 @@ FIBER   <port> <vlan_name>[,<vlan_name>...]
 ```
 
 Note: A PVLAN port and a VLAN port are identical here. PVLANs are defined in the VLANs portion of the configuration
-file which is controlled by the vlans and vlans.d/* files.
+file which is controlled by the vlans and vlans.d/\* files.
 
+## config/routers/<name>
+These files describe the base configuration for a router. The information in
+these files is combined with certain assumptions and other data in the other
+configuration files to produce a router configuration. This is a work in
+progress, as is the script that processes this file. As such, this description
+section may lag development slightly. It is unlikely that the script will be
+ready to produce full working configurations for the routers by showtime this
+year, so focus for now is on biggest bang for the buck. Effort will be focused
+in the following priority order.
+
+1.  Basic router template (system parameters, authentication, etc.)
+2.  L3 VLAN interface configuration
+3.  Bridging configuration for interfaces
+4.  Firewall rule configuartion
+5.  Other items (TBD)
+
+The basic router template will be built into the code, but will also pull
+data from configuration files. This will include building user authentication
+based on data in the authentication/keys directory, etc.
+
+The script doing this will be similar to the buildswitches script and
+will use the same library (template.pl) to read configuration files.
+
+Each file describes one router and shares the same name as the router for which
+the configuraiton is being produced. (E.g. ExMDF will produce the ExMDF router
+configuration)
+
+### L3 VLAN configuration Directives
+
+interface   <VL_Name>
+or
+interfaces  <VL_regexp>
+    This directive specifies one (interface) or more (interfaces) VLANs
+    to have L3 interfaces on the router in question.
+
+### Bridging Interface Configuration Directives
+l2if    <if_name> <mode> <VL_Name>[,<VL_NAME>[...]]
+    This directive specifies a physical interface to be a Layer 2 bridging
+    interface (family ethernet-switching).
+
+    If no unit is specified in if_name (e.g. ge-0/0/0 instead of ge-0/0/0.4),
+    then one of two things will be done, depending on <mode>.
+
+    If <mode> is access, then unit 0 will be used and only a single VL_Name
+    parameter is valid. THe first one will be used and any extras will be
+    ignored with a warning.
+
+    If <mode> is trunk, then the VL_ID of each specified VLAN name will be
+    used as the unit number tagged for that VLAN.
+
+    All trunks will be configured as standard 802.1q.
+
+### Firewall rule configuration
+
+firewall    <VL_Source> <VL_Dest> <Traffic_Class> <Action>
+    Specifies a firewall rule to be built.
+    VL_Source and VL_Dest can either be literal VLAN names or they can be
+    One of the following special VLAN categories:
+        ALL     Matches IPv4 0.0.0.0/0 and/or IPv6 ::/0
+        INET    Matches non-local addresses (Non-RFC1918 for IPv4,
+                outside the show /48 for IPv6)
+        LOCAL   Matches local addresses (IPv4 RFC-1918, IPv6 show /48)
+        Expo    Matches addresses assigned to Expo Hall
+        Conf    Matches addresses assigned to Conference Building
+
+## config/routers/traffic_classes/\*
+These files describe traffic classes for firewalls. They are essentially
+additional expressions to be placed in a from clase (along with the ones
+that cause the Source and Destination to be matched)
+
+e.g. a file named "ICMP" might contain:
+```
+protocol [ icmp icmp6 ];
+
+
+## config/routers/actions/\*
+These files describe terminating (or non-terminating) actions to take when
+a firewall rule is matched. These files contain statements which are
+incorporated literally and wholesale into a "then" clause in the firewall
+rule produced. The syntax, therefore is identical to a Juniper then clause
+in C-Style configuration notation (not in display-set notation).
+
+e.g. a file named "permit_and_log" might contain:
+```
+permit;
+log;
+```
 
 ## Source for Vendor Booth Information:
 https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuYxmU/edit?ts=5a80d55a#gid=1023875758
@@ -134,13 +221,19 @@ scripts/
 
 # Standard Operational Procedures
 ## How to build a set of switch configurations
-Once the configuration files are all set up (as described above) and you have set up
-authentication parameters as described below, simply run
+Once the configuration files are all set up (as described above) and you
+have set up authentication parameters as described below, simply run
 ```
 scripts/buildswitches
 ```
 
 The resulting configuration files will be written to the output/switch_confugrations directory.
+
+If you want to rebuild the configuration file for a single switch or a subset
+of switches, specify their names as arguments on the command line
+```
+scripts/buildswitches <switch1>[ <switch2>...]
+```
 
 ## How to mass-update a set of (running) switches
 After completing the configuration build (as described in the previous section) review the
