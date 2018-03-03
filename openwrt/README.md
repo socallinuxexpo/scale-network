@@ -12,28 +12,42 @@ Currently we support Netgear `3700v2`, `3800`, & `3800ch` images.
 We build all 3 modules at once:
 
 ```sh
+cd ./openwrt
 make build-img
 ```
 > This requires an internet connection since it downloads the LEDE src
 > github.com and uses some openwrt mirrors.
 
-You will find the images in `./build/lede-imagebuilder-<version>-ar71xx-generic.Linux-x86_64/bin/targets/ar71xx/generic/`
+You will find the images in `./build/source-<commit>/bin/targets/ar71xx/generic/`
 The `*sysupgrade.bin` and `*factory.img` files match the AP models
 
 ## Image with Templates
+To get the configuration thats used at scale the templates need to be baked into
+the image.
 
 Copy over the default secrets:
 ```bash
-cd ./openwrt/
-cp ../facts/secrets/openwrt.yaml.example ../facts/secrets/openwrt.yaml
+cp ./facts/secrets/openwrt.yaml.example ./facts/secrets/openwrt.yaml
+```
+> If needed update the defaults in `openwrt.yaml` to represent actual values
+
+Generate and update the root password hash in `openwrt.yaml`:
+```bash
+openssl passwd -1 secretpassword
 ```
 
-Update
-
-Update the default to represent actual values then:
+Compile the templates:
 ```bash
 cd ./openwrt/
-make templates build-img
+make templates
+```
+> This will populate the templates with the necessary values and
+> prep them in the build dir. To validate the templates check:
+> ./openwrt/build/source-<commit>/files/
+
+Now build the image:
+```
+make build-img
 ```
 
 This will populate the templates with the necessary values and include them
