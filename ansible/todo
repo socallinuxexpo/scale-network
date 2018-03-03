@@ -2,8 +2,6 @@ todo:
   * be able to derive IP of PIs via SLAAC so they are plug, update pilist.tsv, and play
   * lay down facts locally for better visibility into data
   * generate DHCP zones dynamically using vlans.d files
-  * implement DHCPv6 for APs and whatever else can't be satisfied with standard IPv6
-  * implement failover DHCP 
   * resolve ntp issues from non core servers (might be vagrant issue only)
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
