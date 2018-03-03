@@ -1,17 +1,21 @@
 x   1.	Network Prefixes (assign and add to VLANS)
-    2.	DNS -- scale.lan local domain, Authoritative servers for Show Network and in-addr/ip6.arpa
+K    2.	DNS -- scale.lan local domain, Authoritative servers for Show Network and in-addr/ip6.arpa
 x       Set up local servers
         Produce data to feed to Kyle
         Point RDNS to appropriate servers
 x   3.	L3 Interfaces for management VLAN on switches
     4.	Scripts to build configuration files
+x       Switches
+x       Routers
     5.	Scripts for switch installation and maintenance (Robert)
-    6.  PVLAN support for Expo floor
-x   7.  V6 only VLANs (Staff, Signs, Registration, 
+P   6.  PVLAN support for Expo floor
+x   7.  V6 only VLANs (Staff, Signs, Registration)
     8.  Firewall Rules
-    9.  Zach's DWCC
-        Partially done. VLANs specified, Addresses assigned. Need to assign ports to switches
-   10.  Verify Tabs in TDF (vim on Mac tends to produce spaces instead)
+P   9.  Zach's DWCC
+x       VLANs specified
+x       Addresses assigned
+        Assign ports to switches
+O  10.  Verify Tabs in TDF (vim on Mac tends to produce spaces instead)
 
 #### Notes
 
