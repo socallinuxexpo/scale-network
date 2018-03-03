@@ -10,21 +10,25 @@ boxes = [
   {
     :name => "server1",
     :eth1 => "10.128.3.5",
+    :eth1ipv6 => "2001:470:f325:503::5",
     :description => "DNS & DHCP & SYSLOG & NTP in NOC",
   },
   {
     :name => "server2",
     :eth1 => "10.0.3.5",
+    :eth1ipv6 => "2001:470:f325:103::5",
     :description => "DNS & DHCP & SYSLOG & NTP in Expo Hall MDF",
   },
   {
     :name => "server3",
     :eth1 => "10.128.3.6",
-     :description => "MONITORING Server in NOC",
+    :eth1ipv6 => "2001:470:f325:503::6",
+    :description => "MONITORING Server in NOC",
   },
   {
     :name => "server4",
     :eth1 => "10.128.3.7",
+    :eth1ipv6 => "2001:470:f325:503::7",
     :description => "AUTOMATION & SIGN Server in NOC",
   },
 ]
@@ -46,6 +50,7 @@ Vagrant.configure(2) do |config|
       end
 
       config.vm.network :private_network, ip: box[:eth1]
+      config.vm.network :private_network, ip: box[:eth1ipv6]
 
       if index == boxes.size - 1
         config.vm.provision "ansible" do |ansible|

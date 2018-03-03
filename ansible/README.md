@@ -5,10 +5,19 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
 ## Features:
   * DNS servers - bind9
     * Dynamically generated zone files
-    * Supports IPv4 and IPv6 forward and reverse zones
+    * Supports IPv6 and IPv4 forward and reverse zones
     * Zone files versioned and backed up locally
     * Support for DNS views
     * Dynamically generated view ACLs
+    * Logs each DNS request
+  * DHCP servers IPv6 and IPv4 - isc-dhcp-server
+    * Dynamically generated subnet definitions files using vlans.d
+    * Supports IPv6 and IPv4
+    * Prewired for potential host reservations
+    * DNS servers assigned to favor same building
+    * Allocation blocks split in half (modifyable at show time)
+    * Automated backups when changes are made in /etc/dhcp/backup
+    * Logs all DHCP activity
   * DNS client - systemd-resolved
     * Clients are configured to prefer IPv6 and the building local DNS server
   * NTP services
