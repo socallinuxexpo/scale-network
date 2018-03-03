@@ -1,5 +1,12 @@
 ---
 
+- name: restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+    enabled: yes
+    masked: no
+
 - name: restart isc-dhcp-server
   systemd:
     name: isc-dhcp-server

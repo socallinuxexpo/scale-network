@@ -76,18 +76,36 @@ def populatevlans():
                 ipv6 = elems[3].split('/')
                 if ipv6[1] == "0":
                     ipv6 = [" ", " "]
+                ipv6prefix = ipv6[0]
+                ipv6bitmask = ipv6[1]
+                ipv6dhcp1a = re.split(r'\:\:', ipv6prefix)[0] + ":1::1"
+                ipv6dhcp1b = re.split(r'\:\:', ipv6prefix)[0] + ":0fff::fffe"
+                ipv6dhcp2a = re.split(r'\:\:', ipv6prefix)[0] + ":f000::1"
+                ipv6dhcp2b = re.split(r'\:\:', ipv6prefix)[0] + ":ffff::fffe"
                 ipv4 = elems[4].split('/')
+                ipv4prefix = ipv4[0]
+                ipv4bitmask = ipv4[1]
                 if ipv4[1] == "0":
                     ipv4 = [" ", " "]
                 vlans.append({
                     "name": elems[1],
                     "id": elems[2],
-                    "ipv6prefix": ipv6[0],
-                    "ipv6bitmask": ipv6[1],
-                    "ipv4prefix": ipv4[0],
-                    "ipv4bitmask": ipv4[1],
+                    "ipv6prefix": ipv6prefix,
+                    "ipv6bitmask": ipv6bitmask,
+                    "ipv4prefix": ipv4prefix,
+                    "ipv4bitmask": ipv4bitmask,
                     "building": file,
                     "description": elems[5].split('\n')[0],
+                    "ipv6dns1": "",
+                    "ipv6dns2": "",
+                    "ipv6dhcp1a": ipv6dhcp1a,
+                    "ipv6dhcp1b": ipv6dhcp1b,
+                    "ipv6dhcp2a": ipv6dhcp2a,
+                    "ipv6dhcp2b": ipv6dhcp2b,
+                    "ipv4dns1": "",
+                    "ipv4dns2": "",
+                    "ipv4dhcp1": "",
+                    "ipv4dhcp2": "",
                 })
 
 
@@ -152,6 +170,8 @@ def populateservers():
             elems = re.split(r'\t+', line)
             if len(elems) > 2:
                 ipv6 = elems[2]
+                ipv4 = elems[3]
+                ansiblerole = elems[4].split('\n')[0]
                 vlan = ""
                 for v in vlans:
                     if ipv6.find(v["ipv6prefix"]) > -1:
@@ -161,11 +181,20 @@ def populateservers():
                     "name": elems[0],
                     "macaddress": elems[1],
                     "ipv6": ipv6,
-                    "ipv4": elems[3],
-                    "ansiblerole": elems[4].split('\n')[0],
+                    "ipv4": ipv4,
+                    "ansiblerole": ansiblerole,
                     "vlan": vlan,
                     "building": building,
                 })
+                if ansiblerole == "core":
+                    for i in range(0, len(vlans)):
+                        v = vlans[i]
+                        if building == v["building"]:
+                            vlans[i]["ipv6dns1"] = ipv6
+                            vlans[i]["ipv4dns1"] = ipv4
+                        else:
+                            vlans[i]["ipv6dns2"] = ipv6
+                            vlans[i]["ipv4dns2"] = ipv4
 
 
 # populateinv() will populate the master inventory dictionary

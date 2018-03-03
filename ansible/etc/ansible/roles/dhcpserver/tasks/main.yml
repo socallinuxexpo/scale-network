@@ -1,10 +1,19 @@
 ---
 
-- name: install isc-dhcpp-server package
+- name: install isc-dhcp-server package
   apt:
     name: isc-dhcp-server
     state: latest
     update_cache: no
+
+- name: copy dhcp rsyslog file
+  copy:
+    src: rsyslog.dhcp.conf
+    dest: /etc/rsyslog.d/dhcp.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart rsyslog
 
 - name: create dhcp subnets and hosts backup directory
   file:
