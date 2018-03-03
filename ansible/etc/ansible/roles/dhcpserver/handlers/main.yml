@@ -6,6 +6,7 @@
     state: restarted
     enabled: yes
     masked: no
+    daemon_reload: yes
 
 - name: restart isc-dhcp-server
   systemd:
