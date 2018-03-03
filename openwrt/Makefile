@@ -41,7 +41,7 @@ $(BUILD_DIR)/$(IMAGEBUILDER)/.config: extract
 	  && make defconfig
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
-	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) download && $(MAKE) V=s j=4
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) download && $(MAKE) V=s -j 4
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -59,4 +59,6 @@ ifndef GOMPLATE
   $(error "gomplate is not available please install it")
 endif
 	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
+	# TODO: should do this automatically for .sh file types
+	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
 	touch $(TMPL_OUT_DIR)
