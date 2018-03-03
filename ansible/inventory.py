@@ -99,6 +99,7 @@ def populatevlans():
                     "ipv4dhcp1b": ipv4dhcp[1],
                     "ipv4dhcp2a": ipv4dhcp[2],
                     "ipv4dhcp2b": ipv4dhcp[3],
+                    "ipv4router": ipv4dhcp[4],
                     "ipv4netmask": ipv4netmask,
                     "ipv6dns1": "",
                     "ipv6dns2": "",
@@ -157,10 +158,10 @@ def dhcp6ranges(prefix, bitmask):
     ]
 
 
-# dhcp4ranges() will return a list in [ipv4dhcp1a, ipv4dhcp1b, ipv4dhcp2a,...]
+# dhcp4ranges() will return a list in [ipv4dhcp1a, ipv4dhcp1b,... ipv4router]
 def dhcp4ranges(prefix, bitmask):
     if bitmask < 17 or bitmask > 24:
-        return ["", "", "", ""]
+        return ["", "", "", "", ""]
     ipsplit = re.split(r'\.', prefix)
     if bitmask == 24:
         return [
@@ -168,6 +169,7 @@ def dhcp4ranges(prefix, bitmask):
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".128",
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".129",
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".254",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
         ]
     numocs = 2**(24 - bitmask)
     midthird = (int(ipsplit[2]) + (numocs / 2))
@@ -177,6 +179,7 @@ def dhcp4ranges(prefix, bitmask):
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird - 1) + ".255",
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird) + ".1",
         ipsplit[0] + "." + ipsplit[1] + "." + str(topthird) + ".254",
+        ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
     ]
 
 
