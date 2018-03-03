@@ -77,14 +77,11 @@ def populatevlans():
                 ipv6prefix = ipv6[0]
                 ipv6bitmask = ipv6[1]
                 ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
-                if ipv6[1] == "0":
-                    ipv6 = [" ", " "]
                 ipv4 = elems[4].split('/')
                 ipv4prefix = ipv4[0]
                 ipv4bitmask = ipv4[1]
                 ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
-                if ipv4bitmask == "0":
-                    ipv4 = [" ", " "]
+                ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
                 vlans.append({
                     "name": elems[1],
                     "id": elems[2],
@@ -102,6 +99,11 @@ def populatevlans():
                     "ipv4dhcp1b": ipv4dhcp[1],
                     "ipv4dhcp2a": ipv4dhcp[2],
                     "ipv4dhcp2b": ipv4dhcp[3],
+                    "ipv4netmask": ipv4netmask,
+                    "ipv6dns1": "",
+                    "ipv6dns2": "",
+                    "ipv4dns1": "",
+                    "ipv4dns2": "",
                 })
 
 
@@ -151,7 +153,7 @@ def dhcp6ranges(prefix, bitmask):
         prefsplit + ":1::1",
         prefsplit + ":0fff::fffe",
         prefsplit + ":f000::1",
-        prefsplit + "ffff::fffe",
+        prefsplit + ":ffff::fffe",
     ]
 
 
@@ -176,6 +178,14 @@ def dhcp4ranges(prefix, bitmask):
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird) + ".1",
         ipsplit[0] + "." + ipsplit[1] + "." + str(topthird) + ".254",
     ]
+
+
+# ipv4netmask() will return a netmask given a bitmask
+def bitmasktonetmask(bitmask):
+    if bitmask < 17 or bitmask > 24:
+        return "255.255.255.255"
+    else:
+        return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
 
 
 # populateswitches() will populate the switch list

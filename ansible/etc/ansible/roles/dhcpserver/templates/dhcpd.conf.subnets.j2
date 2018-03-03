@@ -1,0 +1,13 @@
+{% for vlan in hostvars[ansible_hostname].vlans %}
+{% if vlan["ipv4bitmask"] not in [" ", "0"] and vlan["ipv4dns1"] != "" %}
+# {{ vlan["name"] }} / {{ vlan["building"] }}
+subnet {{ vlan["ipv4prefix"] }} netmask {{ vlan["ipv4netmask"]}} {
+{% if hostvars[ansible_hostname].building == vlan["building"] %}
+    range {{ vlan["ipv4dhcp1a"] }} {{ vlan["ipv4dhcp1b"] }};
+{% else %}
+    range {{ vlan["ipv4dhcp2a"] }} {{ vlan["ipv4dhcp2b"] }};
+{% endif %}
+    option domain-name-servers {{ vlan["ipv4dns1"] }}, {{ vlan["ipv4dns2"] }}; 
+}
+{% endif %}
+{% endfor %}
