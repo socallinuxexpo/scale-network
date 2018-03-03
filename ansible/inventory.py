@@ -29,7 +29,7 @@ pis = []
 # inv = {
 #    "group": {
 #        "hosts": [
-#            "192.168.28.71",
+#            "192.168.28.71"
 #            "192.168.28.72"
 #        ],
 #        "vars": {
@@ -74,30 +74,47 @@ def populatevlans():
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
                 ipv6 = elems[3].split('/')
-                if ipv6[1] == "0":
-                    ipv6 = [" ", " "]
+                ipv6prefix = ipv6[0]
+                ipv6bitmask = ipv6[1]
+                ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
                 ipv4 = elems[4].split('/')
-                if ipv4[1] == "0":
-                    ipv4 = [" ", " "]
+                ipv4prefix = ipv4[0]
+                ipv4bitmask = ipv4[1]
+                ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
+                ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
                 vlans.append({
                     "name": elems[1],
                     "id": elems[2],
-                    "ipv6prefix": ipv6[0],
-                    "ipv6bitmask": ipv6[1],
-                    "ipv4prefix": ipv4[0],
-                    "ipv4bitmask": ipv4[1],
+                    "ipv6prefix": ipv6prefix,
+                    "ipv6bitmask": ipv6bitmask,
+                    "ipv4prefix": ipv4prefix,
+                    "ipv4bitmask": ipv4bitmask,
                     "building": file,
                     "description": elems[5].split('\n')[0],
+                    "ipv6dhcp1a": ipv6dhcp[0],
+                    "ipv6dhcp1b": ipv6dhcp[1],
+                    "ipv6dhcp2a": ipv6dhcp[2],
+                    "ipv6dhcp2b": ipv6dhcp[3],
+                    "ipv4dhcp1a": ipv4dhcp[0],
+                    "ipv4dhcp1b": ipv4dhcp[1],
+                    "ipv4dhcp2a": ipv4dhcp[2],
+                    "ipv4dhcp2b": ipv4dhcp[3],
+                    "ipv4router": ipv4dhcp[4],
+                    "ipv4netmask": ipv4netmask,
+                    "ipv6dns1": "",
+                    "ipv6dns2": "",
+                    "ipv4dns1": "",
+                    "ipv4dns2": "",
                 })
 
 
-# ip4toptr() generate a PTR
+# ip4toptr() generate a PTR and returns it
 def ip4toptr(ipaddress):
     splitip = re.split(r'\.', ipaddress)
     return splitip[3] + "." + splitip[2] + "." + splitip[1]
 
 
-# ip6toptr() generates a PTR
+# ip6toptr() generates a PTR and returns it
 def ip6toptr(ipaddress):
     splitip = re.split(r'::', ipaddress)
     ptr = []
@@ -128,6 +145,52 @@ def ip6toptr(ipaddress):
     return retstr
 
 
+# dhcp6ranges() will return a list in [ipv6dhcp1a, ipv6dhcp1b, ipv6dhcp2a,...]
+def dhcp6ranges(prefix, bitmask):
+    if bitmask == 0:
+        return ["", "", "", ""]
+    prefsplit = re.split(r'\:\:', prefix)[0]
+    return [
+        prefsplit + ":1::1",
+        prefsplit + ":0fff::fffe",
+        prefsplit + ":f000::1",
+        prefsplit + ":ffff::fffe",
+    ]
+
+
+# dhcp4ranges() will return a list in [ipv4dhcp1a, ipv4dhcp1b,... ipv4router]
+def dhcp4ranges(prefix, bitmask):
+    if bitmask < 17 or bitmask > 24:
+        return ["", "", "", "", ""]
+    ipsplit = re.split(r'\.', prefix)
+    if bitmask == 24:
+        return [
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".10",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".128",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".129",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".254",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
+        ]
+    numocs = 2**(24 - bitmask)
+    midthird = (int(ipsplit[2]) + (numocs / 2))
+    topthird = (int(ipsplit[2]) + (numocs - 1))
+    return [
+        ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".10",
+        ipsplit[0] + "." + ipsplit[1] + "." + str(midthird - 1) + ".255",
+        ipsplit[0] + "." + ipsplit[1] + "." + str(midthird) + ".1",
+        ipsplit[0] + "." + ipsplit[1] + "." + str(topthird) + ".254",
+        ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
+    ]
+
+
+# ipv4netmask() will return a netmask given a bitmask
+def bitmasktonetmask(bitmask):
+    if bitmask < 17 or bitmask > 24:
+        return "255.255.255.255"
+    else:
+        return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
+
+
 # populateswitches() will populate the switch list
 def populateswitches():
     f = open(switchesfile, 'r')
@@ -152,6 +215,8 @@ def populateservers():
             elems = re.split(r'\t+', line)
             if len(elems) > 2:
                 ipv6 = elems[2]
+                ipv4 = elems[3]
+                ansiblerole = elems[4].split('\n')[0]
                 vlan = ""
                 for v in vlans:
                     if ipv6.find(v["ipv6prefix"]) > -1:
@@ -161,11 +226,20 @@ def populateservers():
                     "name": elems[0],
                     "macaddress": elems[1],
                     "ipv6": ipv6,
-                    "ipv4": elems[3],
-                    "ansiblerole": elems[4].split('\n')[0],
+                    "ipv4": ipv4,
+                    "ansiblerole": ansiblerole,
                     "vlan": vlan,
                     "building": building,
                 })
+                if ansiblerole == "core":
+                    for i in range(0, len(vlans)):
+                        v = vlans[i]
+                        if building == v["building"]:
+                            vlans[i]["ipv6dns1"] = ipv6
+                            vlans[i]["ipv4dns1"] = ipv4
+                        else:
+                            vlans[i]["ipv6dns2"] = ipv6
+                            vlans[i]["ipv4dns2"] = ipv4
 
 
 # populateinv() will populate the master inventory dictionary
@@ -200,7 +274,6 @@ def populateinv():
 
 
 def main():
-
     populatevlans()
     populateswitches()
     populateservers()
