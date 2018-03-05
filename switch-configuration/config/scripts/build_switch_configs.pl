@@ -3,7 +3,7 @@
 # This script will iterate through each of the switches named in the switchtypes
 # file and produce a configuration file for that switch named <switchname>.conf
 #
-require "scripts/switch_template.pl";   # Pull in configuration library
+require "./scripts/switch_template.pl";   # Pull in configuration library
 set_debug_level(5);
 my $switchlist = get_switchlist();
 my $switch;
