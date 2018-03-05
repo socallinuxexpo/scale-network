@@ -532,6 +532,13 @@ $USER_AUTHENTICATION
         }
     }
 }
+chassis {
+    alarm {
+        management-ethernet {
+	    link-down ignore;
+	}
+    }
+}
 interfaces {
     $INTERFACES_PHYSICAL
     $INTERFACES_LAYER3
