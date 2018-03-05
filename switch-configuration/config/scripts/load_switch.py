@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 from getpass import getpass
 from jnpr.junos import Device
