@@ -8,7 +8,7 @@ numcpu = "1"
 
 boxes = [
   {
-    :name => "server1",
+    :name => "server5",
     :eth1 => "10.128.3.5",
     :eth1ipv6 => "2001:470:f325:503::5",
     :description => "DNS & DHCP & SYSLOG & NTP in NOC",
@@ -26,7 +26,7 @@ boxes = [
     :description => "MONITORING Server in NOC",
   },
   {
-    :name => "server4",
+    :name => "server8",
     :eth1 => "10.128.3.7",
     :eth1ipv6 => "2001:470:f325:503::7",
     :description => "AUTOMATION & SIGN Server in NOC",

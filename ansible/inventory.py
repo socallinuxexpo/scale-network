@@ -15,8 +15,12 @@ pifiles = "../facts/pi/pilist.tsv"
 
 # globals
 #
-# vlans = []{name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask,
-# building, description}
+# vlans = []{
+#   name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask,
+#   building, description, ipv6dhcp1a, ipv6dhcp1b, ipv6dhcp2a,
+#   ipv6dhcp2b, ipv4dhcp1a, ipv4dhcp1b, ipv4dhcp2a, ipv4dhcp2b,
+#   ipv4router, ipv4netmask
+# }
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
@@ -101,6 +105,10 @@ def populatevlans():
                     "ipv4dhcp2b": ipv4dhcp[3],
                     "ipv4router": ipv4dhcp[4],
                     "ipv4netmask": ipv4netmask,
+                    "ipv6dns1": "",
+                    "ipv6dns2": "",
+                    "ipv4dns1": "",
+                    "ipv4dns2": "",
                 })
 
 
