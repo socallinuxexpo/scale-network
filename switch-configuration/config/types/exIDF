@@ -44,6 +44,6 @@ TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             exAVLAN,exStaff,exSigns
 VLAN	exSigns		4		// ge-0/0/{18-21}
-FIBER	ge-1/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             exAVLAN,exStaff, \
 			exSigns,exDWCC,HAM_BRIDGE // Uplink to ExMDF Switch
