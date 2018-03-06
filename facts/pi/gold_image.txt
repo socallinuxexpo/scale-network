@@ -1,9 +1,7 @@
 # Steps used to build the gold image
 
 # TODO
-- disable right clicks
-- fix autologin
-- add the zabbix agent
+- disable screen blanking
 
 # Create bootable SDCARD:
 1. Download Raspbian Stretch Lite 
@@ -79,6 +77,7 @@
     Under [Seat:*] Uncomment #xserver-command=X
     change to:
     xserver-command=X -s 0 -dpms
+    autologin-user=pi
 14. `sudo vi /etc/X11/xorg.conf`
     Section "ServerFlags"
 	    # Disable VT/TTY change
@@ -96,4 +95,6 @@
     set Server=<zabbix_server>
     set ServerActive=<zabbix_server>
     set HostMetadata=pi
+    set RefreshActiveChecks=60
+    set Hostname=pi
 17. `sudo systemctl enable zabbix-agent`
