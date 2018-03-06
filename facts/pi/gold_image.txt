@@ -1,9 +1,9 @@
 # Steps used to build the gold image
 
 # TODO
-- disable screensaver
-- configure autologin for pi user
 - disable right clicks
+- fix autologin
+- add the zabbix agent
 
 # Create bootable SDCARD:
 1. Download Raspbian Stretch Lite 
@@ -16,12 +16,22 @@
 3. run `sudo apt-get update`
 4. run `sudo apt-get upgrade -y`
 5. run `sudo apt-get dist-upgrade -y`
-6. run `sudo reboot`
-7. Log in again after reboot
+6. run `sudo apt-get install -y \
+    git \
+    openbox \
+    xwit \
+    python-gtk2 \
+    python-webkit \
+    xinit \
+    zabbix-agent \
+    lightdm \
+    nodm \
+    matchbox-window-manager
+7. run `sudo reboot`
+8. Log in again after reboot
 
 # Run raspi-config
-1. `sudo apt-get install lightdm -y`
-2. `sudo raspi-config`
+1. `sudo raspi-config`
 - 3. Boot Options
     - B1. Desktop / CLI
         - B4. Desktop Autologin
@@ -30,33 +40,58 @@
         - disable en_GB.UTF-8 
         - enable en_US.UTF-8
         - exit and choose en_US.UTF-8 as the default when prompted
+    - I3. Change Keyboard Layout
+        - set to Generic 104-key PC
+        - go to Other
+        - Set English (US)
+        - Set English (US)
+        - The default keyboard Layout
+        - No compose key
+        - No when prompted for CTRL-ALT-Backspace
 - 5. Interfacing Options
     - P2. Enable SSH server
     - P3. Disable VNC server
     - P6. Disable access via serial
 - 7. Advanced Options
     - A3. Change memory split to 16MB for GPU
-3. clicked Finished, when prompted for reboot select no
+2. clicked Finished, when prompted for reboot select no
 
 # disable TTYs
 1. `sudo vi /etc/systemd/logind.conf`
 2. Uncomment "ReserveVT=6" and change it to "ReserveVT=N"
+3. Uncomment "NAutoVTs=6" and change it to "NAutoVTs=0"
 
 # Setup home directories and python scripts
-1. run `sudo apt-get install -y git openbox xwit`
-2. cd /tmp
-3. run `git clone https://github.com/socallinuxexpo/scale-signs`
-4. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
-5. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
-6. `sudo chown -R pi:pi /home/pi`
-7. `sudo chown -R root:root /home/pi.save`
-8. `sudo cp scale-signs/client/pi-python/usr/bin/* /usr/bin/`
-9. `sudo chmod +x /usr/bin/resethome.sh`
-10. `sudo apt-get install python-gtk2 python-webkit -y`
-11. `sudo systemctl unmask rc-local`
-12. `sudo vi /etc/rc.local`
-13. add to the bottom of the file (above exit 0):
+1. cd /tmp
+2. run `git clone https://github.com/socallinuxexpo/scale-signs`
+3. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
+4. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
+5. `sudo chown -R pi:pi /home/pi`
+6. `sudo chown -R root:root /home/pi.save`
+7. `sudo cp scale-signs/client/pi-python/usr/bin/* /usr/bin/`
+8. `sudo chmod +x /usr/bin/resethome.sh`
+9. `sudo systemctl unmask rc-local`
+10. `sudo vi /etc/rc.local`
+11. add to the bottom of the file (above exit 0):
     /usr/bin/resethome.sh
-14. `sudo reboot`
-15. `sudo apt-get install xinit -y`
-
+12. `sudo reboot`
+13. `sudo vi /etc/lightdm/lightdm.conf`
+    Under [Seat:*] Uncomment #xserver-command=X
+    change to:
+    xserver-command=X -s 0 -dpms
+14. `sudo vi /etc/X11/xorg.conf`
+    Section "ServerFlags"
+	    # Disable VT/TTY change
+	    Option "DontVTSwitch" "true"
+	    # Disable ctrl+alt+bs (close xorg)
+	    Option "DontZap"	"yes"
+    EndSection
+    `sudo vi /etc/default/nodm`
+    NODM_ENABLED=true
+    NODM_USER=pi
+15. `sudo vi ~/.config/openbox/rc.xml`
+    in Keyboard section, find keybind key="A-F4"
+    set execute command to false
+16. `sudo vi /etc/zabbix/zabbix_agentd.conf`
+    change Server= and set to current zabbix server
+17. `sudo systemctl enable zabbix-agent`
