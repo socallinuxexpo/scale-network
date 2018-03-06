@@ -6,50 +6,57 @@
 - disable right clicks
 
 # Create bootable SDCARD:
-1. Download Raspbian Stretch with desktop 2017-11-29 
-2. Write to 4GB SD Card
+1. Download Raspbian Stretch Lite 
+  a. 2017-11-29-raspbian-stretch-lite.img
+2. Write to 4GB SD Card using Etcher
 
 # Boot and update system:
 1. Boot up
-2. run `sudo apt-get update`
-3. run `sudo apt-get upgrade -y`
-4. run `sudo apt-get dist-upgrade -y`
-5. run `sudo reboot`
+2. Log in as pi/raspberry
+3. run `sudo apt-get update`
+4. run `sudo apt-get upgrade -y`
+5. run `sudo apt-get dist-upgrade -y`
+6. run `sudo reboot`
+7. Log in again after reboot
 
 # Run raspi-config
-- Localization
-1. in Localization, disable en_GB.UTF-8 
-2. in Localization, enable en_US.UTF-8
-3. choose en_US.UTF-8 as the default
-- Interfacing Options
-1. Enable SSH server
-2. Disable VNC server
-3. Disable access via serial
-- Advanced Options
-1. Change memory split to 16 (for video, rest for system)
-
-# Setup user credentials:
-1. set root password with `passwd root`
-2. set pi password with `passwd pi`
+1. `sudo apt-get install lightdm -y`
+2. `sudo raspi-config`
+- 3. Boot Options
+    - B1. Desktop / CLI
+        - B4. Desktop Autologin
+- 4. Localization
+    - I1. Change Locale
+        - disable en_GB.UTF-8 
+        - enable en_US.UTF-8
+        - exit and choose en_US.UTF-8 as the default when prompted
+- 5. Interfacing Options
+    - P2. Enable SSH server
+    - P3. Disable VNC server
+    - P6. Disable access via serial
+- 7. Advanced Options
+    - A3. Change memory split to 16MB for GPU
+3. clicked Finished, when prompted for reboot select no
 
 # disable TTYs
-1. run `sed -i 's/#NAutoVTs=6/NAutoVTs=0/' /etc/systemd/logind.conf
-2. run `sed -i 's/#ReserveVT=6/ReserveVT=N/' /etc/systemd/logind.conf
-
-# Set video memory in boot/config.txt (if not done via raspi-config)
-1. run `sudo echo "gpu_mem=16" >> /boot/config.txt`
+1. `sudo vi /etc/systemd/logind.conf`
+2. Uncomment "ReserveVT=6" and change it to "ReserveVT=N"
 
 # Setup home directories and python scripts
 1. run `sudo apt-get install -y git openbox xwit`
-2. cd /tmp 
+2. cd /tmp
 3. run `git clone https://github.com/socallinuxexpo/scale-signs`
-4. `cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
-5. `cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
+4. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
+5. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
 6. `sudo chown -R pi:pi /home/pi`
 7. `sudo chown -R root:root /home/pi.save`
 8. `sudo cp scale-signs/client/pi-python/usr/bin/* /usr/bin/`
-9. `sudo apt-get install python-gtk2 python-webkit -y`
-10. `echo "#!/bin/bash" >> /etc/rc.local`
-11. `echo "/usr/bin/resethome.sh" >> /etc/rc.local`
-12. `chmod +x /etc/rc.d/rc.local`
-13. `systemctl enable rc-local.service
+9. `sudo chmod +x /usr/bin/resethome.sh`
+10. `sudo apt-get install python-gtk2 python-webkit -y`
+11. `sudo systemctl unmask rc-local`
+12. `sudo vi /etc/rc.local`
+13. add to the bottom of the file (above exit 0):
+    /usr/bin/resethome.sh
+14. `sudo reboot`
+15. `sudo apt-get install xinit -y`
+
