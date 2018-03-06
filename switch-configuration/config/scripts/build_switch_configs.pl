@@ -26,7 +26,7 @@ foreach $switch (@{$switchlist})
 {
     debug(2, "Building $switch\n");
     my $cf = build_config_from_template($switch,
-            '$1$qQMsQS3c$DmHnv3mHPwDuE/ILQ.yLl.');
+            '$5$c1mAcDv3$zQkDfQL9dswXflyqd6stNT3A3aPLhZoXLtuIgWjG073');
     open OUTPUT, ">output/$switch.conf" ||
              die("Couldn't write configuration for ".$switch." $!\n");
     print OUTPUT $cf;
