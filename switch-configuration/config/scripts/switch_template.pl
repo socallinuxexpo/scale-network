@@ -184,6 +184,7 @@ sub build_users_from_auth
     debug(9, "\tFound USER $user type $type\n");
     open KEYFILE, "<$file" || die("Failed to open key file: $file\n");
     my $key = <KEYFILE>;
+    chomp($key);
     close KEYFILE;
     if (!defined($Keys{$user}))
     {
@@ -318,7 +319,7 @@ EOF
       while ($count)
       {
           debug(9, "\t\tMember ge-0/0/$port remaining $count\n");
-          $MEMBERS.= "        ge-0/0/$port;\n";
+          $MEMBERS.= "        member ge-0/0/$port;\n";
           $count--;
           $port++;
       }
@@ -455,7 +456,7 @@ EOF
             # }
         }
         no-local-switching;
-        isolation-id $_;
+        isolation-id 2$_;
       }
 EOF
     }
