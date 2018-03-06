@@ -242,6 +242,15 @@ sub build_interfaces_from_config
   my $switchtype = read_config_file("types/$Type");
   debug(9, "$hostname: type: $Type, received ", $#{$switchtype},
       " lines of config\n");
+  $OUTPUT .= <<EOF;
+    me-0 {
+        unit 0 {
+	    family inet {
+	        dhcp;
+            }
+	}
+    }
+EOF
   foreach(@{$switchtype})
   {
     my @tokens = split(/\t/, $_); # Split line into tokens
