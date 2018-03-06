@@ -6,7 +6,6 @@
   roles: 
     - { role: dnsserver }
     - { role: dhcpserver }
-#    - { role: syslogserver }
 
 - hosts: servers
   become: yes
@@ -15,7 +14,7 @@
     - { role: dnsclient }
     - { role: noapparmor }
     - { role: ntp }
-    - { role: aptupdate }
+#    - { role: aptupdate }
 
 #- hosts: automation
 #  become: yes

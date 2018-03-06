@@ -264,7 +264,7 @@ def populateinv():
         inv["servers"]["hosts"].append(s["name"])
         inv[s["ansiblerole"]]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
-                "ansible_host": s["ipv4"],
+                "ansible_host": s["ipv6"],
                 "ipv6": s["ipv6"],
                 "ipv6ptr": ip6toptr(s["ipv6"]),
                 "ipv4": s["ipv4"],
