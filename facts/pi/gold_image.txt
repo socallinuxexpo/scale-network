@@ -93,5 +93,7 @@
     in Keyboard section, find keybind key="A-F4"
     set execute command to false
 16. `sudo vi /etc/zabbix/zabbix_agentd.conf`
-    change Server= and set to current zabbix server
+    set Server=<zabbix_server>
+    set ServerActive=<zabbix_server>
+    set HostMetadata=pi
 17. `sudo systemctl enable zabbix-agent`
