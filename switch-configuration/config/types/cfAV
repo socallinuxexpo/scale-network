@@ -1,0 +1,7 @@
+// Room Switch Template -- All conference rooms Conference Center
+TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,cfDWCC,HAM_BRIDGE	// Uplink
+TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,cfDWCC,HAM_BRIDGE	// Downlink
+TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfStaff				// AP
+VLAN	cfAVLAN		44	// ge-0/0/{4-47}
+
