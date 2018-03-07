@@ -1,8 +1,22 @@
 {% for item in groups["core"] %}
 @	    IN  NS     {{ item }}
+ns      IN  AAAA    {{ hostvars[item].ipv6 }}
+ns      IN  A    {{ hostvars[item].ipv4 }}
 {% endfor -%}
 
 {% for item in groups["servers"] %}
-{{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }} 
-{{ item }}  IN  A       {{ hostvars[item].ipv4 }} 
+{{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }}
+{{ item }}  IN  A       {{ hostvars[item].ipv4 }}
 {% endfor -%}
+
+{% for item in groups["monitoring"] %}
+zabbix  IN  CNAME   {{ hostvars[item].fqdn }}.
+monitor  IN  CNAME   {{ hostvars[item].fqdn }}.
+bigbrother  IN  CNAME   {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
+{% for item in groups["automation"] %}
+signs   IN  CNAME    {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
+
