@@ -1,4 +1,4 @@
 // Bridged -- 900-999
 VLAN	MDF_LINK	900	2001:470:f325:8000::/64	172.20.0.0/24	Link between IDF in Conference and Expo Centers
 VLAN	HAM_BRIDGE	950	::/0			0.0.0.0/0	Link between N6S station and Ham Booth in Expo
-VLAN  COGENT  999 ::/0  38.98.46.128/25 COGENT IPv4 Transit Link (PSAV / PCC)
+VLAN	COGENT	999 ::/0	38.98.46.128/25	COGENT IPv4 Transit Link (PSAV / PCC)
