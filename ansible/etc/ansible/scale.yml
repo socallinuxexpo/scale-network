@@ -14,9 +14,4 @@
     - { role: dnsclient }
     - { role: noapparmor }
     - { role: ntp }
-#    - { role: aptupdate }
 
-- hosts: automation
-  become: yes
-  roles:
-    - { role: signs }
