@@ -16,7 +16,7 @@
     - { role: ntp }
 #    - { role: aptupdate }
 
-#- hosts: automation
-#  become: yes
-#  roles:
-#    - { role: signs }
+- hosts: automation
+  become: yes
+  roles:
+    - { role: signs }
