@@ -1,9 +1,5 @@
 # Steps used to build the gold image
 
-# TODO
-- disable screen blanking
-- how to get hostname from dhcp
-
 # Create bootable SDCARD:
 1. Download Raspbian Stretch Lite 
   a. 2017-11-29-raspbian-stretch-lite.img
@@ -93,7 +89,6 @@
     `sudo vi /etc/default/nodm`
     NODM_ENABLED=true
     NODM_USER=pi
-    NODM_XSESSION=/home/pi/.xsession
 15. `sudo vi ~/.config/openbox/rc.xml`
     in Keyboard section, find keybind key="A-F4"
     set execute command to false
