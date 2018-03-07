@@ -85,6 +85,10 @@
 	    Option "DontVTSwitch" "true"
 	    # Disable ctrl+alt+bs (close xorg)
 	    Option "DontZap"	"yes"
+        Option         "BlankTime"     "0"
+        Option         "StandbyTime"   "0"
+        Option         "SuspendTime"   "0"
+        Option         "OffTime"       "0"
     EndSection
     `sudo vi /etc/default/nodm`
     NODM_ENABLED=true
@@ -101,3 +105,5 @@
     set Hostname=pi
 17. `sudo systemctl enable zabbix-agent`
 18. `setterm -blank 0 -powerdown 0`
+19. `update-alternatives --config x-window-manager`
+    pick matchbox-window-manager
