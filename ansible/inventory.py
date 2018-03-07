@@ -101,6 +101,10 @@ def populatevlans():
                     "ipv4dhcp2b": ipv4dhcp[3],
                     "ipv4router": ipv4dhcp[4],
                     "ipv4netmask": ipv4netmask,
+-                    "ipv6dns1": "",		
+-                    "ipv6dns2": "",		
+-                    "ipv4dns1": "",		
+-                    "ipv4dns2": "",
                 })
 
 
