@@ -14,9 +14,4 @@
     - { role: dnsclient }
     - { role: noapparmor }
     - { role: ntp }
-    - { role: aptupdate }
 
-- hosts: core
-  become: yes
-  roles: 
-    #- { role: syslogserver }

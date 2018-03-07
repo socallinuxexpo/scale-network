@@ -6,6 +6,8 @@
     state: present
     update_cache: no
 
+
+
 - name: start rsyslog service
   systemd:
     name: rsyslog
@@ -13,3 +15,4 @@
     state: started
     masked: no
     daemon_reload: no
+

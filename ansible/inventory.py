@@ -15,8 +15,12 @@ pifiles = "../facts/pi/pilist.tsv"
 
 # globals
 #
-# vlans = []{name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask,
-# building, description}
+# vlans = []{
+#   name, id, ipv6prefix, ipv6bitmask, ipv4prefix, ipv4bitmask,
+#   building, description, ipv6dhcp1a, ipv6dhcp1b, ipv6dhcp2a,
+#   ipv6dhcp2b, ipv4dhcp1a, ipv4dhcp1b, ipv4dhcp2a, ipv4dhcp2b,
+#   ipv4router, ipv4netmask
+# }
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
@@ -260,7 +264,7 @@ def populateinv():
         inv["servers"]["hosts"].append(s["name"])
         inv[s["ansiblerole"]]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
-                "ansible_host": s["ipv4"],
+                "ansible_host": s["ipv6"],
                 "ipv6": s["ipv6"],
                 "ipv6ptr": ip6toptr(s["ipv6"]),
                 "ipv4": s["ipv4"],
