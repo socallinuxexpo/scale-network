@@ -15,6 +15,7 @@ if(scalar(@ARGV)) # One or more switch names specified
 else
 {
     # Rebuild entire config set, so start with empty output directory
+    ##FIXME## Should probably only delete configurations we are about to build
     my $file;
     foreach $file (glob("output/*"))
     {
@@ -27,6 +28,14 @@ foreach $switch (@{$switchlist})
     debug(2, "Building $switch\n");
     my $cf = build_config_from_template($switch,
             '$5$c1mAcDv3$zQkDfQL9dswXflyqd6stNT3A3aPLhZoXLtuIgWjG073');
+    if ( ! -d "output")
+    {
+	mkdir "output";
+    }
+    if ( ! -d "output" || ! -w "output" || ! -x "output" )
+    {
+        die("Directory \"output\" does not exist!\n");
+    }
     open OUTPUT, ">output/$switch.conf" ||
              die("Couldn't write configuration for ".$switch." $!\n");
     print OUTPUT $cf;
