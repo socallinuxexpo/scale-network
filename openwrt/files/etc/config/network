@@ -21,13 +21,12 @@ config interface '{{.name}}'
         option ifname '{{range .vlans}}{{$element.parent_if}}.{{.}} {{ end -}}'
         option type '{{.type}}'
         option proto '{{.proto}}'
-{{range .vlans}}
-config switch_vlan
-        option device '{{$element.device}}'
-        option vlan '{{.}}'
-        option ports '{{$element.ports}}'
 {{ end }}
-{{ end }}
+
+config interface 'mgmt6'
+        option proto 'dhcpv6'
+        option ifname '@mgmt'
+        option reqprefix no
 
 config switch_port
         option device 'switch0'
