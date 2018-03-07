@@ -69,6 +69,17 @@
 10. `sudo vi /etc/rc.local`
 11. add to the bottom of the file (above exit 0):
     /usr/bin/resethome.sh
+
+    MYHOSTNAME=`hostname`
+
+    if [ "$MYHOSTNAME" = "pi" ]; then
+            MACC=`ip a | grep ether | cut -d " " -f 6 | cut -d ":" -f 3,4,5 | sed 's/://g'`
+            NEWNAME="pi$MACC"
+            hostnamectl set-hostname $NEWNAME
+            systemctl restart zabbix-agent
+            date >> /var/log/pi-name-change.log
+    fi
+
 12. `sudo reboot`
 13. `sudo vi /etc/lightdm/lightdm.conf`
     Under [Seat:*] Uncomment #xserver-command=X
