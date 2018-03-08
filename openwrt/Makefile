@@ -61,4 +61,6 @@ endif
 	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
+	chmod 755 $(TMPL_OUT_DIR)/root
+	chmod 750 $(TMPL_OUT_DIR)/root/.ssh
 	touch $(TMPL_OUT_DIR)
