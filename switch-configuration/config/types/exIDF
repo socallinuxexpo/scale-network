@@ -13,36 +13,26 @@ TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink to BallroomH
 TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN,exStaff, \
-			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink to BallroomH
+			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN,exStaff, \
-			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink to BallroomH
+			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN,exStaff, \
-			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink to BallroomH
+			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN,exStaff, \
-			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink to BallroomH
-TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
-TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff,exSigns,exRegistration
+			exSigns,exDWCC,HAM_BRIDGE,exRegistration // Downlink
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
 VLAN	exSigns		4		// ge-0/0/{18-21}
 FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN,exStaff, \
