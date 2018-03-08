@@ -26,8 +26,12 @@ else
 foreach $switch (@{$switchlist})
 {
     debug(2, "Building $switch\n");
-    my $cf = build_config_from_template($switch,
-            '$5$c1mAcDv3$zQkDfQL9dswXflyqd6stNT3A3aPLhZoXLtuIgWjG073');
+    open PASSWD, "<../../facts/secrets/jroot_pw" ||
+    	die "Couldn't find root PW: $!\n";
+    my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
+    chomp $rootpw;
+    close PASSWD;
+    my $cf = build_config_from_template($switch,$rootpw);
     if ( ! -d "output")
     {
 	mkdir "output";
