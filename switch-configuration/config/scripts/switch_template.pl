@@ -518,6 +518,11 @@ system {
     root-authentication {
         encrypted-password "$root_auth";
     }
+    syslog {
+	host loghost {
+	    any any;
+	}
+    }
     login {
 $USER_AUTHENTICATION
     }
@@ -546,6 +551,15 @@ chassis {
     alarm {
         management-ethernet {
 	    link-down ignore;
+	}
+    }
+}
+snmp {
+    community Junitux {
+	authorization read-only;
+	clients {
+	    2001:470:f325:103::/64;
+	    2001:470:f325:503::/64;
 	}
     }
 }
