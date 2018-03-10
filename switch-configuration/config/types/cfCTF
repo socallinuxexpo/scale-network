@@ -1,5 +1,3 @@
-// Room Switch Template -- All conference rooms Conference Center
-TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,cfDWCC,HAM_BRIDGE	// Uplink
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,cfDWCC,HAM_BRIDGE	// Downlink
-VLAN	cfCTF		46	// ge-0/0/{2-47}
+// CTF Table Switches -- All ports CTF VLAN, no trunks.
+VLAN	cfCTF		48	// ge-0/0/{0-47}
 
