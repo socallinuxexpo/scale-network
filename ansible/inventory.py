@@ -24,7 +24,7 @@ pifiles = "../facts/pi/pilist.tsv"
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
-# servers = []{name, mac, ipv6, ipv4, role, vlanname, bldg, vlans}
+# servers = []{name, num, mac, ipv6, ipv4, role, vlanname, bldg, vlans}
 servers = []
 # apfile = []{name, power5g?, freq5g?, power2g?, freq2g?, mac, building}
 aps = []
@@ -203,10 +203,27 @@ def populateswitches():
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
+            name = elems[0]
+            roomalias(name)
             switches.append({
-                "name": elems[0],
+                "name": name,
+                "num": elems[1],
                 "ipv6": elems[3],
+                "aliases": roomalias(name),
             })
+
+
+# swroomalias() will return a list of alias for multiple room use cases
+def roomalias(name):
+    payload = []
+    upname = name.upper()
+    if "RM" in upname and '-' in name:
+        comrooms = re.split("RM", upname)[1]
+        comrooms = comrooms.replace('\n', '')
+        rooms = re.split('\-', comrooms)
+        for r in rooms:
+            payload.append(r)
+    return payload 
 
 
 # populateservers() will populate the server list
@@ -253,7 +270,9 @@ def populateinv():
         inv["_meta"]["hostvars"][s["name"]] = {
             "ipv6": s["ipv6"],
             "ipv6ptr": ip6toptr(s["ipv6"]),
-            "fqdn": s["name"] + ".scale.lan"
+            "fqdn": s["name"] + ".scale.lan",
+            "num": s["num"],
+            "aliases": s["aliases"],
         }
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
