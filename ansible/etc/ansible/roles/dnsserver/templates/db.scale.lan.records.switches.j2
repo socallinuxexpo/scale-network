@@ -1,3 +1,7 @@
 {% for item in groups["switches"] -%}
 {{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }}
+switch{{ hostvars[item].num }}  IN  CNAME   {{ hostvars[item].fqdn }}.
+{% for alias in hostvars[item].aliases %}
+rm{{ alias }} IN    CNAME   {{ hostvars[item].fqdn }}.
+{% endfor -%}
 {% endfor -%}

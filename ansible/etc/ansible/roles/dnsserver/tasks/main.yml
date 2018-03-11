@@ -45,6 +45,7 @@
     - named.conf.scale-zones
     - named.conf.scale-ip-zones
     - named.conf.options
+    - db.scale.lan.records.routers
 
 - name: copy scale view, record, and acl files
   template:
