@@ -61,6 +61,9 @@ inv = {
     "switches": {
         "hosts": [],
     },
+    "aps": {
+        "hosts": [],
+    },
     "_meta": {
         "hostvars": {}
     }
@@ -213,6 +216,23 @@ def populateswitches():
             })
 
 
+# populate aps() will populate the ap list
+def populateaps():
+    f = open(apfile, 'r')
+    flines = f.readlines()
+    f.close()
+    for line in flines:
+        if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
+            elems = re.split(r'\t+', line)
+            aps.append({
+                "name": elems[0],
+                "mac": elems[1],
+                "ipv4": elems[2],
+                "wifi2": elems[3],
+                "wifi5": elems[4].split('\n')[0]
+            })
+
+
 # swroomalias() will return a list of alias for multiple room use cases
 def roomalias(name):
     payload = []
@@ -274,6 +294,15 @@ def populateinv():
             "num": s["num"],
             "aliases": s["aliases"],
         }
+    for a in aps:
+        inv["aps"]["hosts"].append(a["name"])
+        inv["_meta"]["hostvars"][a["name"]] = {
+            "mac": a["mac"],
+            "ipv4": a["ipv4"],
+            "ansible_host": a["ipv4"],
+            "wifi2": a["wifi2"],
+            "wifi5": a["wifi5"],
+        }
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
             inv[s["ansiblerole"]] = {
@@ -300,6 +329,7 @@ def main():
     populatevlans()
     populateswitches()
     populateservers()
+    populateaps()
     populateinv()
     print(inv)
 
