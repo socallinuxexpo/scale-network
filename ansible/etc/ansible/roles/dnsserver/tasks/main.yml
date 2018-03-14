@@ -45,7 +45,6 @@
     - named.conf.scale-zones
     - named.conf.scale-ip-zones
     - named.conf.options
-    - db.scale.lan.records.routers
 
 - name: copy scale view, record, and acl files
   template:
@@ -58,6 +57,9 @@
   with_items:
     - db.scale.lan.records.servers
     - db.scale.lan.records.switches
+    - db.scale.lan.records.routers
+    - db.scale.lan.records.aps
+    - db.scale.lan.records.pis
     - db.scale.lan.records.conference
     - db.scale.lan.records.expo
     - db.ip6.arpa.records
@@ -138,6 +140,9 @@
   with_items:
     - db.scale.lan.records.servers
     - db.scale.lan.records.switches
+    - db.scale.lan.records.routers
+    - db.scale.lan.records.aps
+    - db.scale.lan.records.pis
     - db.scale.lan.records.conference
     - db.scale.lan.records.expo
     - db.ip6.arpa.records

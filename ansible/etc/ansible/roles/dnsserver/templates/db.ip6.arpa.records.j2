@@ -6,6 +6,14 @@
 {{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
 {% endfor -%}
 
+{% for item in groups["routers"] -%}
+{{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
 {% for item in groups["switches"] -%}
+{{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
+{% endfor -%}
+
+{% for item in groups["pis"] -%}
 {{ hostvars[item].ipv6ptr }}  IN  PTR    {{ hostvars[item].fqdn }}.
 {% endfor -%}

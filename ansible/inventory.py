@@ -8,10 +8,11 @@ import re
 
 # constants with locations to files or directories within the repo
 vlansddir = "../switch-configuration/config/vlans.d/"
+routerfile = "../facts/routers/routerlist.tsv"
 switchesfile = "../switch-configuration/config/switchtypes"
 serverfile = "../facts/servers/serverlist.tsv"
 apfile = "../facts/aps/aplist.tsv"
-pifiles = "../facts/pi/pilist.tsv"
+pifile = "../facts/pi/pilist.tsv"
 
 # globals
 #
@@ -24,6 +25,8 @@ pifiles = "../facts/pi/pilist.tsv"
 vlans = []
 # switches = []{name, ipv6address}
 switches = []
+# routers = []{name, ipv6}
+routers = []
 # servers = []{name, num, mac, ipv6, ipv4, role, vlanname, bldg, vlans}
 servers = []
 # apfile = []{name, power5g?, freq5g?, power2g?, freq2g?, mac, building}
@@ -54,6 +57,10 @@ pis = []
 #    }
 # }
 inv = {
+    "routers": {
+        "hosts": [],
+        "vars": {},
+    },
     "servers": {
         "hosts": [],
         "vars": {},
@@ -62,6 +69,9 @@ inv = {
         "hosts": [],
     },
     "aps": {
+        "hosts": [],
+    },
+    "pis": {
         "hosts": [],
     },
     "_meta": {
@@ -123,19 +133,20 @@ def ip4toptr(ipaddress):
 
 # ip6toptr() generates a PTR and returns it
 def ip6toptr(ipaddress):
-    splitip = re.split(r'::', ipaddress)
+    splitip = re.split(r'::', ipaddress.split('\n')[0])
     ptr = []
     for i in range(0, 32):
         ptr.append(0)
     ix = 0
-    for c in splitip[1][::-1]:
-        if not c == ":":
-            ptr[ix] = c
-            ix += 1
-        else:
-            while not ix % 4 == 0:
-                ptr[ix] = 0
+    if len(splitip) > 1:
+        for c in splitip[1][::-1]:
+            if not c == ":":
+                ptr[ix] = c
                 ix += 1
+            else:
+                while not ix % 4 == 0:
+                    ptr[ix] = 0
+                    ix += 1
     iy = 31
     for h in re.split(r':', splitip[0]):
         while len(h) < 4:
@@ -216,6 +227,20 @@ def populateswitches():
             })
 
 
+# populaterouters() will populate the router list
+def populaterouters():
+    f = open(routerfile, 'r')
+    flines = f.readlines()
+    f.close()
+    for line in flines:
+        if not line[0] == '/' or line[0] == ' ' or line[0] == '\n':
+            elems = re.split(r'\t+', line)
+            routers.append({
+                "name": elems[0],
+                "ipv6": elems[1].split('\n')[0],
+            })
+
+
 # populate aps() will populate the ap list
 def populateaps():
     f = open(apfile, 'r')
@@ -229,7 +254,21 @@ def populateaps():
                 "mac": elems[1],
                 "ipv4": elems[2],
                 "wifi2": elems[3],
-                "wifi5": elems[4].split('\n')[0]
+                "wifi5": elems[4].split('\n')[0],
+            })
+
+
+# populate pis() will populate the pi list
+def populatepis():
+    f = open(pifile, 'r')
+    flines = f.readlines()
+    f.close()
+    for line in flines:
+        if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
+            elems = re.split(r'\t+', line)
+            pis.append({
+                "name": elems[0],
+                "ipv6": elems[1].split('\n')[0],
             })
 
 
@@ -240,7 +279,7 @@ def roomalias(name):
     if "RM" in upname and '-' in name:
         comrooms = re.split("RM", upname)[1]
         comrooms = comrooms.replace('\n', '')
-        rooms = re.split('\-', comrooms)
+        rooms = re.split('-', comrooms)
         for r in rooms:
             payload.append(r)
     return payload 
@@ -299,9 +338,25 @@ def populateinv():
         inv["_meta"]["hostvars"][a["name"]] = {
             "mac": a["mac"],
             "ipv4": a["ipv4"],
+            "ipv4ptr": ip4toptr(a["ipv4"]),
             "ansible_host": a["ipv4"],
             "wifi2": a["wifi2"],
             "wifi5": a["wifi5"],
+            "fqdn": a["name"] + ".scale.lan",
+        }
+    for r in routers:
+        inv["routers"]["hosts"].append(r["name"])
+        inv["_meta"]["hostvars"][r["name"]] = {
+            "ipv6": r["ipv6"],
+            "ipv6ptr": ip6toptr(r["ipv6"]),
+            "fqdn": r["name"] + ".scale.lan",
+        }
+    for p in pis:
+        inv["pis"]["hosts"].append(p["name"])
+        inv["_meta"]["hostvars"][p["name"]] = {
+            "ipv6": p["ipv6"],
+            "ipv6ptr": ip6toptr(p["ipv6"]),
+            "fqdn": p["name"] + ".scale.lan",
         }
     for s in servers:
         if s["ansiblerole"] not in inv.keys():
@@ -312,7 +367,7 @@ def populateinv():
         inv["servers"]["hosts"].append(s["name"])
         inv[s["ansiblerole"]]["hosts"].append(s["name"])
         inv["_meta"]["hostvars"][s["name"]] = {
-                "ansible_host": s["ipv6"],
+                "ansible_host": s["ipv4"],
                 "ipv6": s["ipv6"],
                 "ipv6ptr": ip6toptr(s["ipv6"]),
                 "ipv4": s["ipv4"],
@@ -329,7 +384,9 @@ def main():
     populatevlans()
     populateswitches()
     populateservers()
+    populaterouters()
     populateaps()
+    populatepis()
     populateinv()
     print(inv)
 

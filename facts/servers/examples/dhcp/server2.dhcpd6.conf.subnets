@@ -1,0 +1,115 @@
+# cfSCALE-SLOW / Conference
+subnet6 2001:470:f325:500::/64 {
+    range6 2001:470:f325:500:f000::1 2001:470:f325:500:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfSCALE-FAST / Conference
+subnet6 2001:470:f325:501::/64 {
+    range6 2001:470:f325:501:f000::1 2001:470:f325:501:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfSpeaker / Conference
+subnet6 2001:470:f325:502::/64 {
+    range6 2001:470:f325:502:f000::1 2001:470:f325:502:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfInfra / Conference
+subnet6 2001:470:f325:503::/64 {
+    range6 2001:470:f325:503:f000::1 2001:470:f325:503:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfCTF / Conference
+subnet6 2001:470:f325:504::/64 {
+    range6 2001:470:f325:504:f000::1 2001:470:f325:504:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfAVLAN / Conference
+subnet6 2001:470:f325:505::/64 {
+    range6 2001:470:f325:505:f000::1 2001:470:f325:505:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfNOC / Conference
+subnet6 2001:470:f325:506::/64 {
+    range6 2001:470:f325:506:f000::1 2001:470:f325:506:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfSigns / Conference
+subnet6 2001:470:f325:507::/64 {
+    range6 2001:470:f325:507:f000::1 2001:470:f325:507:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfStaff / Conference
+subnet6 2001:470:f325:508::/64 {
+    range6 2001:470:f325:508:f000::1 2001:470:f325:508:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfHam_N6S / Conference
+subnet6 2001:470:f325:509::/64 {
+    range6 2001:470:f325:509:f000::1 2001:470:f325:509:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# cfDWCC / Conference
+subnet6 2001:470:f325:600::/64 {
+    range6 2001:470:f325:600:f000::1 2001:470:f325:600:ffff::fffe;
+    option dhcp6.name-servers 2001:470:f325:503::5, 2001:470:f325:103::5; 
+}
+# exSCALE-SLOW / Expo
+subnet6 2001:470:f325:100::/64 {
+    range6 2001:470:f325:100:1::1 2001:470:f325:100:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exSCALE-FAST / Expo
+subnet6 2001:470:f325:101::/64 {
+    range6 2001:470:f325:101:1::1 2001:470:f325:101:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exSpeaker / Expo
+subnet6 2001:470:f325:102::/64 {
+    range6 2001:470:f325:102:1::1 2001:470:f325:102:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exInfra / Expo
+subnet6 2001:470:f325:103::/64 {
+    range6 2001:470:f325:103:1::1 2001:470:f325:103:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exMDF / Expo
+subnet6 2001:470:f325:104::/64 {
+    range6 2001:470:f325:104:1::1 2001:470:f325:104:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exAVLAN / Expo
+subnet6 2001:470:f325:105::/64 {
+    range6 2001:470:f325:105:1::1 2001:470:f325:105:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exSigns / Expo
+subnet6 2001:470:f325:107::/64 {
+    range6 2001:470:f325:107:1::1 2001:470:f325:107:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exStaff / Expo
+subnet6 2001:470:f325:108::/64 {
+    range6 2001:470:f325:108:1::1 2001:470:f325:108:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exRegistration / Expo
+subnet6 2001:470:f325:110::/64 {
+    range6 2001:470:f325:110:1::1 2001:470:f325:110:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exAkamai / Expo
+subnet6 2001:470:f325:111::/64 {
+    range6 2001:470:f325:111:1::1 2001:470:f325:111:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exDWCC / Expo
+subnet6 2001:470:f325:200::/64 {
+    range6 2001:470:f325:200:1::1 2001:470:f325:200:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}
+# exVendor / Expo
+subnet6 2001:470:f325:300::/64 {
+    range6 2001:470:f325:300:1::1 2001:470:f325:300:0fff::fffe;
+    option dhcp6.name-servers 2001:470:f325:103::5, 2001:470:f325:503::5; 
+}

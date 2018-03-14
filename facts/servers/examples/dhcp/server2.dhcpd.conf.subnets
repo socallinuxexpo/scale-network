@@ -1,0 +1,120 @@
+# cfSCALE-SLOW / Conference
+subnet 10.128.128.0 netmask 255.255.248.0 {
+    range 10.128.132.1 10.128.135.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.128.1;
+}
+# cfSCALE-FAST / Conference
+subnet 10.128.136.0 netmask 255.255.248.0 {
+    range 10.128.140.1 10.128.143.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.136.1;
+}
+# cfSpeaker / Conference
+subnet 10.128.2.0 netmask 255.255.255.0 {
+    range 10.128.2.129 10.128.2.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.2.1;
+}
+# cfInfra / Conference
+subnet 10.128.3.0 netmask 255.255.255.0 {
+    range 10.128.3.129 10.128.3.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.3.1;
+}
+# cfCTF / Conference
+subnet 10.128.4.0 netmask 255.255.255.0 {
+    range 10.128.4.129 10.128.4.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.4.1;
+}
+# cfAVLAN / Conference
+subnet 10.128.5.0 netmask 255.255.255.0 {
+    range 10.128.5.129 10.128.5.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.5.1;
+}
+# cfNOC / Conference
+subnet 10.128.6.0 netmask 255.255.255.0 {
+    range 10.128.6.129 10.128.6.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.6.1;
+}
+# cfStaff / Conference
+subnet 10.128.8.0 netmask 255.255.255.0 {
+    range 10.128.8.129 10.128.8.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.8.1;
+}
+# cfHam_N6S / Conference
+subnet 10.128.9.0 netmask 255.255.255.0 {
+    range 10.128.9.129 10.128.9.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.9.1;
+}
+# cfDWCC / Conference
+subnet 10.128.100.0 netmask 255.255.255.0 {
+    range 10.128.100.129 10.128.100.254;
+    option domain-name-servers 10.128.3.5, 10.0.3.5; 
+    option routers 10.128.100.1;
+}
+# exSCALE-SLOW / Expo
+subnet 10.0.128.0 netmask 255.255.248.0 {
+    range 10.0.128.10 10.0.131.255;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.128.1;
+}
+# exSCALE-FAST / Expo
+subnet 10.0.136.0 netmask 255.255.248.0 {
+    range 10.0.136.10 10.0.139.255;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.136.1;
+}
+# exSpeaker / Expo
+subnet 10.0.2.0 netmask 255.255.255.0 {
+    range 10.0.2.10 10.0.2.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.2.1;
+}
+# exInfra / Expo
+subnet 10.0.3.0 netmask 255.255.255.0 {
+    range 10.0.3.10 10.0.3.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.3.1;
+}
+# exMDF / Expo
+subnet 10.0.4.0 netmask 255.255.255.0 {
+    range 10.0.4.10 10.0.4.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.4.1;
+}
+# exAVLAN / Expo
+subnet 10.0.5.0 netmask 255.255.255.0 {
+    range 10.0.5.10 10.0.5.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.5.1;
+}
+# exStaff / Expo
+subnet 10.0.8.0 netmask 255.255.255.0 {
+    range 10.0.8.10 10.0.8.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.8.1;
+}
+# exRegistration / Expo
+subnet 10.0.10.0 netmask 255.255.255.0 {
+    range 10.0.10.10 10.0.10.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.10.1;
+}
+# exDWCC / Expo
+subnet 10.0.100.0 netmask 255.255.255.0 {
+    range 10.0.100.10 10.0.100.128;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.0.100.1;
+}
+# exVendor / Expo
+subnet 10.100.0.0 netmask 255.255.240.0 {
+    range 10.100.0.10 10.100.7.255;
+    option domain-name-servers 10.0.3.5, 10.128.3.5; 
+    option routers 10.100.0.1;
+}

@@ -1,0 +1,3 @@
+{% for item in groups["aps"] -%}
+{{ item }}  IN  A    {{ hostvars[item].ipv4 }}
+{% endfor -%}
