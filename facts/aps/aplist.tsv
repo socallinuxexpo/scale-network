@@ -1,123 +1,92 @@
-// NOT STABLE VERSION, DON'T CONSUME YET, need to discuss
-// this is a copy of the 15x file, needs to be updated 
-//
-// Hostname	ip	power5g	freq5g	power2g	freq2g	mac	building
-room106ap1	10.1.0.75	5	149	4	1	e0:46:9a:5a:ec:85	conf
-room106ap2	10.1.0.76	5	48	4	11	e0:46:9a:5a:c0:51	expo
-room106ap3	10.1.0.77	5	161	4	6	e0:46:9a:5a:bf:fd	conf
-room106ap4	10.1.0.78	5	157	4	11	e0:46:9a:5a:c0:1b	conf
-outsideroom106ap	10.1.0.79	5	153	4	1	e0:46:9a:5a:df:b0	conf
-room107ap1	10.1.0.80	5	36	4	1	e0:46:9a:5a:e0:0d	conf
-room107ap2	10.1.0.81	5	157	4	6	e0:46:9a:5a:c0:54	conf
-room107ap3	10.1.0.82	5	149	4	1	e0:46:9a:5a:e0:c4	conf
-room107ap4	10.1.0.83	5	48	4	11	e0:46:9a:5a:bf:94	conf
-outsideroom107ap	10.1.0.84	5	153	4	6	e0:46:9a:5a:c0:c6	conf
-room101-102ap1	10.1.0.85	5	157	4	11	e0:46:9a:5a:c0:f6	conf
-room101-102ap2	10.1.0.86	5	157	4	1	e0:46:9a:5a:f0:24	conf
-room101-102ap3	10.1.0.87	5	44	4	6	74:44:01:84:81:50	conf
-room101-102ap4	10.1.0.88	5	161	4	11	c4:04:15:8f:50:82	conf
-room101-102ap5	10.1.0.89	5	36	4	6	c4:04:15:9b:4c:03	conf
-outsideroom101ap	10.1.0.90	5	48	4	1	e0:46:9a:5a:df:b6	conf
-room103ap1	10.1.0.91	5	44	4	11	c4:04:15:8f:30:72	conf
-room103ap2	10.1.0.92	5	36	4	6	08:bd:43:ba:a6:5b	conf
-room103ap3	10.1.0.93	5	153	4	1	08:bd:43:b2:8b:56	conf
-room104-105ap1	10.1.0.94	5	44	4	1	c4:04:15:90:1b:d1	conf
-room104-105ap2	10.1.0.95	5	40	4	11	20:4e:7f:80:38:e8	conf
-room104-105ap3	10.1.0.96	5	48	4	6	e0:46:9a:5a:c0:36	conf
-room104-105ap4	10.1.0.97	5	153	4	1	44:94:fc:91:e9:36	conf
-room104-105ap5	10.1.0.98	5	36	4	11	08:bd:43:c8:7b:11	conf
-outsideroom105ap	10.1.0.99	5	44	4	11	e0:46:9a:5a:c0:09	conf
-room204ap	10.1.0.100	5	48	4	6	74:44:01:71:dc:7f	conf
-room205ap	10.1.0.101	5	48	4	11	74:44:01:93:75:d2	conf
-Ham-ap	10.1.0.102	5	153	4	1	2c:b0:5d:7f:51:9f	conf
-room207ap	10.1.0.103	5	36	4	1	44:94:fc:73:02:80	conf
-room208ap	10.1.0.104	5	44	4	11	04:a1:51:a3:09:0e	conf
-outsideroom208ap	10.1.0.105	5	161	4	6	2c:b0:5d:7f:63:72	conf
-room209-210ap1	10.1.0.106	5	36	4	1	e0:46:9a:5a:e0:43	conf
-room209-210ap2	10.1.0.107	5	44	4	11	44:94:fc:73:34:78	conf
-room211ap1	10.1.0.108	5	153	4	1	04:a1:51:9b:a0:7e	conf
-room211ap2	10.1.0.109	5	36	4	6	04:a1:51:a3:31:8e	conf
-room211ap3	10.1.0.110	5	36	4	11	e0:46:9a:5a:e0:6d	conf
-outsideroom211ap	10.1.0.111	5	44	4	11	28:c6:8e:c1:a9:ed	conf
-room214ap1	10.1.0.112	5	48	4	6	44:94:fc:73:7a:f2	conf
-room214ap2	10.1.0.113	5	40	4	1	e0:46:9a:5a:df:e0	conf
-room214ap3	10.1.0.114	5	157	4	11	44:94:fc:95:ea:45	conf
-outsideroom214ap	10.1.0.115	5	161	4	6	04:a1:51:8b:0f:f9	conf
-room215ap	10.1.0.116	5	157	4	1	20:4e:7f:85:a8:40	conf
-ballroomAap1	10.1.0.117	5	48	4	1	2c:b0:5d:87:3a:4c	expo
-ballroomAap2	10.1.0.118	5	161	4	6	04:a1:51:ac:a9:06	expo
-ballroomAap3	10.1.0.119	5	153	4	11	e0:46:9a:51:74:30	expo
-ballroomAap4	10.1.0.120	5	149	4	1	e0:46:9a:5a:e9:22	expo
-ballroomBap1	10.1.0.121	5	40	4	6	e0:46:9a:5a:c0:12	expo
-ballroomBap2	10.1.0.122	5	149	4	11	08:bd:43:ac:7b:b9	expo
-ballroomBap3	10.1.0.123	5	149	4	1	04:a1:51:a0:60:a4	expo
-ballroomBap4	10.1.0.124	5	40	4	6	04:a1:51:a0:16:85	expo
-outsideofballroomBap	10.1.0.125	5	161	4	11	e0:46:9a:5a:e0:b5	expo
-ballroomCap1	10.1.0.126	5	44	4	1	04:a1:51:b1:71:e5	expo
-ballroomCap2	10.1.0.127	5	36	4	6	e0:46:9a:5a:e3:88	expo
-ballroomCap3	10.1.0.128	5	149	4	11	44:94:fc:8d:37:03	expo
-ballroomCap4	10.1.0.129	5	157	4	1	c4:04:15:90:57:c5	expo
-outsideofballroomCap	10.1.0.130	5	40	4	6	e0:46:9a:5a:e6:25	expo
-Lobbyap	10.1.0.131	5	157	4	11	c4:04:15:a1:14:83	expo
-ballroomDEap1	10.1.0.132	5	48	4	6	08:bd:43:be:49:b3	expo
-ballroomDEap2	10.1.0.133	5	149	4	11	c4:04:15:9d:72:1c	expo
-ballroomDEap3	10.1.0.134	5	157	4	6	08:bd:43:c8:74:69	expo
-ballroomDEap4	10.1.0.135	5	149	4	1	c4:04:15:9b:46:60	expo
-ballroomDEap5	10.1.0.136	5	36	4	6	c4:04:15:a1:19:81	expo
-ballroomDEap6	10.1.0.137	5	161	4	11	2c:b0:5d:7f:60:a8	expo
-ballroomDEap7	10.1.0.138	5	40	4	6	08:bd:43:b9:ed:3c	expo
-ballroomDEap8	10.1.0.139	5	161	4	1	08:bd:43:ac:5f:6c	expo
-partyap11	10.1.0.140	5	48	4	6	74:44:01:7a:9c:3e	expo
-outsideofballroomDEap2	10.1.0.142	5	149	4	1	c4:04:15:9b:58:99	expo
-ballroomFap1	10.1.0.143	5	149	4	11	08:bd:43:c3:7e:bb	expo
-ballroomFap2	10.1.0.144	5	149	4	6	08:bd:43:ab:9b:f4	expo
-ballroomFap3	10.1.0.145	5	40	4	1	c4:04:15:9b:5e:b4	expo
-ballroomFap4	10.1.0.146	5	40	4	6	44:94:fc:72:d2:c8	expo
-outsideofballroomFap1	10.1.0.147	5	153	4	1	e0:46:9a:5a:c0:78	expo
-outsideofballroomFap2	10.1.0.148	5	44	4	11	2c:b0:5d:a0:db:52	expo
-ballroomGap1	10.1.0.149	5	153	4	1	44:94:fc:7f:49:0c	expo
-ballroomGap2	10.1.0.150	5	161	4	11	44:94:fc:8d:1c:78	expo
-ballroomGap3	10.1.0.151	5	149	4	1	e0:46:9a:5a:be:41	expo
-ballroomGap4	10.1.0.152	5	161	4	6	08:bd:43:b1:52:5e	expo
-outsideofballroomGap	10.1.0.153	5	161	4	6	74:44:01:7a:b7:95	expo
-ballroomHap1	10.1.0.154	5	48	4	1	04:a1:51:9d:7b:14	expo
-ballroomHap2	10.1.0.155	5	153	4	6	e0:46:9a:5a:e0:25	expo
-ballroomHap3	10.1.0.156	5	157	4	1	08:bd:43:ba:ac:b2	expo
-ballroomHap4	10.1.0.157	5	157	4	11	04:a1:51:ba:72:a9	expo
-ballroomJap1	10.1.0.158	5	157	4	1	74:44:01:96:47:e4	expo
-ballroomJap2	10.1.0.159	5	153	4	6	08:bd:43:ac:b0:12	expo
-ballroomIap1	10.1.0.160	5	44	4	11	c4:04:15:9a:fd:13	expo
-ballroomIap2	10.1.0.161	5	157	4	1	08:bd:43:b0:ea:7b	expo
-expoap7	10.1.0.162	8	36	7	6	04:a1:51:ba:45:d9	expo
-expoap1	10.1.0.163	8	44	7	11	44:94:fc:73:25:09	expo
-expoAap3	10.1.0.164	8	161	7	1	c4:04:15:a3:90:8c	expo
-expoap4	10.1.0.165	8	48	7	6	c4:04:15:ad:a3:93	expo
-expoap15	10.1.0.166	8	48	7	11	44:94:fc:8c:f0:f8	expo
-expoap6	10.1.0.167	8	40	7	1	44:94:fc:72:f5:93	expo
-expoap9	10.1.0.168	8	40	7	6	04:a1:51:a3:31:f4	expo
-expoap16	10.1.0.170	8	48	7	1	2c:b0:5d:87:4f:df	expo
-expoap2	10.1.0.171	8	36	7	6	2c:b0:5d:a0:f2:ef	expo
-expoap11	10.1.0.172	8	157	7	11	74:44:01:81:72:8b	expo
-expoap3	10.1.0.173	8	161	7	1	20:4e:7f:8e:57:69	expo
-expoap5	10.1.0.174	8	48	7	6	74:44:01:7a:b7:59	expo
-expoap12	10.1.0.176	8	44	7	1	28:c6:8e:c5:f7:9a	expo
-expoap8	10.1.0.177	8	40	7	6	20:4e:7f:91:b0:f9	expo
-expoap19	10.1.0.178	8	48	7	11	74:44:01:96:55:2b	expo
-expoap10	10.1.0.179	8	48	7	1	20:4e:7f:91:a2:44	expo
-outsideofexpoBap	10.1.0.180	5	149	4	6	a0:21:b7:a2:d3:67	expo
-regdeskAP	10.1.0.181	5	48	4	11	74:44:01:96:52:b2	expo
-ctfZoneap	10.1.0.182	5	48	4	6	e0:46:9a:5a:c0:63	conf
-regdeskAP2	10.1.0.183	5	161	4	6	c4:04:15:a9:90:d8	expo
-outsideballroomaap1	10.1.0.184	5	161	4	6	04:a1:51:9d:60:f8	expo
-tbdexponew3	10.1.0.186	5	36	4	1	04:a1:51:ac:68:7d	expo
-party1	10.1.0.189	5	48	4	11	c4:04:15:a3:5d:11	expo
-party2	10.1.0.190	5	48	4	11	c2:b0:5d:82:e7:ff	expo
-party3	10.1.0.191	5	48	4	11	2c:b0:5d:7f:6a:f8	expo
-party4	10.1.0.192	5	48	4	11	74:44:01:81:7f:c3	expo
-party5	10.1.0.193	5	48	4	11	20:4e:7f:85:db:c7	expo
-party6	10.1.0.194	5	48	4	11	74:44:01:93:54:51	expo
-party7	10.1.0.195	5	48	4	11	74:44:01:71:b4:e9	expo
-party8	10.1.0.196	5	48	4	11	08:bd:43:ac:78:d7	expo
-party9	10.1.0.197	5	48	4	11	44:94:fc:8d:12:76	expo
-party10	10.1.0.198	5	48	4	11	44:94:fc:7f:5f:23	expo
-party11	10.1.0.199	5	48	4	11	74:44:01:7a:9c:3e	expo
+// AP list file in format:
+// name		mac-address	ipv4	2.4GHz	5Ghz
+ap4-blobby	74:44:01:71:dc:7f	10.0.3.10		1	36
+ap8-blobby	74:44:01:93:75:d2	10.0.3.11		6	40
+ap3-c	28:c6:8e:c1:a9:ed	10.0.3.14		6	149
+ap1-c	44:94:fc:8c:f0:f8	10.0.3.15		11	153
+ap2-de	04:a1:51:ac:a9:06	10.0.3.16		1	157
+ap1-de	44:94:fc:7f:49:0c	10.0.3.17		6	161
+ap4-de	44:94:fc:95:ea:45	10.0.3.18		11	165
+ap5-de	04:a1:51:a0:60:a4	10.0.3.19		1	36
+ap3-de	04:a1:51:9d:7b:14	10.0.3.20		6	40
+ap1-f	04:a1:51:ac:68:7d	10.0.3.21		11	44
+ap3-f	28:c6:8e:c5:f7:9a	10.0.3.22		1	48
+ap7-blobby	74:44:01:7a:b7:95	10.0.3.23		1	40
+ap5-blobby	74:44:01:7a:9c:3e	10.0.3.24		6	44
+ap1-reg	e0:46:9a:5a:f0:24	10.0.3.25		11	149
+ap12-spare	e0:46:9a:5a:e0:c4	10.0.3.27		1	44
+ap4-reg	e0:46:9a:5a:df:b6	10.0.3.28		6	153
+ap2-reg	e0:46:9a:51:74:30	10.0.3.30		1	48
+ap3-reg	e0:46:9a:5a:e6:25	10.0.3.31		6	157
+ap1-a	44:94:fc:8d:12:76	10.0.3.32		11	161
+ap3-a	04:a1:51:8b:0f:f9	10.0.3.33		1	165
+ap2-b	44:94:fc:91:e9:36	10.0.3.34		6	36
+ap3-b	44:94:fc:73:02:80	10.0.3.35		11	40
+ap1-b	44:94:fc:73:7a:f2	10.0.3.36		1	44
+ap3-g	04:a1:51:9b:a0:7e	10.0.3.37		11	149
+ap2-blobby	20:4e:7f:80:38:e8	10.0.3.38		11	48
+ap2-c	44:94:fc:8d:1c:78	10.0.3.39		11	153
+ap2-f	44:94:fc:8d:37:03	10.0.3.40		1	157
+ap10-spare	e0:46:9a:5a:e9:22	10.0.3.41		6	161
+ap1-show	74:44:01:96:55:2b	10.0.3.42		1	161
+ap5-show	74:44:01:84:81:50	10.0.3.45		6	36
+ap3-show	20:4e:7f:91:a2:44	10.0.3.46		11	40
+ap2-show	2c:b0:5d:87:4f:df	10.0.3.47		1	44
+ap8-show	10:0d:7f:45:73:bc	10.0.3.48		6	48
+ap4-show	74:44:01:81:72:8b	10.0.3.49		11	149
+ap5-reg	04:a1:51:b1:71:e5	10.0.3.50		11	157
+ap3-blobby	20:4e:7f:91:b0:f9	10.0.3.51		11	40
+ap9-show	20:4e:7f:8e:57:69	10.0.3.52		1	44
+ap2-party	20:4e:7f:85:a8:40	10.0.3.53		1	153
+ap1-party	2c:b0:5d:7f:60:a8	10.0.3.54		6	36
+ap3-h	e0:46:9a:5a:c0:f6	10.0.3.55		11	40
+ap1-h	04:a1:51:a0:16:85	10.0.3.56		6	36
+ap2-h	44:94:fc:73:25:09	10.0.3.57		1	161
+ap15-spare	e0:46:9a:5a:e0:0d	10.0.3.58		1	161
+ap16-spare	e0:46:9a:5a:bf:fd	10.0.3.59		6	157
+ap19-spare	e0:46:9a:5a:e0:6d	10.0.3.60		1	40
+ap3-spare	e0:46:9a:5a:c0:54	10.0.3.61		6	36
+ap6-spare	e0:46:9a:5a:ec:85	10.0.3.62		11	161
+ap24-spare	e0:46:9a:5a:c0:78	10.0.3.63		11	36
+ap3-party	74:44:01:93:54:51	10.0.3.64		11	36
+ap23-spare	e0:46:9a:5a:df:e0	10.0.3.65		11	36
+unknown1	74:44:01:81:7f:c3	10.128.3.17		11	36
+ap1-210	c4:04:15:8f:50:82	10.128.3.20		6	40
+ap2-210	04:a1:51:ba:45:d9	10.128.3.21		11	44
+ap1-104	04:a1:51:ba:72:a9	10.128.3.22		1	48
+ap3-104	08:bd:43:ab:9b:f4	10.128.3.23		6	149
+ap2-104	08:bd:43:b2:8b:56	10.128.3.24		11	153
+ap2-105	c4:04:15:9b:4c:03	10.128.3.25		1	157
+ap1-103	c4:04:15:90:57:c5	10.128.3.26		6	161
+ap1-105	08:bd:43:c3:7e:bb	10.128.3.27		1	153
+ap3-214	08:bd:43:b9:ed:3c	10.128.3.28		1	40
+ap2-103	c4:04:15:9a:fd:13	10.128.3.29		6	44
+ap1-204	08:bd:43:c8:7b:11	10.128.3.30		11	48
+ap3-103	c4:04:15:9b:5e:b4	10.128.3.31		1	149
+ap2-106	08:bd:43:b0:ea:7b	10.128.3.32		6	153
+ap3-106	04:a1:51:a3:31:f4	10.128.3.33		11	157
+ap1-107	08:bd:43:ac:78:d7	10.128.3.34		1	161
+ap2-107	08:bd:43:ac:5f:6c	10.128.3.35		6	165
+ap2_down_lobby	2c:b0:5d:87:3a:4c	10.128.3.36		6	40
+ap3-107	c4:04:15:a3:90:8c	10.128.3.37		1	40
+ap3-down-lobby	2c:b0:5d:7f:51:9f	10.128.3.38		6	44
+ap4-down-lobby	2c:b0:5d:7f:63:72	10.128.3.39		11	48
+ap5-down-lobby	2c:b0:5d:a0:f2:ef	10.128.3.40		1	149
+ap3-105	08:bd:43:ac:b0:12	10.128.3.41		6	153
+ap3-up-lobby	04:a1:51:a3:09:0e	10.128.3.42		11	157
+ap22-spare	e0:46:9a:5a:c0:c6	10.128.3.43		11	48
+ap3-211	08:bd:43:c8:74:69	10.128.3.44		6	161
+ap1-211	c4:04:15:9a:64:82	10.128.3.45		11	157
+ap1-up-lobby	2c:b0:5d:a0:db:52	10.128.3.47		6	153
+ap2-214	08:bd:43:b1:52:5e	10.128.3.51		6	161
+ap1-214	08:bd:43:ba:ac:b2	10.128.3.52		1	153
+ap2-101	c4:04:15:9d:72:1c	10.128.3.54		6	153
+ap1-106	c4:04:15:ad:a3:93	10.128.3.55		1	149
+ap1-102	08:bd:43:ba:a6:5b	10.128.3.56		6	157
+ap1-205	c4:04:15:a1:14:83	10.128.3.61		6	141
+ap1-208	c4:04:15:90:1b:d1	10.128.3.62		1	145
+ap2-102	c4:04:15:9b:58:99	10.128.3.65		6	48
+ap18-spare	e0:46:9a:5a:bf:94	10.128.3.66		1	157
+ap4-spare	e0:46:9a:5a:e3:88	10.128.3.67		11	48
+ap17-spare	e0:46:9a:5a:c0:09	10.128.3.68		11	44
+ap5-spare	e0:46:9a:5a:c0:36	10.128.3.70		11	153
