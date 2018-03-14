@@ -39,8 +39,13 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
 #### At SCaLE:
 
 * change "ansible_host": s["ipv4"] to "ansible_host": s["ipv6"] in the inventory.py
-
-further processes TBD
+* modify ../facts/servers/serverlist.tsv specifying 2 core servers
+* deploy servers
+* * use IPs and name from serverlist.tsv, 
+* * establish and test network connectivty
+* * set uniform username, password, and sudoer access on each system
+* run `ansible-playbook -u <username> -k -K -i inventory.py etc/ansible/scale.yml`
+* once ssh keys are deployed `ansible-playbook -u <username> -i inventory.py etc/ansible/scale.yml`
 
 ## Vagrant Commands:
 
@@ -90,5 +95,6 @@ expects generated dynamically by reading in the following files:
 * vlansddir = "../switch-configuration/config/vlans.d/"
 * switchesfile = "../switch-configuration/config/switchtypes"
 * serverfile = "../facts/servers/serverlist.tsv"
+* routerfile = "../facts/routers/routerlist.tsv"
 * apfile = "../facts/aps/aplist.tsv"
 * pifiles = "../facts/pi/pilist.tsv"

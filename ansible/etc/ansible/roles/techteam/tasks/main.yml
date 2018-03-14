@@ -30,7 +30,6 @@
     - rob
     - dlang
     - kyle
-  ignore_errors: True
 
 - name: copy tech team sudoers file
   copy:
