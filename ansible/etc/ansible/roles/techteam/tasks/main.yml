@@ -15,6 +15,7 @@
   with_items:
     - owen
     - rob
+    - dlang
     - kyle
 
 # Owen's key is currently invalid
@@ -27,6 +28,7 @@
   with_items:
     # - owen
     - rob
+    - dlang
     - kyle
 
 - name: copy tech team sudoers file
