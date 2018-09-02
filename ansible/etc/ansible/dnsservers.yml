@@ -1,7 +1,0 @@
----
-
-- hosts: core
-  become: yes 
-  serial: 1
-  roles: 
-    - { role: dnsserver }

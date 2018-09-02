@@ -1,8 +1,8 @@
 ---
 
-- name: restart ntp
+- name: restart chrony
   systemd:
-    name: ntp
+    name: chrony
     state: restarted
     enabled: yes
     daemon_reload: yes

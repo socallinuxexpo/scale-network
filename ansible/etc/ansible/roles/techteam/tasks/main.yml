@@ -4,7 +4,7 @@
   group:
     name: tech
     state: present
-    gid: 900
+    gid: "900"
 
 - name: create tech team users
   user:
@@ -18,13 +18,21 @@
     - dlang
     - kyle
 
+- name: create root remote_tmp
+  file:
+    path: /root/.ansible/tmp
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
 # Owen's key is currently invalid
 
 - name: copy tech team rsa keys
   authorized_key:
     user: "{{ item }}"
     state: present
-    key: "https://raw.githubusercontent.com/socallinuxexpo/scale-network/master/switch-configuration/authentication/keys/{{ item }}_id_rsa.pub"
+    key: "{{ lookup('file', '{{inventory_dir}}/../switch-configuration/authentication/keys/{{ item }}_id_rsa.pub') }}"
   with_items:
     # - owen
     - rob

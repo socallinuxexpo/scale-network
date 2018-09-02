@@ -1,24 +1,24 @@
 ---
 
-- name: install ntp package
+- name: install chrony package
   apt:
-    name: ntp
-    state: latest
+    name: chrony
+    state: present
     update_cache: no
 
-- name: Copy ntp.conf
+- name: Copy chrony.conf
   template:
-    src: ntp.conf.j2
-    dest: /etc/ntp.conf
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
     owner: root
     group: root
     mode: 0644
-  notify: restart ntp
+  notify: restart chrony
   register: config
 
-- name: start ntp service
+- name: start chrony service
   systemd:
-    name: ntp
+    name: chrony
     state: started
     enabled: yes
     masked: no

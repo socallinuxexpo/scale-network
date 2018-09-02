@@ -1,12 +1,3 @@
-driftfile /var/lib/ntp/ntp.drift
-
-leapfile /usr/share/zoneinfo/leap-seconds.list
-
-statistics loopstats peerstats clockstats
-filegen loopstats file loopstats type day enable
-filegen peerstats file peerstats type day enable
-filegen clockstats file clockstats type day enable
-
 {% if ansible_fqdn in groups["core"] %}
 
 pool us.pool.ntp.org
@@ -26,5 +17,9 @@ interface listen ::1
 
 {% endif %}
 
-restrict 127.0.0.1
-restrict ::1
+keyfile /etc/chrony/chrony.keys
+driftfile /var/lib/chrony/chrony.drift
+logdir /var/log/chrony
+maxupdateskew 100.0
+rtcsync
+makestep 1 3

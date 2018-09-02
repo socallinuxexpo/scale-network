@@ -1,21 +1,23 @@
 todo:
-  * be able to derive IP of PIs via SLAAC so they are plug, update pilist.tsv, and play
   * lay down facts locally for better visibility into data
-  * resolve ntp issues from non core servers (might be vagrant issue only)
   * implement rsyslog dual collectors, ship to single master
   * implement rsyslog client on all servers
-  * implement zabbix (I think Steve B is driving this)
-  * implement zabbix dynamic additions
-  * create docker build role to build sign server
-  * implement existing php sign server with versioned docker images
-  * add APs to inventory
-  * add PIs to inventory
+  * implement monitoring (Steve B to decide zabbix or other)
+  * implement monitoring dynamic additions
+  * create docker build role to build legacy sign server (PHP5 version)
+  * implement versioning for legacy sign server docker images
   * convert PI instructions to ansible playbook(s)/role(s)
-  * for ipv6 setup an address per service (if possible)??
+  * for ipv6 setup an address per service (if possible, is this still a requirement?)
    ** 3.A - admin
    ** 3.B - DNS
    ** 3.C - DHCP
    ** 3.D - Log
    ** 3.E - NTP
-  * create "bootstrap" playbook, role, and var to get SSH keys on APs, PIs, etc [as needed]
-  * do proper authoritative / peer grouping for DHCP [need feedback from team next week]
+  * cleanup inventory script
+   ** update to python3
+   ** gracefully fail when source files aren't properly formatted or missing
+   ** generalize populate operations
+   ** execute in container (allow easy use of pip installed libraries)
+  * get Owen to create a proper RSA key and uncomment from tech team module
+  * automated ansible-lint
+  * create ansible tests

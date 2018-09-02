@@ -29,9 +29,9 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
   * Automatically updates via apt
 
 ## Requirements:
-  * vagrant 2.0.1
+  * vagrant 2.1
   * virtualbox 5.2
-  * ansible 2.4
+  * ansible 2.6
   * python 2.7
 
 ## Usage

@@ -3,7 +3,7 @@
 - name: install isc-dhcp-server package
   apt:
     name: isc-dhcp-server
-    state: latest
+    state: present
     update_cache: no
 
 - name: copy dhcp rsyslog file
@@ -49,14 +49,9 @@
     - dhcpd.conf.subnets
     - dhcpd.conf.hosts
 
-- name: generate dhcp subnets and hosts timestamp
-  shell: date +%y%m%d%H%M
-  register: date
-  when: subnets6.changed or subnets4.changed 
-
 - name: set fact subnets and hosts timestamp
   set_fact:
-    subnets_timestamp: "{{ date.stdout }}"
+    subnets_timestamp: "{{ansible_date_time.epoch }}"
   when: subnets6.changed or subnets4.changed
 
 - name: copy dhcp6 subnet file
@@ -95,7 +90,7 @@
     mode: 0644
   when: subnets4.changed
 
-- name: copy dhcpd6.conf 
+- name: copy dhcpd6.conf
   copy:
     src: dhcpd6.conf
     dest: /etc/dhcp/dhcpd6.conf
@@ -106,12 +101,12 @@
   notify: restart isc-dhcp-server6
 
 - name: copy dhcpd.conf
-  copy: 
+  copy:
     src: dhcpd.conf
     dest: /etc/dhcp/dhcpd.conf
-    owner: root 
+    owner: root
     group: root
-    mode: 0644 
+    mode: 0644
   register: config4
   notify: restart isc-dhcp-server
 
