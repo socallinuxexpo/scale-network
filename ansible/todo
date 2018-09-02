@@ -21,3 +21,5 @@ todo:
   * get Owen to create a proper RSA key and uncomment from tech team module
   * automated ansible-lint
   * create ansible tests
+  * refactor roles to pass ANSIBLE0016 
+  
