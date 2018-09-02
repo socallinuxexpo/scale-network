@@ -21,11 +21,10 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
   * DNS client - systemd-resolved
     * Clients are configured to prefer IPv6 and the building local DNS server
   * NTP services
-    * Single role supports client/server
+    * Single chrony role supports client/server
   * Tech Team
     * Auto create team user accounts and home dirs
     * Effortless passwordless sudo
-    * SSH keys are pulled down from Github
   * Automatically updates via apt
 
 ## Requirements:
@@ -73,7 +72,7 @@ This "pings" the servers through ansible. It's not a network ping but rather an 
 
 `ansible -u owen -i inventory.py servers -a "ping6 -c 1 server1.scale.lan"`
 
-The `-u` option with `-k` omitted assumes your authorized_key is in the repository and has been merged to master. Issues single ping sourced from each server destined for server1
+The `-u` option with `-k` omitted assumes your authorized_key is in the repository. Issues single ping sourced from each server destined for server1
 
 `ansible -u rob -i inventory.py core -a "tail -12 /var/log/query.log"`
 
