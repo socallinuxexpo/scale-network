@@ -51,7 +51,7 @@
 
 - name: set fact subnets and hosts timestamp
   set_fact:
-    subnets_timestamp: "{{ansible_date_time.epoch }}"
+    subnets_timestamp: "{{ ansible_date_time.epoch }}"
   when: subnets6.changed or subnets4.changed
 
 - name: copy dhcp6 subnet file
