@@ -59,11 +59,11 @@
 # Setup home directories and python scripts
 1. cd /tmp
 2. run `git clone https://github.com/socallinuxexpo/scale-signs`
-3. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi /home`
-4. `sudo cp -R /tmp/scale-signs/client/pi-python/home/pi.save /home`
+3. `sudo cp -R /tmp/scale-signs/client/home/pi /home`
+4. `sudo cp -R /tmp/scale-signs/client/home/pi.save /home`
 5. `sudo chown -R pi:pi /home/pi`
 6. `sudo chown -R root:root /home/pi.save`
-7. `sudo cp scale-signs/client/pi-python/usr/bin/* /usr/bin/`
+7. `sudo cp scale-signs/client/usr/bin/* /usr/bin/`
 8. `sudo chmod +x /usr/bin/resethome.sh`
 9. `sudo systemctl unmask rc-local`
 10. `sudo vi /etc/rc.local`
