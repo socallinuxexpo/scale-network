@@ -1,0 +1,7 @@
+---
+
+- name: install python 2.7
+  apt:
+    name: python
+    state: present
+    update_cache: no

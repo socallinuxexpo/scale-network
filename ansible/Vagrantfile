@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 playbook = "etc/ansible/scale.yml"
-boxname = "fso/artful64-desktop"
+boxname = "ubuntu/bionic64"
 memmb = "1024"
 numcpu = "1"
 
@@ -47,6 +47,7 @@ Vagrant.configure(2) do |config|
         v.gui = false
         v.customize ["modifyvm", :id, "--memory", memmb]
         v.customize ["modifyvm", :id, "--cpus", numcpu]
+        v.customize ["modifyvm", :id, "--uartmode1", "disconnected" ]
       end
 
       config.vm.network :private_network, ip: box[:eth1]

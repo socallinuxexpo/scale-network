@@ -1,17 +1,23 @@
 ---
 
 - hosts: core
-  become: yes 
+  become: yes
   serial: 1
-  roles: 
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
     - { role: dnsserver }
     - { role: dhcpserver }
 
 - hosts: servers
   become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   roles:
+    - { role: aptupdate }
+    - { role: python27 }
     - { role: techteam }
     - { role: dnsclient }
     - { role: noapparmor }
-    - { role: ntp }
+    - { role: chrony }
 

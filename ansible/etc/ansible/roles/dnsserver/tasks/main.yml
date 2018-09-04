@@ -1,9 +1,9 @@
 ---
 
 - name: install bind9 package
-  apt: 
+  apt:
     name: bind9
-    state: latest
+    state: present
     update_cache: no
 
 - name: create zonefile backup directory
@@ -67,14 +67,9 @@
     - db.scale.lan
     - named.conf.scale-acls
 
-- name: generate zone serial number
-  shell: date +%y%m%d%H%M
-  register: date
-  when: records.changed 
-
 - name: set fact zone serial
   set_fact:
-    bind_zone_serial: "{{ date.stdout }}"
+    bind_zone_serial: "{{ ansible_date_time.epoch }}"
   when: records.changed
 
 - name: copy scale conference view files
@@ -149,9 +144,9 @@
     - db.10.ip4.arpa.records
     - db.scale.lan
     - named.conf.scale-acls
-  
+
 - name: start bind9 service
-  systemd: 
+  systemd:
     name: bind9
     state: started
     enabled: yes
