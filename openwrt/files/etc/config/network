@@ -16,16 +16,6 @@ config switch
         option blinkrate '2'
 {{ end }}
 
-config interface 'mgmt'
-        option ifname 'eth1.103 eth1.503 '
-        option type 'bridge'
-        option proto 'dhcp'
-
-config interface 'mgmt6'
-        option proto 'dhcpv6'
-        option ifname '@mgmt'
-        option reqprefix no
-
 {{ range $index, $element := (datasource "openwrt").wired.networks }}
 config interface '{{.name}}'
         {{ range $key, $value := . -}}
