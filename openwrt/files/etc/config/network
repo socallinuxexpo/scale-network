@@ -28,9 +28,11 @@ config interface 'mgmt6'
 
 {{ range $index, $element := (datasource "openwrt").wired.networks }}
 config interface '{{.name}}'
-        option ifname '{{range .vlans}}{{$element.parent_if}}.{{.}} {{ end -}}'
-        option type '{{.type}}'
-        option proto '{{.proto}}'
+        {{ range $key, $value := . -}}
+        {{ if (ne $key "name") -}}
+        option {{ $key }} '{{ $value }}'
+        {{ end -}}
+        {{ end -}}
 {{ end }}
 
 
