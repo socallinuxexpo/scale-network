@@ -1,6 +1,6 @@
 # Prereqs
 
-Make sure you have the prereqs for the [LEDE Image Builder](https://lede-project.org/docs/user-guide/imagebuilder#prerequisites)
+Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 If you are building images with templates you'll also need:
 * gomplate 2.2.0: https://github.com/hairyhenderson/gomplate/releases/tag/v2.2.0
@@ -9,6 +9,7 @@ If you are building images with templates you'll also need:
 ## Stock Image
 
 Currently we support Netgear `3700v2`, `3800`, & `3800ch` images.
+
 We build all 3 modules at once:
 
 ```sh
@@ -54,20 +55,35 @@ This will populate the templates with the necessary values and include them
 into the lede build
 
 # Upgrading
-## Auto TFTP
-Set a static ip in `192.168.1.1/24` then use the `flash` script:
+
+1. Connect an ethernet cable from your workstation's ethernet port to one
+   of the LAN (not WAN) ports on the router.
+2. Set  static ip in `192.168.1.1/24` on your workstations ethernet port.
+3. Create symlink to `.img` due to tftp being picky about long filenames:
 
 ```sh
 cd openwrt
-ln -s locationof.img factory.img
+ln -s <locationof>.img factory.img
+```
+
+4. Start the AP up while holding down the reset button. Once the power lede is
+   flashing green you can let go of the reset button.
+
+The AP is now ready to accept a new `.img`, continue with either method below:
+
+## Auto TFTP
+
+Use the `flash` script:
+
+```sh
+cd openwrt
 ./flash
 ```
 > This will also update the .csv with the mac address
 
 ## Manual TFTP
-Start the AP up while holding down the reset button. Once the power lede is
-flashing green you can let go of the reset button. Set a static ip in
-`192.168.1.1/24` then `tftp`:
+
+Manual interaction with `tftp` client:
 
 ```sh
 ln -s locationof.img factory.img
