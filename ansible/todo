@@ -7,17 +7,9 @@ todo:
   * create docker build role to build legacy sign server (PHP5 version)
   * implement versioning for legacy sign server docker images
   * convert PI instructions to ansible playbook(s)/role(s)
-  * for ipv6 setup an address per service (if possible, is this still a requirement?)
-   ** 3.A - admin
-   ** 3.B - DNS
-   ** 3.C - DHCP
-   ** 3.D - Log
-   ** 3.E - NTP
   * cleanup inventory script
-   ** update to python3
    ** gracefully fail when source files aren't properly formatted or missing
    ** generalize populate operations
-   ** execute in container (allow easy use of pip installed libraries)
   * get Owen to create a proper RSA key and uncomment from tech team module
   * automated ansible-lint
   * create ansible tests

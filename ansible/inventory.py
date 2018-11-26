@@ -356,9 +356,9 @@ def populateinv():
                 "macaddress": s["macaddress"],
                 "vlan": s["vlan"],
                 "fqdn": s["name"] + ".scale.lan",
-                "vlans": vlans,
                 "building": s["building"],
         }
+    inv["all"]["vars"]["vlans"] = vlans
 
 
 def main():
