@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Dynamic inventory script used to slurp in various
 # SCaLE specific text files to produce a sane inventory to ansible
 
+import json
 import os
 import re
 
@@ -73,6 +74,9 @@ inv = {
     },
     "pis": {
         "hosts": [],
+    },
+    "all": {
+        "vars": {}
     },
     "_meta": {
         "hostvars": {}
@@ -282,7 +286,7 @@ def roomalias(name):
         rooms = re.split('-', comrooms)
         for r in rooms:
             payload.append(r)
-    return payload 
+    return payload
 
 
 # populateservers() will populate the server list
@@ -388,7 +392,7 @@ def main():
     populateaps()
     populatepis()
     populateinv()
-    print(inv)
+    print(json.dumps(inv))
 
 
 if __name__ == "__main__":
