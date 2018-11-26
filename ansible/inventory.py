@@ -77,7 +77,9 @@ inv = {
         "hosts": [],
     },
     "all": {
-        "vars": {}
+        "vars": {
+	    "ansible_ssh_common_args": "-o StrictHostKeyChecking=no",
+	}
     },
     "_meta": {
         "hostvars": {}

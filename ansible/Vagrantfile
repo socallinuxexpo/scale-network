@@ -1,68 +1,65 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-playbook = "etc/ansible/scale.yml"
-boxname = "ubuntu/bionic64"
-memmb = "1024"
-numcpu = "1"
+playbook = 'etc/ansible/scale.yml'
+boxname = 'ubuntu/bionic64'
+memmb = '1024'
+numcpu = '1'
 
 boxes = [
   {
-    :name => "server5",
-    :eth1 => "10.128.3.5",
-    :eth1ipv6 => "2001:470:f325:503::5",
-    :description => "DNS & DHCP & SYSLOG & NTP in NOC",
+    name: 'server5',
+    eth1: '10.128.3.5',
+    eth1ipv6: '2001:470:f325:503::5',
+    description: 'DNS & DHCP & SYSLOG & NTP in NOC',
   },
   {
-    :name => "server2",
-    :eth1 => "10.0.3.5",
-    :eth1ipv6 => "2001:470:f325:103::5",
-    :description => "DNS & DHCP & SYSLOG & NTP in Expo Hall MDF",
+    name: 'server2',
+    eth1: '10.0.3.5',
+    eth1ipv6: '2001:470:f325:103::5',
+    description: 'DNS & DHCP & SYSLOG & NTP in Expo Hall MDF',
   },
   {
-    :name => "server3",
-    :eth1 => "10.128.3.6",
-    :eth1ipv6 => "2001:470:f325:503::6",
-    :description => "MONITORING Server in NOC",
+    name: 'server3',
+    eth1: '10.128.3.6',
+    eth1ipv6: '2001:470:f325:503::6',
+    description: 'MONITORING Server in NOC',
   },
   {
-    :name => "server8",
-    :eth1 => "10.128.3.7",
-    :eth1ipv6 => "2001:470:f325:503::7",
-    :description => "AUTOMATION & SIGN Server in NOC",
+    name: 'server8',
+    eth1: '10.128.3.7',
+    eth1ipv6: '2001:470:f325:503::7',
+    description: 'AUTOMATION & SIGN Server in NOC',
   },
 ]
 
-Vagrant.configure(2) do |config|
-
+Vagrant.configure(2) do |configure|
   boxes.each_with_index do |box, index|
-    config.vm.define box[:name] do |config|
-
+    configure.vm.define box[:name] do |config|
       config.vm.box = boxname
 
       config.ssh.insert_key = false
       config.vm.hostname = box[:name]
 
-      config.vm.provider "virtualbox" do |v|
+      config.vm.provider 'virtualbox' do |v|
         v.gui = false
-        v.customize ["modifyvm", :id, "--memory", memmb]
-        v.customize ["modifyvm", :id, "--cpus", numcpu]
-        v.customize ["modifyvm", :id, "--uartmode1", "disconnected" ]
+        v.customize ['modifyvm', :id, '--memory', memmb]
+        v.customize ['modifyvm', :id, '--cpus', numcpu]
+        v.customize ['modifyvm', :id, '--uartmode1', 'disconnected']
       end
 
       config.vm.network :private_network, ip: box[:eth1]
-      config.vm.network :private_network, ip: box[:eth1ipv6]
 
       if index == boxes.size - 1
-        config.vm.provision "ansible" do |ansible|
-	    ansible.compatibility_mode = "2.0"
-            ansible.verbose = ""
-            ansible.playbook = playbook
-            ansible.limit = "all"
-            ansible.inventory_path = "inventory.py"
-            ansible.host_key_checking = false
-            ansible.raw_ssh_args = ['-i ~/.vagrant.d/insecure_private_key']
-	          ansible.raw_arguments = ['--forks=10']
+        config.vm.provision 'ansible' do |ansible|
+          ansible.compatibility_mode = '2.0'
+          ansible.verbose = ''
+          ansible.playbook = playbook
+          ansible.limit = 'all'
+          ansible.inventory_path = 'inventory.py'
+          ansible.host_key_checking = false
+          ansible.raw_ssh_args = ['-i ~/.vagrant.d/insecure_private_key']
+          ansible.raw_arguments = ['--forks=10']
         end
       end
     end
