@@ -59,7 +59,7 @@ Vagrant.configure(2) do |configure|
           ansible.inventory_path = 'inventory.py'
           ansible.host_key_checking = false
           ansible.raw_ssh_args = ['-i ~/.vagrant.d/insecure_private_key']
-          ansible.raw_arguments = ['--forks=10']
+          ansible.raw_arguments = ['--forks=5']
         end
       end
     end

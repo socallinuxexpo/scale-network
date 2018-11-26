@@ -7,9 +7,6 @@ todo:
   * create docker build role to build legacy sign server (PHP5 version)
   * implement versioning for legacy sign server docker images
   * convert PI instructions to ansible playbook(s)/role(s)
-  * cleanup inventory script
-   ** gracefully fail when source files aren't properly formatted or missing
-   ** generalize populate operations
   * get Owen to create a proper RSA key and uncomment from tech team module
   * automated ansible-lint
   * create ansible tests
