@@ -220,7 +220,7 @@ def populateservers(vlans):
                 ansiblerole = elems[4].rstrip()
                 vlan = ""
                 for v in vlans:
-                    if ipv6.find(v["ipv6prefix"]) > -1:
+                    if ipv6.find(v["ipv6prefix"]) == 0:
                         vlan = v["name"]
                         building = v["building"]
                 servers.append({
