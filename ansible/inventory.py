@@ -3,6 +3,7 @@
 # Dynamic inventory script used to slurp in various
 # SCaLE specific text files to produce a sane inventory to ansible
 
+import ipaddress
 import json
 import os
 import re
@@ -129,42 +130,15 @@ def populatevlans():
                 })
 
 
-# ip4toptr() generate a PTR and returns it
-def ip4toptr(ipaddress):
-    splitip = re.split(r'\.', ipaddress)
-    return splitip[3] + "." + splitip[2] + "." + splitip[1]
+# ip4toptr() generate a split PTR and returns it
+def ip4toptr(ip):
+    splitip = re.split(r'\.', ipaddress.ip_address(ip).reverse_pointer)
+    return splitip[1] + "." + splitip[2] + "." + splitip[3]
 
 
-# ip6toptr() generates a PTR and returns it
-def ip6toptr(ipaddress):
-    splitip = re.split(r'::', ipaddress.split('\n')[0])
-    ptr = []
-    for i in range(0, 32):
-        ptr.append(0)
-    ix = 0
-    if len(splitip) > 1:
-        for c in splitip[1][::-1]:
-            if not c == ":":
-                ptr[ix] = c
-                ix += 1
-            else:
-                while not ix % 4 == 0:
-                    ptr[ix] = 0
-                    ix += 1
-    iy = 31
-    for h in re.split(r':', splitip[0]):
-        while len(h) < 4:
-            h = "0" + str(h)
-        for c in h:
-            ptr[iy] = c
-            iy -= 1
-
-    retstr = ""
-    for i in range(0, 32):
-        retstr = retstr + str(ptr[i])
-        if not i == 31:
-            retstr = retstr + "."
-    return retstr
+# ip6toptr() generates a split PTR and returns it
+def ip6toptr(ip):
+    return re.split(r'\.ip6', ipaddress.ip_address(ip).reverse_pointer)[0]
 
 
 # dhcp6ranges() will return a list in [ipv6dhcp1a, ipv6dhcp1b, ipv6dhcp2a,...]
