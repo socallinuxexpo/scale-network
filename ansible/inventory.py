@@ -112,7 +112,7 @@ def populatevlans():
                     "ipv4prefix": ipv4prefix,
                     "ipv4bitmask": ipv4bitmask,
                     "building": file,
-                    "description": elems[5].split('\n')[0],
+                    "description": elems[5].rstrip(),
                     "ipv6dhcp1a": ipv6dhcp[0],
                     "ipv6dhcp1b": ipv6dhcp[1],
                     "ipv6dhcp2a": ipv6dhcp[2],
@@ -215,7 +215,7 @@ def populaterouters():
             elems = re.split(r'\t+', line)
             routers.append({
                 "name": elems[0],
-                "ipv6": elems[1].split('\n')[0],
+                "ipv6": elems[1].rstrip(),
             })
 
 
@@ -232,7 +232,7 @@ def populateaps():
                 "mac": elems[1],
                 "ipv4": elems[2],
                 "wifi2": elems[3],
-                "wifi5": elems[4].split('\n')[0],
+                "wifi5": elems[4].rstrip(),
             })
 
 
@@ -246,7 +246,7 @@ def populatepis():
             elems = re.split(r'\t+', line)
             pis.append({
                 "name": elems[0],
-                "ipv6": elems[1].split('\n')[0],
+                "ipv6": elems[1].rstrip(),
             })
 
 
@@ -274,7 +274,7 @@ def populateservers():
             if len(elems) > 2:
                 ipv6 = elems[2]
                 ipv4 = elems[3]
-                ansiblerole = elems[4].split('\n')[0]
+                ansiblerole = elems[4].rstrip()
                 vlan = ""
                 for v in vlans:
                     if ipv6.find(v["ipv6prefix"]) > -1:
