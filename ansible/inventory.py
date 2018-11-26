@@ -102,8 +102,8 @@ def dhcp4ranges(prefix, bitmask):
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
         ]
     numocs = 2**(24 - bitmask)
-    midthird = (int(ipsplit[2]) + (numocs / 2))
-    topthird = (int(ipsplit[2]) + (numocs - 1))
+    midthird = int(int(ipsplit[2]) + (numocs / 2))
+    topthird = int(int(ipsplit[2]) + (numocs - 1))
     return [
         ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".10",
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird - 1) + ".255",
