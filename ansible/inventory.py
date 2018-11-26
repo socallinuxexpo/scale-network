@@ -58,6 +58,7 @@ pis = []
 #        }
 #    }
 # }
+sshArgs = "-o StrictHostKeyChecking=no -F /dev/null"
 inv = {
     "routers": {
         "hosts": [],
@@ -78,8 +79,8 @@ inv = {
     },
     "all": {
         "vars": {
-	    "ansible_ssh_common_args": "-o StrictHostKeyChecking=no",
-	}
+            "ansible_ssh_common_args": sshArgs,
+        }
     },
     "_meta": {
         "hostvars": {}
