@@ -50,6 +50,13 @@ Vagrant.configure(2) do |configure|
 
       config.vm.network :private_network, ip: box[:eth1]
 
+      config.vm.provision 'shell', inline: <<-SHELL
+        if grep -q dhcp4 /etc/netplan/50-vagrant.yaml; then
+          sed -i '/addresses:/i\\ \ \ \ \ \ dhcp4: false' /etc/netplan/50-vagrant.yaml
+          netplan apply
+        fi
+      SHELL
+
       if index == boxes.size - 1
         config.vm.provision 'ansible' do |ansible|
           ansible.compatibility_mode = '2.0'
