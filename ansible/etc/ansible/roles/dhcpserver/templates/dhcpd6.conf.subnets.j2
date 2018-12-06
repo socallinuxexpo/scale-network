@@ -1,4 +1,4 @@
-{% for vlan in hostvars[ansible_hostname].vlans %}
+{% for vlan in vlans %}
 {% if vlan["ipv6bitmask"] not in [" ", "0"] and vlan["ipv6dns1"] != "" %}
 # {{ vlan["name"] }} / {{ vlan["building"] }}
 subnet6 {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"] }} {
