@@ -1,3 +1,7 @@
+# Supported Hardware
+
+* [TPLink c2600](./TPLINK.md)
+
 # Prereqs
 
 Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
