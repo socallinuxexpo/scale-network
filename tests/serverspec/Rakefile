@@ -1,0 +1,28 @@
+require 'rake'
+require 'rspec/core/rake_task'
+
+test_type = ENV['TEST_TYPE']
+
+task :spec    => 'spec:all'
+task :default => :spec
+
+namespace :spec do
+
+  # Get all possible spec top level targets
+  targets = []
+  Dir.glob('./spec/*').each do |dir|
+    next unless File.directory?(dir)
+    target = File.basename(dir)
+    targets << target
+  end
+
+  task :all     => test_type
+  task :default => :all
+
+  if targets.include? test_type
+    desc "Run serverspec tests for #{test_type}"
+    RSpec::Core::RakeTask.new(test_type.to_sym) do |t|
+      t.pattern = "spec/#{test_type}/*_spec.rb"
+    end
+  end
+end
