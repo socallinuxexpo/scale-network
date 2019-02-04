@@ -5,6 +5,8 @@ configurations, tooling and scripts for [SCALE's](https://www.socallinuxexpo.org
 * [CONTRIBUTING](./CONTRIBUTING.md)
 * [SWITCH CONFIG](./switch-configuration/README.md)
 * [ANSIBLE](./ansible/README.md)
+* [OPENWRT](./openwrt/README.md)
+* [TESTING](./tests/serverspec/README.md)
 
 ## Requirements
 To use this git repo you will need the following pkgs:

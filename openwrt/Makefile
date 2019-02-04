@@ -10,8 +10,7 @@ BUILD_SECRETS = ../facts/secrets/openwrt.yaml
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-#LEDE_VER = 7da64807002cbe665176b125d8b2ee1a46d4e785
-LEDE_VER = 4056be58f323ee813bccf500aa30ebac3bbb263d
+LEDE_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
 IMAGEBUILDER = source-$(LEDE_VER)
 TAR_EXT = .tar.gz
 

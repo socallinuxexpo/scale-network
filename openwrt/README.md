@@ -54,6 +54,25 @@ make build-img
 This will populate the templates with the necessary values and include them
 into the lede build
 
+# Adding new packages
+
+Leverage the existing `diffconfig` via the `Makefile`:
+```
+make build/source-<SHA>/.config
+cd build/source-<SHA>/
+make menuconfig
+```
+
+At this point you can add any additional pkgs youd like. Afterwhich its time
+to save them back to the `diffconfig`:
+```
+scripts/diffconfig.sh > mydiffconfig
+mv mydiffconfig ../../diffconfig
+```
+
+At which point you should have a diff in git which can then be tested against a new
+build of the img
+
 # Upgrading
 
 1. Connect an ethernet cable from your workstation's ethernet port to one
