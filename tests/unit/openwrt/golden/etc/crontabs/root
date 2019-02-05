@@ -1,0 +1,1 @@
+0 * * * * /usr/sbin/logrotate -f /etc/logrotate.conf -s /tmp/logrotate.status
