@@ -3,7 +3,7 @@
 Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 If you are building images with templates you'll also need:
-* gomplate 2.2.0: https://github.com/hairyhenderson/gomplate/releases/tag/v2.2.0
+* [gomplate](../README.md#requirements)
 
 # Build
 ## Stock Image
