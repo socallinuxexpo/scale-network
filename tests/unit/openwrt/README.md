@@ -2,7 +2,8 @@
 
 ## Usage
 
-To test the template output from whats generated using gomplate
+To test the template output from whats generated using gomplate. If does this by `diff`ing
+a known good generated set of files found in `./golden` with generated files in `./tmp`.
 
 Just run:
 

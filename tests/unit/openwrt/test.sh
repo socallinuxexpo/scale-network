@@ -39,7 +39,7 @@ UPDATE=${UPDATE:-0}
 TMPLOC="tmp"
 
 gen_templates(){
-  gomplate -d openwrt=../../../facts/secrets/openwrt.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
+  gomplate -d openwrt=../../../facts/secrets/openwrt-example.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
 }
 
 if [ "${UPDATE}" == "1" ]; then

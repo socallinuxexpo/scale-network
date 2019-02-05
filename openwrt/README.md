@@ -28,7 +28,7 @@ the image.
 
 Copy over the default secrets:
 ```bash
-cp ./facts/secrets/openwrt.yaml.example ./facts/secrets/openwrt.yaml
+cp ./facts/secrets/openwrt-example.yaml ./facts/secrets/openwrt.yaml
 ```
 > If needed update the defaults in `openwrt.yaml` to represent actual values
 
