@@ -4,6 +4,9 @@ openwrt/*.img
 openwrt/aplist
 *.swp
 
+# Ignore openwrt test dir
+tests/unit/openwrt/tmp*
+
 # Ignore built configuration files directory
 switch-configuration/config/output
 
