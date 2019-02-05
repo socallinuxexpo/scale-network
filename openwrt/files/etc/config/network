@@ -16,7 +16,7 @@ config switch
         option blinkrate '2'
 {{ end }}
 
-{{ range $index, $element := (datasource "openwrt").wired.networks }}
+{{ range (datasource "openwrt").wired.networks }}
 config interface '{{.name}}'
         {{ range $key, $value := . -}}
         {{ if (ne $key "name") -}}
