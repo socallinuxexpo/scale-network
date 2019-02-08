@@ -3,6 +3,7 @@ configurations, tooling and scripts for [SCALE's](https://www.socallinuxexpo.org
 
 ## Table of Contents
 * [CONTRIBUTING](./CONTRIBUTING.md)
+* [MAPS](./MAPS.md)
 * [SWITCH CONFIG](./switch-configuration/README.md)
 * [ANSIBLE](./ansible/README.md)
 * [OPENWRT](./openwrt/README.md)
