@@ -1,0 +1,7 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+# TODO make this a true service
+/root/bin/wifi-details.sh &
+
+exit 0
