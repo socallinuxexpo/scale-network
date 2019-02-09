@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  test:
+    docker:
+      # Lockdown version after gomplate issue is resolved
+      # https://github.com/hairyhenderson/gomplate/issues/484
+      - image: hairyhenderson/gomplate 
+    steps:
+      - checkout:
+          path: tests/unit/openwrt
+      - run:
+          name: openwrt golden file test
+          command: sh test.sh
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
