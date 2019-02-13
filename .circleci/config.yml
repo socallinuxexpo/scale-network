@@ -1,19 +1,87 @@
+---
+
 version: 2
 jobs:
-  test:
+
+  gomplate_tests:
     docker:
-      # Lockdown version after gomplate issue is resolved
-      # https://github.com/hairyhenderson/gomplate/issues/484
-      - image: hairyhenderson/gomplate 
+    - image: hairyhenderson/gomplate:v3.2.0-alpine
+    resource_class: medium
+    working_directory: ~/scale-network/tests/unit/openwrt
     steps:
-      - checkout:
-          path: tests/unit/openwrt
-      - run:
-          name: openwrt golden file test
-          command: sh test.sh
+    - checkout:
+        path: ~/scale-network
+
+    - run:
+        name: install diffutils
+        command: apk update && apk add diffutils
+
+    - run:
+        name: openwrt golden file test
+        command: sh -x test.sh
+
+  # TODO: Figure out when to do end-to-end build test
+  # builds take a long time and should be done
+  # outside of initial ci testing
+  #openwrt_test_build:
+  #  docker:
+  #  - image: debian:jessie-20190204
+  #  resource_class: medium
+  #  working_directory: ~/scale-network/openwrt
+  #  steps:
+  #  - checkout:
+  #      path: ~/scale-network
+  #
+  #  - run:
+  #      name: install Image Builder Deps
+  #      command: apt-get update && apt-get install -y curl file build-essential libncurses5-dev
+  #        zlib1g-dev gawk git gettext libssl-dev xsltproc wget unzip python
+  #
+  #  - run:
+  #      name: download gomplate
+  #      command: wget -o /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v3.2.0/gomplate_linux-amd64
+  #        && chmod +x /usr/local/bin/gomplate
+  #
+  #  - run:
+  #      name: rename default facts
+  #      command: cp ../facts/secrets/openwrt-example.yaml ../facts/secrets/openwrt.yaml
+  #
+  #  - run:
+  #      name: build openwrt image
+  #      command: make build-img
+
+  ansible_lint:
+    docker:
+    - image: circleci/python:3.7.2-node-browsers-legacy
+    resource_class: medium
+    working_directory: ~/scale-network/ansible
+    steps:
+    - checkout:
+        path: ~/scale-network
+
+    - run:
+        name: install ansible-lint
+        command: sudo pip install ansible-lint
+
+    - run:
+        name: lint scale.yml
+        command: ansible-lint -x 503 -x 405 etc/ansible/scale.yml
+
+    - run:
+        name: install pylint
+        command: sudo pip install pylint
+
+    - run:
+        name: lint inventory.py
+        command: pylint inventory.py --confidence=HIGH
+
+    - run:
+        name: test inventory.py
+        command: ./inventory.py | jq
 
 workflows:
   version: 2
-  build_and_test:
+  build_all:
     jobs:
-      - test
+    - gomplate_tests
+    - ansible_lint
