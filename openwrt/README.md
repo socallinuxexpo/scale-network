@@ -1,16 +1,18 @@
-# Supported Hardware
+# Openwrt
+
+## Supported Hardware
 
 * [TPLink c2600](./TPLINK.md)
 
-# Prereqs
+## Prereqs
 
 Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 If you are building images with templates you'll also need:
 * [gomplate](../README.md#requirements)
 
-# Build
-## Stock Image
+## Build
+### Stock Image
 
 Currently we support Netgear `3700v2`, `3800`, & `3800ch` images.
 
@@ -26,7 +28,7 @@ make build-img
 You will find the images in `./build/source-<commit>/bin/targets/ar71xx/generic/`
 The `*sysupgrade.bin` and `*factory.img` files match the AP models
 
-## Image with Templates
+### Image with Templates
 To get the configuration thats used at scale the templates need to be baked into
 the image.
 
