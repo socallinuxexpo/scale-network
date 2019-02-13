@@ -143,9 +143,10 @@ GitHub.sublime-settings
 
 ### Vim ###
 # swap
-[._]*.s[a-v][a-z]
+# vim ignore conflicts with .ssh
+#[._]*.s[a-v][a-z]
+#[._]s[a-v][a-z]
 [._]*.sw[a-p]
-[._]s[a-v][a-z]
 [._]sw[a-p]
 # session
 Session.vim
