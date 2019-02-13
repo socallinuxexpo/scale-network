@@ -1,4 +1,6 @@
 # scale-network
+[![CircleCI](https://circleci.com/gh/socallinuxexpo/scale-network/tree/master.svg?style=svg)](https://circleci.com/gh/socallinuxexpo/scale-network/tree/master)
+
 configurations, tooling and scripts for [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network
 
 ## Table of Contents
