@@ -48,4 +48,4 @@ fi
 
 gen_templates $TMPLOC
 
-diff -r golden/ $TMPLOC/
+diff -u -r golden/ $TMPLOC/
