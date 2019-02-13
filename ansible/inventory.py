@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
-
-# Dynamic inventory script used to slurp in various
-# SCaLE specific text files to produce a sane inventory to ansible
-
+'''
+Dynamic inventory script used to slurp in various
+SCaLE specific text files to produce a sane inventory to ansible
+'''
 import ipaddress
 import json
 import os
 import re
 
-# constants with locations to files or directories within the repo
-vlansddir = "../switch-configuration/config/vlans.d/"
-routerfile = "../facts/routers/routerlist.tsv"
-switchesfile = "../switch-configuration/config/switchtypes"
-serverfile = "../facts/servers/serverlist.tsv"
-apfile = "../facts/aps/aplist.tsv"
-pifile = "../facts/pi/pilist.tsv"
+VLANSDDIR = "../switch-configuration/config/vlans.d/"
+ROUTERFILE = "../facts/routers/routerlist.tsv"
+SWITCHESFILE = "../switch-configuration/config/switchtypes"
+SERVERFILE = "../facts/servers/serverlist.tsv"
+APFILE = "../facts/aps/aplist.tsv"
+PIFILE = "../facts/pi/pilist.tsv"
 
 
-# populatevlans() will populate the vlans list
 def populatevlans():
+    """populate the vlan list"""
     vlans = []
-    filelist = (os.listdir(vlansddir))
+    filelist = (os.listdir(VLANSDDIR))
     for file in filelist:
-        f = open(vlansddir + file, 'r')
-        flines = f.readlines()
-        f.close()
-        for line in flines:
+        fhandle = open(VLANSDDIR + file, 'r')
+        lines = fhandle.readlines()
+        fhandle.close()
+        for line in lines:
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
                 ipv6 = elems[3].split('/')
@@ -64,19 +63,19 @@ def populatevlans():
     return vlans
 
 
-# ip4toptr() generate a split PTR and returns it
-def ip4toptr(ip):
-    splitip = re.split(r'\.', ipaddress.ip_address(ip).reverse_pointer)
+def ip4toptr(ip_address):
+    '''generate a split PTR for IPv4 and return in'''
+    splitip = re.split(r'\.', ipaddress.ip_address(ip_address).reverse_pointer)
     return splitip[1] + "." + splitip[2] + "." + splitip[3]
 
 
-# ip6toptr() generates a split PTR and returns it
-def ip6toptr(ip):
-    return re.split(r'\.ip6', ipaddress.ip_address(ip).reverse_pointer)[0]
+def ip6toptr(ip_address):
+    '''generates a split PTR for IPv6 an returns it'''
+    return re.split(r'\.ip6', ipaddress.ip_address(ip_address).reverse_pointer)[0]
 
 
-# dhcp6ranges() will return a list in [ipv6dhcp1a, ipv6dhcp1b, ipv6dhcp2a,...]
 def dhcp6ranges(prefix, bitmask):
+    '''generates start and end IPv6 addresses for 2x DHCP ranges'''
     if bitmask == 0:
         return ["", "", "", ""]
     prefsplit = re.split(r'\:\:', prefix)[0]
@@ -88,8 +87,8 @@ def dhcp6ranges(prefix, bitmask):
     ]
 
 
-# dhcp4ranges() will return a list in [ipv4dhcp1a, ipv4dhcp1b,... ipv4router]
 def dhcp4ranges(prefix, bitmask):
+    '''generates start and end IPv4 addresses + router for 2x DHCP ranges'''
     if bitmask < 17 or bitmask > 24:
         return ["", "", "", "", ""]
     ipsplit = re.split(r'\.', prefix)
@@ -113,20 +112,19 @@ def dhcp4ranges(prefix, bitmask):
     ]
 
 
-# ipv4netmask() will return a netmask given a bitmask
 def bitmasktonetmask(bitmask):
+    '''returns an IPv4 netmask given a bitmask'''
     if bitmask < 17 or bitmask > 24:
         return "255.255.255.255"
-    else:
-        return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
+    return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
 
 
-# populateswitches() will populate the switch list
 def populateswitches():
+    '''populate the switch list'''
     switches = []
-    f = open(switchesfile, 'r')
-    flines = f.readlines()
-    f.close()
+    fhandle = open(SWITCHESFILE, 'r')
+    flines = fhandle.readlines()
+    fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
@@ -141,12 +139,12 @@ def populateswitches():
     return switches
 
 
-# populaterouters() will populate the router list
 def populaterouters():
+    '''populate the router list'''
     routers = []
-    f = open(routerfile, 'r')
-    flines = f.readlines()
-    f.close()
+    fhandle = open(ROUTERFILE, 'r')
+    flines = fhandle.readlines()
+    fhandle.close()
     for line in flines:
         if not line[0] == '/' or line[0] == ' ' or line[0] == '\n':
             elems = re.split(r'\t+', line)
@@ -157,12 +155,12 @@ def populaterouters():
     return routers
 
 
-# populate aps() will populate the ap list
 def populateaps():
+    '''populate the AP list'''
     aps = []
-    f = open(apfile, 'r')
-    flines = f.readlines()
-    f.close()
+    fhandle = open(APFILE, 'r')
+    flines = fhandle.readlines()
+    fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
@@ -176,12 +174,12 @@ def populateaps():
     return aps
 
 
-# populate pis() will populate the pi list
 def populatepis():
+    '''populate the PI list'''
     pis = []
-    f = open(pifile, 'r')
-    flines = f.readlines()
-    f.close()
+    fhandle = open(PIFILE, 'r')
+    flines = fhandle.readlines()
+    fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
@@ -192,25 +190,25 @@ def populatepis():
     return pis
 
 
-# swroomalias() will return a list of alias for multiple room use cases
 def roomalias(name):
+    '''generats room name based alias names for switches'''
     payload = []
     upname = name.upper()
     if "RM" in upname and '-' in name:
         comrooms = re.split("RM", upname)[1]
         comrooms = comrooms.replace('\n', '')
         rooms = re.split('-', comrooms)
-        for r in rooms:
-            payload.append(r)
+        for room in rooms:
+            payload.append(room)
     return payload
 
 
-# populateservers() will populate the server list
 def populateservers(vlans):
+    '''populate the server list'''
     servers = []
-    f = open(serverfile, 'r')
-    flines = f.readlines()
-    f.close()
+    fhandle = open(SERVERFILE, 'r')
+    flines = fhandle.readlines()
+    fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
             elems = re.split(r'\t+', line)
@@ -219,10 +217,10 @@ def populateservers(vlans):
                 ipv4 = elems[3]
                 ansiblerole = elems[4].rstrip()
                 vlan = ""
-                for v in vlans:
-                    if ipv6.find(v["ipv6prefix"]) == 0:
-                        vlan = v["name"]
-                        building = v["building"]
+                for vln in vlans:
+                    if ipv6.find(vln["ipv6prefix"]) == 0:
+                        vlan = vln["name"]
+                        building = vln["building"]
                 servers.append({
                     "name": elems[0],
                     "macaddress": elems[1],
@@ -234,8 +232,8 @@ def populateservers(vlans):
                 })
                 if ansiblerole == "core":
                     for i in range(0, len(vlans)):
-                        v = vlans[i]
-                        if building == v["building"]:
+                        vln = vlans[i]
+                        if building == vln["building"]:
                             vlans[i]["ipv6dns1"] = ipv6
                             vlans[i]["ipv4dns1"] = ipv4
                         else:
@@ -244,10 +242,9 @@ def populateservers(vlans):
     return servers
 
 
-# populateinv() will populate the master inventory dictionary
 def populateinv(vlans, switches, servers, routers, aps, pis):
-    # keep things simple, avoid existing ssh config and known_hosts issues
-    sshArgs = "-o StrictHostKeyChecking=no -F /dev/null"
+    '''populates the final inventory which will become the command's output'''
+    ssh_args = "-o StrictHostKeyChecking=no -F /dev/null"
     inv = {
         "routers": {
             "hosts": [],
@@ -268,71 +265,72 @@ def populateinv(vlans, switches, servers, routers, aps, pis):
         },
         "all": {
             "vars": {
-                "ansible_ssh_common_args": sshArgs,
+                "ansible_ssh_common_args": ssh_args,
             }
         },
         "_meta": {
             "hostvars": {}
         }
     }
-    for s in switches:
-        inv["switches"]["hosts"].append(s["name"])
-        inv["_meta"]["hostvars"][s["name"]] = {
-            "ipv6": s["ipv6"],
-            "ipv6ptr": ip6toptr(s["ipv6"]),
-            "fqdn": s["name"] + ".scale.lan",
-            "num": s["num"],
-            "aliases": s["aliases"],
+    for switch in switches:
+        inv["switches"]["hosts"].append(switch["name"])
+        inv["_meta"]["hostvars"][switch["name"]] = {
+            "ipv6": switch["ipv6"],
+            "ipv6ptr": ip6toptr(switch["ipv6"]),
+            "fqdn": switch["name"] + ".scale.lan",
+            "num": switch["num"],
+            "aliases": switch["aliases"],
         }
-    for a in aps:
-        inv["aps"]["hosts"].append(a["name"])
-        inv["_meta"]["hostvars"][a["name"]] = {
-            "mac": a["mac"],
-            "ipv4": a["ipv4"],
-            "ipv4ptr": ip4toptr(a["ipv4"]),
-            "ansible_host": a["ipv4"],
-            "wifi2": a["wifi2"],
-            "wifi5": a["wifi5"],
-            "fqdn": a["name"] + ".scale.lan",
+    for apc in aps:
+        inv["aps"]["hosts"].append(apc["name"])
+        inv["_meta"]["hostvars"][apc["name"]] = {
+            "mac": apc["mac"],
+            "ipv4": apc["ipv4"],
+            "ipv4ptr": ip4toptr(apc["ipv4"]),
+            "ansible_host": apc["ipv4"],
+            "wifi2": apc["wifi2"],
+            "wifi5": apc["wifi5"],
+            "fqdn": apc["name"] + ".scale.lan",
         }
-    for r in routers:
-        inv["routers"]["hosts"].append(r["name"])
-        inv["_meta"]["hostvars"][r["name"]] = {
-            "ipv6": r["ipv6"],
-            "ipv6ptr": ip6toptr(r["ipv6"]),
-            "fqdn": r["name"] + ".scale.lan",
+    for router in routers:
+        inv["routers"]["hosts"].append(router["name"])
+        inv["_meta"]["hostvars"][router["name"]] = {
+            "ipv6": router["ipv6"],
+            "ipv6ptr": ip6toptr(router["ipv6"]),
+            "fqdn": router["name"] + ".scale.lan",
         }
-    for p in pis:
-        inv["pis"]["hosts"].append(p["name"])
-        inv["_meta"]["hostvars"][p["name"]] = {
-            "ipv6": p["ipv6"],
-            "ipv6ptr": ip6toptr(p["ipv6"]),
-            "fqdn": p["name"] + ".scale.lan",
+    for pii in pis:
+        inv["pis"]["hosts"].append(pii["name"])
+        inv["_meta"]["hostvars"][pii["name"]] = {
+            "ipv6": pii["ipv6"],
+            "ipv6ptr": ip6toptr(pii["ipv6"]),
+            "fqdn": pii["name"] + ".scale.lan",
         }
-    for s in servers:
-        if s["ansiblerole"] not in inv.keys():
-            inv[s["ansiblerole"]] = {
+    for server in servers:
+        if server["ansiblerole"] not in inv.keys():
+            inv[server["ansiblerole"]] = {
                 "hosts": [],
                 "vars": {},
             }
-        inv["servers"]["hosts"].append(s["name"])
-        inv[s["ansiblerole"]]["hosts"].append(s["name"])
-        inv["_meta"]["hostvars"][s["name"]] = {
-                "ansible_host": s["ipv4"],
-                "ipv6": s["ipv6"],
-                "ipv6ptr": ip6toptr(s["ipv6"]),
-                "ipv4": s["ipv4"],
-                "ipv4ptr": ip4toptr(s["ipv4"]),
-                "macaddress": s["macaddress"],
-                "vlan": s["vlan"],
-                "fqdn": s["name"] + ".scale.lan",
-                "building": s["building"],
+        inv["servers"]["hosts"].append(server["name"])
+        inv[server["ansiblerole"]]["hosts"].append(server["name"])
+        inv["_meta"]["hostvars"][server["name"]] = {
+            "ansible_host": server["ipv4"],
+            "ipv6": server["ipv6"],
+            "ipv6ptr": ip6toptr(server["ipv6"]),
+            "ipv4": server["ipv4"],
+            "ipv4ptr": ip4toptr(server["ipv4"]),
+            "macaddress": server["macaddress"],
+            "vlan": server["vlan"],
+            "fqdn": server["name"] + ".scale.lan",
+            "building": server["building"],
         }
     inv["all"]["vars"]["vlans"] = vlans
     return inv
 
 
 def main():
+    '''command entry point'''
     vlans = populatevlans()
     switches = populateswitches()
     servers = populateservers(vlans)
