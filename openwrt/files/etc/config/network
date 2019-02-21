@@ -9,11 +9,16 @@ config globals 'globals'
 
 {{ range (datasource "openwrt").wired.switches }}
 config switch
-	option name '{{.}}'
-        option reset '1'
-        option enable_vlan '1'
-        option enable_vlan4k '1'
-        option blinkrate '2'
+        {{ range $key, $value := . -}}
+        option {{ $key }} '{{ $value }}'
+        {{ end -}}
+{{ end }}
+
+{{ range (datasource "openwrt").wired.switch_vlans }}
+config switch_vlan
+        {{ range $key, $value := . -}}
+        option {{ $key }} '{{ $value }}'
+        {{ end -}}
 {{ end }}
 
 {{ range (datasource "openwrt").wired.networks }}
@@ -24,7 +29,6 @@ config interface '{{.name}}'
         {{ end -}}
         {{ end -}}
 {{ end }}
-
 
 config switch_port
         option device 'switch0'
