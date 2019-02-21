@@ -1,0 +1,7 @@
+/var/log/messages {
+    missingok
+    notifempty
+    compress
+    size 500k
+    copytruncate
+}
