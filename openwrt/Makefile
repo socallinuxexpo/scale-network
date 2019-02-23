@@ -42,7 +42,13 @@ $(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
 	  mkdir -p $(IMAGEBUILDER) && \
 	  tar -zxmf  $(LEDE_VER)$(TAR_EXT) -C $(IMAGEBUILDER) --strip-components 1
 
-$(BUILD_DIR)/$(IMAGEBUILDER)/.config: extract
+$(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default: extract
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
+	  && cp ../../feeds.conf.default feeds.conf.default
+
+feeds: $(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default
+
+$(BUILD_DIR)/$(IMAGEBUILDER)/.config: feeds
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
 	  && ./scripts/feeds update -a \
 	  && ./scripts/feeds install -a	\
