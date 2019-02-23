@@ -74,5 +74,6 @@ endif
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
 	chmod 755 $(TMPL_OUT_DIR)/root
-	chmod 750 $(TMPL_OUT_DIR)/root/.ssh
+	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
+	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
 	touch $(TMPL_OUT_DIR)
