@@ -54,12 +54,28 @@ Flow see: https://guides.github.com/introduction/flow/
 
 4. Create a pull request the `feature` branch against `master` with the proposed
    changes to kick off a discussion. Make sure to fill out the PR template with
-   as much information as possible regarding the changes.
+   as much information as possible regarding the changes. The pull request can be
+   titled with either the `[WAIT]` or `[READY]` flag. PRs with `[WAIT]` signify that
+   the author does not yet wish for the PR to be approved as further modifications
+   and conversation are expected. Any PR with the title omitting either `[WAIT]` or
+   `[READY]` should be assumed to be `[READY]`.
+
 5. If further changes are needed before the pull request is merged repeat steps #2
    and #3. Your existing pull request will update automatically!
-6. Another SCALE Tech member will review and merge the pull request once the
-   branch is approved.
-7. Once your branch is merged, sit back and pat yourself on the back for
+
+6. Any PR in `[WAIT]` will be held at this state until the author is ready for a merge.
+   Once ready the title should be editted to reflect `[READY]`.
+
+7. Once in `[READY]` another SCALE Tech member will review the PR. The reviewer should
+   ensure that the changes being proposed conform to the spirit of the existing efforts
+   and do their best to test any changes manually to ensure accuracy. The reviewer should
+   also verify that all Circle CI checks are passing at this time. No PR with failing
+   test should ever be approved under normal circumstances.
+
+8. The approving reviewer should then merge the PR, ensuring Circle CI checks are passing
+   against `master`.
+
+9. Once your branch is merged, sit back and pat yourself on the back for
    improving the repo! Now go back to the `master` branch which is the default branch and
    get the changes that were merged with your `feature` branch:
    ```bash
@@ -67,7 +83,8 @@ Flow see: https://guides.github.com/introduction/flow/
    git pull --rebase origin master
    git log  # Check to make sure the merge exists
    ```
-8. Go back to step #1 and add more fix and/or features to the repo!
+
+10. Go back to step #1 and add more fix and/or features to the repo!
 
 ### Common Scenarios
 
