@@ -16,9 +16,15 @@ jobs:
         name: install diffutils
         command: apk update && apk add diffutils
 
+    # Netgear WNDR 3700v2, 3800, 3800ch configs
     - run:
-        name: openwrt golden file test
-        command: sh -x test.sh
+        name: openwrt ar71xx golden file test
+        command: sh -x test.sh -t ar71xx
+
+    # TP-Link c2600 configs
+    - run:
+        name: openwrt ipq806x golden file test
+        command: sh -x test.sh -t ipq806x
 
   # TODO: Figure out when to do end-to-end build test
   # builds take a long time and should be done
