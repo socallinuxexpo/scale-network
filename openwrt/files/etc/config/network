@@ -4,8 +4,13 @@ config interface 'loopback'
         option ipaddr '127.0.0.1'
         option netmask '255.0.0.0'
 
+{{ if (eq (env.Getenv "TARGET") "ar71xx") }}
 config globals 'globals'
         option ula_prefix 'fdfa:7251:0374::/48'
+{{ else }}
+config globals 'globals'
+        option ula_prefix 'fd38:15c5:20b8::/48'
+{{ end }}
 
 {{ range (datasource "openwrt").wired.switches }}
 config switch
@@ -30,6 +35,7 @@ config interface '{{.name}}'
         {{ end -}}
 {{ end }}
 
+{{ if (eq (env.Getenv "TARGET") "ar71xx") }}
 config switch_port
         option device 'switch0'
         option port '1'
@@ -44,4 +50,4 @@ config switch_port
         option device 'switch0'
         option port '5'
         option led '2'
-
+{{ end }}

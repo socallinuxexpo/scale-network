@@ -44,6 +44,8 @@ UPDATE=${UPDATE:-0}
 TMPLOC="tmp/${TARGET}"
 
 gen_templates(){
+  # Export to support ENV datasource
+  export TARGET=$TARGET
   gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
 }
 

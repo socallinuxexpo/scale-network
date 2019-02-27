@@ -3,6 +3,9 @@
 # Assumes all dependency tools are already installed
 #
 
+# Export all variables by default
+.EXPORT_ALL_VARIABLES:
+
 # WNDR by default
 TARGET ?= ar71xx
 
