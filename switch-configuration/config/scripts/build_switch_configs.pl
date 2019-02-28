@@ -63,7 +63,7 @@ foreach(@{$VL_CONFIG})
   $VV_prefix6 = $TOKENS[3];
   $VV_prefix4 = $TOKENS[4];
   debug(5, "VVRNG $VV_name_prefix from $VV_LOW to $VV_HIGH within ".
-		"$VV_prefix6 and $VV_prefix4");
+		"$VV_prefix6 and $VV_prefix4.\n");
 }
 
  
