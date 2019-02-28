@@ -14,5 +14,5 @@ TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 RSRVD	6
-VLAN	exVendor	20		// ge-0/0/{24-43}				// Vendor VLAN
+VVLAN	16			// Dynamically assigned Vendor VLAN ports
 

@@ -14,20 +14,66 @@ if(scalar(@ARGV)) # One or more switch names specified
 }
 else
 {
-    # Rebuild entire config set, so start with empty output directory
-    ##FIXME## Should probably only delete configurations we are about to build
+    ##FIXME## Probably should evaluate switch list and remove any entries
+    ##FIXME## that no longer exist from output directory.
+    my @outputs = ();
     my $file;
-    foreach $file (glob("output/*"))
+    if (scalar(@ARGV))
+    # Selectively delete only configurations we are rebuilding
+    {
+        foreach $file (@{$switchlist})
+        {
+            push @outputs, $file.".conf";
+        }
+    }
+    else
+    # Rebuild entire config set, so start with empty output directory
+    {
+        @outputs = glob("output/*");
+    }
+    foreach $file (@outputs)
     {
         unlink($file) || die "Failed to delete $file: $!\n";
         debug(3, "Deleted $file from output directory\n");
     }
 }
+
+# Pull in data necessary for VVLAN handling and prepare it.
+# Use of global variables here is ugly, but due to the need to maintain a lot of
+# shared state information, there's no easy to code better way.
+#
+# Hopefully this all eventually goes away in favor of Ansible next year, so not
+# worth a lot of focus to improve now.
+our $VL_CONFIG = read_config_file("vlans");
+our $VV_name_prefix;
+our $VV_LOW;
+our $VV_HIGH;
+our $VV_COUNT=0;
+our $VV_prefix6;
+our $VV_prefix4;
+
+foreach(@{$VL_CONFIG})
+{
+  my @TOKENS;
+  @TOKENS = split(/\t/, $_);
+  next if ($TOKENS[0] ne "VVRNG");
+  die "Error: Multiple VVRNG statements encountered!\n" if ($VV_name_prefix);
+  $VV_name_prefix = $TOKENS[1];
+  ($VV_LOW, $VV_HIGH) = split(/\s*-\s*/, $TOKENS[2]);
+  $VV_prefix6 = $TOKENS[3];
+  $VV_prefix4 = $TOKENS[4];
+  debug(5, "VVRNG $VV_name_prefix from $VV_LOW to $VV_HIGH within ".
+		"$VV_prefix6 and $VV_prefix4.\n");
+}
+
+ 
+
+
 foreach $switch (@{$switchlist})
 {
     debug(2, "Building $switch\n");
-    open PASSWD, "<../../facts/secrets/jroot_pw" ||
-    	die "Couldn't find root PW: $!\n";
+    open(PASSWD, "< ../../facts/secrets/jroot_pw") ||
+    	die "Couldnt find root PW: $!\n";
     my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
     chomp $rootpw;
     close PASSWD;
