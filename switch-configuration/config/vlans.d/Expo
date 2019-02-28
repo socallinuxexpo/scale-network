@@ -12,11 +12,9 @@ VLAN	exStaff			108	2001:470:f325:108::/64	10.0.8.0/24	Staff Wireless Network
 VLAN	exRegistration	110	2001:470:f325:110::/64	10.0.10.0/24	Registration Network (Expo Center) IPv6 Only
 VLAN	exAkamai		111	2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
 //112 through 199 not used
-VLAN	exDWCC			200	2001:470:f325:200::/64	10.0.100.0/24	Zach's Distributed Wifi Capability Collector
-//201 through 299 not used
-//300 through 499 Vendors
-PVLAN	exVendor		300	2001:470:f325:300::/64	10.100.0.0/20	Vendor PVLAN
-//301-499 are dynamically generated from Booth information file as community VLANs.
-//		Name			Type	VLID	PVLAN		Comment
-//SVLAN	V_Microsoft	COMM	301	exVendor	Sec. Comm. VLAN for Microsoft
-
+//200 through 499 Vendors
+//200-498 are dynamically generated from Booth information file as Vendor VLANs.
+//The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other
+//VLANs (vendor_vlan <-> internet only)
+VVRNG	ex_v_			200-498	2001:470:f325:200::/55	10.1.0.0/16	Dynamically allocated and named booth VLANs
+//499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.

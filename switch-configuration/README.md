@@ -93,11 +93,28 @@ The syntax of a config/vlans file (either master or within an included file) is 
 VLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
 						Defines a Normal VLAN.
 
-PVLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
-                        Defines a primary PVLAN.
-SVLAN <vlan_name> <ISOL|COMM> <vlan_number> <pvlan_name> <comment>
-                        Defines a secondary PVLAN. ISOL makes an isolated PVLAN. COMM makes a Community
-                        PVLAN.
+VVRNG 	<template>		<vlan_range>	<prefix6>	<prefix4>	<comment>
+						Defines a range of Booth (Vendor) VLANs.
+
+Note: Only one VVRNG statement is allowed globally, even across all included files. The behavior of multiple
+VVRNG definitions is undefined.
+
+<template> is the prefix for naming the vlans. These will be dynamically assigned from the booth
+list file.
+
+<vlan_range> is a hyphen separated range defining the lowest and highest VLAN ID numbers that can be allocated.
+
+<prefix6> is a shorter than /64 prefix from which /64s will be delegated. It must contain at least as many /64s
+as there are numbers between the low and high specfication in <vlan_range> in BCD notation. That is, if you
+have a range from 200-399 for VLAN ids, then there should be a /55 or shorter IPv6 prefix. Ideally, the numbers
+also line up (e.g. 200-399 VLAN IDs should map to 2001:db8:abcd:0200::/55 which would yield IPv6 networks for
+the VLANs of 2001:db8:abcd:200::/64 through 2001:db8:abcd:399::/64.)
+
+<prefix4> is a shorter than /24 prefix from which /24s will be delegated. It must contain at least as many /24s
+as there are numbers between the low and high specification in <vlan_range>. Since IPv4 numbers cannot possibly
+represent the full range of VLAN IDs in any human readable form, no attempt is made at matching the numbers.
+In our example above of VLAN IDs in the range 200-399, a /16 is perfect (e.g. 10.1.0.0/16 would map to 10.1.0.0/24
+through 10.1.199.0/24).
 
 [<directive>] // <text>				Any text after a double slash is considered a comment
 						to the end of line.  It is ignored by the parser.
@@ -117,13 +134,11 @@ Configuration elements include:
 ```
 RSRVD	<number_of_ports>
 VLAN	<vlan_name> <number_of_ports>
+VVLAN	<number_of_ports>
 TRUNK	<port> <vlan_name>[,<vlan_name>...]
 JUNOS	<junos_version>
 FIBER   <port> <vlan_name>[,<vlan_name>...]
 ```
-
-Note: A PVLAN port and a VLAN port are identical here. PVLANs are defined in the VLANs portion of the configuration
-file which is controlled by the vlans and vlans.d/\* files.
 
 ## config/routers/<name>
 These files describe the base configuration for a router. The information in

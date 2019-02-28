@@ -11,10 +11,6 @@ x       Routers
 P   6.  PVLAN support for Expo floor
 x   7.  V6 only VLANs (Staff, Signs, Registration)
     8.  Firewall Rules
-P   9.  Zach's DWCC
-x       VLANs specified
-x       Addresses assigned
-        Assign ports to switches
 O  10.  Verify Tabs in TDF (vim on Mac tends to produce spaces instead)
 
 #### Notes
