@@ -1,17 +1,24 @@
 #
-# Builds Lede (Openwrt) images for Netgear 3700v2, 3800, & 3800ch used at Scale
+# Builds Openwrt images for ar71xx & ipq806x targets used at Scale
 # Assumes all dependency tools are already installed
 #
 
-BUILD_DIR = build
-BUILD_SECRETS = ../facts/secrets/openwrt.yaml
+# Export all variables by default
+.EXPORT_ALL_VARIABLES:
+
+# WNDR by default
+TARGET ?= ar71xx
+
+BUILD_DIR ?= build
+
+BUILD_SECRETS = ../facts/secrets/$(TARGET)-openwrt-example.yaml
 
 # bins
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
 LEDE_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
-IMAGEBUILDER = source-$(LEDE_VER)
+IMAGEBUILDER = source-$(TARGET)-$(LEDE_VER)
 TAR_EXT = .tar.gz
 
 TMPL_SRC_DIR = files
@@ -31,14 +38,25 @@ $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT): | $(BUILD_DIR)
 	curl -L -o $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(LEDE_VER)$(TAR_EXT)
 
 $(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
-	@cd $(BUILD_DIR) && tar -zxmf  $(LEDE_VER)$(TAR_EXT)
+	@cd $(BUILD_DIR) && \
+	  mkdir -p $(IMAGEBUILDER) && \
+	  tar -zxmf  $(LEDE_VER)$(TAR_EXT) -C $(IMAGEBUILDER) --strip-components 1
 
-$(BUILD_DIR)/$(IMAGEBUILDER)/.config: extract
+$(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default: extract
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
+	  && cp ../../feeds.conf.default feeds.conf.default
+
+feeds: $(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default
+
+$(BUILD_DIR)/$(IMAGEBUILDER)/.config: feeds
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
 	  && ./scripts/feeds update -a \
 	  && ./scripts/feeds install -a	\
-	  && cp ../../diffconfig .config \
+	  && cat ../../configs/$(TARGET)-generic.config > .config \
+	  && cat ../../configs/common.config >> .config \
 	  && make defconfig
+
+config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) download && $(MAKE) V=s -j 4
@@ -62,5 +80,6 @@ endif
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
 	chmod 755 $(TMPL_OUT_DIR)/root
-	chmod 750 $(TMPL_OUT_DIR)/root/.ssh
+	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
+	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
 	touch $(TMPL_OUT_DIR)

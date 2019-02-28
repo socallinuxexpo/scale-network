@@ -1,0 +1,60 @@
+config interface 'loopback'
+        option ifname 'lo'
+        option proto 'static'
+        option ipaddr '127.0.0.1'
+        option netmask '255.0.0.0'
+
+
+config globals 'globals'
+        option ula_prefix 'fd38:15c5:20b8::/48'
+
+
+
+config switch
+        option enable_vlan '1'
+        option name 'switch0'
+        option reset '1'
+        
+
+
+config switch_vlan
+        option device 'switch0'
+        option ports '1 2 3 4 6t'
+        option vlan '1'
+        
+config switch_vlan
+        option device 'switch0'
+        option ports '5 0t'
+        option vlan '2'
+        
+
+
+config interface 'mgmt'
+        option ifname 'eth0.2'
+        option proto 'dhcp'
+        option type 'bridge'
+        
+config interface 'mgmt6'
+        option ifname '@mgmt'
+        option proto 'dhcpv6'
+        option reqprefix 'no'
+        
+config interface 'staffwifi'
+        option ifname 'eth1.1'
+        option ipaddr '192.168.1.1'
+        option netmask '255.255.255.0'
+        option proto 'static'
+        option type 'bridge'
+        
+config interface 'scaleslow'
+        option ifname 'eth1.100 eth1.500'
+        option proto 'none'
+        option type 'bridge'
+        
+config interface 'scalefast'
+        option ifname 'eth1.101 eth1.501'
+        option proto 'none'
+        option type 'bridge'
+        
+
+

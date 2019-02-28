@@ -6,6 +6,7 @@ Simple test for gomplate generated templates
 
 OPTIONS:
   -h      Show this message
+  -t      Target arch to build
   -u      Update golden templates
 
 EXAMPLES:
@@ -16,11 +17,14 @@ EXAMPLES:
 EOF
 }
 
-while getopts "hu" OPTION
+while getopts "ht:u" OPTION
 do
   case $OPTION in
     u )
       UPDATE=1
+      ;;
+    t )
+      TARGET=$OPTARG
       ;;
     h )
       usage
@@ -34,18 +38,21 @@ do
 done
 shift $((OPTIND -1))
 
+TARGET=${TARGET:-'ar71xx'}
 UPDATE=${UPDATE:-0}
 
-TMPLOC="tmp"
+TMPLOC="tmp/${TARGET}"
 
 gen_templates(){
-  gomplate -d openwrt=../../../facts/secrets/openwrt-example.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
+  # Export to support ENV datasource
+  export TARGET=$TARGET
+  gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
 }
 
 if [ "${UPDATE}" == "1" ]; then
-  gen_templates golden
+  gen_templates "golden/${TARGET}"
 fi
 
 gen_templates $TMPLOC
 
-diff -u -r golden/ $TMPLOC/
+diff -u -r "golden/${TARGET}" $TMPLOC/
