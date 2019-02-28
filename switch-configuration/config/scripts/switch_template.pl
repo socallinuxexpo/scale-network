@@ -9,6 +9,16 @@
 ##FIXME## those defined in the types/* files.
 
 use strict;
+use integer;
+use Data::Dumper;
+
+our $VV_LOW;
+our $VV_HIGH;
+our $VV_COUNT;
+our $VV_prefix6;
+our $VV_prefix4;
+
+
 my $DEBUGLEVEL = 0;
 
 my %Switchtypes;
@@ -231,7 +241,7 @@ sub build_interfaces_from_config
 {
   ##FIXME## There are a number of places where this subroutine assumes
   ##FIXME## that all interaces are ge-0/0/*
-  ##FIXME## Covers all but fiber ports for SCALE 16x.
+  ##FIXME## Covers all but fiber ports for SCALE 17x.
   my $hostname = shift @_;
   # Retrieve Switch Type Information
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
@@ -345,6 +355,14 @@ $MEMBERS
     }
 EOF
     }
+    elsif ($cmd eq "VVLAN")
+    {
+      # Skip for now. Needs to be handled as a special case due to interaction of multiple
+      # elements across multiple switches.
+      # Account for the ports VVLAN directive takes up.
+      my $count = shift(@tokens);
+      $port += $count;
+    }
   }
   return($OUTPUT);
 }
@@ -407,27 +425,18 @@ sub build_vlans_from_config
     @TOKENS = split(/\t/, $_);
     $prim = 0;
     $name = $TOKENS[1];
-    if ($TOKENS[0] eq "SVLAN") # Secondary PVLAN
+    if ($TOKENS[0] eq "VLAN") # Standard VLAN
     {
-      $type = $TOKENS[2];
-      $vlid = $TOKENS[3];
-      $prim = $TOKENS[4];
-      $desc = $TOKENS[5];
-      my $pvlid = $VLANS_byname{$prim};
-      debug(1, "PVLAN Lookup for $prim\n");
-      # For Secondary VLANs, retrieve prefix from Primary
-      $IPv6 = $VLANS{$pvlid}[2];
-      $IPv4 = $VLANS{$pvlid}[3];
-    }
-    else
-    {
-      $type = $TOKENS[0]; # VLAN or PVLAN
+      $type = $TOKENS[0]; # VLAN
       $vlid = $TOKENS[2];
       $desc = $TOKENS[5];
       $IPv6 = $TOKENS[3];
       $IPv4 = $TOKENS[4];
     }
-    $type = "PRIM" if ($type eq "PVLAN"); # FIXUP Type
+    elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
+    {
+      # Skip this line here... Process elsewhere
+    }
     debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     $VLANS_byname{$name} = $vlid;
     $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
@@ -436,9 +445,6 @@ sub build_vlans_from_config
 
   # Now that we have a hash containing all of the VLAN configurations, iterate
   # through and write out the switch configuration vlans {} section.
-  ##FIXME## Need to figure out how to integrate interfaces and trunks,
-  ##FIXME## especially pvlan trunks. currently not handled. Manual config
-  ##FIXME## Edits will be required (This will be noted in generated config).
   foreach(sort(keys(%VLANS)))
   {
     ($type, $name, $IPv6, $IPv4, $desc, $prim) = @{$VLANS{$_}};
@@ -452,45 +458,6 @@ EOF
       $OUTPUT .= "        l3-interface vlan.$_;\n" if ($_ eq $MgtVL);
       $OUTPUT .= "    }\n";
     }
-    elsif ($type eq "PRIM")
-    {
-      $OUTPUT .= <<EOF;
-    $name {
-        description "$desc";
-        vlan-id $_;
-        interface {
-            ### WARNING ### Trunks must be manually configured
-            # ge-0/1/0.0 {
-            #     pvlan-trunk;
-            # }
-        }
-        no-local-switching;
-        isolation-id 2$_;
-      }
-EOF
-    }
-    elsif ($type eq "COMM")
-    {
-      $OUTPUT .= <<EOF;
-    $name {
-        description "COMMUNITY $desc";
-        vlan-id $_;
-        primary-vlan $prim;
-    }
-EOF
-    }
-    elsif ($type eq "ISOL")
-    {
-      $OUTPUT .= <<EOF;
-    $name {
-        description "ISOLATED $desc";
-        vlan-id $_;
-        primary-vlan $prim;
-        no-local-switching;
-        isolation-id $_;
-    }
-EOF
-    }
     else
     {
         warn("Skipped unknown VLAN type ($_ => $name type=$type).\n");
@@ -500,6 +467,477 @@ EOF
 }
 
 
+# Vendor VLAN subroutines
+sub VV_get_prefix6
+# Return the $VV_COUNT'th /64 prefix from $VV_prefix6 (if possible), or -1 if error.
+{
+  my $VV_COUNT = shift @_;
+  my $VV_prefix6 = shift @_;
+  debug(5, "VV_get_prefix6: Count: $VV_COUNT from prefix $VV_prefix6.\n");
+  my ($net, $mask) = split(/\//, $VV_prefix6);
+  my $net = expand_double_colon($net);
+  my @quartets = split(/:/, $net);
+  my $n_bits = 64 - $mask;
+  debug(5, "\tNet: $net Mask: $mask ($n_bits bits to play)\n");
+  my $netbase = "";
+  my $digitpfx = "";
+  if ($n_bits > 16)
+  {
+    warn("Error: cannot support more than 9999 IPv6 VLANs (>16 bit variable field) for VVRNG\n");
+    return -1;
+  }
+  $netbase = $quartets[3];
+  if ($quartets[3] !~ /^\d+$/)
+  {
+    # Have to extract BCD compatible portion to netbase and treat rest as fixed.
+    my @digits = split(//, $quartets[3]);
+    while ($digits[0] !~ /^\d$/ && $#digits)
+    {
+      $digitpfx .= shift @digits; # Save hex prefix for later use
+    }
+    $netbase = join("", @digits);
+    if ($netbase !~ /^\d+$/)
+    {
+      warn("Error: Supplied ipv6 not BCD cmpatible for VVRNG\n");
+      return -1;
+    }
+  }
+  my $netmax = $netbase + 2 ** $n_bits + 1;
+  my $candidate = $netbase + $VV_COUNT;
+  return -1 if ($candidate > $netmax);
+  $candidate = $digitpfx.$candidate; # Restore hex prefix if needed
+  return($quartets[0].":".$quartets[1].":".$quartets[2].":".$candidate."::/64");
+}
+
+sub VV_get_prefix4
+# Return the $VV_COUNT'th /24 prefix from $VV_prefix4 (if possible), or -1 if error.
+{
+  my $VV_COUNT = shift @_;
+  my $VV_prefix4 = shift @_;
+  my ($net, $mask) = split(/\//, $VV_prefix4);
+  debug(5, "VV_get_prefix4 Count: $VV_COUNT Prefix: $net Mask: $mask\n");
+  my @octets = split(/\./, $net);
+  my $netbase = ($octets[0] << 24) + ($octets[1] << 16) + ($octets[1] << 8) + $octets[3];
+  my $netmax = $netbase + (2 ** $mask) -1;
+  my $candidate = $netbase + ($VV_COUNT << 8);
+  return -1 if ($candidate > $netmax);
+  debug(5, "\tBase: $netbase Max: $netmax Candidate: $candidate\n");
+  debug(5, "\t\t3 -> ($candidate ->)", $candidate % 256, ".\n");
+  $octets[3] = ($candidate % 256);
+  $candidate >>= 8;
+  debug(5, "\t\t2 -> ($candidate ->)", $candidate % 256, ".\n");
+  $octets[2] = ($candidate % 256);
+  $candidate >>= 8;
+  debug(5, "\t\t1 -> ($candidate ->)", $candidate % 256, ".\n");
+  $octets[1] = ($candidate % 256);
+  $candidate >>= 8;
+  debug(5, "\t\t0 -> ($candidate ->)", $candidate % 256, ".\n");
+  $octets[0] = ($candidate % 256);
+  debug(5, "\tResult: ".join(".", @octets)."/24.\n");
+  return(join(".", @octets)."/24");
+}
+
+sub VV_get_vlid
+# Return the $VV_COUNT'th vlan ID from $VV_LOW to $VV_HIGH (if possible), or -1 if error.
+{
+  my $VV_COUNT = shift @_;
+  my $candidate = $VV_LOW + $VV_COUNT;
+  return -1 if ($candidate > $VV_HIGH);
+  return $candidate;
+}
+
+sub VV_init_firewall
+# Return a string contiaing the base firewall configuration fragment for a switch
+{
+  my  $VV_firewall = <<EOF;
+    family inet {
+        filter only_to_internet {
+            term dns {
+                from {
+                    destination-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    destination-port domain;
+                }
+                then {
+                    accept;
+                }
+            }
+            term dhcp {
+                from {
+                    destination-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    destination-port [ bootps dhcp ];
+                }
+            }
+            term no-rfc1918 {
+                from {
+                    destination-address {
+                        10.0.0.0/8;
+                        172.16.0.0/12;
+                        192.168.0.0/16;
+                    }
+                }
+                then {
+                    reject;
+                }
+            }
+            term to-internet {
+                from {
+                    destination-address {
+                        0.0.0.0/0;
+                }
+                then {
+                    accept;
+                }
+            }
+        }
+        filter only_from_internet {
+            term dns {
+                from {
+                    source-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    source-port domain;
+                }
+                then {
+                    accept;
+                }
+            }
+            term dhcp {
+                from {
+                    source-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    source-port [ bootps dhcp ];
+                }
+            }
+            term no-rfc1918 {
+                from {
+                    source-address {
+                        10.0.0.0/8;
+                        172.16.0.0/12;
+                        192.168.0.0/16;
+                    }
+                }
+                then {
+                    reject;
+                }
+            }
+            term to-internet {
+                from source-address {
+                    0.0.0.0/0;
+                }
+                then {
+                    accept;
+                }
+            }
+        }
+    }
+    family inet6 {
+        filter only_to_internet6 {
+          term dns {
+                from {
+                    destination-address {
+                        2001:470:f325:103::/64;
+                        2001:470:f325:503::/64;
+                    }
+                    destination-port domain;
+                }
+                then {
+                    accept;
+                }
+          }
+          term dhcp {
+                from {
+                    destination-address {
+                        2001:470:f325:103::/64;
+                        2001:470:f325:503::/64;
+                    }
+                    destination-port [ bootps dhcp ];
+                }
+                then {
+                    accept;
+                }
+          }
+          term no-local {
+                from {
+                    destination-address {
+                        2001:470:f325::/48;
+                        fc00::/7;
+                    }
+                }
+                then {
+                    reject;
+                }
+          }
+          term to-internet {
+                from {
+                    destination-address {
+                        ::/0;
+                    }
+                }
+                then {
+                    accept;
+                }
+          }
+        }
+        filter only_from_internet6 {
+          term dns {
+                from {
+                    source-address {
+                        2001:470:f325:103::/64;
+                        2001:470:f325:503::/64;
+                    }
+                    source-port domain;
+                }
+                then {
+                    accept;
+                }
+          }
+          term dhcp {
+                from {
+                    source-address {
+                        2001:470:f325:103::/64;
+                        2001:470:f325:503::/64;
+                    }
+                    source-port [ bootps dhcp ];
+                }
+                then {
+                    accept;
+                }
+          }
+          term no-local {
+                from {
+                    source-address {
+                        2001:470:f325::/48;
+                        fc00::/7;
+                    }
+                }
+                then {
+                    reject;
+                }
+          }
+          term to-internet {
+                from {
+                    source-address {
+                        ::/0;
+                    }
+                }
+                then {
+                    accept;
+                }
+          }
+        }
+    }
+EOF
+  return $VV_firewall;
+}
+
+
+
+sub build_vendor_from_config
+# Return a reference to a hash containing the following elements:
+# "interfaces" -> An interface configuration fragment for all Vendor related VLAN interfaces
+# "vlans"      -> A vlan configuration fragment for all Vendor related VLANs
+# "vlans_l3"    -> An interface configuration fragment for all Vendor VLAN L3 interfaces
+# "defgw_ipv4" -> A routing-options configuration fragment to provide an IPv4 default gateway for the Vendor VLANs
+# "firewall"   -> A firewall configuration fragment to provide the necessary filters to prevent Vendor VLANs from attacking others.
+# "dhcp"       -> A forwarding-options configuration fragment to provide dhcp-relay configuration
+{
+  my $hostname = shift @_;
+  debug(5, "Building Vendor VLANs for $hostname\n");
+  # Retrieve Switch Type Information
+  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  
+  my $port = 0;
+  # Read Type file and produce interface configuration
+  my $switchtype = read_config_file("types/$Type");
+  debug(5, "$hostname: type: $Type, received ", scalar(@{$switchtype}),
+      " lines of config\n");
+  
+  my $VV_interfaces = "";
+  my $VV_vlans = "";
+  my $VV_vlans_l3 = "";
+  my $VV_defgw_ipv4 = "";
+  my $VV_firewall = "";
+  my $VV_dhcp = "";
+  my $VV_portcount = 0;
+  # Construct empty hashref to use later for return value
+  my $VV_hashref = {
+  };
+
+  my $intnum = 0;
+  foreach(@{$switchtype})
+  {
+    my @tokens = split(/\t/, $_); # Split line into tokens
+    my $cmd = shift(@tokens);     # Command is always first token.
+    debug(5, "\tCommand: $cmd (intnum: $intnum)", join(",", @tokens), "\n");
+    if ($cmd eq "RSRVD")
+    {
+      # Skip -- Not vendor VLAN related, handled elsewhere
+      # Need to account for the interfaces, though.
+      my $count = $tokens[0];
+      $intnum += $count;
+      debug(5, "\t\tSkipping $count reserved ports, new intnum $intnum.\n");
+    }
+    elsif ($cmd eq "TRUNK" || $cmd eq "FIBER")
+    {
+      # Skip -- Not vendor VLAN related, handled elsewhere
+      # Need to account for the interfaces, though.
+      my $iname = $tokens[0];
+      my ($name,$instance) = split(/-/, $iname);
+      my ($fpc, $slot, $port) = split(/\//, $instance);
+      $intnum = $port+1 if ($port >= $intnum);
+      debug(5, "\t\tFound port definition for $name-$fpc/$slot/$port, new intnum $intnum.\n");
+    }
+    elsif ($cmd eq "VLAN")
+    {
+      # Skip -- Not vendor VLAN related, handled elsewhere
+      # Need to account for the interfaces, though.
+      my $count = $tokens[0];
+      $intnum += $count;
+      debug(5, "\t\tSkipping $count vlan ports, new intnum $intnum.\n");
+    }
+    elsif ($cmd eq "VVLAN")
+    {
+      debug(5, "Command: $cmd ", join(",", @tokens),"\n");
+      # Determine number of ports to build out
+      my $count = $tokens[0];
+      $VV_portcount = $count;
+      # Build config fragments for each interface.
+      debug(5, "Building $count Vendor Interfaces starting at ge-0/0/$intnum\n");
+
+
+      # Initialize config fragments. These initialized values (may) get appended to for each interface.
+      $VV_interfaces = "";
+      ##FIXME## Given that the Vendor VLAN Backbone is hard coded, this is a little bit silly, but avoids a dangling
+      ##FIXME## timebomb if that ever gets corrected.
+      my $v4_nexthop = ($MgtVL < 500) ? "10.2.0.1" : "10.130.0.1";
+      debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
+      ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
+      $VV_vlans = <<EOF;
+vendor_backbone {
+    description "Vendor Backbone";
+    vlan-id 499;
+    l3-interface vlan.499;
+}
+EOF
+      my $ipv4_suffix = $VV_COUNT + 10;
+      $VV_vlans_l3 = <<EOF;
+    vlan {
+        unit 499 {
+            family inet {
+                address 10.2.0.$ipv4_suffix/24;
+            }
+        }
+EOF
+      $VV_defgw_ipv4 = <<EOF;
+    static {
+        route 0.0.0.0/0 next-hop $v4_nexthop;
+    }
+EOF
+      $VV_firewall = VV_init_firewall();
+
+      while ($count)
+      {
+        my $VLID = VV_get_vlid($VV_COUNT);
+        debug(5, "$count remaining -- VV_COUNT $VV_COUNT, VLID $VLID.\n");
+        if ($VLID < 0)
+        {
+          die("ERROR: Not enough Vendor VLANs defined in VVRNG.\n");
+        }
+        my $VL_prefix6 = VV_get_prefix6($VV_COUNT, $VV_prefix6);
+        debug(5, "\tVL_prefix6 $VL_prefix6.\n");
+        if ($VL_prefix6 < 0)
+        {
+          die("ERROR: Couldn't get IPv6 prefix for Vendor VLAN ($VV_COUNT)\n");
+        }
+        my $VL_prefix4 = VV_get_prefix4($VV_COUNT, $VV_prefix4);
+        debug(5, "\tVL_prefix4 $VL_prefix4.\n");
+        if ($VL_prefix4 < 0)
+        {
+          die("ERROR: Couldn't get IPv4 prefix for Vendor VLAN ($VV_COUNT)\n");
+        }
+#	"interfaces"  -> $VV_interfaces,
+#       context: interfaces { <here> }
+        $VV_interfaces .= <<EOF;
+    ge-0/0/$intnum {
+        unit $VLID {
+            description "Vendor VLAN $VLID"
+            family ethernet-switching {
+                port-mode access;
+                vlan {
+                    members vendor-vlan-$VLID;
+                }
+            }
+        }
+    }
+EOF
+#	"vlans"       -> $VV_vlans,
+#	context: vlans { <here> }
+        $VV_vlans .= <<EOF;
+    vendor-vlan-$VLID {
+        vlan-id $VLID
+        l3-interface vlan.$VLID;
+    }
+EOF
+#	"vlans_l3"    -> $VV_vlans_l3,
+#       context: interfaces { vlan { <here> ... [}] }
+        $VV_vlans_l3 .= <<EOF;
+        unit $VLID {
+            family inet {
+                $VL_prefix4.1/24;
+            }
+            family inet6 {
+                $VL_prefix6::1/64;
+            }
+        }
+EOF
+# These two are simply used in their initialized state (currently)...
+#	"defagw_ipv4" -> $VV_defgw_ipv4,
+#	"firewall"    -> $VV_firewall,
+#	"dhcp"        -> $VV_dhcp,
+##FIXME## Put forwarding options here to facilitate DHCP (v4,v6)
+	# context: forwarding-options { dhcp { <here> } }
+        # Increment / decrement counters
+        $intnum++;	# Next interface (ge-0/0/{$intnum})
+        $VV_COUNT++;	# Vendor VLAN Counter
+        $count--;	# Remaining unprocessed interfaces in this group
+      }
+    }
+  }
+  # Finish up strings that need to be terminated (currently just $VV_vlans_l3
+  $VV_vlans_l3 .= <<EOF;
+    }
+EOF
+  if ($VV_portcount == 0) # No VVLAN statement encountered.
+  {
+    return(0);
+  }
+  else
+  {
+    # Put cooked values into initialized hashref
+    my $VV_hashref = {
+	  "interfaces"  => $VV_interfaces,
+	  "vlans"       => $VV_vlans,
+	  "vlans_l3"    => $VV_vlans_l3,
+	  "defagw_ipv4" => $VV_defgw_ipv4,
+	  "firewall"    => $VV_firewall,
+	  "dhcp"        => $VV_dhcp,
+    };
+    debug(5, "Returning Vendor parameters:\n");
+    debug(5, Dumper($VV_hashref));
+    return($VV_hashref);
+  }
+}
+
+# Put it all together
 sub build_config_from_template
 {
   # Add input variables here:
@@ -510,8 +948,17 @@ sub build_config_from_template
   my $USER_AUTHENTICATION = build_users_from_auth();
   my $INTERFACES_PHYSICAL = build_interfaces_from_config($hostname);
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
+  my (%VENDOR_CONFIGURATION) = %{build_vendor_from_config($hostname)};
+  debug(5, "Received Vendor configuration:\n");
+  debug(5, Dumper(%VENDOR_CONFIGURATION));
+  debug(5, "End Vendor Config\n");
   my ($INTERFACES_LAYER3, $IPV6_DEFGW) = build_l3_from_config($hostname);
-
+  $INTERFACES_PHYSICAL .= ${VENDOR_CONFIGURATION}{"interfaces"};
+  $VLAN_CONFIGURATION  .= ${VENDOR_CONFIGURATION}{"vlans"};
+  $INTERFACES_LAYER3   .= ${VENDOR_CONFIGURATION}{"vlans_l3"};
+  my $IPV4_DEFGW           = ${VENDOR_CONFIGURATION}{"defgw_ipv4"};
+  my $FIREWALL_CONFIG   = ${VENDOR_CONFIGURATION}{"firewall"};
+  my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
   my $OUTPUT = <<EOF;
 system {
     host-name $hostname;
@@ -567,7 +1014,13 @@ interfaces {
     $INTERFACES_PHYSICAL
     $INTERFACES_LAYER3
 }
+forwarding-options {
+    dhcp-relay {
+        $DHCP_CONFIG;
+    }
+}
 routing-options {
+    $IPV4_DEFGW
     rib inet6.0 {
         static {
             route ::/0 next-hop $IPV6_DEFGW;
@@ -585,6 +1038,9 @@ protocols {
     lldp-med {
         interface all;
     }
+}
+firewall {
+    $FIREWALL_CONFIG
 }
 ethernet-switching-options {
     storm-control {
