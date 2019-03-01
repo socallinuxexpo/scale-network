@@ -1,0 +1,15 @@
+---
+
+- name: rebuild scale-signs docker image
+  command: docker-compose build
+  args:
+    chdir: "{{ scale_signs_root }}"
+  listen: scale-signs repo updated
+
+- name: restart scale-signs
+  systemd:
+    name: scale-signs
+    state: restarted
+  listen:
+    - scale-signs repo updated
+    - restart scale-signs

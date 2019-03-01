@@ -25,6 +25,10 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
   * Tech Team
     * Auto create team user accounts and home dirs
     * Effortless passwordless sudo
+  * SCaLE Signs
+    * Automatically pulls down scale signs repo, builds as docker image, and wraps it up as a systemd service
+    * Subsequent runs after an update to the repo will rebuild the container and restart service
+    * Secrets management is still manual for twitter creds and requires rebuilding the container and restarting manually
   * Automatically updates via apt
 
 ## Requirements:
