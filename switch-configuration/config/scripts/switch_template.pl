@@ -10,6 +10,7 @@
 
 use strict;
 use integer;
+use Scalar::Util qw/reftype/;
 use Data::Dumper;
 
 our $VV_LOW;
@@ -1035,7 +1036,9 @@ sub build_config_from_template
   my $USER_AUTHENTICATION = build_users_from_auth();
   my $INTERFACES_PHYSICAL = build_interfaces_from_config($hostname);
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
-  my (%VENDOR_CONFIGURATION) = %{build_vendor_from_config($hostname)};
+  my $vcfg = build_vendor_from_config($hostname);
+  my %VENDOR_CONFIGURATION = {};
+  %VENDOR_CONFIGURATION = %{$vcfg} if (reftype $vcfg eq reftype {});;
   debug(5, "Received Vendor configuration:\n");
   debug(5, Dumper(%VENDOR_CONFIGURATION));
   debug(5, "End Vendor Config\n");
