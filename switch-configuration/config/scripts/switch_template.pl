@@ -10,6 +10,7 @@
 
 use strict;
 use integer;
+use Scalar::Util qw/reftype/;
 use Data::Dumper;
 
 our $VV_LOW;
@@ -298,7 +299,7 @@ EOF
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
       {
-        $portnum =~ s@^ge-0/0/(\d+)$@\1@;
+        $portnum =~ s@^ge-0/0/(\d+)$@$1@;
         if ($portnum != $port)
         {
           warn("Port number in Trunk: $_ does not match expected port ".
@@ -475,7 +476,7 @@ sub VV_get_prefix6
   my $VV_prefix6 = shift @_;
   debug(5, "VV_get_prefix6: Count: $VV_COUNT from prefix $VV_prefix6.\n");
   my ($net, $mask) = split(/\//, $VV_prefix6);
-  my $net = expand_double_colon($net);
+  $net = expand_double_colon($net);
   my @quartets = split(/:/, $net);
   my $n_bits = 64 - $mask;
   debug(5, "\tNet: $net Mask: $mask ($n_bits bits to play)\n");
@@ -768,6 +769,7 @@ sub build_vendor_from_config
   my $VV_firewall = "";
   my $VV_dhcp = "";
   my $VV_portcount = 0;
+  my @VV_intlist = ();
   # Construct empty hashref to use later for return value
   my $VV_hashref = {
   };
@@ -889,22 +891,45 @@ EOF
 EOF
 #	"vlans_l3"    -> $VV_vlans_l3,
 #       context: interfaces { vlan { <here> ... [}] }
+        my ($pref,$mask) = split(/\//, $VL_prefix4);
+        debug(5, "L3 Interface $VLID v4 = $pref / $mask.\n");
+        $pref =~ s/\.0$/.1/;
+        debug(5, "\t-> $pref\n");
+        my $VL_addr4 = join("/", $pref, $mask);
+        ($pref,$mask) = split(/\//, $VL_prefix6);
+        debug(5, "L3 Interface $VLID v6 = $pref / $mask.\n");
+        $pref =~ s/::$/::1/;
+        debug(5, "\t-> $pref\n");
+        my $VL_addr6 = join("/", $pref, $mask);
+        debug(5, "L3 Interface $VLID -- v4 = $VL_addr4, v6 = $VL_addr6\n");
         $VV_vlans_l3 .= <<EOF;
         unit $VLID {
             family inet {
-                $VL_prefix4.1/24;
+                $VL_addr4;
+                filter input only_to_internet;
+                filter output only_from_internet;
             }
             family inet6 {
-                $VL_prefix6::1/64;
+                $VL_addr6;
+                filter input only_to_internet6;
+                filter output only_from_internet6;
             }
         }
 EOF
 # These two are simply used in their initialized state (currently)...
 #	"defagw_ipv4" -> $VV_defgw_ipv4,
 #	"firewall"    -> $VV_firewall,
+
 #	"dhcp"        -> $VV_dhcp,
 ##FIXME## Put forwarding options here to facilitate DHCP (v4,v6)
-	# context: forwarding-options { dhcp { <here> } }
+##FIXME## This is more complext than one would hope because it needs
+##FIXME## to produce a list of interfaces for IPv4 and IPv6 along
+##FIXME## with some other parameters. The best we can do at this
+##FIXME## stage is store the list of l3 interfaces for later use
+##FIXME## in the "Finish up strings" area below
+        push @VV_intlist, "vlan.$VLID";
+
+
         # Increment / decrement counters
         $intnum++;	# Next interface (ge-0/0/{$intnum})
         $VV_COUNT++;	# Vendor VLAN Counter
@@ -912,10 +937,73 @@ EOF
       }
     }
   }
-  # Finish up strings that need to be terminated (currently just $VV_vlans_l3
+  # Finish up strings that need to be terminated (currently just $VV_vlans_l3)
   $VV_vlans_l3 .= <<EOF;
     }
 EOF
+  # Finalize DHCP Forwarder configuration
+  my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
+  $VV_dhcp = <<EOF;
+forwarding-options {
+    dhcp-relay {
+        dhcpv6 {
+            group vendors {
+
+EOF
+
+  foreach (@VV_intlist)
+  {
+    $VV_dhcp .= <<EOF;
+                interface $_;
+EOF
+
+  }
+
+  $VV_dhcp .= <<EOF;
+            }
+            server-group {
+                Conference {
+                    2001:470:f325:503::5;
+                }
+                Expo {
+                    2001:470:f325:103::5;
+                }
+                AV {
+                    2001:470:f325:105::10;
+                }
+            }
+            active-server-group $active_srv_grp;
+        }
+        server-group {
+            Conference {
+                10.128.3.5;
+            }
+            Expo {
+                10.0.3.5;
+            }
+            AV {
+                10.0.5.10;
+            }
+        }
+        active-server-group $active_srv_grp;
+        group vendors {
+EOF
+
+  foreach (@VV_intlist)
+  {
+    $VV_dhcp .= <<EOF;
+                interface $_;
+EOF
+
+  }
+
+  $VV_dhcp .= <<EOF;
+        }
+
+    }
+}
+EOF
+##FIXME## Put DHCP finalization steps here
   if ($VV_portcount == 0) # No VVLAN statement encountered.
   {
     return(0);
@@ -948,7 +1036,9 @@ sub build_config_from_template
   my $USER_AUTHENTICATION = build_users_from_auth();
   my $INTERFACES_PHYSICAL = build_interfaces_from_config($hostname);
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
-  my (%VENDOR_CONFIGURATION) = %{build_vendor_from_config($hostname)};
+  my $vcfg = build_vendor_from_config($hostname);
+  my %VENDOR_CONFIGURATION = {};
+  %VENDOR_CONFIGURATION = %{$vcfg} if (reftype $vcfg eq reftype {});;
   debug(5, "Received Vendor configuration:\n");
   debug(5, Dumper(%VENDOR_CONFIGURATION));
   debug(5, "End Vendor Config\n");
