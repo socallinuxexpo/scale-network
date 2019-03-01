@@ -36,9 +36,12 @@ def populatevlans():
                 ipv4bitmask = ipv4[1]
                 ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
                 ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
+                vlanid = elems[2]
+                if not vlanid.isdigit():
+                    continue
                 vlans.append({
                     "name": elems[1],
-                    "id": elems[2],
+                    "id": vlanid,
                     "ipv6prefix": ipv6prefix,
                     "ipv6bitmask": ipv6bitmask,
                     "ipv4prefix": ipv4prefix,
@@ -71,7 +74,8 @@ def ip4toptr(ip_address):
 
 def ip6toptr(ip_address):
     '''generates a split PTR for IPv6 an returns it'''
-    return re.split(r'\.ip6', ipaddress.ip_address(ip_address).reverse_pointer)[0]
+    return re.split(r'\.ip6',
+                    ipaddress.ip_address(ip_address).reverse_pointer)[0]
 
 
 def dhcp6ranges(prefix, bitmask):
