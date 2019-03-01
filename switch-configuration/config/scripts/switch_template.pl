@@ -894,9 +894,13 @@ EOF
         unit $VLID {
             family inet {
                 $VL_prefix4.1/24;
+                filter input only_to_internet;
+                filter output only_from_internet;
             }
             family inet6 {
                 $VL_prefix6::1/64;
+                filter input only_to_internet6;
+                filter output only_from_internet6;
             }
         }
 EOF
