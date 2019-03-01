@@ -918,12 +918,7 @@ EOF
 #	"firewall"    -> $VV_firewall,
 
 #	"dhcp"        -> $VV_dhcp,
-##FIXME## Put forwarding options here to facilitate DHCP (v4,v6)
-##FIXME## This is more complext than one would hope because it needs
-##FIXME## to produce a list of interfaces for IPv4 and IPv6 along
-##FIXME## with some other parameters. The best we can do at this
-##FIXME## stage is store the list of l3 interfaces for later use
-##FIXME## in the "Finish up strings" area below
+#       Build list of Vendor VLAN Interfaces for later use to build DHCP forwarders
         push @VV_intlist, "vlan.$VLID";
 
 
