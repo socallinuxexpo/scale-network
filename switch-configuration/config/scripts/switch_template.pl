@@ -298,7 +298,7 @@ EOF
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
       {
-        $portnum =~ s@^ge-0/0/(\d+)$@\1@;
+        $portnum =~ s@^ge-0/0/(\d+)$@$1@;
         if ($portnum != $port)
         {
           warn("Port number in Trunk: $_ does not match expected port ".
@@ -475,7 +475,7 @@ sub VV_get_prefix6
   my $VV_prefix6 = shift @_;
   debug(5, "VV_get_prefix6: Count: $VV_COUNT from prefix $VV_prefix6.\n");
   my ($net, $mask) = split(/\//, $VV_prefix6);
-  my $net = expand_double_colon($net);
+  $net = expand_double_colon($net);
   my @quartets = split(/:/, $net);
   my $n_bits = 64 - $mask;
   debug(5, "\tNet: $net Mask: $mask ($n_bits bits to play)\n");
@@ -890,15 +890,26 @@ EOF
 EOF
 #	"vlans_l3"    -> $VV_vlans_l3,
 #       context: interfaces { vlan { <here> ... [}] }
+        my ($pref,$mask) = split(/\//, $VL_prefix4);
+        debug(5, "L3 Interface $VLID v4 = $pref / $mask.\n");
+        $pref =~ s/\.0$/.1/;
+        debug(5, "\t-> $pref\n");
+        my $VL_addr4 = join("/", $pref, $mask);
+        ($pref,$mask) = split(/\//, $VL_prefix6);
+        debug(5, "L3 Interface $VLID v6 = $pref / $mask.\n");
+        $pref =~ s/::$/::1/;
+        debug(5, "\t-> $pref\n");
+        my $VL_addr6 = join("/", $pref, $mask);
+        debug(5, "L3 Interface $VLID -- v4 = $VL_addr4, v6 = $VL_addr6\n");
         $VV_vlans_l3 .= <<EOF;
         unit $VLID {
             family inet {
-                $VL_prefix4.1/24;
+                $VL_addr4;
                 filter input only_to_internet;
                 filter output only_from_internet;
             }
             family inet6 {
-                $VL_prefix6::1/64;
+                $VL_addr6;
                 filter input only_to_internet6;
                 filter output only_from_internet6;
             }
