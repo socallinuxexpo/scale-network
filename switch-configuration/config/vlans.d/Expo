@@ -16,5 +16,5 @@ VLAN	exAkamai		111	2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache 
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.
 //The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other
 //VLANs (vendor_vlan <-> internet only)
-VVRNG	ex_v_			200-498	2001:470:f325:200::/55	10.1.0.0/16	Dynamically allocated and named booth VLANs
+VVRNG	ex_v_			200-498	2001:470:f325:200::/54	10.2.0.0/15	Dynamically allocated and named booth VLANs
 //499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.

@@ -469,6 +469,9 @@ EOF
 # Vendor VLAN subroutines
 sub VV_get_prefix6
 # Return the $VV_COUNT'th /64 prefix from $VV_prefix6 (if possible), or -1 if error.
+##FIXME## This subroutine is very hacky. Should actually just do proper arithmetic
+##FIXME## After converting the IPv6 prefix to a 64-bit integer and handling. Currently
+##FIXME## Assumes prefix is longer than or equal to a /48 and we are issuing /64s.
 {
   my $VV_COUNT = shift @_;
   my $VV_prefix6 = shift @_;
@@ -501,10 +504,21 @@ sub VV_get_prefix6
       return -1;
     }
   }
-  my $netmax = $netbase + 2 ** $n_bits + 1;
+  my $netmax;
+  if ($n_bits % 4)
+  {
+    $netmax = $netbase + 10 ** ($n_bits/4) + (2 ** (($n_bits % 4) -1) * (10 ** ($n_bits/4))) - 1 ;
+  }
+  else
+  {
+    $netmax = $netbase + 10 ** ($n_bits/4) - 1;
+  }
+  debug(5, "IPv6 Netmax (Base = $netbase with $n_bits) $netmax\n");
   my $candidate = $netbase + $VV_COUNT;
+  debug(5, "\tCandidate: $candidate\n");
   return -1 if ($candidate > $netmax);
   $candidate = $digitpfx.$candidate; # Restore hex prefix if needed
+  debug(5, "\tReturning: ".$quartets[0].":".$quartets[1].":".$quartets[2].":".$candidate."::/64\n");
   return($quartets[0].":".$quartets[1].":".$quartets[2].":".$candidate."::/64");
 }
 
@@ -516,11 +530,38 @@ sub VV_get_prefix4
   my ($net, $mask) = split(/\//, $VV_prefix4);
   debug(5, "VV_get_prefix4 Count: $VV_COUNT Prefix: $net Mask: $mask\n");
   my @octets = split(/\./, $net);
-  my $netbase = ($octets[0] << 24) + ($octets[1] << 16) + ($octets[1] << 8) + $octets[3];
-  my $netmax = $netbase + (2 ** $mask) -1;
+  my $netbase = ($octets[0] << 24) + ($octets[1] << 16) + ($octets[2] << 8) + $octets[3];
+  my $n = ((2 ** (32 - $mask)) / 256);
+  debug(5, "\t\tAllows $n Vendor VLANs.\n");
+  my $netmax = $netbase + (2 ** (32 - $mask)) -1;
   my $candidate = $netbase + ($VV_COUNT << 8);
-  return -1 if ($candidate > $netmax);
   debug(5, "\tBase: $netbase Max: $netmax Candidate: $candidate\n");
+  return(-1) if ($candidate > $netmax);
+  debug(5, "\tBase:\n");
+  debug(5, "\t\t3 -> ($netbase ->)", $netbase % 256, ".\n");
+  $octets[3] = ($netbase % 256);
+  $netbase >>= 8;
+  debug(5, "\t\t2 -> ($netbase ->)", $netbase % 256, ".\n");
+  $octets[2] = ($netbase % 256);
+  $netbase >>= 8;
+  debug(5, "\t\t1 -> ($netbase ->)", $netbase % 256, ".\n");
+  $octets[1] = ($netbase % 256);
+  $netbase >>= 8;
+  debug(5, "\t\t0 -> ($netbase ->)", $netbase % 256, ".\n");
+  debug(5, "\tMAX:\n");
+  debug(5, "\t\t3 -> ($netmax ->)", $netmax % 256, ".\n");
+  $octets[3] = ($netmax % 256);
+  $netmax >>= 8;
+  debug(5, "\t\t2 -> ($netmax ->)", $netmax % 256, ".\n");
+  $octets[2] = ($netmax % 256);
+  $netmax >>= 8;
+  debug(5, "\t\t1 -> ($netmax ->)", $netmax % 256, ".\n");
+  $octets[1] = ($netmax % 256);
+  $netmax >>= 8;
+  debug(5, "\t\t0 -> ($netmax ->)", $netmax % 256, ".\n");
+  $octets[0] = ($netmax % 256);
+  debug(5, "\tResult: ".join(".", @octets)."/24.\n");
+  debug(5, "\tCandidate:\n");
   debug(5, "\t\t3 -> ($candidate ->)", $candidate % 256, ".\n");
   $octets[3] = ($candidate % 256);
   $candidate >>= 8;
@@ -821,6 +862,7 @@ sub build_vendor_from_config
       my $v4_nexthop = ($MgtVL < 500) ? "10.2.0.1" : "10.130.0.1";
       debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
       ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
+      ##FIXME## It means that 10.1.0.0/24 needs to be remembered and avoided which is a major timebomb in the code.
       $VV_vlans = <<EOF;
     vendor_backbone {
         description "Vendor Backbone";
@@ -832,7 +874,7 @@ EOF
       $VV_vlans_l3 = <<EOF;
         unit 499 {
             family inet {
-                address 10.2.0.$ipv4_suffix/24;
+                address 10.1.0.$ipv4_suffix/24;
             }
         }
 EOF
