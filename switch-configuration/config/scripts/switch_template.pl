@@ -372,16 +372,14 @@ sub build_l3_from_config
 {
   my $hostname = shift @_;
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
-  my $OUTPUT = "    # Automatically Generated Layer 3 Configuration ".
+  my $OUTPUT = "        # Automatically Generated Layer 3 Configuration ".
                 "for $hostname (MGT: $MgtVL Addr: $IPv6addr Type: $Type\n";
   $OUTPUT .= <<EOF;
-    vlan {
         unit $MgtVL {
             family inet6 {
                 address $IPv6addr/64;
             }
         }
-    }
 EOF
   my $gw = get_default_gw($IPv6addr);
   return($OUTPUT, $gw);
@@ -433,15 +431,15 @@ sub build_vlans_from_config
       $desc = $TOKENS[5];
       $IPv6 = $TOKENS[3];
       $IPv4 = $TOKENS[4];
+      $VLANS_byname{$name} = $vlid;
+      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
+                        ($prim ? $prim : undef) ];
+      debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     }
     elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
     {
       # Skip this line here... Process elsewhere
     }
-    debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
-    $VLANS_byname{$name} = $vlid;
-    $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
-                      ($prim ? $prim : undef) ];
   }
 
   # Now that we have a hash containing all of the VLAN configurations, iterate
@@ -824,15 +822,14 @@ sub build_vendor_from_config
       debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
       ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
       $VV_vlans = <<EOF;
-vendor_backbone {
-    description "Vendor Backbone";
-    vlan-id 499;
-    l3-interface vlan.499;
-}
+    vendor_backbone {
+        description "Vendor Backbone";
+        vlan-id 499;
+        l3-interface vlan.499;
+    }
 EOF
       my $ipv4_suffix = $VV_COUNT + 10;
       $VV_vlans_l3 = <<EOF;
-    vlan {
         unit 499 {
             family inet {
                 address 10.2.0.$ipv4_suffix/24;
@@ -921,12 +918,7 @@ EOF
 #	"firewall"    -> $VV_firewall,
 
 #	"dhcp"        -> $VV_dhcp,
-##FIXME## Put forwarding options here to facilitate DHCP (v4,v6)
-##FIXME## This is more complext than one would hope because it needs
-##FIXME## to produce a list of interfaces for IPv4 and IPv6 along
-##FIXME## with some other parameters. The best we can do at this
-##FIXME## stage is store the list of l3 interfaces for later use
-##FIXME## in the "Finish up strings" area below
+#       Build list of Vendor VLAN Interfaces for later use to build DHCP forwarders
         push @VV_intlist, "vlan.$VLID";
 
 
@@ -938,9 +930,6 @@ EOF
     }
   }
   # Finish up strings that need to be terminated (currently just $VV_vlans_l3)
-  $VV_vlans_l3 .= <<EOF;
-    }
-EOF
   # Finalize DHCP Forwarder configuration
   my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
   $VV_dhcp = <<EOF;
@@ -999,11 +988,10 @@ EOF
 
   $VV_dhcp .= <<EOF;
         }
-
     }
 }
 EOF
-##FIXME## Put DHCP finalization steps here
+
   if ($VV_portcount == 0) # No VVLAN statement encountered.
   {
     return(0);
@@ -1101,14 +1089,12 @@ snmp {
     }
 }
 interfaces {
-    $INTERFACES_PHYSICAL
-    $INTERFACES_LAYER3
-}
-forwarding-options {
-    dhcp-relay {
-        $DHCP_CONFIG;
+$INTERFACES_PHYSICAL
+    vlan {
+$INTERFACES_LAYER3
     }
 }
+$DHCP_CONFIG
 routing-options {
     $IPV4_DEFGW
     rib inet6.0 {
@@ -1130,7 +1116,7 @@ protocols {
     }
 }
 firewall {
-    $FIREWALL_CONFIG
+$FIREWALL_CONFIG
 }
 ethernet-switching-options {
     storm-control {

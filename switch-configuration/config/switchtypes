@@ -1,4 +1,5 @@
-//	Switch	Type	Definitions
+//Switch Definitions
+//
 //Name		Num	MgtVL	IPv6				Type			// Switch Noiselevel
 Rm101-102	1	503	2001:470:f325:503::200:1	cfRoom			// Quiet
 NW-IDF		2	103	2001:470:f325:103::200:2	exIDF			// Loud
@@ -45,3 +46,5 @@ ExpoA5		42	103	2001:470:f325:103::200:42	Booth			// Normal
 ExpoB5		43	103	2001:470:f325:103::200:43	Booth			// Normal
 ExpoC5		44	103	2001:470:f325:103::200:44	Booth			// Loud
 ExpoAW		45	103	2001:470:f325:103::200:45	Booth			// Normal
+CTF5		46	103	2001:470:f325:103::200:46	cfCTF			// Loud
+CTF6		47	103	2001:470:f325:103::200:47	cfCTF			// Normal
