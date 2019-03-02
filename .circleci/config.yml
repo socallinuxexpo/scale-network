@@ -3,6 +3,19 @@
 version: 2
 jobs:
 
+  switch-configuration_lint:
+    docker:
+    - image: perl:5
+    resource_class: medium
+    working_directory: ~/scale-network
+    steps:
+    - checkout:
+        path: ~/scale-network
+
+    - run:
+        name: lint switch-configuration
+        command: find ./switch-configuration/ -iname "*.pl" -exec perl -Mstrict -Mdiagnostics -cw {} \;
+
   gomplate_tests:
     docker:
     - image: hairyhenderson/gomplate:v3.2.0-alpine
@@ -89,5 +102,6 @@ workflows:
   version: 2
   build_all:
     jobs:
+    - switch-configuration_lint
     - gomplate_tests
     - ansible_lint
