@@ -85,9 +85,35 @@ jobs:
         name: test inventory.py
         command: ./inventory.py | jq
 
+  perl_lint:
+    docker:
+    - image: perl:5
+    resource_class: medium
+    working_directory: ~/scale-network
+    steps:
+    - checkout:
+        path: ~/scale-network
+
+    - run:
+        name: compile switch-configuration
+        # Make all warnings into errors so perl has a return thats not 0
+        command: find ./switch-configuration/ -iname "*.pl" | xargs -i perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
+
+    - run:
+        name: Set temp password
+        # Make sure we set a password
+        command: echo "scale" > ./facts/secrets/jroot_pw
+
+    - run:
+        name: run switch-configuration
+        working_directory: ~/scale-network/switch-configuration/config
+        # Make sure we set a password
+        command: ./scripts/build_switch_configs.pl
+
 workflows:
   version: 2
   build_all:
     jobs:
     - gomplate_tests
     - ansible_lint
+    - perl_lint
