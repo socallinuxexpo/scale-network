@@ -5,6 +5,7 @@ SCaLE specific text files to produce a sane inventory to ansible
 '''
 import ipaddress
 import json
+import math
 import os
 import re
 
@@ -27,42 +28,82 @@ def populatevlans():
         for line in lines:
             if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
                 elems = re.split(r'\t+', line)
-                ipv6 = elems[3].split('/')
-                ipv6prefix = ipv6[0]
-                ipv6bitmask = ipv6[1]
-                ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
-                ipv4 = elems[4].split('/')
-                ipv4prefix = ipv4[0]
-                ipv4bitmask = ipv4[1]
-                ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
-                ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
-                vlanid = elems[2]
-                if not vlanid.isdigit():
-                    continue
-                vlans.append({
-                    "name": elems[1],
-                    "id": vlanid,
-                    "ipv6prefix": ipv6prefix,
-                    "ipv6bitmask": ipv6bitmask,
-                    "ipv4prefix": ipv4prefix,
-                    "ipv4bitmask": ipv4bitmask,
-                    "building": file,
-                    "description": elems[5].rstrip(),
-                    "ipv6dhcp1a": ipv6dhcp[0],
-                    "ipv6dhcp1b": ipv6dhcp[1],
-                    "ipv6dhcp2a": ipv6dhcp[2],
-                    "ipv6dhcp2b": ipv6dhcp[3],
-                    "ipv4dhcp1a": ipv4dhcp[0],
-                    "ipv4dhcp1b": ipv4dhcp[1],
-                    "ipv4dhcp2a": ipv4dhcp[2],
-                    "ipv4dhcp2b": ipv4dhcp[3],
-                    "ipv4router": ipv4dhcp[4],
-                    "ipv4netmask": ipv4netmask,
-                    "ipv6dns1": "",
-                    "ipv6dns2": "",
-                    "ipv4dns1": "",
-                    "ipv4dns2": "",
-                })
+                directive = elems[0]
+                if directive == "VLAN":
+                    ipv6 = elems[3].split('/')
+                    ipv6prefix = ipv6[0]
+                    ipv6bitmask = ipv6[1]
+                    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
+                    ipv4 = elems[4].split('/')
+                    ipv4prefix = ipv4[0]
+                    ipv4bitmask = ipv4[1]
+                    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
+                    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
+                    directive = elems[0]
+                    vlanid = elems[2]
+                    if not vlanid.isdigit():
+                        continue
+                    vlans.append({
+                        "name": elems[1],
+                        "id": vlanid,
+                        "ipv6prefix": ipv6prefix,
+                        "ipv6bitmask": ipv6bitmask,
+                        "ipv4prefix": ipv4prefix,
+                        "ipv4bitmask": ipv4bitmask,
+                        "building": file,
+                        "description": elems[5].rstrip(),
+                        "ipv6dhcp1a": ipv6dhcp[0],
+                        "ipv6dhcp1b": ipv6dhcp[1],
+                        "ipv6dhcp2a": ipv6dhcp[2],
+                        "ipv6dhcp2b": ipv6dhcp[3],
+                        "ipv4dhcp1a": ipv4dhcp[0],
+                        "ipv4dhcp1b": ipv4dhcp[1],
+                        "ipv4dhcp2a": ipv4dhcp[2],
+                        "ipv4dhcp2b": ipv4dhcp[3],
+                        "ipv4router": ipv4dhcp[4],
+                        "ipv4netmask": ipv4netmask,
+                        "ipv6dns1": "",
+                        "ipv6dns2": "",
+                        "ipv4dns1": "",
+                        "ipv4dns2": "",
+                    })
+                elif directive == "VVRNG":
+                    rangeb, rangee = elems[2].split('-')
+                    for i in range(int(rangeb), int(rangee) + 1):
+                        ipv6prefix = elems[3].split('/')[0].split(
+                            rangeb + '::')[0] + str(i) + '::'
+                        ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
+                        ocs = elems[4].split('.')
+                        ocs[1] = str(int(ocs[1]) + math.floor((
+                            i - int(rangeb)) / 256))
+                        ocs[2] = str(((i - int(rangeb)) % 256))
+                        ip4prefix = ocs[0] + "." + ocs[1] + "." + ocs[2] + ".0"
+                        ipv4dhcp = dhcp4ranges(ip4prefix, 24)
+                        ipv4netmask = bitmasktonetmask(24)
+                        vlans.append({
+                            "name": elems[1] + str(i),
+                            "id": i,
+                            "ipv6prefix": ipv6prefix,
+                            "ipv6bitmask": 64,
+                            "ipv4prefix": ip4prefix,
+                            "ipv4bitmask": 24,
+                            "building": file,
+                            "description": "Dyanmic vlan " + str(i),
+                            "ipv6dhcp1a": ipv6dhcp[0],
+                            "ipv6dhcp1b": ipv6dhcp[1],
+                            "ipv6dhcp2a": ipv6dhcp[2],
+                            "ipv6dhcp2b": ipv6dhcp[3],
+                            "ipv4dhcp1a": ipv4dhcp[0],
+                            "ipv4dhcp1b": ipv4dhcp[1],
+                            "ipv4dhcp2a": ipv4dhcp[2],
+                            "ipv4dhcp2b": ipv4dhcp[3],
+                            "ipv4router": ipv4dhcp[4],
+                            "ipv4netmask": ipv4netmask,
+                            "ipv6dns1": "",
+                            "ipv6dns2": "",
+                            "ipv4dns1": "",
+                            "ipv4dns2": "",
+                        })
     return vlans
 
 
