@@ -31,13 +31,13 @@
             1. secrets are populated \
             2. contianer is rebuilt \
             3. service is restarted "
-  when: signs_secrets.stat.exists == False
+  when: not signs_secrets.stat.exists
 
 - name: create temporary blank secrets file
   file:
     path: "{{ scale_signs_root }}/secrets.env"
     state: touch
-  when: signs_secrets.stat.exists == False
+  when: not signs_secrets.stat.exists
 
 - name: copy scale-signs systemd unit file
   template:
