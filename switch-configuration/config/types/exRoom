@@ -1,6 +1,6 @@
 // Room Switch Template -- All conference rooms Expo Center
-TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns,exDWCC	// Uplink
-TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns,exDWCC	// Downlink
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns// Uplink
+TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns// Downlink
 RSRVD	6
 TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
 TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
