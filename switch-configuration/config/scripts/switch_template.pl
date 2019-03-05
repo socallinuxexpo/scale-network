@@ -944,12 +944,12 @@ EOF
         $VV_vlans_l3 .= <<EOF;
         unit $VLID {
             family inet {
-                $VL_addr4;
+                address $VL_addr4;
                 filter input only_to_internet;
                 filter output only_from_internet;
             }
             family inet6 {
-                $VL_addr6;
+                address $VL_addr6;
                 filter input only_to_internet6;
                 filter output only_from_internet6;
             }
