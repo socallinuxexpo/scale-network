@@ -82,4 +82,5 @@ endif
 	chmod 755 $(TMPL_OUT_DIR)/root
 	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
 	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
+	@cd $(TMPL_OUT_DIR)/etc && ln -s /tmp/resolv.conf.auto resolv.conf
 	touch $(TMPL_OUT_DIR)
