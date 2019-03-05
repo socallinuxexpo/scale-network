@@ -13,7 +13,7 @@ spawn /usr/sbin/arp -n 192.168.1.1
 expect -re "192.168.1.1 *ether *(\[^ \]*) "
 set mac $expect_out(1,string)
 set file [open aplist a]
-puts $file "$ap,$mac"
+puts $file "$ap,$mac,"
 close $file
 spawn tftp 192.168.1.1
 expect tftp
