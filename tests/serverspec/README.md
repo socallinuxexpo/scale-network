@@ -30,3 +30,7 @@ Example of running `serverspec` on an AP@192.168.254.100:
 rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100
 ```
 
+Run openwrt show specific tests
+```
+rake spec TEST_TYPE=openwrt_show TARGET_HOST=192.168.254.100
+```
