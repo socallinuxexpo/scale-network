@@ -213,7 +213,7 @@ that cause the Source and Destination to be matched)
 e.g. a file named "ICMP" might contain:
 ```
 protocol [ icmp icmp6 ];
-
+```
 
 ## config/routers/actions/\*
 These files describe terminating (or non-terminating) actions to take when
@@ -315,11 +315,16 @@ scripts/update_switches BallroomG Room126
 	should be ready for installation.
 
 ## To get the configuration for a switch:
-1.  Check the number on the labels on the switch and find the
+1.  If you haven't already, get a full copy of the repository and build the configuration files.
+    A. Clone the repository
+    B. Get a current copy of the secrets directory from someone.
+    C. Change to the "switch_configuration/config" directory.
+    D. Run "scripts/build_switch_configs.pl"
+2.  Check the number on the labels on the switch and find the
     corresponding line in the config/switchtypes file.
     e.g. for switch 27, the line shows switch name CTF3 (at the
     time of writing).
-2.  The config file will be in the config/output/ directory and
+3.  The config file will be in the config/output/ directory and
     will be named <name>.conf. So for switch 27 in our above example,
     it would be "config/output/CTF3.conf".
 ## To replace the configuration on one of last years switches:
@@ -344,7 +349,7 @@ scripts/update_switches BallroomG Room126
     start back at step 4.A. and repeat the process. If the error
     is persistent, ask for help.
 7.  When done pasting, hit Ctrl-D to exit load mode.
-8.  Type "show | cmopare".
+8.  Type "show | compare".
     A.  Expected output is a diff from last years config. The important
         thing is to make sure the diff looks reasonably sane.
 9.  Type "commit and-quit"
