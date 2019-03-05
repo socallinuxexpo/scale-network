@@ -315,47 +315,47 @@ scripts/update_switches BallroomG Room126
 	should be ready for installation.
 
 ## To get the configuration for a switch:
-1.  If you haven't already, get a full copy of the repository and build the configuration files.
-    A. Clone the repository
-    B. Get a current copy of the secrets directory from someone.
-    C. Change to the "switch_configuration/config" directory.
-    D. Run "scripts/build_switch_configs.pl"
-2.  Check the number on the labels on the switch and find the
-    corresponding line in the config/switchtypes file.
-    e.g. for switch 27, the line shows switch name CTF3 (at the
-    time of writing).
-3.  The config file will be in the config/output/ directory and
-    will be named <name>.conf. So for switch 27 in our above example,
-    it would be "config/output/CTF3.conf".
+1.      If you haven't already, get a full copy of the repository and build the configuration files.
+        A.      Clone the repository
+        B.      Get a current copy of the secrets directory from someone.
+        C.      Change to the "switch_configuration/config" directory.
+        D.      Run "scripts/build_switch_configs.pl"
+2.      Check the number on the labels on the switch and find the
+        corresponding line in the config/switchtypes file.
+        e.g. for switch 27, the line shows switch name CTF3 (at the
+        time of writing).
+3.      The config file will be in the config/output/ directory and
+        will be named <name>.conf. So for switch 27 in our above example,
+        it would be "config/output/CTF3.conf".
 ## To replace the configuration on one of last years switches:
-1.  Connect to switch via serial console.
-2.  Log into switch as root.
-3.  Start the cli.
-4.  Type "edit" to enter edit mode and perform the following steps:
-    A.  delete system
-    B.  delete chassis
-    C.  delete interfaces
-    D.  delete snmp
-    E.  delete routing-options
-    F.  delete protocols
-    G.  delete ethernet-switching-options
-    H.  delete vlans
-    I.  delete poe
-5.  You now have an empty configuraton. Type "load merge terminal"  
-    to enter a mode where you can paste in the new configuration file.
-6.  Bring up the configuration file from the switch in another window
-    and paste about 1 screenful at a time into the switch.
-    Be watchful for any error reports. If you encounter an error,
-    start back at step 4.A. and repeat the process. If the error
-    is persistent, ask for help.
-7.  When done pasting, hit Ctrl-D to exit load mode.
-8.  Type "show | compare".
-    A.  Expected output is a diff from last years config. The important
-        thing is to make sure the diff looks reasonably sane.
-9.  Type "commit and-quit"
-    If the configuration fails to commit, ask for assistance.
-10. Type "quit"
-    You're done with this switch.
+1.      Connect to switch via serial console.
+2.      Log into switch as root.
+3.      Start the cli.
+4.      Type "edit" to enter edit mode and perform the following steps:
+        A.      delete system
+        B.      delete chassis
+        C.      delete interfaces
+        D.      delete snmp
+        E.      delete routing-options
+        F.      delete protocols
+        G.      delete ethernet-switching-options
+        H.      delete vlans
+        I.      delete poe
+5.      You now have an empty configuraton. Type "load merge terminal"  
+        to enter a mode where you can paste in the new configuration file.
+6.      Bring up the configuration file from the switch in another window
+        and paste about 1 screenful at a time into the switch.
+        Be watchful for any error reports. If you encounter an error,
+        start back at step 4.A. and repeat the process. If the error
+        is persistent, ask for help.
+7.      When done pasting, hit Ctrl-D to exit load mode.
+8.      Type "show | compare".
+        A.    Expected output is a diff from last years config. The important
+              thing is to make sure the diff looks reasonably sane.
+9.      Type "commit and-quit"
+        If the configuration fails to commit, ask for assistance.
+10.     Type "quit"
+        You're done with this switch.
 # Important additional data
 
 ## Switch Authentication
