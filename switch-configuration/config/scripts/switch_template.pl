@@ -629,6 +629,7 @@ sub VV_init_firewall
                 from {
                     destination-address {
                         0.0.0.0/0;
+                    }
                 }
                 then {
                     accept;
@@ -725,7 +726,7 @@ sub VV_init_firewall
                 then {
                     accept;
                 }
-          }
+            }
         }
         filter only_from_internet6 {
           term dns {
