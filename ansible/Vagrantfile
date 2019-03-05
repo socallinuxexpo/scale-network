@@ -72,3 +72,4 @@ Vagrant.configure(2) do |configure|
     end
   end
 end
+
