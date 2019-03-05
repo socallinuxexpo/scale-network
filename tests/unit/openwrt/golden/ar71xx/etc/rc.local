@@ -2,6 +2,6 @@
 # the system init finished. By default this file does nothing.
 
 # TODO make this a true service
-/root/bin/wifi-details.sh &
+/root/bin/wifi-details.sh >/dev/null 2>/dev/null </dev/null &
 
 exit 0

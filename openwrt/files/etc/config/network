@@ -37,17 +37,17 @@ config interface '{{.name}}'
 
 {{ if (eq (env.Getenv "TARGET") "ar71xx") }}
 config switch_port
-        option device 'switch0'
+        option device 'rtl8366s'
         option port '1'
         option led '6'
 
 config switch_port
-        option device 'switch0'
+        option device 'rtl8366s'
         option port '2'
         option led '9'
 
 config switch_port
-        option device 'switch0'
+        option device 'rtl8366s'
         option port '5'
         option led '2'
 {{ end }}

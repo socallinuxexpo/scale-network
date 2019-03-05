@@ -1,0 +1,40 @@
+#!/bin/sh
+
+case "$1" in
+  "renew")
+    set > /tmp/dhcp.params
+    radio0=`uci show 'wireless.radio0.channel'|cut -f 2 -d "'"`
+    radio1=`uci show 'wireless.radio1.channel'|cut -f 2 -d "'"`
+    if [ ! -z "$opt224" ] || [ ! -z "$opt225" ]; then
+      if [ "$opt224" != "$radio0" ] || [ "$opt225" != "$radio1" ]; then
+	uci set 'wireless.radio0.channel'=$(printf %d "0x$opt224")
+	uci set 'wireless.radio1.channel'=$(printf %d "0x$opt225")
+	uci commit
+	wifi reload
+      fi
+    fi 
+    if [ ! -z "$hostname" ]; then
+      uci set 'system.@system[0].hostname'="$hostname"
+      uci commit
+      if [ "$HOSTNAME" != "$hostname" ]; then reboot; fi
+    fi
+  ;;
+  "bound")
+    set > /tmp/dhcp.params
+    radio0=`uci show 'wireless.radio0.channel'|cut -f 2 -d "'"`
+    radio1=`uci show 'wireless.radio1.channel'|cut -f 2 -d "'"`
+    if [ ! -z "$opt224" ] || [ ! -z "$opt225" ]; then
+      if [ "$opt224" != "$radio0" ] || [ "$opt225" != "$radio1" ]; then
+	uci set 'wireless.radio0.channel'=$(printf %d "0x$opt224")
+	uci set 'wireless.radio1.channel'=$(printf %d "0x$opt225")
+	uci commit
+	wifi reload
+      fi
+    fi
+    if [ ! -z "$hostname" ]; then
+      uci set 'system.@system[0].hostname'="$hostname"
+      uci commit
+      if [ "$HOSTNAME" != "$hostname" ]; then reboot; fi
+    fi
+  ;;
+esac

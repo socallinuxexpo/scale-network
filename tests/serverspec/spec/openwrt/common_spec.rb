@@ -17,11 +17,9 @@ DEFAULT_SERVICES.each do |service|
   end
 end
 
-# Validate rsyslogd config
-# TODO: After fixing issue #125
-#describe command('rsyslogd -N1') do
-#  its(:exit_status) { should eq 0 }
-#end
+describe command('rsyslogd -N1') do
+  its(:exit_status) { should eq 0 }
+end
 
 describe file('/root/bin/wifi-details.sh') do
     it { should exist }
