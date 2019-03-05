@@ -256,10 +256,10 @@ sub build_interfaces_from_config
   $OUTPUT .= <<EOF;
     me-0 {
         unit 0 {
-	    family inet {
-	        dhcp;
+            family inet {
+                    address 192.168.255.76/24;
             }
-	}
+        }
     }
 EOF
   foreach(@{$switchtype})
@@ -657,6 +657,9 @@ sub VV_init_firewall
                     }
                     source-port [ bootps dhcp ];
                 }
+                then {
+                    accept;
+                }
             }
             term no-rfc1918 {
                 from {
@@ -667,7 +670,7 @@ sub VV_init_firewall
                     }
                 }
                 then {
-                    reject;
+                    discard;
                 }
             }
             term to-internet {
@@ -761,7 +764,7 @@ sub VV_init_firewall
                     }
                 }
                 then {
-                    reject;
+                    discard;
                 }
           }
           term to-internet {
@@ -910,7 +913,7 @@ EOF
 #       context: interfaces { <here> }
         $VV_interfaces .= <<EOF;
     ge-0/0/$intnum {
-        unit $VLID {
+        unit 0 {
             description "Vendor VLAN $VLID"
             family ethernet-switching {
                 port-mode access;
@@ -1043,12 +1046,12 @@ EOF
   {
     # Put cooked values into initialized hashref
     my $VV_hashref = {
-	  "interfaces"  => $VV_interfaces,
-	  "vlans"       => $VV_vlans,
-	  "vlans_l3"    => $VV_vlans_l3,
-	  "defagw_ipv4" => $VV_defgw_ipv4,
-	  "firewall"    => $VV_firewall,
-	  "dhcp"        => $VV_dhcp,
+        "interfaces"  => $VV_interfaces,
+        "vlans"       => $VV_vlans,
+        "vlans_l3"    => $VV_vlans_l3,
+        "defagw_ipv4" => $VV_defgw_ipv4,
+        "firewall"    => $VV_firewall,
+        "dhcp"        => $VV_dhcp,
     };
     debug(5, "Returning Vendor parameters:\n");
     debug(5, Dumper($VV_hashref));
@@ -1087,9 +1090,9 @@ system {
         encrypted-password "$root_auth";
     }
     syslog {
-	host loghost {
-	    any any;
-	}
+        host loghost {
+        any any;
+        }
     }
     login {
 $USER_AUTHENTICATION
@@ -1118,17 +1121,17 @@ $USER_AUTHENTICATION
 chassis {
     alarm {
         management-ethernet {
-	    link-down ignore;
-	}
+        link-down ignore;
+        }
     }
 }
 snmp {
     community Junitux {
-	authorization read-only;
-	clients {
-	    2001:470:f325:103::/64;
-	    2001:470:f325:503::/64;
-	}
+        authorization read-only;
+        clients {
+        2001:470:f325:103::/64;
+        2001:470:f325:503::/64;
+        }
     }
 }
 interfaces {
