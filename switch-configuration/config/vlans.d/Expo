@@ -1,20 +1,20 @@
 // Expo Center -- VLANS 100-499
 VLAN	exSCALE-SLOW		100	2001:470:f325:100::/64	10.0.128.0/21	2.4G Wireless Network in Expo Center
 VLAN	exSCALE-FAST		101	2001:470:f325:101::/64	10.0.136.0/21	5G Wireless Network in Expo Center
-VLAN	exSpeaker		102	2001:470:f325:102::/64	10.0.2.0/24	Speaker Network
-VLAN	exInfra			103	2001:470:f325:103::/64	10.0.3.0/24	SCALE Network Infrastructure and Servers (Expo Center)
-VLAN	exMDF			104	2001:470:f325:104::/64	10.0.4.0/24	Link to MDF Router
-VLAN	exAVLAN			105	2001:470:f325:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
+VLAN	exSpeaker			102	2001:470:f325:102::/64	10.0.2.0/24	Speaker Network
+VLAN	exInfra				103	2001:470:f325:103::/64	10.0.3.0/24	SCALE Network Infrastructure and Servers (Expo Center)
+VLAN	exMDF				104	2001:470:f325:104::/64	10.0.4.0/24	Link to MDF Router
+VLAN	exAVLAN				105	2001:470:f325:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
 //106 not used
-VLAN	exSigns			107	2001:470:f325:107::/64	0.0.0.0/0	Signs network (Expo Center) IPv6 Only
-VLAN	exStaff			108	2001:470:f325:108::/64	10.0.8.0/24	Staff Wireless Network
+VLAN	exSigns				107	2001:470:f325:107::/64	0.0.0.0/0	Signs network (Expo Center) IPv6 Only
+VLAN	exStaff				108	2001:470:f325:108::/64	10.0.8.0/24	Staff Wireless Network
 //109 not used
-VLAN	exRegistration	110	2001:470:f325:110::/64	10.0.10.0/24	Registration Network (Expo Center) IPv6 Only
-VLAN	exAkamai		111	2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
+VLAN	exRegistration  	110	2001:470:f325:110::/64	10.0.10.0/24	Registration Network (Expo Center) IPv6 Only
+VLAN	exAkamai			111	2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
 //112 through 199 not used
 //200 through 499 Vendors
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.
 //The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other
 //VLANs (vendor_vlan <-> internet only)
-VVRNG	ex_v_			200-498	2001:470:f325:200::/54	10.2.0.0/15	Dynamically allocated and named booth VLANs
+VVRNG	vendor_vlan_		200-498	2001:470:f325:200::/54	10.2.0.0/15	Dynamically allocated and named booth VLANs
 //499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.

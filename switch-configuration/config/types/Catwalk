@@ -3,13 +3,13 @@ TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exAVLAN,exStaff, vendor_backbone \
 			exSigns,HAM_BRIDGE // Link to EX Router
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-			exAVLAN,exStaff, \
+			exAVLAN,exStaff, vendor_backbone\
 			exSigns,HAM_BRIDGE // Downlink to BallroomF
 TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-			exAVLAN,exStaff, \
+			exAVLAN,exStaff, vendor_backbone\
 			exSigns,HAM_BRIDGE // Downlink to BallroomG
 TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-			exAVLAN,exStaff, \
+			exAVLAN,exStaff, vendor_backbone\
 			exSigns,HAM_BRIDGE // Downlink to BallroomH
 TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exAVLAN,exStaff, vendor_backbone \

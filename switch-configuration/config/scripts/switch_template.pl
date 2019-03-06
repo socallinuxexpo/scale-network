@@ -18,6 +18,7 @@ our $VV_HIGH;
 our $VV_COUNT;
 our $VV_prefix6;
 our $VV_prefix4;
+our $VV_name_prefix;
 
 
 my $DEBUGLEVEL = 0;
@@ -131,18 +132,10 @@ sub get_switchtype
 {
   my $hostname = shift(@_);
   my @list = sort(keys(%Switchtypes));
-  if (defined($Switchtypes{$hostname}))
+  debug(5, "get_switchtype called for $hostname.\n");
+  # Preload the cache if we don't have a hit or are specifically called to preload ("anonymous")
+  if (!exists($Switchtypes{$hostname}) || $hostname eq "anonymous")
   {
-    return(@{$Switchtypes{$hostname}});
-  }
-  elsif($hostname ne "anonymous" && scalar(@list))
-  {
-      die("Name: $hostname not found in switchtypes file\n");
-  }
-  else
-  {
-    # Read configuration file and build cache
-    debug(5, "Building switchtypes cache\n");
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
@@ -150,15 +143,22 @@ sub get_switchtype
       debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type)\n");
       $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type ];
     }
-    if ($hostname ne "anonymous" && !defined($Switchtypes{$hostname}))
-    {
-      die("Name: $hostname not found in switchtypes file\n");
-    }
-    return(@{$Switchtypes{$hostname}}) unless($hostname eq "anonymous");
+  }
+  # If we're just doing a cache preload, we're done.
+  if ($hostname eq "anonymous")
+  {
     return(undef);
   }
+  # Perform consistency checks
+  my @v6q = split(/:/, $Switchtypes{$hostname}[2]);
+  if ($Switchtypes{$hostname}[1] != $v6q[3])
+  {
+    die("ERROR: Switch: $hostname Management VLAN (".$Switchtypes{$hostname}[1].
+        ") does not match Address (".$Switchtypes{$hostname}[2].")\n");
+  }
+  # Return appropriate information
+  return(@{$Switchtypes{$hostname}});
 }
-  
 
 sub build_users_from_auth
 {
@@ -813,6 +813,7 @@ sub build_vendor_from_config
   my $VV_dhcp = "";
   my $VV_portcount = 0;
   my @VV_intlist = ();
+  my $VV_protocols = "";
   # Construct empty hashref to use later for return value
   my $VV_hashref = {
   };
@@ -926,8 +927,10 @@ EOF
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }
+    debug(5, "Name_prefix: x$VV_name_prefix"."x VLID: x$VLID"."x\n");
+    my $vv_name = $VV_name_prefix.$VLID;
         $VV_vlans .= <<EOF;
-    vendor-vlan-$VLID {
+    $vv_name {
         vlan-id $VLID
         l3-interface vlan.$VLID;
     }
@@ -1038,6 +1041,46 @@ EOF
 }
 EOF
 
+#    "protocols"    -> $VV_protocols
+#   Build OSPF configuration to advertise Vendor VLANs across vendor-backbone network
+#   Context: protocols { <here> }
+  $VV_protocols = <<EOF;
+    ospf {
+        area 0.0.0.0 {
+            interface vlan.499;
+EOF
+  foreach (@VV_intlist)
+  {
+     $VV_protocols .= <<EOF;
+            interface $_ {
+                passive;
+            }
+EOF
+  }
+
+  $VV_protocols .= <<EOF;
+        }
+    }
+    ospf3 {
+        area 0.0.0.0 {
+            interface vlan.499;
+EOF
+
+  foreach (@VV_intlist)
+  {
+     $VV_protocols .= <<EOF;
+            interface $_ {
+                passive;
+            }
+EOF
+  }
+
+  $VV_protocols .= <<EOF;
+        }
+    }
+EOF
+
+
   if ($VV_portcount == 0) # No VVLAN statement encountered.
   {
     return(0);
@@ -1052,6 +1095,7 @@ EOF
         "defagw_ipv4" => $VV_defgw_ipv4,
         "firewall"    => $VV_firewall,
         "dhcp"        => $VV_dhcp,
+        "protocols"   => $VV_protocols,
     };
     debug(5, "Returning Vendor parameters:\n");
     debug(5, Dumper($VV_hashref));
@@ -1083,6 +1127,7 @@ sub build_config_from_template
   my $IPV4_DEFGW           = ${VENDOR_CONFIGURATION}{"defgw_ipv4"};
   my $FIREWALL_CONFIG   = ${VENDOR_CONFIGURATION}{"firewall"};
   my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
+  my $PROTOCOL_CONFIG   = ${VENDOR_CONFIGURATION}{"protocols"};
   my $OUTPUT = <<EOF;
 system {
     host-name $hostname;
@@ -1160,6 +1205,7 @@ protocols {
     lldp-med {
         interface all;
     }
+$PROTOCOL_CONFIG;
 }
 firewall {
 $FIREWALL_CONFIG

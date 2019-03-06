@@ -10,7 +10,7 @@ ExpoIDF		6	103	2001:470:f325:103::200:6	exIDF			// Loud
 BallroomF	7	103	2001:470:f325:103::200:7	exRoom			// Normal
 Rm103		8	503	2001:470:f325:503::200:8	cfRoom			// Quiet
 BallroomG	9	103	2001:470:f325:103::200:9	exRoom			// Normal
-ConfIDF		10	103	2001:470:f325:503::200:10	cfIDF			// Loud
+ConfIDF		10	503	2001:470:f325:503::200:10	cfIDF			// Loud
 BallroomH	11	103	2001:470:f325:103::200:11	exRoom			// Normal
 BallroomA	12	103	2001:470:f325:103::200:12	exRoom			// Normal
 BallroomB	13	103	2001:470:f325:103::200:13	exRoom			// Normal

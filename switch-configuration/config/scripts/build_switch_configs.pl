@@ -5,7 +5,7 @@
 #
 require "./scripts/switch_template.pl";   # Pull in configuration library
 set_debug_level(5);
-my $switchlist = get_switchlist();
+my $switchlist = "";
 my $switch;
 
 if(scalar(@ARGV)) # One or more switch names specified
@@ -16,6 +16,7 @@ else
 {
     ##FIXME## Probably should evaluate switch list and remove any entries
     ##FIXME## that no longer exist from output directory.
+    $switchlist = get_switchlist();
     my @outputs = ();
     my $file;
     if (scalar(@ARGV))
@@ -67,20 +68,21 @@ foreach(@{$VL_CONFIG})
 }
 
  
+# Pull in private configuration objects (not stored in repo)
+open(PASSWD, "< ../../facts/secrets/jroot_pw") ||
+    die "Couldnt find root PW: $!\n";
+my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
+chomp $rootpw;
+close PASSWD;
 
-
+# Iterate through list of switches and build each configuration file
 foreach $switch (@{$switchlist})
 {
     debug(2, "Building $switch\n");
-    open(PASSWD, "< ../../facts/secrets/jroot_pw") ||
-    	die "Couldnt find root PW: $!\n";
-    my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
-    chomp $rootpw;
-    close PASSWD;
     my $cf = build_config_from_template($switch,$rootpw);
     if ( ! -d "output")
     {
-	mkdir "output";
+        mkdir "output";
     }
     if ( ! -d "output" || ! -w "output" || ! -x "output" )
     {
