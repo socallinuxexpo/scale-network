@@ -3,8 +3,9 @@
 host {{ item }} {
     hardware ethernet {{ hostvars[item].mac }};
     fixed-address {{ hostvars[item].ipv4 }};
-    option radio0-channel {{ hostvars[item].wifi2 }};
-    option radio1-channel {{ hostvars[item].wifi5 }};
+    option host-name "{{ item }}";
+    option radio0-channel "{{ hostvars[item].wifi2 }}";
+    option radio1-channel "{{ hostvars[item].wifi5 }}";
 }
 
 {% endfor -%}
