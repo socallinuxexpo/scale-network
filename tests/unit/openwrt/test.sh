@@ -50,6 +50,7 @@ gen_templates(){
 }
 
 if [ "${UPDATE}" == "1" ]; then
+  rm -rf "golden/${TARGET}"
   gen_templates "golden/${TARGET}"
 fi
 
