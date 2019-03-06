@@ -214,7 +214,8 @@ def populateaps():
                 "mac": elems[1],
                 "ipv4": elems[2],
                 "wifi2": elems[3],
-                "wifi5": elems[4].rstrip(),
+                "wifi5": elems[4],
+                "configver": elems[5].rstrip(),
             })
     return aps
 
@@ -335,6 +336,7 @@ def populateinv(vlans, switches, servers, routers, aps, pis):
             "ansible_host": apc["ipv4"],
             "wifi2": apc["wifi2"],
             "wifi5": apc["wifi5"],
+            "configver": apc["configver"],
             "fqdn": apc["name"] + ".scale.lan",
         }
     for router in routers:

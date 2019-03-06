@@ -6,6 +6,7 @@ host {{ item }} {
     option host-name "{{ item }}";
     option radio0-channel {{ hostvars[item].wifi2 }};
     option radio1-channel {{ hostvars[item].wifi5 }};
+    option ap-network-type {{ hostvars[item].configver }};
 }
 
 {% endfor -%}
