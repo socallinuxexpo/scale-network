@@ -30,4 +30,11 @@ RSpec.shared_examples "openwrt" do
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
   end
+
+  describe file('/etc/resolv.conf') do
+      it { should be_symlink }
+      it { should be_owned_by 'root' }
+      it { should be_grouped_into 'root' }
+  end
+
 end
