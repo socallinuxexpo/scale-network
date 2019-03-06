@@ -8,19 +8,19 @@ numcpu = '2'
 
 boxes = [
   {
-    name: 'server5',
+    name: 'server1',
     eth1: '10.128.3.5',
     eth1ipv6: '2001:470:f325:503::5',
     description: 'DNS & DHCP & SYSLOG & NTP in NOC',
   },
   {
-    name: 'server2',
+    name: 'server7',
     eth1: '10.0.3.5',
     eth1ipv6: '2001:470:f325:103::5',
     description: 'DNS & DHCP & SYSLOG & NTP in Expo Hall MDF',
   },
   {
-    name: 'server3',
+    name: 'monitor',
     eth1: '10.128.3.6',
     eth1ipv6: '2001:470:f325:503::6',
     description: 'MONITORING Server in NOC',
