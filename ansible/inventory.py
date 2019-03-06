@@ -139,9 +139,9 @@ def dhcp4ranges(prefix, bitmask):
     ipsplit = re.split(r'\.', prefix)
     if bitmask == 24:
         return [
-            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".10",
-            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".128",
-            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".129",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".165",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".166",
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".254",
             ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
         ]
@@ -149,7 +149,7 @@ def dhcp4ranges(prefix, bitmask):
     midthird = int(int(ipsplit[2]) + (numocs / 2))
     topthird = int(int(ipsplit[2]) + (numocs - 1))
     return [
-        ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".10",
+        ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird - 1) + ".255",
         ipsplit[0] + "." + ipsplit[1] + "." + str(midthird) + ".1",
         ipsplit[0] + "." + ipsplit[1] + "." + str(topthird) + ".254",
