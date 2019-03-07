@@ -1,0 +1,93 @@
+#!/usr/bin/perl
+# Ballroom layout
+# A I J H
+# B D-E G
+# C D-E F
+#
+# D-E is fed from F.
+# I, J no network switch
+#
+
+require "./scripts/switch_template.pl";
+use Data::Dumper qw/Dumper/;
+
+set_debug_level(0);
+
+# Parse switchtypes file and extract hierarchy from comments.
+open TYPES, "<switchtypes" || die("Failed to open \"switchtypes\" file for read.");
+my %Hierarchy = ();
+
+# Don't continue the loop on interrupt
+$SIG{INT}      = sub { exit 2; };
+$SIG{QUIT}     = sub { exit 2; };
+$SIG{TERM}     = sub { exit 2; };
+
+debug(7, "Empty Hierarchy: ".Dumper(%Hierarchy)."\n");
+foreach(<TYPES>)
+{
+    if ($_ =~ /^\s*\/\//)
+    {
+        next; # Skip pure comment lines
+    }
+    else
+    {
+        chomp;
+        $_ =~ s/ +//g; # Get rid of spaces. Only tabs matter.
+        debug(9, "Splitting $_\n");
+        my ($name, $num, $mvl, $ipv6, $type, $discard, $hierarchy, $noise) = split(/\t+/, $_);
+        debug(8, "Parsing $hierarchy -> $name ($ipv6)\n");
+        my ($hi, $Tier) = split(/\./, $hierarchy);
+        debug(8, "H-> $hi, T->$Tier N->$name, I->$ipv6\n");
+        if (!exists($Hierarchy{$hi}))
+        {
+            debug(5, "Creating empty hierarchy $Hierarchy\n");
+            $Hierarchy{$hi} = {};
+        }
+        if (!exists(${$Hierarchy{$hi}}{$Tier}))
+        {
+            debug(5, "Creating empty tier  $Hierarchy->$Tier\n");
+            ${$Hierarchy{$hi}}{$tier} = [];
+        }
+        my $list = [ $name, $ipv6 ];
+        debug(5, "Adding to tier  $Hierarchy->$Tier (".${$list}[0].",".${$list}[1].")\n");
+        push @{$Hierarchy{$hi}{$Tier}}, $list;
+        debug(7, "Now: ".Dumper(%Hierarchy)."\n");
+    }
+}
+
+close(TYPES);
+
+# Display Hierarchy and ping status
+
+foreach(sort(keys(%Hierarchy)))
+{
+    print "Group $_\n";
+    for (my $i = 0; $i < 10; $i++)
+    {
+        foreach my $sw (@{$Hierarchy{$_}{$i}})
+        {
+            # Temporarily just print the Name and IPv6 Address
+            debug(9, "Got ".Dumper(@{$sw}));
+            print " " x (10+(4*$i)), $i, " -> ";
+            printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
+            debug(9, "Pinging ${$sw}[1]\n");
+            my $r = system('ping6 -c 1 -i 1 -W 1 -n -q  '.${$sw}[1].' >/dev/null');
+            if ($r == -1)
+            {
+                print "\tNOSTART: $!";
+            }
+            elsif ($r & 127)
+            {
+                print "\tSIGNAL: ", ($r & 127), ($r & 128) ? " with " : " without ",
+                    "coredump";
+                exit 2;
+            }
+            else
+            {
+                my $rc = $r >> 8;
+                print (($rc) ? "..down..($rc) <-----------!!!!!!!!!!!!" : "...OK...");
+            }
+            print "\n";
+        }
+    }
+}
