@@ -3,5 +3,7 @@ TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSig
 TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,HAM_BRIDGE	// Downlink
 TRUNK	ge-0/0/2	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
 TRUNK	ge-0/0/3	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-VLAN	cfAVLAN		44	// ge-0/0/{4-47}
+TRUNK	ge-0/0/4	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
+VLAN	cfSigns		4										// ge-0/0/5
+VLAN	cfAVLAN		44										// ge-0/0/{6-47}
 
