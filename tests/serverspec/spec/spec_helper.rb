@@ -22,7 +22,7 @@ set :host,        options[:host_name] || host
 set :ssh_options, options
 
 # Setup some special options for openwrt tests
-if ENV['TEST_TYPE'] == 'openwrt'
+if ENV['TEST_TYPE'].start_with?('openwrt')
   options[:user] = 'root'
   # Disable sudo
   set :disable_sudo, true
