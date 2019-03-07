@@ -17,6 +17,7 @@
     - rob
     - dlang
     - kyle
+    - steveb
 
 - name: create root remote_tmp
   file:
@@ -38,6 +39,7 @@
     - rob
     - dlang
     - kyle
+    - steveb
 
 - name: copy tech team sudoers file
   copy:
