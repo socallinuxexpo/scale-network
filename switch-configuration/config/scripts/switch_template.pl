@@ -805,15 +805,20 @@ sub build_vendor_from_config
   debug(5, "$hostname: type: $Type, received ", scalar(@{$switchtype}),
       " lines of config\n");
   
+  # Local strings to hold configuration fragments
   my $VV_interfaces = "";
   my $VV_vlans = "";
   my $VV_vlans_l3 = "";
   my $VV_defgw_ipv4 = "";
   my $VV_firewall = "";
   my $VV_dhcp = "";
+  my $VV_protocols = "";
+
+  # Local scratchpad variables for tracking elements that apply to multiple configuration fragments
   my $VV_portcount = 0;
   my @VV_intlist = ();
-  my $VV_protocols = "";
+  my %VV_v6_map = ();
+
   # Construct empty hashref to use later for return value
   my $VV_hashref = {
   };
@@ -928,9 +933,9 @@ EOF
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }
-    debug(5, "Name_prefix: x$VV_name_prefix"."x VLID: x$VLID"."x\n");
-    my $vv_name = $VV_name_prefix.$VLID;
-        $VV_vlans .= <<EOF;
+        debug(5, "Name_prefix: x$VV_name_prefix"."x VLID: x$VLID"."x\n");
+        my $vv_name = $VV_name_prefix.$VLID;
+            $VV_vlans .= <<EOF;
     $vv_name {
         vlan-id $VLID
         l3-interface vlan.$VLID;
@@ -964,13 +969,14 @@ EOF
         }
 EOF
 # These two are simply used in their initialized state (currently)...
-#	"defagw_ipv4" -> $VV_defgw_ipv4,
+#	"defgw_ipv4" -> $VV_defgw_ipv4,
 #	"firewall"    -> $VV_firewall,
 
 #	"dhcp"        -> $VV_dhcp,
 #       Build list of Vendor VLAN Interfaces for later use to build DHCP forwarders
         push @VV_intlist, "vlan.$VLID";
-
+        $VV_v6_map{"vlan.$VLID"} = $VL_prefix6;
+        debug(5, "Mapped $VL_prefix6 to vlan.$VLID\n");
 
         # Increment / decrement counters
         $intnum++;	# Next interface (ge-0/0/{$intnum})
@@ -1044,8 +1050,28 @@ EOF
 
 #    "protocols"    -> $VV_protocols
 #   Build OSPF configuration to advertise Vendor VLANs across vendor-backbone network
+#   Build router-advertisement configuration for Vendor VLANs
 #   Context: protocols { <here> }
-  $VV_protocols = <<EOF;
+  $VV_protocols .= <<EOF;
+    router-advertisement {
+EOF
+  foreach (@VV_intlist)
+  {
+    my $pfx = $VV_v6_map{$_};
+    $VV_protocols .= <<EOF;
+        interface $_ {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f325:103::5;
+            dns-server-address 2001:470:f325:503::5;
+            prefix $pfx {
+                on-link;
+                autonomous;
+            }
+        }
+EOF
+  }
+  $VV_protocols .= <<EOF;
+    }
     ospf {
         area 0.0.0.0 {
             interface vlan.499;
@@ -1093,7 +1119,7 @@ EOF
         "interfaces"  => $VV_interfaces,
         "vlans"       => $VV_vlans,
         "vlans_l3"    => $VV_vlans_l3,
-        "defagw_ipv4" => $VV_defgw_ipv4,
+        "defgw_ipv4" => $VV_defgw_ipv4,
         "firewall"    => $VV_firewall,
         "dhcp"        => $VV_dhcp,
         "protocols"   => $VV_protocols,
@@ -1125,10 +1151,11 @@ sub build_config_from_template
   $INTERFACES_PHYSICAL .= ${VENDOR_CONFIGURATION}{"interfaces"};
   $VLAN_CONFIGURATION  .= ${VENDOR_CONFIGURATION}{"vlans"};
   $INTERFACES_LAYER3   .= ${VENDOR_CONFIGURATION}{"vlans_l3"};
-  my $IPV4_DEFGW           = ${VENDOR_CONFIGURATION}{"defgw_ipv4"};
+  my $IPV4_DEFGW        = ${VENDOR_CONFIGURATION}{"defgw_ipv4"};
   my $FIREWALL_CONFIG   = ${VENDOR_CONFIGURATION}{"firewall"};
   my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
   my $PROTOCOL_CONFIG   = ${VENDOR_CONFIGURATION}{"protocols"};
+  debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
   my $OUTPUT = <<EOF;
 system {
     host-name $hostname;
