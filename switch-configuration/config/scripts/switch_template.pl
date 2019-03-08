@@ -912,6 +912,7 @@ EOF
         }
 #	"interfaces"  -> $VV_interfaces,
 #       context: interfaces { <here> }
+        my $myvlan = $VV_name_prefix.$VLID;
         $VV_interfaces .= <<EOF;
     ge-0/0/$intnum {
         unit 0 {
@@ -919,7 +920,7 @@ EOF
             family ethernet-switching {
                 port-mode access;
                 vlan {
-                    members vendor-vlan-$VLID;
+                    members $myvlan;
                 }
             }
         }
