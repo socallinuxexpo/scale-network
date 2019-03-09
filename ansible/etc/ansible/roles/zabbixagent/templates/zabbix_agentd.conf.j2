@@ -1,0 +1,28 @@
+# use syslog
+LogType=system
+LogFile=no
+DebugLevel=3
+MaxLinesPerSecond=1000
+EnableRemoteCommands=1
+AllowRoot=1
+
+# Auto-reg
+HostMetadata=server
+
+# How often list of active checks is refreshed, in seconds.
+RefreshActiveChecks=60
+
+# List of comma delmited IP addressses of Zabbix servers
+Server={{ zabbix_server }}
+ServerActive={{ zabbix_server }}
+
+
+# How often list of active checks is refreshed, in seconds.
+RefreshActiveChecks=60
+
+# Number of pre-forked instances of zabbix_agentd that
+# process passive checks
+StartAgents=1
+
+# Include additional config
+Include=/etc/zabbix/zabbix_agentd.conf.d/

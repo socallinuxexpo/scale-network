@@ -16,6 +16,7 @@
   roles:
     - dnsserver
     - dhcpserver
+    - zabbixagent
 
 - hosts: servers
   become: yes
@@ -34,3 +35,4 @@
     ansible_python_interpreter: /usr/bin/python3
   roles:
     - signs
+    - zabbixagent

@@ -1,0 +1,21 @@
+---
+
+- name: install zabbix package
+  apt:
+    name: zabbix-agent
+    state: present
+
+- name: copy zabbix_agentd.conf
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart zabbix agent
+
+- name: enable zabbix-agent service
+  systemd:
+    name: zabbix-agent
+    enabled: yes
+  notify: restart zabbix agent
