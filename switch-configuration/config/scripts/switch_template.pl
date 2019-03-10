@@ -1090,7 +1090,7 @@ EOF
     }
     ospf3 {
         area 0.0.0.0 {
-            interface vlan.499;
+            interface vlan.103;
 EOF
 
   foreach (@VV_intlist)
