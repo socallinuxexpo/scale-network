@@ -1,14 +1,38 @@
 Jack	Device			Location
-NE8		BallroomC		South East Corner
+NE8	BallroomC		South East Corner
 NE26	BallroomB		
 NW20	BallroomF	
 NW26	BallroomDE		North Wall West
 NW33	BallroomI		South Wall Center
-CW2		ExpoB5			Catwalk
+CW2	ExpoB5			Catwalk
 CW20	ExpoA5			Catwalk
 CW24	ExpoC5			Catwalk
 CW51	ExpoAW			Catwalk
-G48		CTF				Cyberlobby (lower level conference center)
+G48	CTF				Cyberlobby (lower level conference center)
 SE21	Registration
 SE22	Reg-ap1
 SE13	Reg-ap6
+noc	d81
+104	d12
+ne6	balllob-ap6
+ne21	sign
+nw24	balllob-ap4
+nw15	balllob-ap3
+nw14	balllob-ap2
+d40	103
+ne2	balllob-ap5
+d10	106
+nw12	signn
+nw8	ballroomg	centered on the hard wall, left of the door
+d78	101-102
+nw34	ballroomh	centered against service corridor
+ne17	balllob-ap9
+ne38	balllob-ap10
+ne30	balllob-ap8
+ne32	ballroomA	sw corner on south wall
+d62	211
+ne35	ballroomj	on south wall towards the west side
+d68	204
+d20	205-ap1	plugged in to room 207
+d47	207	ap
+d45	208	ap
