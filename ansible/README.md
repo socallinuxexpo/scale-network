@@ -47,8 +47,8 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
 * * use IPs and name from serverlist.tsv, 
 * * establish and test network connectivty
 * * set uniform username, password, and sudoer access on each system
-* run `ansible-playbook -u <username> -k -K -i inventory.py etc/ansible/scale.yml`
-* once ssh keys are deployed `ansible-playbook -u <username> -i inventory.py etc/ansible/scale.yml`
+* run `ansible-playbook -u <username> -k -K -i inventory.py scale.yml`
+* once ssh keys are deployed `ansible-playbook -u <username> -i inventory.py scale.yml`
 
 ## Vagrant Commands:
 

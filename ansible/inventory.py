@@ -362,7 +362,7 @@ def populateinv(vlans, switches, servers, routers, aps, pis):
         inv["servers"]["hosts"].append(server["name"])
         inv[server["ansiblerole"]]["hosts"].append(server["name"])
         inv["_meta"]["hostvars"][server["name"]] = {
-            "ansible_host": server["ipv6"],
+            "ansible_host": server["ipv4"],
             "ipv6": server["ipv6"],
             "ipv6ptr": ip6toptr(server["ipv6"]),
             "ipv4": server["ipv4"],
