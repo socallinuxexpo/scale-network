@@ -126,9 +126,9 @@ def dhcp6ranges(prefix, bitmask):
     prefsplit = re.split(r'\:\:', prefix)[0]
     return [
         prefsplit + ":1::1",
-        prefsplit + ":0fff::fffe",
-        prefsplit + ":f000::1",
-        prefsplit + ":ffff::fffe",
+        prefsplit + ":1::400",
+        prefsplit + ":2::1",
+        prefsplit + ":2::400",
     ]
 
 
