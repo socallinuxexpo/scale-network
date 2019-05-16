@@ -3,16 +3,12 @@
 - hosts: servers
   become: yes
   serial: 1
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - aptupdate
 
 - hosts: core
   become: yes
   serial: 1
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - dnsserver
     - dhcpserver
@@ -20,10 +16,7 @@
 
 - hosts: servers
   become: yes
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
-    - python27
     - techteam
     - dnsclient
     - noapparmor
@@ -31,8 +24,6 @@
 
 - hosts: automation
   become: yes
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - signs
     - zabbixagent

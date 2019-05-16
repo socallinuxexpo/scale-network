@@ -312,6 +312,7 @@ def populateinv(vlans, switches, servers, routers, aps, pis):
         "all": {
             "vars": {
                 "ansible_ssh_common_args": ssh_args,
+                "ansible_python_interpreter": "/usr/bin/python3",
             }
         },
         "_meta": {
