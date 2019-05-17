@@ -10,11 +10,11 @@ import os
 import re
 
 VLANSDDIR = "../switch-configuration/config/vlans.d/"
-ROUTERFILE = "../facts/routers/routerlist.tsv"
+ROUTERFILE = "../facts/routers/routerlist.csv"
 SWITCHESFILE = "../switch-configuration/config/switchtypes"
-SERVERFILE = "../facts/servers/serverlist.tsv"
-APFILE = "../facts/aps/aplist.tsv"
-PIFILE = "../facts/pi/pilist.tsv"
+SERVERFILE = "../facts/servers/serverlist.csv"
+APFILE = "../facts/aps/aplist.csv"
+PIFILE = "../facts/pi/pilist.csv"
 
 
 def populatevlans():
@@ -192,7 +192,7 @@ def populaterouters():
     fhandle.close()
     for line in flines:
         if not line[0] == '/' or line[0] == ' ' or line[0] == '\n':
-            elems = re.split(r'\t+', line)
+            elems = re.split(',', line)
             routers.append({
                 "name": elems[0],
                 "ipv6": elems[1].rstrip(),
@@ -208,7 +208,7 @@ def populateaps():
     fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(r'\t+', line)
+            elems = re.split(',', line)
             aps.append({
                 "name": elems[0],
                 "mac": elems[1],
@@ -228,7 +228,7 @@ def populatepis():
     fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(r'\t+', line)
+            elems = re.split(',', line)
             pis.append({
                 "name": elems[0],
                 "ipv6": elems[1].rstrip(),
@@ -257,7 +257,7 @@ def populateservers(vlans):
     fhandle.close()
     for line in flines:
         if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(r'\t+', line)
+            elems = re.split(',', line)
             if len(elems) > 2:
                 ipv6 = elems[2]
                 ipv4 = elems[3]
