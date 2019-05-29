@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-playbook = 'etc/ansible/scale.yml'
+playbook = 'scale.yml'
 boxname = 'ubuntu/bionic64'
 memmb = '1024'
 numcpu = '2'

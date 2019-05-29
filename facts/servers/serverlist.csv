@@ -1,0 +1,20 @@
+// list of physical servers
+// all servers imaged with default 17.10 build, auth: scale/scale16x (not permanent)
+//
+// core server role - ntpd, dns, dhcp (ipv4), syslog 
+// monitoring - zabbix
+// automation - ansible, signs
+//
+//name,mac-address,ipv6,ipv4,ansible-role
+server1,4c:72:b9:7c:41:17,2001:470:f325:503::5,10.128.3.5,core
+server2,4c:72:b9:7c:40:ec
+server3,4c:72:b9:7c:44:88
+server4,4c:72:b9:7c:43:27
+server5,4c:72:b9:7c:41:d6
+server6,4c:72:b9:7c:42:12
+server7,4c:72:b9:7c:3a:f9,2001:470:f325:103::5,10.0.3.5,core
+server8,4c:72:b9:7c:42:21,2001:470:f325:503::7,10.128.3.7,automation
+server9,4c:72:b9:7c:3e:1d
+server10,4c:72:b9:7c:3f:bc
+monitor,00:25:90:34:d2:14,2001:470:f325:503::6,10.128.3.6,monitoring
+// 00:25:90:34:d2:15
