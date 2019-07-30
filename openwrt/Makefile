@@ -70,7 +70,11 @@ targetconfig: diffconfig
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
-	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) download && $(MAKE) V=s -j 4
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
+	  && echo SCALE_VER=$(shell git rev-parse HEAD) > $(TMPL_SRC_DIR)/etc/scale-release \
+	  && echo OPENWRT_VER=$(OPENWRT_VER) >> $(TMPL_SRC_DIR)/etc/scale-release \
+	  && $(MAKE) download \
+	  && $(MAKE) V=s -j 4
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
