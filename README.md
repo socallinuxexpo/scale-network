@@ -1,7 +1,12 @@
-# scale-network
-[![CircleCI](https://circleci.com/gh/socallinuxexpo/scale-network/tree/master.svg?style=svg)](https://circleci.com/gh/socallinuxexpo/scale-network/tree/master)
 
-configurations, tooling and scripts for [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network
+<p align="center"><img src="http://sarcasticadmin.com/scale/imgs/tux-scale-tech-2018.png" width="360"></p>
+<p align="center">
+  <a href="https://circleci.com/gh/socallinuxexpo/scale-network/tree/master"><img src="https://circleci.com/gh/socallinuxexpo/scale-network/tree/master.svg?style=svg" alt="Build Status"></img></a>
+</p>
+
+# scale-network
+
+[SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configurations, tooling and scripts 
 
 ## Table of Contents
 * [CONTRIBUTING](./CONTRIBUTING.md)
