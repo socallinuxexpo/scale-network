@@ -12,6 +12,25 @@ If you are building images with templates you'll also need:
 * [gomplate](../README.md#requirements)
 
 ## Build
+
+### Docker
+
+You can build these images inside a docker container. This makes it easy to has a consistent build environment
+for all members of the tech team.
+
+To start building:
+
+```
+docker pull sarcasticadmin/openwrt-build:528bc79
+# Make sure to mount the git root inside this container
+docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build:528bc79 /bin/bash
+cd /home/openwrt/scale-network
+```
+> There is no latest tag so make sure to specify the version (short commit hash)
+> The docker mount only works in linux, on OSX you'll get: "Build dependency: OpenWrt can only be built on a case-sensitive filesystem"
+
+Then continue onto whichever image you'd like to build.
+
 ### Stock Image
 
 Currently we support Netgear `3700v2`, `3800`, & `3800ch` images.
