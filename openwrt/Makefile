@@ -3,6 +3,8 @@
 # Assumes all dependency tools are already installed
 #
 
+include include/*.mk
+
 # Export all variables by default
 .EXPORT_ALL_VARIABLES:
 
