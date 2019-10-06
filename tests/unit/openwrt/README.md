@@ -18,3 +18,9 @@ due to other code changes then you can run the same script with `-u` to update t
 sh test.sh -u
 ```
 > **NOTE:** This all needs to be done from the scripts current directory
+
+There is also the ability to target the architecture `ar71xx`(default) and `ipq806x`:
+
+```
+sh test.sh -t ipq806x -u
+```

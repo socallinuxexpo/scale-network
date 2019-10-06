@@ -80,9 +80,11 @@ ifndef GOMPLATE
 endif
 	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
 	# TODO: should do this automatically for .sh file types
+	chmod 750 $(TMPL_OUT_DIR)/root/bin/config-version.sh
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
 	chmod 755 $(TMPL_OUT_DIR)/root
 	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
 	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
+	@cd $(TMPL_OUT_DIR)/etc/config && ln -s network.0 network && ln -s wireless.0 wireless
 	@cd $(TMPL_OUT_DIR)/etc && ln -s /tmp/resolv.conf.auto resolv.conf
 	touch $(TMPL_OUT_DIR)
