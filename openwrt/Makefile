@@ -58,6 +58,15 @@ $(BUILD_DIR)/$(IMAGEBUILDER)/.config: feeds
 	  && cat ../../configs/common.config >> .config \
 	  && make defconfig
 
+diffconfig:
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && ./scripts/diffconfig.sh > .diffconfig
+
+commonconfig: diffconfig
+	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep -v CONFIG_TARGET > ./configs/common.config
+
+targetconfig: diffconfig
+	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep CONFIG_TARGET > ./configs/$(TARGET)-generic.config
+
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
