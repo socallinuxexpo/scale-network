@@ -170,6 +170,12 @@ ssh root@<AP IP>
 cat /etc/os-release
 ```
 # Notes
+## Identity
+
+Depending on the SCaLE conference number, the WPS LED will be green for even years and off
+for odd years.
+> NOTE: This depends on the SCaLE conference number not the year since the build
+> would drift based on when it was built.
 
 ## Files
 ### SSH
