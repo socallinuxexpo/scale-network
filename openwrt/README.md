@@ -6,7 +6,7 @@
 
 ## Prereqs
 
-Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
+Make sure you have the prereq pkgs for the [Openwrt Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 If you are building images with templates you'll also need:
 * [gomplate](../README.md#requirements)
@@ -41,7 +41,7 @@ We build all 3 modules at once:
 cd ./openwrt
 make build-img
 ```
-> This requires an internet connection since it downloads the LEDE src
+> This requires an internet connection since it downloads the Openwrt src
 > github.com and uses some openwrt mirrors.
 
 You will find the images in `./build/source-<commit>/bin/targets/ar71xx/generic/`
@@ -77,7 +77,7 @@ make build-img
 ```
 
 This will populate the templates with the necessary values and include them
-into the lede build
+into the Openwrt build
 
 # Adding new packages
 
@@ -138,7 +138,7 @@ tftp 192.168.1.1
 ```
 
 ## Inplace
-Assuming openwrt or LEDE is already installed:
+Assuming Openwrt is already installed:
 
 ```sh
 scp <sysupgrade.bin> root@<AP IP>:/tmp/
