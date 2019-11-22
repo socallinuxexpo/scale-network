@@ -19,8 +19,8 @@ BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-LEDE_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
-IMAGEBUILDER = source-$(TARGET)-$(LEDE_VER)
+OPENWRT_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
+IMAGEBUILDER = source-$(TARGET)-$(OPENWRT_VER)
 TAR_EXT = .tar.gz
 
 TMPL_SRC_DIR = files
@@ -32,17 +32,17 @@ endif
 
 PHONY: download-image extract templates clean clean-templates
 
-download-image: $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
+download-image: $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 
 extract: $(BUILD_DIR)/$(IMAGEBUILDER)
 
-$(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT): | $(BUILD_DIR)
-	curl -L -o $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(LEDE_VER)$(TAR_EXT)
+$(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT): | $(BUILD_DIR)
+	curl -L -o $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(OPENWRT_VER)$(TAR_EXT)
 
-$(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(LEDE_VER)$(TAR_EXT)
+$(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 	@cd $(BUILD_DIR) && \
 	  mkdir -p $(IMAGEBUILDER) && \
-	  tar -zxmf  $(LEDE_VER)$(TAR_EXT) -C $(IMAGEBUILDER) --strip-components 1
+	  tar -zxmf  $(OPENWRT_VER)$(TAR_EXT) -C $(IMAGEBUILDER) --strip-components 1
 
 $(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default: extract
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
@@ -58,6 +58,15 @@ $(BUILD_DIR)/$(IMAGEBUILDER)/.config: feeds
 	  && cat ../../configs/common.config >> .config \
 	  && make defconfig
 
+diffconfig:
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && ./scripts/diffconfig.sh > .diffconfig
+
+commonconfig: diffconfig
+	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep -v CONFIG_TARGET > ./configs/common.config
+
+targetconfig: diffconfig
+	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep CONFIG_TARGET > ./configs/$(TARGET)-generic.config
+
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
@@ -66,8 +75,11 @@ build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-clean:
+clean-all:
 	rm -rf $(BUILD_DIR)
+
+clean:
+	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)
 
 clean-templates:
 	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)/files

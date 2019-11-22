@@ -2,11 +2,12 @@
 
 ## Supported Hardware
 
+* WNDR 3700,3800,3800ch
 * [TPLink c2600](./TPLINK.md)
 
 ## Prereqs
 
-Make sure you have the prereq pkgs for the [LEDE Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
+Make sure you have the prereq pkgs for the [Openwrt Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 If you are building images with templates you'll also need:
 * [gomplate](../README.md#requirements)
@@ -41,7 +42,7 @@ We build all 3 modules at once:
 cd ./openwrt
 make build-img
 ```
-> This requires an internet connection since it downloads the LEDE src
+> This requires an internet connection since it downloads the Openwrt src
 > github.com and uses some openwrt mirrors.
 
 You will find the images in `./build/source-<commit>/bin/targets/ar71xx/generic/`
@@ -77,26 +78,41 @@ make build-img
 ```
 
 This will populate the templates with the necessary values and include them
-into the lede build
+into the Openwrt build
 
 # Adding new packages
 
 Leverage the existing `diffconfig` via the `Makefile`:
 ```
-make build/source-<SHA>/.config
+make config
 cd build/source-<SHA>/
 make menuconfig
 ```
 
 At this point you can add any additional pkgs youd like. Afterwhich its time
-to save them back to the `diffconfig`:
+to save them back to the `diffconfig` using the makefile and then copy them
+to the commonconfig:
 ```
-scripts/diffconfig.sh > mydiffconfig
-mv mydiffconfig ../../diffconfig
+make diffconfig commonconfig
 ```
 
 At which point you should have a diff in git which can then be tested against a new
 build of the img
+
+## Issues
+
+When iterating on new packages there have been times were the existing config is stale
+and needs to be completely blown away and regenerated off of `master` then reconfigured
+with `menuconfig`. This is just something to be aware of since its come up during the development
+of this image.
+
+# Updating target info
+
+This is similar to `Adding a new package` however after running `menuconfig` go back to the Makefile in `openwrt`
+and run:
+```
+make diffconfig targetconfig
+```
 
 # Upgrading
 
@@ -138,7 +154,7 @@ tftp 192.168.1.1
 ```
 
 ## Inplace
-Assuming openwrt or LEDE is already installed:
+Assuming Openwrt is already installed:
 
 ```sh
 scp <sysupgrade.bin> root@<AP IP>:/tmp/
