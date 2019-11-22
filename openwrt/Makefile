@@ -19,7 +19,7 @@ BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
+OPENWRT_VER ?= deb835849aeb713968aaa48bf046101140ab4825
 IMAGEBUILDER = source-$(TARGET)-$(OPENWRT_VER)
 TAR_EXT = .tar.gz
 
@@ -37,7 +37,7 @@ download-image: $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 extract: $(BUILD_DIR)/$(IMAGEBUILDER)
 
 $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT): | $(BUILD_DIR)
-	curl -L -o $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(OPENWRT_VER)$(TAR_EXT)
+	curl -L -o $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT) https://github.com/openwrt/openwrt/archive/$(OPENWRT_VER)$(TAR_EXT)
 
 $(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 	@cd $(BUILD_DIR) && \
