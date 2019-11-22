@@ -75,8 +75,11 @@ build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-clean:
+clean-all:
 	rm -rf $(BUILD_DIR)
+
+clean:
+	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)
 
 clean-templates:
 	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)/files
