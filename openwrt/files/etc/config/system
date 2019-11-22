@@ -8,10 +8,7 @@ config system
 config timeserver 'ntp'
         option enabled '1'
         option enable_server '0'
-        list server '0.openwrt.pool.ntp.org'
-        list server '1.openwrt.pool.ntp.org'
-        list server '2.openwrt.pool.ntp.org'
-        list server '3.openwrt.pool.ntp.org'
+        list server '{{ (datasource "openwrt").ntp.server }}'
 
 {{ if (eq (env.Getenv "TARGET") "ar71xx") }}
 config led 'led_wan'
