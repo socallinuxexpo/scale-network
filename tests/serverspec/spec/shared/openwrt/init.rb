@@ -4,7 +4,8 @@ require 'serverspec' # If you want to use serverspec matchers, you will need thi
 RSpec.shared_examples "openwrt" do
 
   DEFAULT_BINS=["apinger", "bash", "logrotate",
-                "python3", "rsyslogd", "zabbix_agentd"]
+                "python3", "rsyslogd", "zabbix_agentd",
+                "tcpdump"]
 
   REMOVED_BINS=["snmpd", "dropbear"]
 
