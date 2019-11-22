@@ -2,6 +2,7 @@
 
 ## Supported Hardware
 
+* WNDR 3700,3800,3800ch
 * [TPLink c2600](./TPLINK.md)
 
 ## Prereqs
@@ -83,20 +84,35 @@ into the Openwrt build
 
 Leverage the existing `diffconfig` via the `Makefile`:
 ```
-make build/source-<SHA>/.config
+make config
 cd build/source-<SHA>/
 make menuconfig
 ```
 
 At this point you can add any additional pkgs youd like. Afterwhich its time
-to save them back to the `diffconfig`:
+to save them back to the `diffconfig` using the makefile and then copy them
+to the commonconfig:
 ```
-scripts/diffconfig.sh > mydiffconfig
-mv mydiffconfig ../../diffconfig
+make diffconfig commonconfig
 ```
 
 At which point you should have a diff in git which can then be tested against a new
 build of the img
+
+## Issues
+
+When iterating on new packages there have been times were the existing config is stale
+and needs to be completely blown away and regenerated off of `master` then reconfigured
+with `menuconfig`. This is just something to be aware of since its come up during the development
+of this image.
+
+# Updating target info
+
+This is similar to `Adding a new package` however after running `menuconfig` go back to the Makefile in `openwrt`
+and run:
+```
+make diffconfig targetconfig
+```
 
 # Upgrading
 
