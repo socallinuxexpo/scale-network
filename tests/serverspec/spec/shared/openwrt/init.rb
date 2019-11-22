@@ -3,14 +3,22 @@ require 'serverspec' # If you want to use serverspec matchers, you will need thi
 
 RSpec.shared_examples "openwrt" do
 
-  DEFAULT_PKGS=["apinger", "bash", "logrotate",
+  DEFAULT_BINS=["apinger", "bash", "logrotate",
                 "python3", "rsyslogd", "zabbix_agentd"]
+
+  REMOVED_BINS=["snmpd", "dropbear"]
 
   DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "zabbix"]
 
-  DEFAULT_PKGS.each do |pkg|
-    describe command("which #{pkg} 2> /dev/null") do
+  DEFAULT_BINS.each do |bin|
+    describe command("which #{bin} 2> /dev/null") do
       its(:exit_status) { should eq 0 }
+    end
+  end
+
+  REMOVED_BINS.each do |bin|
+    describe command("which #{bin} 2> /dev/null") do
+      its(:exit_status) { should eq 1 }
     end
   end
 
