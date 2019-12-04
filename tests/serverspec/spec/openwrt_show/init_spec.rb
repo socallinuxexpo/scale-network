@@ -3,7 +3,7 @@ require 'spec_helper'
 #require_relative '../shared/openwrt/init.rb'
 require_relative '../shared/openwrt/init.rb'
 
-RESOLVABLE=["loghost.scale.lan", "zabbix.scale.lan", "google.com"]
+RESOLVABLE=["ntp.scale.lan", "loghost.scale.lan", "zabbix.scale.lan", "google.com"]
 
 describe "shared" do
   include_examples "openwrt"

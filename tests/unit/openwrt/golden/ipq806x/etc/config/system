@@ -1,0 +1,44 @@
+config system
+        option hostname 'OpenWrt'
+        option timezone 'UTC'
+        option ttylogin '0'
+        option log_size '64'
+        option urandom_seed '0'
+
+config timeserver 'ntp'
+        option enabled '1'
+        option enable_server '0'
+        list server '0.openwrt.pool.ntp.org'
+
+
+config led 'led_usb1'
+        option name 'USB 1'
+        option sysfs 'c2600:white:usb_2'
+        option trigger 'usbport'
+        list port 'usb1-port1'
+        list port 'usb2-port1'
+
+config led 'led_usb2'
+        option name 'USB 2'
+        option sysfs 'c2600:white:usb_4'
+        option trigger 'usbport'
+        list port 'usb3-port1'
+        list port 'usb4-port1'
+
+config led 'led_wan'
+        option name 'wan'
+        option sysfs 'c2600:white:wan'
+        option trigger 'switch0'
+        option port_mask '0x20'
+
+config led 'led_lan'
+        option name 'lan'
+        option sysfs 'c2600:white:lan'
+        option trigger 'switch0'
+        option port_mask '0x1e'
+
+config led 'led_wps'
+        option name 'WPS for build ID'
+        option sysfs 'c2600:white:wps'
+        option default '1'
+
