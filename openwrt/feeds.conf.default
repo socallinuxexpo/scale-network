@@ -1,6 +1,5 @@
 # off openwrt pkg master branch
-# before the issues with zabbix were introduced
-src-git packages https://git.openwrt.org/feed/packages.git^63d221c310b77d568c34da0eb116915dc3fd5ff9
+src-git packages https://git.openwrt.org/feed/packages.git^6cff09119bb2d4e5819325bfa2ff3997241fb80f
 #src-git luci https://git.openwrt.org/project/luci.git
 #src-git routing https://git.openwrt.org/feed/routing.git
 #src-git telephony https://git.openwrt.org/feed/telephony.git
