@@ -20,7 +20,8 @@ GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
 OPENWRT_VER ?= deb835849aeb713968aaa48bf046101140ab4825
-IMAGEBUILDER = source-$(TARGET)-$(OPENWRT_VER)
+SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
+IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
 TAR_EXT = .tar.gz
 
 TMPL_SRC_DIR = files
