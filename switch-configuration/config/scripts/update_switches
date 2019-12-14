@@ -1,0 +1,111 @@
+#!/usr/bin/perl
+#
+# Push an updated copy of the configuration file to a switch and activate it.
+#
+
+# Not yet ready for use... Do not use
+die "Don't use this script yet. It's not ready"
+
+# Ideally this will eventually be obviated by ansible
+
+# Pull in dependencies
+use strict;
+require "./scripts/switch_template.pl";
+use FileHandle;
+use IPC::Open2;
+
+# Constants
+my @sections = (
+    "chassis",
+    "system",
+    "interfaces",
+    "snmp",
+    "forwarding-options",
+    "routing-options",
+    "protocols",
+    "firewall",
+    "ethernet-switching-options",
+    "vlans",
+);
+
+my $pipe_reader;
+my $pipe_writer;
+# Parse arguments (if any) or default to all switches
+##FIXME## Allow for exception syntax on command line
+my @list = @ARGV;
+if (scalar(@list) == 0)
+{
+    @list = get_switchlist();
+}
+
+# This works in three phases for each switch...
+#
+# Assertions:
+#   output/* contains valid configuratin files for each switch
+#   Switches are accessible via SSH at their management address in the switchtypes file.
+# Phase 1: Push new configuration file to switch.
+# Phase 2: Remove possibly conflicting old configuration remnants
+# Phase 3: Merge new configuration file and commit
+#
+foreach my $switch (@list)
+{
+    my ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = get_switchtype($switch) ||
+        die("Error: Couldn't get type for $switch\n");
+
+    # Phase 1: Copy configuration to device
+    if (!-f "output/$Name.conf")
+    {
+        die("Error: Couldn't read configuration file for $NAME");
+    }
+    ##FIXME## Using system is an attrocious hack -- do something better
+    system("scp \"$output/$Name.conf\" $Name".":/tmp") ||
+        die("Failed to copy configuration to device $Name ($!)\n");
+
+    # Connect to the switch
+    pipe($pipe_reader, $pipe_writer);
+
+    $pid = fork;
+    if ( $pid ) {
+        ##FIXME## Currently using delays and making assumptions about time to get output back from switch
+        ##FIXME## Should switch to using an asynchronous select driven approach.
+
+        # Phase 2: Remove possibly conflicting old configuration remnants
+        my $response = check_switch_output(2);
+        print Writer "edit\n";
+        foreach(@sections)
+        {
+            $command_seq.= "delete $_\n";
+        }
+    
+        # Phase 3: Merge new configuration file and commit
+        $command_seq .= <<EOF;
+load merge /tmp/$Name.conf
+commit confirm 2
+EOF
+
+    }
+    else
+    {
+        # Child -- Connect to switch
+        exec("ssh $Name");
+    }
+}
+
+sub check_switch_output
+{
+    my $timeout   = shift @_;
+    my $response  = "";
+    my $startTime = time();
+    my $interval  = 25;
+    my $t = time() + $timeout;
+    my $first = 1;
+
+    my $sel = IO::Select->new;
+    $sel->add($pipe_reader);
+
+    while ($t > time() || $first)
+    {
+        # Make sure we make at least one attempt regardless of timeout
+        $first = 0;
+    }
+}
