@@ -70,6 +70,9 @@ targetconfig: diffconfig
 
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
+menuconfig:
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) menuconfig
+
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
 	  && echo SCALE_VER=$(shell git rev-parse HEAD) > $(TMPL_SRC_DIR)/etc/scale-release \
