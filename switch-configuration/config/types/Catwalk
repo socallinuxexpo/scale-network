@@ -89,3 +89,4 @@ TRUNK	ge-0/0/28	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 TRUNK	ge-0/0/29	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exAVLAN,exStaff, vendor_backbone \
 			exSigns,HAM_BRIDGE // 
+RSRVD	18

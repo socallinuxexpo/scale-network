@@ -248,24 +248,112 @@ sub build_interfaces_from_config
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
-  my $portmap_ps = "%!PDF-1.3\n%\n% Generated Interface Portmap for ".
-            "$hostname (Type: $Type)\n%\n";
-  my $portmap_PS .= <<EOF
+  my $portmap_PS = "%!PS-Adobe\n%\n% Generated Interface Portmap for ".
+            "Switch #$Number Name: $hostname (Type: $Type)\n%\n";
+  $portmap_PS .= <<EOF;
 % Initialization of graphical context for portmap
-/Hevetica findfont 30 scalefont setfont % Not quite 1/2" high letters
+
+% Font Definitions
+/BoxFont { /Helvetica findfont 6 scalefont setfont } bind def
+/TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
 
 % Misc. Subroutines used in constant definitions (mostly unit conversions)
-/Inch { 72 mul } def   % Inch converted to points (I -> pts)
-/mm  { 2.835 mul } def % mm converted to points   (mm -> pts)
+/Inch { 72 mul } bind def   % Inch converted to points (I -> pts)
+/mm  { 2.835 mul } bind def % mm converted to points   (mm -> pts)
 
 % Constants for use in building portmaps
-/Origin [ 1 Inch 0.25 Inch ] def % Bottom Left Corner of port map
-/Label_Ligature 1.5 Inch def % Ligature Line Position for Label
-/Even_Ligature 0.8 Inch def % Ligature Line for Even Ports
-/Even_Ligature 0.3 Inch def % Ligature Line for Even Ports
-/Left_Port_edge 0.25 Inch def % Left edge of first port column
+/Origin           [ 0.5 Inch 0.25 Inch ] def    % Bottom Left Corner of port map (After rotation and translatin of [0,0])
+/Label_Ligature   1.5 Inch def                  % Ligature Line Position for Label
+/Box_Height       0.5 Inch def                  % Height of boxes for portmap
+/Odd_Bottom       0.0 Inch def                  % Bottom Line for Even Ports
+/Even_Bottom      Odd_Bottom Box_Height add def % Bottom Line for Even Ports
+/Left_Port_Edge   0.125 Inch def                % Left edge of first port column
+/Port_Width       0.5625 Inch def               % Width of each port
+/Port_Group_Gap   0.125 Inch def                % Width of gap between port groups
+/Center           7 Inch def                    % Center of box diagram
+
+% String for storing port numbers
+/s 3 string def
 
 % Subroutines specific to drawing a portmap
+ % ShowTitle [ text ] -> [ ]
+/ShowTitle {
+  TitleFont                    % Set up Title Font
+  0 0 0 setrgbcolor            % Title in black
+  dup stringwidth pop          % Get width from font metrics (discard height) [ text ] -> [ text width ]
+  2 div                        % Convert to offset from center for left edge -> [ text width/2 ]
+  Center exch sub              % Subtract from Center position -> [ text Center-width/2 ]
+  Label_Ligature moveto        % Position at bottom left edge of text -> [ text ]
+  show                         % Display text [ text ] -> [ ]
+} bind def
+
+ % Box [ Left Bottom Width Height ] -> [ ]
+/Box {
+  /boxHeight exch def
+  /boxWidth exch def
+  /boxBottom exch def
+  /boxLeft exch def
+  /boxTop boxBottom boxHeight add def
+  /boxRight boxLeft boxWidth add def
+  newpath
+  boxLeft boxBottom moveto
+  boxRight boxBottom lineto
+  boxRight boxTop lineto
+  boxLeft boxTop lineto
+  closepath % Draw line from boxLeft BoxTop to boxLeft boxBottom
+ } bind def
+
+ % DrawPort [ Text r g b Number ] -> [ ]
+/DrawPort {
+  % Convert Number to X and Y position
+    % Identify the ligature line and bottom of box
+    % [ Text r g b Number ] -> [ Text r g b Number ]
+    % Save Port Number
+  dup /PortNum exch def
+    % Determine bottom edge of box
+  dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
+  /Ligature Bottom 0.35 Inch add def
+    % Identify left and bottom edge of Port Box on Map (consumes Number)
+    % [ Text r g b Number ] -> [ Text r g b ]
+  2 div                     % Get horizontal port position
+  dup cvi 6 idiv            % Get number of preceding port groups
+  Port_Group_Gap mul        % Convert to width
+  exch                      % Swap port group width with Port Horizontal Position
+  cvi Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
+  Left_Port_Edge add        % Add offset for left port edge
+  /Left exch def            % Save as Left
+  % Set color for fill [ Text r g b ] -> [ Text ]
+  setrgbcolor
+  % Build Box path
+  Left Bottom Port_Width Box_Height Box
+  % Fill Box
+  gsave
+  fill
+  % Draw outline
+  grestore
+  0 0 0 setrgbcolor %black
+  stroke
+  % Draw Text [ Text ] -> [ ]
+  BoxFont
+  dup stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature moveto
+  show
+  /P PortNum s cvs def
+  P stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+} bind def
+
+% Set up page and draw title
+
+% Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
+% Assumes a 17" wide 11" tall page.
+<< /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
+% Currently assumes a single map per page (wasteful, could stack them).
+% Convert coordinate system from portrait to landscape
+11 Inch 0 translate % move origin to lower right edge of portrait page
+90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+(Switch #$Number Name: $hostname (Type: $Type)) ShowTitle
+EOF
   
   my $port = 0;
   # Read Type file and produce interface configuration
@@ -299,6 +387,9 @@ EOF
             family ethernet-switching;
         }
     }
+EOF
+        $portmap_PS .= <<EOF;
+(UNUSED) 0.75 0.75 0.75 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -340,6 +431,13 @@ EOF
         }
     }
 EOF
+      if ($cmd eq "TRUNK")
+      {
+        # Fiber ports aren't part of the map (at least for now)
+        $portmap_PS .= <<EOF;
+(TRUNK) 1 0.75 0.75 $portnum DrawPort
+EOF
+      }
     }
     elsif ($cmd eq "VLAN")
     {
@@ -359,6 +457,9 @@ EOF
       {
           debug(9, "\t\tMember ge-0/0/$port remaining $count\n");
           $MEMBERS.= "        member ge-0/0/$port;\n";
+          $portmap_PS .= <<EOF;
+($vlan) 0.75 0.75 1 $port DrawPort
+EOF
           $count--;
           $port++;
       }
@@ -377,8 +478,6 @@ EOF
     }
     elsif ($cmd eq "VVLAN")
     {
-      # Skip for now. Needs to be handled as a special case due to interaction of multiple
-      # elements across multiple switches.
       # Account for the ports VVLAN directive takes up.
       # (Namely, each switch has a unique set of 16 vendor VLANs in a particular
       #  range for all VVLANs and firewall filters to prevent interaction between
@@ -388,7 +487,7 @@ EOF
       $port += $count;
     }
   }
-  return($OUTPUT);
+  return($OUTPUT, $portmap_PS);
 }
 
 sub build_l3_from_config
@@ -846,6 +945,7 @@ sub build_vendor_from_config
   my $VV_hashref = {
   };
 
+  my $VV_portmap = "";
   my $intnum = 0;
   foreach(@{$switchtype})
   {
@@ -938,6 +1038,9 @@ EOF
             }
         }
     }
+EOF
+        $VV_portmap .= <<EOF;
+(Vend_$VLID) 0.75 1 0.75 $intnum DrawPort
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }
@@ -1152,7 +1255,7 @@ EOF
     };
     debug(5, "Returning Vendor parameters:\n");
     debug(5, Dumper($VV_hashref));
-    return($VV_hashref);
+    return($VV_hashref, $VV_portmap);
   }
 }
 
@@ -1167,7 +1270,7 @@ sub build_config_from_template
   my $USER_AUTHENTICATION = build_users_from_auth();
   my ($INTERFACES_PHYSICAL, $portmap) = build_interfaces_from_config($hostname);
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
-  my $vcfg = build_vendor_from_config($hostname);
+  my ($vcfg, $portmap_vendor) = build_vendor_from_config($hostname);
   my %VENDOR_CONFIGURATION = {};
   %VENDOR_CONFIGURATION = %{$vcfg} if (reftype $vcfg eq reftype {});;
   debug(5, "Received Vendor configuration:\n");
@@ -1274,7 +1377,7 @@ $VLAN_CONFIGURATION
 }
 EOF
 
-  return($OUTPUT, $portmap);
+  return($OUTPUT, $portmap.$portmap_vendor."showpage\n");
 }
 
 #my $cf = build_config_from_template("NW-IDF",

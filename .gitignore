@@ -10,6 +10,9 @@ tests/unit/openwrt/tmp*
 # Ignore built configuration files directory
 switch-configuration/config/output
 
+# Ignore built switch map files
+switch-configuration/config/switch-maps
+
 # Created by https://www.gitignore.io/api/osx,vim,emacs,windows,libreoffice,sublimetext
 
 ### Emacs ###
