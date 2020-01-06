@@ -248,6 +248,25 @@ sub build_interfaces_from_config
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
+  my $portmap_ps = "%!PDF-1.3\n%\n% Generated Interface Portmap for ".
+            "$hostname (Type: $Type)\n%\n";
+  my $portmap_PS .= <<EOF
+% Initialization of graphical context for portmap
+/Hevetica findfont 30 scalefont setfont % Not quite 1/2" high letters
+
+% Misc. Subroutines used in constant definitions (mostly unit conversions)
+/Inch { 72 mul } def   % Inch converted to points (I -> pts)
+/mm  { 2.835 mul } def % mm converted to points   (mm -> pts)
+
+% Constants for use in building portmaps
+/Origin [ 1 Inch 0.25 Inch ] def % Bottom Left Corner of port map
+/Label_Ligature 1.5 Inch def % Ligature Line Position for Label
+/Even_Ligature 0.8 Inch def % Ligature Line for Even Ports
+/Even_Ligature 0.3 Inch def % Ligature Line for Even Ports
+/Left_Port_edge 0.25 Inch def % Left edge of first port column
+
+% Subroutines specific to drawing a portmap
+  
   my $port = 0;
   # Read Type file and produce interface configuration
   my $switchtype = read_config_file("types/$Type");
@@ -361,6 +380,10 @@ EOF
       # Skip for now. Needs to be handled as a special case due to interaction of multiple
       # elements across multiple switches.
       # Account for the ports VVLAN directive takes up.
+      # (Namely, each switch has a unique set of 16 vendor VLANs in a particular
+      #  range for all VVLANs and firewall filters to prevent interaction between
+      #  VVLANs)
+      # The range is defined in the vlans file with a VVRNG directive.
       my $count = shift(@tokens);
       $port += $count;
     }
@@ -485,7 +508,7 @@ sub VV_get_prefix6
   my $digitpfx = "";
   if ($n_bits > 16)
   {
-    warn("Error: cannot support more than 9999 IPv6 VLANs (>16 bit variable field) for VVRNG\n");
+    warn("Error: cannot support more than 9999 IPv6 VLANs (>16 bit variable BCD field) for VVRNG\n");
     return -1;
   }
   $netbase = $quartets[3];
@@ -500,7 +523,7 @@ sub VV_get_prefix6
     $netbase = join("", @digits);
     if ($netbase !~ /^\d+$/)
     {
-      warn("Error: Supplied ipv6 not BCD cmpatible for VVRNG\n");
+      warn("Error: Supplied ipv6 not BCD compatible for VVRNG\n");
       return -1;
     }
   }
@@ -873,21 +896,6 @@ sub build_vendor_from_config
       debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
       ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
       ##FIXME## It means that 10.1.0.0/24 needs to be remembered and avoided which is a major timebomb in the code.
-      $VV_vlans = <<EOF;
-    vendor_backbone {
-        description "Vendor Backbone";
-        vlan-id 499;
-        l3-interface vlan.499;
-    }
-EOF
-      my $ipv4_suffix = $VV_COUNT + 10;
-      $VV_vlans_l3 = <<EOF;
-        unit 499 {
-            family inet {
-                address 10.1.0.$ipv4_suffix/24;
-            }
-        }
-EOF
       $VV_defgw_ipv4 = <<EOF;
     static {
         route 0.0.0.0/0 next-hop $v4_nexthop;
@@ -983,6 +991,24 @@ EOF
         $VV_COUNT++;	# Vendor VLAN Counter
         $count--;	# Remaining unprocessed interfaces in this group
       }
+    }
+    elsif ($cmd eq "VVBB")
+    {
+      $VV_vlans = <<EOF;
+    vendor_backbone {
+        description "Vendor Backbone";
+        vlan-id 499;
+        l3-interface vlan.499;
+    }
+EOF
+      my $ipv4_suffix = $VV_COUNT + 10;
+      $VV_vlans_l3 = <<EOF;
+        unit 499 {
+            family inet {
+                address 10.1.0.$ipv4_suffix/24;
+            }
+        }
+EOF
     }
   }
   # Finish up strings that need to be terminated (currently just $VV_vlans_l3)
@@ -1139,7 +1165,7 @@ sub build_config_from_template
   
   # Add configuration file fetches here:
   my $USER_AUTHENTICATION = build_users_from_auth();
-  my $INTERFACES_PHYSICAL = build_interfaces_from_config($hostname);
+  my ($INTERFACES_PHYSICAL, $portmap) = build_interfaces_from_config($hostname);
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
   my $vcfg = build_vendor_from_config($hostname);
   my %VENDOR_CONFIGURATION = {};
@@ -1248,7 +1274,7 @@ $VLAN_CONFIGURATION
 }
 EOF
 
-  return($OUTPUT);
+  return($OUTPUT, $portmap);
 }
 
 #my $cf = build_config_from_template("NW-IDF",
