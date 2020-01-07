@@ -3,7 +3,6 @@ version 15.1X49-D70.3;
 system {
     host-name cf-mdf-01;
     root-authentication {
-        encrypted-password "$5$BR8gEheN$BW0iDPZjGauNJovtecfOVS/S26xJSwx7I09lsKH9VF1";
     }
     name-server {
         8.8.8.8;

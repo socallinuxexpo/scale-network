@@ -3,7 +3,6 @@ version 15.1X49-D70.3;
 system {
     host-name br-mdf-01;
     root-authentication {
-        encrypted-password "$5$.2JOEO0i$GaaUUIlcgelNVJ7qhfu1jnISVcALe0CtWAoRdn.H1a9";
     }
     name-server {
         8.8.8.8;
@@ -28,7 +27,6 @@ system {
             uid 2004;
             class super-user;
             authentication {
-                encrypted-password "$5$qI2zi6Z6$zlS5ieJQziKFNsiIRs08Pj2MnLES/I5jAG02Qb4bdXD";
                 ssh-rsa "1024 35 114870125079119497064743730551404181721672323637756765961033342070324890531075442741038312582198068761882520928459647324479322148555144455780494777680624949377326717543633178036569565385043021169776538604325865960174754107961471683552906040905706631227199019520404589625948590225853880518583702852911526808117 owen@owen.delong.sj.ca.us";
                 ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
             }
