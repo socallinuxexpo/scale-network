@@ -17,4 +17,4 @@ VLAN	cfAVLAN		6	// ge-0/0/{22-27}
 VLAN	cfSpeaker	2	// ge-0/0/{28,29}
 VLAN	cfHam_N6S	1	// ge-0/0/30						// N6S Station
 VLAN	HAM_BRIDGE	1	// ge-0/0/31						// HAM Link N6S to Expo
-
+RSRVD	16

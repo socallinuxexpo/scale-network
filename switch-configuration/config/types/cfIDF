@@ -19,4 +19,5 @@ TRUNK	ge-0/0/14	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSi
 TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns
-VLAN	cfCTF		4	// ge-0/0/{18-21}
+VLAN	cfCTF		6	// ge-0/0/{18-23}
+RSRVD	24

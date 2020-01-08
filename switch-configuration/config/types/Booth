@@ -3,6 +3,7 @@ TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN, \
 				exSigns,exStaff,vendor_backbone
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN, \
 				exSigns,exStaff,vendor_backbone
+RSRVD	6
 TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff	// AP
 TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff	// AP
 TRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff	// AP
@@ -15,4 +16,4 @@ TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff	// AP
 TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff	// AP
 RSRVD	6
 VVLAN	16			// Dynamically assigned Vendor VLAN ports
-
+RSRVD	8
