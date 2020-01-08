@@ -261,6 +261,18 @@ sub build_interfaces_from_config
 /Inch { 72 mul } bind def   % Inch converted to points (I -> pts)
 /mm  { 2.835 mul } bind def % mm converted to points   (mm -> pts)
 
+% Currently assumes a single map per page (wasteful, could stack them).
+% Convert coordinate system from portrait to landscape
+/PageSize [ 11 Inch 17 Inch ] def % Page Size definition
+/LowerRightCorner { 11 Inch 0 Inch } def % Center of rotation
+/LowerLeftCornerOffset { 0 Inch 0.25 Inch } def % Offset to move page for rendering (Printer margin)
+/SetUpPage {
+	<< /PageSize  PageSize >> setpagedevice
+	LowerRightCorner translate % move origin to lower right edge of portrait page
+	90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+	LowerLeftCornerOffset translate
+} bind def
+
 % Constants for use in building portmaps
 /Origin           [ 0.5 Inch 0.25 Inch ] def    % Bottom Left Corner of port map (After rotation and translatin of [0,0])
 /Label_Ligature   1.5 Inch def                  % Ligature Line Position for Label
@@ -347,11 +359,9 @@ sub build_interfaces_from_config
 
 % Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
 % Assumes a 17" wide 11" tall page.
-<< /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
 % Currently assumes a single map per page (wasteful, could stack them).
 % Convert coordinate system from portrait to landscape
-11 Inch 0 translate % move origin to lower right edge of portrait page
-90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+SetUpPage
 (Switch #$Number Name: $hostname (Type: $Type)) ShowTitle
 EOF
   
