@@ -30,7 +30,7 @@ jobs:
   # outside of initial PR CI testing
   openwrt_build_ar71xx:
     docker:
-      - image: sarcasticadmin/openwrt-build@sha256:e744706323d34bd51f8abc0a9d0413c4a53817c09b6ab50666acafe66eaefb38
+      - image: sarcasticadmin/openwrt-build@sha256:bab6de3f66f5365d866de646bb9fd1f2000061d1a5fe8a07b6a714661a9a9a63
     resource_class: medium
     working_directory: ~/scale-network/openwrt
     steps:
@@ -53,7 +53,7 @@ jobs:
 
   openwrt_build_ipq806x:
     docker:
-      - image: sarcasticadmin/openwrt-build@sha256:e744706323d34bd51f8abc0a9d0413c4a53817c09b6ab50666acafe66eaefb38
+      - image: sarcasticadmin/openwrt-build@sha256:bab6de3f66f5365d866de646bb9fd1f2000061d1a5fe8a07b6a714661a9a9a63
     resource_class: medium
     working_directory: ~/scale-network/openwrt
     steps:
