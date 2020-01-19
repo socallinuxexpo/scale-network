@@ -97,7 +97,7 @@ jobs:
 
     - run:
         name: lint inventory.py
-        command: pylint inventory.py --confidence=HIGH
+        command: pylint inventory.py
 
     - run:
         name: test inventory.py
