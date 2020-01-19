@@ -277,7 +277,7 @@ def populateservers(vlans):
                     "building": building,
                 })
                 if ansiblerole == "core":
-                    for i in range(0, len(vlans)):
+                    for i, _ in enumerate(vlans):
                         vln = vlans[i]
                         if building == vln["building"]:
                             vlans[i]["ipv6dns1"] = ipv6
