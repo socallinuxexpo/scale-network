@@ -288,8 +288,14 @@ def populateservers(vlans):
     return servers
 
 
-def populateinv(vlans, switches, servers, routers, aps, pis):
+def populateinv(listlist):
     '''populates the final inventory which will become the command's output'''
+    vlans = listlist[0]
+    switches = listlist[1]
+    servers = listlist[2]
+    routers = listlist[3]
+    aps = listlist[4]
+    pis = listlist[5]
     ssh_args = "-o StrictHostKeyChecking=no -F /dev/null"
     inv = {
         "routers": {
@@ -385,7 +391,7 @@ def main():
     routers = populaterouters()
     aps = populateaps()
     pis = populatepis()
-    inv = populateinv(vlans, switches, servers, routers, aps, pis)
+    inv = populateinv([vlans, switches, servers, routers, aps, pis])
     print(json.dumps(inv))
 
 
