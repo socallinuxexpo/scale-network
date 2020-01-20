@@ -6,104 +6,142 @@ SCaLE specific text files to produce a sane inventory to ansible
 import ipaddress
 import json
 import math
-import os
 import re
 
-VLANSDDIR = "../switch-configuration/config/vlans.d/"
+SWCONFIGDIR = "../switch-configuration/config/"
+VLANSFILE = "vlans"
 ROUTERFILE = "../facts/routers/routerlist.csv"
 SWITCHESFILE = "../switch-configuration/config/switchtypes"
 SERVERFILE = "../facts/servers/serverlist.csv"
 APFILE = "../facts/aps/aplist.csv"
 PIFILE = "../facts/pi/pilist.csv"
 
+def getfilelines(filename, header=False, directory="./", building=None):
+    '''returns the contents of a file as lines
+    omits the top line for git beautification if the header boolean is set to true
+    takes optional directory flag to support parsing of vlans files
+    takes optional building flag used for vlan parsing, otherwise is None'''
+    fhandle = open(directory + filename, 'r')
+    lines = fhandle.readlines()
+    fhandle.close()
+    if header:
+        lines = lines[1:]
+    if building is not None:
+        newlines = []
+        for line in lines:
+            newlines.append([line, building])
+        lines = newlines
+    return lines
+
+
+def makevlan(line, building):
+    '''Makes a vlan dictionary from VLAN directive line'''
+    elems = re.split(r'\t+', line)
+    ipv6 = elems[3].split('/')
+    ipv6prefix = ipv6[0]
+    ipv6bitmask = ipv6[1]
+    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
+    ipv4 = elems[4].split('/')
+    ipv4prefix = ipv4[0]
+    ipv4bitmask = ipv4[1]
+    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
+    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
+    vlanid = elems[2]
+    if not vlanid.isdigit():
+        return None
+    return {
+        "name": elems[1],
+        "id": vlanid,
+        "ipv6prefix": ipv6prefix,
+        "ipv6bitmask": ipv6bitmask,
+        "ipv4prefix": ipv4prefix,
+        "ipv4bitmask": ipv4bitmask,
+        "building": building,
+        "description": elems[5].rstrip(),
+        "ipv6dhcp1a": ipv6dhcp[0],
+        "ipv6dhcp1b": ipv6dhcp[1],
+        "ipv6dhcp2a": ipv6dhcp[2],
+        "ipv6dhcp2b": ipv6dhcp[3],
+        "ipv4dhcp1a": ipv4dhcp[0],
+        "ipv4dhcp1b": ipv4dhcp[1],
+        "ipv4dhcp2a": ipv4dhcp[2],
+        "ipv4dhcp2b": ipv4dhcp[3],
+        "ipv4router": ipv4dhcp[4],
+        "ipv4netmask": ipv4netmask,
+        "ipv6dns1": "",
+        "ipv6dns2": "",
+        "ipv4dns1": "",
+        "ipv4dns2": "",
+    }
+
+
+def genvlans(line, building):
+    '''Makes a list of vlan dictionaries from a VVRNG directive'''
+    vlans = []
+    elems = re.split(r'\t+', line)
+    rangeb, rangee = elems[2].split('-')
+    for i in range(int(rangeb), int(rangee) + 1):
+        ipv6prefix = elems[3].split('/')[0].split(rangeb + '::')[0] + str(i) + '::'
+        ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
+        ocs = elems[4].split('.')
+        ocs[1] = str(int(ocs[1]) + math.floor((i - int(rangeb)) / 256))
+        ocs[2] = str(((i - int(rangeb)) % 256))
+        ip4prefix = ocs[0] + "." + ocs[1] + "." + ocs[2] + ".0"
+        ipv4dhcp = dhcp4ranges(ip4prefix, 24)
+        ipv4netmask = bitmasktonetmask(24)
+        vlans.append({
+            "name": elems[1] + str(i),
+            "id": i,
+            "ipv6prefix": ipv6prefix,
+            "ipv6bitmask": 64,
+            "ipv4prefix": ip4prefix,
+            "ipv4bitmask": 24,
+            "building": building,
+            "description": "Dyanmic vlan " + str(i),
+            "ipv6dhcp1a": ipv6dhcp[0],
+            "ipv6dhcp1b": ipv6dhcp[1],
+            "ipv6dhcp2a": ipv6dhcp[2],
+            "ipv6dhcp2b": ipv6dhcp[3],
+            "ipv4dhcp1a": ipv4dhcp[0],
+            "ipv4dhcp1b": ipv4dhcp[1],
+            "ipv4dhcp2a": ipv4dhcp[2],
+            "ipv4dhcp2b": ipv4dhcp[3],
+            "ipv4router": ipv4dhcp[4],
+            "ipv4netmask": ipv4netmask,
+            "ipv6dns1": "",
+            "ipv6dns2": "",
+            "ipv4dns1": "",
+            "ipv4dns2": "",
+        })
+    return vlans
+
 
 def populatevlans():
-    """populate the vlan list"""
+    '''populate the vlan list'''
     vlans = []
-    filelist = (os.listdir(VLANSDDIR))
-    for file in filelist:
-        fhandle = open(VLANSDDIR + file, 'r')
-        lines = fhandle.readlines()
-        fhandle.close()
-        for line in lines:
-            if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-                elems = re.split(r'\t+', line)
-                directive = elems[0]
-                if directive == "VLAN":
-                    ipv6 = elems[3].split('/')
-                    ipv6prefix = ipv6[0]
-                    ipv6bitmask = ipv6[1]
-                    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
-                    ipv4 = elems[4].split('/')
-                    ipv4prefix = ipv4[0]
-                    ipv4bitmask = ipv4[1]
-                    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
-                    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
-                    directive = elems[0]
-                    vlanid = elems[2]
-                    if not vlanid.isdigit():
-                        continue
-                    vlans.append({
-                        "name": elems[1],
-                        "id": vlanid,
-                        "ipv6prefix": ipv6prefix,
-                        "ipv6bitmask": ipv6bitmask,
-                        "ipv4prefix": ipv4prefix,
-                        "ipv4bitmask": ipv4bitmask,
-                        "building": file,
-                        "description": elems[5].rstrip(),
-                        "ipv6dhcp1a": ipv6dhcp[0],
-                        "ipv6dhcp1b": ipv6dhcp[1],
-                        "ipv6dhcp2a": ipv6dhcp[2],
-                        "ipv6dhcp2b": ipv6dhcp[3],
-                        "ipv4dhcp1a": ipv4dhcp[0],
-                        "ipv4dhcp1b": ipv4dhcp[1],
-                        "ipv4dhcp2a": ipv4dhcp[2],
-                        "ipv4dhcp2b": ipv4dhcp[3],
-                        "ipv4router": ipv4dhcp[4],
-                        "ipv4netmask": ipv4netmask,
-                        "ipv6dns1": "",
-                        "ipv6dns2": "",
-                        "ipv4dns1": "",
-                        "ipv4dns2": "",
-                    })
-                elif directive == "VVRNG":
-                    rangeb, rangee = elems[2].split('-')
-                    for i in range(int(rangeb), int(rangee) + 1):
-                        ipv6prefix = elems[3].split('/')[0].split(
-                            rangeb + '::')[0] + str(i) + '::'
-                        ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
-                        ocs = elems[4].split('.')
-                        ocs[1] = str(int(ocs[1]) + math.floor((
-                            i - int(rangeb)) / 256))
-                        ocs[2] = str(((i - int(rangeb)) % 256))
-                        ip4prefix = ocs[0] + "." + ocs[1] + "." + ocs[2] + ".0"
-                        ipv4dhcp = dhcp4ranges(ip4prefix, 24)
-                        ipv4netmask = bitmasktonetmask(24)
-                        vlans.append({
-                            "name": elems[1] + str(i),
-                            "id": i,
-                            "ipv6prefix": ipv6prefix,
-                            "ipv6bitmask": 64,
-                            "ipv4prefix": ip4prefix,
-                            "ipv4bitmask": 24,
-                            "building": file,
-                            "description": "Dyanmic vlan " + str(i),
-                            "ipv6dhcp1a": ipv6dhcp[0],
-                            "ipv6dhcp1b": ipv6dhcp[1],
-                            "ipv6dhcp2a": ipv6dhcp[2],
-                            "ipv6dhcp2b": ipv6dhcp[3],
-                            "ipv4dhcp1a": ipv4dhcp[0],
-                            "ipv4dhcp1b": ipv4dhcp[1],
-                            "ipv4dhcp2a": ipv4dhcp[2],
-                            "ipv4dhcp2b": ipv4dhcp[3],
-                            "ipv4router": ipv4dhcp[4],
-                            "ipv4netmask": ipv4netmask,
-                            "ipv6dns1": "",
-                            "ipv6dns2": "",
-                            "ipv4dns1": "",
-                            "ipv4dns2": "",
-                        })
+    # seed root file
+    todo = [["#include\tvlans", "vlan"]]
+    while len(todo) > 0:
+        current = todo[0]
+        elems = re.split(r'^\t+|\s+', current[0])
+        directive = elems[0]
+        # we support 3 directives (#include, VLAN, VVRNG), everything else
+        # is considered a comment and we silently drop it and continue
+        if directive == "#include":
+            filename = elems[1]
+            building = re.split(r'/', filename)[-1] # the filename sans path is the building
+            todo = todo + getfilelines(filename, directory=SWCONFIGDIR, building=building)
+        elif directive == "VLAN":
+            line = current[0]
+            building = current[1]
+            newvlan = makevlan(line, building)
+            if newvlan is not None:
+                vlans.append(newvlan)
+        elif directive == "VVRNG":
+            line = current[0]
+            building = current[1]
+            vlans = vlans + genvlans(line, building)
+        todo.remove(current)
     return vlans
 
 
