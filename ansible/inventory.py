@@ -322,6 +322,9 @@ def populateservers(vlans):
     servers = []
     flines = getfilelines(SERVERFILE, header=True)
     for line in flines:
+        # Lets bail if this line is a comment
+        if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
+            continue
         elems = re.split(',', line)
         # let's bail if we have an invalid number of columns
         if len(elems) < 5:
