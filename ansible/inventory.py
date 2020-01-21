@@ -145,8 +145,17 @@ def populatevlans():
     return vlans
 
 
+def isvalidip(addr):
+    '''check an ipv4 or ipv6 address for validity'''
+    try:
+        ipaddress.ip_address(addr)
+    except ValueError:
+        return False
+    return True
+
+
 def ip4toptr(ip_address):
-    '''generate a split PTR for IPv4 and return in'''
+    '''generate a split PTR for IPv4 and return it'''
     splitip = re.split(r'\.', ipaddress.ip_address(ip_address).reverse_pointer)
     return splitip[1] + "." + splitip[2] + "." + splitip[3]
 
@@ -290,39 +299,42 @@ def roomalias(name):
 def populateservers(vlans):
     '''populate the server list'''
     servers = []
-    fhandle = open(SERVERFILE, 'r')
-    flines = fhandle.readlines()
-    fhandle.close()
+    flines = getfilelines(SERVERFILE, header=True)
     for line in flines:
-        if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(',', line)
-            if len(elems) > 2:
-                ipv6 = elems[2]
-                ipv4 = elems[3]
-                ansiblerole = elems[4].rstrip()
-                vlan = ""
-                for vln in vlans:
-                    if ipv6.find(vln["ipv6prefix"]) == 0:
-                        vlan = vln["name"]
-                        building = vln["building"]
-                servers.append({
-                    "name": elems[0],
-                    "macaddress": elems[1],
-                    "ipv6": ipv6,
-                    "ipv4": ipv4,
-                    "ansiblerole": ansiblerole,
-                    "vlan": vlan,
-                    "building": building,
-                })
-                if ansiblerole == "core":
-                    for i, _ in enumerate(vlans):
-                        vln = vlans[i]
-                        if building == vln["building"]:
-                            vlans[i]["ipv6dns1"] = ipv6
-                            vlans[i]["ipv4dns1"] = ipv4
-                        else:
-                            vlans[i]["ipv6dns2"] = ipv6
-                            vlans[i]["ipv4dns2"] = ipv4
+        elems = re.split(',', line)
+        # let's bail if we have an invalid number of columns
+        if len(elems) < 5:
+            continue
+        ipv6 = elems[2]
+        ipv4 = elems[3]
+        # let's bail if either ip is invalid, which also skips
+        # unused server entries as well (where ip is blank)
+        if not isvalidip(ipv6) or not isvalidip(ipv4):
+            continue
+        ansiblerole = elems[4].rstrip()
+        vlan = ""
+        for vln in vlans:
+            if ipv6.find(vln["ipv6prefix"]) == 0:
+                vlan = vln["name"]
+                building = vln["building"]
+        servers.append({
+            "name": elems[0],
+            "macaddress": elems[1],
+            "ipv6": ipv6,
+            "ipv4": ipv4,
+            "ansiblerole": ansiblerole,
+            "vlan": vlan,
+            "building": building,
+        })
+        if ansiblerole == "core":
+            for i, _ in enumerate(vlans):
+                vln = vlans[i]
+                if building == vln["building"]:
+                    vlans[i]["ipv6dns1"] = ipv6
+                    vlans[i]["ipv4dns1"] = ipv4
+                else:
+                    vlans[i]["ipv6dns2"] = ipv6
+                    vlans[i]["ipv4dns2"] = ipv4
     return servers
 
 
