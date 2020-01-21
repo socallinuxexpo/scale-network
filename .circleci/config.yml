@@ -89,7 +89,7 @@ jobs:
 
     - run:
         name: lint scale.yml
-        command: ansible-lint -x 503 -x 405 etc/ansible/scale.yml
+        command: ansible-lint -x 503 scale.yml
 
     - run:
         name: install pylint
