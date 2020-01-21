@@ -1,5 +1,4 @@
-// List of pis
-// name,,ipv6
+name,ipv6
 pieb1d1c,2001:470:f325:107:efcf:2f67:f127:ba26
 pieb2c80,2001:470:f325:110:f8a2:4653:ca46:6c9d
 pieb2e31,2001:470:f325:107:cdcf:1953:7e20:ffbc

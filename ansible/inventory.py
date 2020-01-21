@@ -234,52 +234,73 @@ def populateswitches():
 def populaterouters():
     '''populate the router list'''
     routers = []
-    fhandle = open(ROUTERFILE, 'r')
-    flines = fhandle.readlines()
-    fhandle.close()
+    flines = getfilelines(ROUTERFILE, header=True)
     for line in flines:
-        if not line[0] == '/' or line[0] == ' ' or line[0] == '\n':
-            elems = re.split(',', line)
-            routers.append({
-                "name": elems[0],
-                "ipv6": elems[1].rstrip(),
-            })
+        # Lets bail if this line is a comment
+        if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
+            continue
+        elems = re.split(',', line)
+        # Let's bail if we have an invalid number of columns
+        if len(elems) < 2:
+            continue
+        ipaddr = elems[1].rstrip()
+        # Let's bail if ip address is invalid
+        if not isvalidip(ipaddr):
+            continue
+        routers.append({
+            "name": elems[0],
+            "ipv6": ipaddr,
+        })
     return routers
 
 
 def populateaps():
     '''populate the AP list'''
     aps = []
-    fhandle = open(APFILE, 'r')
-    flines = fhandle.readlines()
-    fhandle.close()
+    flines = getfilelines(APFILE, header=True)
     for line in flines:
-        if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(',', line)
-            aps.append({
-                "name": elems[0],
-                "mac": elems[1],
-                "ipv4": elems[2],
-                "wifi2": elems[3],
-                "wifi5": elems[4],
-                "configver": elems[5].rstrip(),
-            })
+        # Lets bail if this line is a comment
+        if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
+            continue
+        elems = re.split(',', line)
+        # Lets bail if we have an invalid number of columns
+        if len(elems) < 9:
+            continue
+        ipaddr = elems[2]
+        # Lets bail if ip address is invalid
+        if not isvalidip(ipaddr):
+            continue
+        aps.append({
+            "name": elems[0],
+            "mac": elems[1],
+            "ipv4": ipaddr,
+            "wifi2": elems[3],
+            "wifi5": elems[4],
+            "configver": elems[5].rstrip(),
+        })
     return aps
 
 
 def populatepis():
     '''populate the PI list'''
     pis = []
-    fhandle = open(PIFILE, 'r')
-    flines = fhandle.readlines()
-    fhandle.close()
+    flines = getfilelines(PIFILE, header=True)
     for line in flines:
-        if not (line[0] == '/' or line[0] == ' ' or line[0] == '\n'):
-            elems = re.split(',', line)
-            pis.append({
-                "name": elems[0],
-                "ipv6": elems[1].rstrip(),
-            })
+        # Lets bail if this line is a comment
+        if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
+            continue
+        elems = re.split(',', line)
+        # Let's bail if we have an invalid number of columns
+        if len(elems) < 2:
+            continue
+        ipaddr = elems[1].rstrip()
+        # Let's bail we ip address is invalid
+        if not isvalidip(ipaddr):
+            continue
+        pis.append({
+            "name": elems[0],
+            "ipv6": ipaddr,
+        })
     return pis
 
 
