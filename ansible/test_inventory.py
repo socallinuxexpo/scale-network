@@ -2,8 +2,13 @@
 '''
 Tests for inventory.py
 '''
-
 import inventory
+
+
+def test_getfilelines():
+    '''test cases for the getfilelines() function'''
+    # STUB
+
 
 def test_makevlan():
     '''test cases for the makevlan() function'''
@@ -37,6 +42,71 @@ def test_makevlan():
     for line, vlan in cases:
         assert inventory.makevlan(line, "Conference") == vlan, line
 
+
+def test_genvlans():
+    '''test cases for the genvlans() function'''
+    cases = [
+        ["VVRNG\ttest_vlan_\t\t200-201\t2001:470:f325:200::/54\t10.2.0.0/15\tdynamic vlan", [
+            {
+                "name": "test_vlan_200",
+                "id": 200,
+                "ipv6prefix": "2001:470:f325:200::",
+                "ipv6bitmask": 64,
+                "ipv4prefix": "10.2.0.0",
+                "ipv4bitmask": 24,
+                "building": "Expo",
+                "description": "Dyanmic vlan 200",
+                "ipv6dhcp1a": "2001:470:f325:200:1::1",
+                "ipv6dhcp1b": "2001:470:f325:200:1::400",
+                "ipv6dhcp2a": "2001:470:f325:200:2::1",
+                "ipv6dhcp2b": "2001:470:f325:200:2::400",
+                "ipv4dhcp1a": "10.2.0.80",
+                "ipv4dhcp1b": "10.2.0.165",
+                "ipv4dhcp2a": "10.2.0.166",
+                "ipv4dhcp2b": "10.2.0.254",
+                "ipv4router": "10.2.0.1",
+                "ipv4netmask": "255.255.255.0",
+                "ipv6dns1": "",
+                "ipv6dns2": "",
+                "ipv4dns1": "",
+                "ipv4dns2": ""
+            },
+            {
+                "name": "test_vlan_201",
+                "id": 201,
+                "ipv6prefix": "2001:470:f325:201::",
+                "ipv6bitmask": 64,
+                "ipv4prefix": "10.2.1.0",
+                "ipv4bitmask": 24,
+                "building": "Expo",
+                "description": "Dyanmic vlan 201",
+                "ipv6dhcp1a": "2001:470:f325:201:1::1",
+                "ipv6dhcp1b": "2001:470:f325:201:1::400",
+                "ipv6dhcp2a": "2001:470:f325:201:2::1",
+                "ipv6dhcp2b": "2001:470:f325:201:2::400",
+                "ipv4dhcp1a": "10.2.1.80",
+                "ipv4dhcp1b": "10.2.1.165",
+                "ipv4dhcp2a": "10.2.1.166",
+                "ipv4dhcp2b": "10.2.1.254",
+                "ipv4router": "10.2.1.1",
+                "ipv4netmask": "255.255.255.0",
+                "ipv6dns1": "",
+                "ipv6dns2": "",
+                "ipv4dns1": "",
+                "ipv4dns2": ""
+            },
+            ]
+        ]
+    ]
+    for line, vlans in cases:
+        assert inventory.genvlans(line, "Expo") == vlans, line
+
+
+def test_populatevlans():
+    '''test cases for the populatevlans() function'''
+    # STUB
+
+
 def test_isvalidip():
     '''test cases for the isvalidip() function'''
     cases = [
@@ -51,3 +121,76 @@ def test_isvalidip():
     ]
     for ipaddr, result in cases:
         assert inventory.isvalidip(ipaddr) == result, ipaddr
+
+
+def test_ip4toptr():
+    '''test cases for the ip4toptr() function'''
+    # STUB
+
+
+def test_ip6toptr():
+    '''test cases for the ip6toptr() function'''
+    # STUB
+
+
+def test_dhcp6ranges():
+    '''test cases for the dhcp6ranges() function'''
+    # STUB
+
+
+def test_dhcp4ranges():
+    '''test cases for the dhcp4ranges() function'''
+    # STUB
+
+
+def test_bitmasktonetmask():
+    '''test cases for the bitmasktonetmask() function'''
+    cases = [
+        [16, None],
+        [17, "255.255.128.0"],
+        [18, "255.255.192.0"],
+        [19, "255.255.224.0"],
+        [20, "255.255.240.0"],
+        [21, "255.255.248.0"],
+        [22, "255.255.252.0"],
+        [23, "255.255.254.0"],
+        [24, "255.255.255.0"],
+        [25, None]
+    ]
+    for bitmask, netmask in cases:
+        assert inventory.bitmasktonetmask(bitmask) == netmask, bitmask
+
+
+def test_populateswitches():
+    '''test cases for the populateswitches() function'''
+    # STUB
+
+
+def test_populaterouters():
+    '''test cases for the populaterouters() function'''
+    # STUB
+
+
+def test_populateaps():
+    '''test cases for the populateaps() function'''
+    # STUB
+
+
+def test_populatepis():
+    '''test cases for the populatepis() function'''
+    # STUB
+
+
+def test_roomalias():
+    '''test cases for the roomalias() function'''
+    cases = [
+        ["Rm101-102", ["101", "102"]],
+        ["BallroomC", []]
+    ]
+    for name, aliases in cases:
+        assert inventory.roomalias(name) == aliases, name
+
+
+def test_populateservers():
+    '''test cases for the populateservers() function'''
+    # STUB

@@ -8,6 +8,7 @@ import json
 import math
 import re
 
+
 def getfilelines(filename, header=False, directory="./", building=None):
     '''returns the contents of a file as lines
     omits the top line for git beautification if the header boolean is set to true
@@ -199,7 +200,7 @@ def dhcp4ranges(prefix, bitmask):
 def bitmasktonetmask(bitmask):
     '''returns an IPv4 netmask given a bitmask'''
     if bitmask < 17 or bitmask > 24:
-        return "255.255.255.255"
+        return None
     return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
 
 
