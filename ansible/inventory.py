@@ -8,14 +8,6 @@ import json
 import math
 import re
 
-SWCONFIGDIR = "../switch-configuration/config/"
-VLANSFILE = "vlans"
-ROUTERFILE = "../facts/routers/routerlist.csv"
-SWITCHESFILE = "../switch-configuration/config/switchtypes"
-SERVERFILE = "../facts/servers/serverlist.csv"
-APFILE = "../facts/aps/aplist.csv"
-PIFILE = "../facts/pi/pilist.csv"
-
 def getfilelines(filename, header=False, directory="./", building=None):
     '''returns the contents of a file as lines
     omits the top line for git beautification if the header boolean is set to true
@@ -116,11 +108,11 @@ def genvlans(line, building):
     return vlans
 
 
-def populatevlans():
-    '''populate the vlan list'''
+def populatevlans(vlansdirectory, vlansfile):
+    '''populate the vlan list from a vlans diretory and file'''
     vlans = []
     # seed root file
-    todo = [["#include\tvlans", "vlan"]]
+    todo = [["#include\t" + vlansfile + "\tno_building"]]
     while len(todo) > 0:
         current = todo[0]
         elems = re.split(r'^\t+|\s+', current[0])
@@ -130,7 +122,7 @@ def populatevlans():
         if directive == "#include":
             filename = elems[1]
             building = re.split(r'/', filename)[-1] # the filename sans path is the building
-            todo = todo + getfilelines(filename, directory=SWCONFIGDIR, building=building)
+            todo = todo + getfilelines(filename, directory=vlansdirectory, building=building)
         elif directive == "VLAN":
             line = current[0]
             building = current[1]
@@ -211,10 +203,10 @@ def bitmasktonetmask(bitmask):
     return "255.255." + str(256 - 2**(24 - bitmask)) + ".0"
 
 
-def populateswitches():
-    '''populate the switch list'''
+def populateswitches(switchesfile):
+    '''populate the switch list from a switches file'''
     switches = []
-    fhandle = open(SWITCHESFILE, 'r')
+    fhandle = open(switchesfile, 'r')
     flines = fhandle.readlines()
     fhandle.close()
     for line in flines:
@@ -231,10 +223,10 @@ def populateswitches():
     return switches
 
 
-def populaterouters():
+def populaterouters(routersfile):
     '''populate the router list'''
     routers = []
-    flines = getfilelines(ROUTERFILE, header=True)
+    flines = getfilelines(routersfile, header=True)
     for line in flines:
         # Lets bail if this line is a comment
         if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
@@ -254,10 +246,10 @@ def populaterouters():
     return routers
 
 
-def populateaps():
-    '''populate the AP list'''
+def populateaps(apsfile):
+    '''populate the AP list from an APs file'''
     aps = []
-    flines = getfilelines(APFILE, header=True)
+    flines = getfilelines(apsfile, header=True)
     for line in flines:
         # Lets bail if this line is a comment
         if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
@@ -281,10 +273,10 @@ def populateaps():
     return aps
 
 
-def populatepis():
-    '''populate the PI list'''
+def populatepis(pisfile):
+    '''populate the PI list from a PIs file'''
     pis = []
-    flines = getfilelines(PIFILE, header=True)
+    flines = getfilelines(pisfile, header=True)
     for line in flines:
         # Lets bail if this line is a comment
         if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
@@ -317,10 +309,10 @@ def roomalias(name):
     return payload
 
 
-def populateservers(vlans):
-    '''populate the server list'''
+def populateservers(serversfile, vlans):
+    '''populate the server list from a servers file'''
     servers = []
-    flines = getfilelines(SERVERFILE, header=True)
+    flines = getfilelines(serversfile, header=True)
     for line in flines:
         # Lets bail if this line is a comment
         if (line[0] == '/' or line[0] == '#' or line[0] == '\n'):
@@ -459,12 +451,25 @@ def populateinv(listlist):
 
 def main():
     '''command entry point'''
-    vlans = populatevlans()
-    switches = populateswitches()
-    servers = populateservers(vlans)
-    routers = populaterouters()
-    aps = populateaps()
-    pis = populatepis()
+
+    # Repository data files
+    swconfigdir = "../switch-configuration/config/"
+    vlansfile = "vlans"
+    switchesfile = "../switch-configuration/config/switchtypes"
+    serversfile = "../facts/servers/serverlist.csv"
+    routersfile = "../facts/routers/routerlist.csv"
+    apsfile = "../facts/aps/aplist.csv"
+    pisfile = "../facts/pi/pilist.csv"
+
+    # populate the device type lists
+    vlans = populatevlans(swconfigdir, vlansfile)
+    switches = populateswitches(switchesfile)
+    servers = populateservers(serversfile, vlans)
+    routers = populaterouters(routersfile)
+    aps = populateaps(apsfile)
+    pis = populatepis(pisfile)
+
+    # build the master inventory and json dump it to stdout
     inv = populateinv([vlans, switches, servers, routers, aps, pis])
     print(json.dumps(inv))
 
