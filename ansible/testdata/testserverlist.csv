@@ -1,0 +1,3 @@
+name,mac-address,ipv6,ipv4,ansible-role
+server1,4c:72:b9:7c:41:17,2001:470:f325:503::5,10.128.3.5,core
+server2,4c:72:b9:7c:40:ec,,,

@@ -5,9 +5,72 @@ Tests for inventory.py
 import inventory
 
 
-def test_getfilelines():
-    '''test cases for the getfilelines() function'''
-    # STUB
+def test_getfilelineshdr():
+    '''test cases for getfilelines() with header no building'''
+    cases = [
+        ["testdata/testaplist.csv", [
+            "104-ap3,c6:04:15:90:57:c5,10.128.3.20,6,40,0,,,\n",
+            "105-ap1,0a:bd:43:ac:5f:6c,10.128.3.21,11,44,0,4,1450,128\n"
+        ]],
+        ["testdata/testpilist.csv", [
+            "pieb1d1c,2001:470:f325:107:efcf:2f67:f127:ba26\n"
+        ]],
+        ["testdata/testrouterlist.csv", [
+            "br-mdf-01,2001:470:f325:103::2\n"
+        ]],
+        ["testdata/testserverlist.csv", [
+            "server1,4c:72:b9:7c:41:17,2001:470:f325:503::5,10.128.3.5,core\n",
+            "server2,4c:72:b9:7c:40:ec,,,"
+        ]]
+    ]
+    for filename, lines in cases:
+        assert inventory.getfilelines(filename, header=True) == lines, filename
+
+def test_getfilelinesnobldg():
+    '''test cases for getfilelines() no header no building'''
+    cases = [
+        ["testdata/testvlans", [
+            "// Expo Center -- VLANS 100-499\n",
+            "#include dir.d/testExpo\n",
+            "\n",
+            "// Conference Center -- VLANS 500-899\n",
+            "#include dir.d/testConference\n",
+            "\n"
+        ]]
+    ]
+    for filename, lines in cases:
+        assert inventory.getfilelines(filename) == lines, filename
+
+
+def test_getfilelinesbldg():
+    # pylint: disable=line-too-long
+    '''test cases for the getfilelines() no header with building'''
+    cases = [
+        ["testConference", [
+            "//\tConference\tCenter\t--\tVLANS\t500-899\n",
+            "VLAN\tcfSCALE-SLOW	\t500\t2001:470:f325:500::/64\t10.128.128.0/21\t2.4G Wireless Network in Conference Center\n",
+            "VLAN\tcfSigns\t\t\t507\t2001:470:f325:507::/64	0.0.0.0/0\tSigns network (Conference Center) IPv6 Only\n",
+            "VLAN\tcfHam_N6S\t\t509\t2001:470:f325:509::/64\t10.128.9.0/24\tHAM radio station in Conference Center\n",
+            "//510-599 not used\n"
+        ]],
+        ["testExpo", [
+            "// Expo Center -- VLANS 100-499\n",
+            "VLAN\texSCALE-SLOW\t\t100\t2001:470:f325:100::/64\t10.0.128.0/21\t2.4G Wireless Network in Expo Center\n",
+            "//106 not used\n",
+            "VLAN\texAkamai\t\t\t111\t2001:470:f325:111::/64\t0.0.0.0/0\tSpecial public Akamai Cache Cluster network (has IPv4 from convention center)\n",
+            "//112 through 199 not used\n",
+            "//200 through 499 Vendors\n",
+            "//200-498 are dynamically generated from Booth information file as Vendor VLANs.\n",
+            "//The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other\n",
+            "//VLANs (vendor_vlan <-> internet only)\n",
+            "VVRNG\tvendor_vlan_\t\t200-498\t2001:470:f325:200::/54\t10.2.0.0/15\tDynamically allocated and named booth VLANs\n",
+            "//499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.\n",
+        ]]
+    ]
+    for filename, caseslines in cases:
+        filelines = inventory.getfilelines(filename, directory="./testdata/dir.d/", building="testbuilding")
+        for i, line in enumerate(caseslines):
+            assert filelines[i] == [line, "testbuilding"], line
 
 
 def test_dhcp6ranges():
