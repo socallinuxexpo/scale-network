@@ -12,12 +12,49 @@ def test_getfilelines():
 
 def test_dhcp6ranges():
     '''test cases for the dhcp6ranges() function'''
-    # STUB
+    cases = [
+        [["2001:470:f325:504::", 64], [
+            "2001:470:f325:504:1::1",
+            "2001:470:f325:504:1::400",
+            "2001:470:f325:504:2::1",
+            "2001:470:f325:504:2::400",
+        ]],
+        [["2001:470:f325:111::", 64], [
+            "2001:470:f325:111:1::1",
+            "2001:470:f325:111:1::400",
+            "2001:470:f325:111:2::1",
+            "2001:470:f325:111:2::400"
+        ]],
+        [["::", 0], ["", "", "", ""]]
+    ]
+    for case, ranges in cases:
+        prefix, bitmask = case
+        assert inventory.dhcp6ranges(prefix, bitmask) == ranges, prefix + "/" + str(bitmask)
 
 
 def test_dhcp4ranges():
     '''test cases for the dhcp4ranges() function'''
-    # STUB
+    cases = [
+        [["10.0.136.0", 21], [
+            "10.0.136.80",
+            "10.0.139.255",
+            "10.0.140.1",
+            "10.0.143.254",
+            "10.0.136.1"
+        ]],
+        [["10.0.2.0", 24], [
+            "10.0.2.80",
+            "10.0.2.165",
+            "10.0.2.166",
+            "10.0.2.254",
+            "10.0.2.1"
+        ]],
+        [["0.0.0.0", 0], ["", "", "", "", ""]],
+        [["38.98.46.128", 25], ["", "", "", "", ""]],
+    ]
+    for case, ranges in cases:
+        prefix, bitmask = case
+        assert inventory.dhcp4ranges(prefix, bitmask) == ranges, prefix + "/" + str(bitmask)
 
 
 def test_makevlan():
