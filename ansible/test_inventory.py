@@ -169,12 +169,24 @@ def test_genvlans():
 
 def test_ip4toptr():
     '''test cases for the ip4toptr() function'''
-    # STUB
+    cases = [
+        ["10.128.3.5", "3.128.10"],
+        ["10.0.3.200", "3.0.10"]
+    ]
+    for ipaddr, ptr in cases:
+        assert inventory.ip4toptr(ipaddr) == ptr, ipaddr
 
 
 def test_ip6toptr():
     '''test cases for the ip6toptr() function'''
-    # STUB
+    cases = [
+        ["2001:470:f325:103::200:4",
+         "4.0.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2"],
+        ["2001:470:f325:107:ad84:2d06:1dfe:7f67",
+         "7.6.f.7.e.f.d.1.6.0.d.2.4.8.d.a.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2"],
+    ]
+    for ipaddr, ptr in cases:
+        assert inventory.ip6toptr(ipaddr) == ptr, ipaddr
 
 
 def test_isvalidip():
