@@ -10,6 +10,16 @@ def test_getfilelines():
     # STUB
 
 
+def test_dhcp6ranges():
+    '''test cases for the dhcp6ranges() function'''
+    # STUB
+
+
+def test_dhcp4ranges():
+    '''test cases for the dhcp4ranges() function'''
+    # STUB
+
+
 def test_makevlan():
     '''test cases for the makevlan() function'''
     cases = [
@@ -41,6 +51,24 @@ def test_makevlan():
     ]
     for line, vlan in cases:
         assert inventory.makevlan(line, "Conference") == vlan, line
+
+
+def test_bitmasktonetmask():
+    '''test cases for the bitmasktonetmask() function'''
+    cases = [
+        [16, None],
+        [17, "255.255.128.0"],
+        [18, "255.255.192.0"],
+        [19, "255.255.224.0"],
+        [20, "255.255.240.0"],
+        [21, "255.255.248.0"],
+        [22, "255.255.252.0"],
+        [23, "255.255.254.0"],
+        [24, "255.255.255.0"],
+        [25, None]
+    ]
+    for bitmask, netmask in cases:
+        assert inventory.bitmasktonetmask(bitmask) == netmask, bitmask
 
 
 def test_genvlans():
@@ -102,8 +130,13 @@ def test_genvlans():
         assert inventory.genvlans(line, "Expo") == vlans, line
 
 
-def test_populatevlans():
-    '''test cases for the populatevlans() function'''
+def test_ip4toptr():
+    '''test cases for the ip4toptr() function'''
+    # STUB
+
+
+def test_ip6toptr():
+    '''test cases for the ip6toptr() function'''
     # STUB
 
 
@@ -123,42 +156,19 @@ def test_isvalidip():
         assert inventory.isvalidip(ipaddr) == result, ipaddr
 
 
-def test_ip4toptr():
-    '''test cases for the ip4toptr() function'''
-    # STUB
-
-
-def test_ip6toptr():
-    '''test cases for the ip6toptr() function'''
-    # STUB
-
-
-def test_dhcp6ranges():
-    '''test cases for the dhcp6ranges() function'''
-    # STUB
-
-
-def test_dhcp4ranges():
-    '''test cases for the dhcp4ranges() function'''
-    # STUB
-
-
-def test_bitmasktonetmask():
-    '''test cases for the bitmasktonetmask() function'''
+def test_roomalias():
+    '''test cases for the roomalias() function'''
     cases = [
-        [16, None],
-        [17, "255.255.128.0"],
-        [18, "255.255.192.0"],
-        [19, "255.255.224.0"],
-        [20, "255.255.240.0"],
-        [21, "255.255.248.0"],
-        [22, "255.255.252.0"],
-        [23, "255.255.254.0"],
-        [24, "255.255.255.0"],
-        [25, None]
+        ["Rm101-102", ["101", "102"]],
+        ["BallroomC", []]
     ]
-    for bitmask, netmask in cases:
-        assert inventory.bitmasktonetmask(bitmask) == netmask, bitmask
+    for name, aliases in cases:
+        assert inventory.roomalias(name) == aliases, name
+
+
+def test_populatevlans():
+    '''test cases for the populatevlans() function'''
+    # STUB
 
 
 def test_populateswitches():
@@ -179,16 +189,6 @@ def test_populateaps():
 def test_populatepis():
     '''test cases for the populatepis() function'''
     # STUB
-
-
-def test_roomalias():
-    '''test cases for the roomalias() function'''
-    cases = [
-        ["Rm101-102", ["101", "102"]],
-        ["BallroomC", []]
-    ]
-    for name, aliases in cases:
-        assert inventory.roomalias(name) == aliases, name
 
 
 def test_populateservers():
