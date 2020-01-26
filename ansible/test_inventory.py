@@ -460,24 +460,101 @@ def test_populatevlans():
 
 def test_populateswitches():
     '''test cases for the populateswitches() function'''
-    # STUB
+    cases = [
+        ["./testdata/testswitchtypes", [
+            {
+                "name": "Expo-Catwalk",
+                "num": "16",
+                "ipv6": "2001:470:f325:103::200:16",
+                "aliases": [],
+            },
+            {
+                "name": "Rm209-210",
+                "num": "17",
+                "ipv6": "2001:470:f325:503::200:17",
+                "aliases": ["209", "210"],
+            }
+        ]]
+    ]
+    for filename, switches in cases:
+        assert inventory.populateswitches(filename) == switches, filename
 
 
 def test_populaterouters():
     '''test cases for the populaterouters() function'''
-    # STUB
+    cases = [
+        ["./testdata/testrouterlist.csv", [
+            {
+                "ipv6": "2001:470:f325:103::2",
+                "name": "br-mdf-01"
+            }
+        ]]
+    ]
+    for filename, routers in cases:
+        assert inventory.populaterouters(filename) == routers, filename
 
 
 def test_populateaps():
     '''test cases for the populateaps() function'''
-    # STUB
+    cases = [
+        ["./testdata/testaplist.csv", [
+            {
+                "name": "104-ap3",
+                "mac": "c6:04:15:90:57:c5",
+                "ipv4": "10.128.3.20",
+                "wifi2": "6",
+                "wifi5": "40",
+                "configver": "0",
+            },
+            {
+                "name": "105-ap1",
+                "mac": "0a:bd:43:ac:5f:6c",
+                "ipv4": "10.128.3.21",
+                "wifi2": "11",
+                "wifi5": "44",
+                "configver": "0",
+            },
+        ]]
+    ]
+    for filename, aps in cases:
+        assert inventory.populateaps(filename) == aps
 
 
 def test_populatepis():
     '''test cases for the populatepis() function'''
-    # STUB
+    cases = [
+        ["./testdata/testpilist.csv", [
+            {
+                "name": "pieb1d1c",
+                "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26"
+            }
+        ]]
+    ]
+    for filename, pis in cases:
+        assert inventory.populatepis(filename) == pis, filename
 
 
 def test_populateservers():
     '''test cases for the populateservers() function'''
-    # STUB
+    mocvlans = [
+        {
+            "name": "cfInfra",
+            "ipv6prefix": "2001:470:f325:503::",
+            "building": "Conference"
+        }
+    ]
+    cases = [
+        ["./testdata/testserverlist.csv", [
+            {
+                "name": "server1",
+                "macaddress": "4c:72:b9:7c:41:17",
+                "ipv6": "2001:470:f325:503::5",
+                "ipv4": "10.128.3.5",
+                "ansiblerole": "core",
+                "vlan": "cfInfra",
+                "building": "Conference",
+            }
+        ]]
+    ]
+    for filename, servers in cases:
+        assert inventory.populateservers(filename, mocvlans) == servers, filename
