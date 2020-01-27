@@ -74,33 +74,29 @@ jobs:
       - store_artifacts:
           path: /tmp/ipq806x
 
-  ansible_lint:
+  ansible_tests:
     docker:
-    - image: circleci/python:3.7.2-node-browsers-legacy
-    resource_class: medium
+    - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+    resource_class: small
     working_directory: ~/scale-network/ansible
     steps:
     - checkout:
         path: ~/scale-network
 
     - run:
-        name: install ansible-lint
-        command: sudo pip install ansible-lint
-
-    - run:
-        name: lint scale.yml
+        name: lint ansible playbook
         command: ansible-lint -x 503 scale.yml
 
     - run:
-        name: install pylint
-        command: sudo pip install pylint
+        name: lint python files
+        command: pylint *.py
 
     - run:
-        name: lint inventory.py
-        command: pylint inventory.py
+        name: python unit tests
+        command: pytest -vv
 
     - run:
-        name: test inventory.py
+        name: validate properly formed json
         command: ./inventory.py | jq
 
   perl_lint:
@@ -133,7 +129,7 @@ workflows:
   test_all:
     jobs:
       - gomplate_tests
-      - ansible_lint
+      - ansible_tests
       - perl_lint
   weekly:
     triggers:

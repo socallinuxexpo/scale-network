@@ -1,0 +1,3 @@
+name,mac,ipv4,2.4Ghz_chan,5Ghz_chan,config_ver,map_id,map_x,map_y
+104-ap3,c6:04:15:90:57:c5,10.128.3.20,6,40,0,,,
+105-ap1,0a:bd:43:ac:5f:6c,10.128.3.21,11,44,0,4,1450,128
