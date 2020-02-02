@@ -39,6 +39,27 @@ do
 done
 shift $((OPTIND -1))
 
+CONFIG=$(cat << EOF
+option domain-name "example.org";
+option domain-name-servers 8.8.8.8, 8.8.4.4;
+option subnet-mask 255.255.255.0;
+
+default-lease-time 600;
+max-lease-time 72400;
+ddns-update-style none;
+
+#subnet 192.168.1.0 netmask 255.255.255.0 {
+#  range 192.168.1.50 192.168.1.100;
+#  option routers 192.168.1.2;
+#}
+
+subnet 192.168.254.0 netmask 255.255.255.0 {
+  range 192.168.254.100 192.168.254.200;
+  option routers 192.168.254.1;
+}
+EOF
+)
+
 NETIF=${1:-ue0}
 # Kill dhcpd if set
 if [ $DELETE -eq 0 ];then
