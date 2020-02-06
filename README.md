@@ -15,6 +15,7 @@
 * [ANSIBLE](./ansible/README.md)
 * [OPENWRT](./openwrt/README.md)
 * [TESTING](./tests/README.md)
+* [KERMIT](./.kermit/README.md)
 
 ## Requirements
 To use this git repo you will need the following pkgs:
