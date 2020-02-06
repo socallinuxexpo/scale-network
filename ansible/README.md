@@ -30,6 +30,8 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
     * Subsequent runs after an update to the repo will rebuild the container and restart service
     * Secrets management is still manual for twitter creds and requires rebuilding the container and restarting manually
   * Automatically updates via apt
+  * [Bhyve servers](./roles/bhyve/README.md)
+    * Currently configured manually
 
 ## Requirements:
   * vagrant 2.1
