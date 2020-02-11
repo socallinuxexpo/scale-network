@@ -12,10 +12,13 @@ OPTIONS:
   -d      delete existing dhcpd service
 
 EXAMPLES:
-  To print out arg1:
+  To print out this message:
 
-      $(basename $0) arg1
+      $(basename $0) -h
 
+  Run script in FreeBSD using doas
+
+      doas ./$(basename $0) ue0
 EOF
 }
 
@@ -48,11 +51,6 @@ default-lease-time 600;
 max-lease-time 72400;
 ddns-update-style none;
 
-#subnet 192.168.1.0 netmask 255.255.255.0 {
-#  range 192.168.1.50 192.168.1.100;
-#  option routers 192.168.1.2;
-#}
-
 subnet 192.168.254.0 netmask 255.255.255.0 {
   range 192.168.254.100 192.168.254.200;
   option routers 192.168.254.1;
@@ -63,10 +61,19 @@ EOF
 NETIF=${1:-ue0}
 # Kill dhcpd if set
 if [ $DELETE -eq 0 ];then
-  echo "Deleting dhcpd"
+  echo "Deleting all dhcpd instances"
   pkill dhcpd
+  sleep 2
+  #TODO should make this cleaner
+  rm -rf /tmp/dhcpd*
   ifconfig ${NETIF} delete
 else
+  tmp_file=$(mktemp -d -t dhcpd)
+  echo $tmp_file
   ifconfig ${NETIF} inet 192.168.254.1 netmask 255.255.255.0
-  dhcpd -4 -cf /usr/local/etc/dhcpd.conf -lf /var/db/dhcpd/dhcpd.leases ${NETIF}
+  #dhcpd -4 -cf /usr/local/etc/dhcpd.conf -lf /var/db/dhcpd/dhcpd.leases ${NETIF}
+  # Need to create leases file before dhcpd starts
+  touch $tmp_file/dhcpd.leases
+  echo $CONFIG > $tmp_file/dhcpd.conf
+  dhcpd -4 -cf $tmp_file/dhcpd.conf -lf $tmp_file/dhcpd.leases ${NETIF}
 fi
