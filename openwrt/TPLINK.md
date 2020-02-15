@@ -1,4 +1,6 @@
 # TPLINK C2600
+> **NOTE:** Currently broken on the latest upstream Openwrt reference: 87b14bc6c289e7e80052b344c0f0c35e95ced267
+> Will be fixing as soon as possible but not in time for SCaLE 18x
 
 # Configuration
 
