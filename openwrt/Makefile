@@ -19,8 +19,9 @@ BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER = 8c6f00ef4f17999c5110166764773e40b9a934de
-IMAGEBUILDER = source-$(TARGET)-$(OPENWRT_VER)
+OPENWRT_VER ?= 87b14bc6c289e7e80052b344c0f0c35e95ced267
+SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
+IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
 TAR_EXT = .tar.gz
 
 TMPL_SRC_DIR = files
@@ -37,7 +38,7 @@ download-image: $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 extract: $(BUILD_DIR)/$(IMAGEBUILDER)
 
 $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT): | $(BUILD_DIR)
-	curl -L -o $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT) https://github.com/lede-project/source/archive/$(OPENWRT_VER)$(TAR_EXT)
+	curl -L -o $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT) https://github.com/openwrt/openwrt/archive/$(OPENWRT_VER)$(TAR_EXT)
 
 $(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 	@cd $(BUILD_DIR) && \
@@ -68,6 +69,9 @@ targetconfig: diffconfig
 	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep CONFIG_TARGET > ./configs/$(TARGET)-generic.config
 
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
+
+menuconfig:
+	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && $(MAKE) menuconfig
 
 build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \

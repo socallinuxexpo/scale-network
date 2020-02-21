@@ -2,29 +2,40 @@
 
 ## Supported Hardware
 
-* WNDR 3700,3800,3800ch
+* [WNDR 3700,3800,3800ch](./AR71XX.md)
 * [TPLink c2600](./TPLINK.md)
 
-## Prereqs
+## Requirements
 
 Make sure you have the prereq pkgs for the [Openwrt Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
-If you are building images with templates you'll also need:
-* [gomplate](../README.md#requirements)
+To use this part of the git repo you will need the following pkgs:
+  - git >= 1.8.2
+  - git-lfs
+  - gomplate >= 3.2.0
+  - Docker (Optional)
 
-## Build
+### Gomplate
+
+Installation of `gomplate` is a little bit tricky since it doesnt come in a `.deb`:
+```bash
+sudo -i
+cd /usr/local/bin/
+curl -O https://github.com/hairyhenderson/gomplate/releases/download/<version>/gomplate_linux-amd64 -L
+mv gomplate_linux-amd64 gomplate
+```
 
 ### Docker
 
-You can build these images inside a docker container. This makes it easy to has a consistent build environment
+You can build these openwrt images inside a docker container. This makes it easy to has a consistent build environment
 for all members of the tech team.
 
 To start building:
 
 ```
-docker pull sarcasticadmin/openwrt-build:528bc79
+docker pull sarcasticadmin/openwrt-build:2aea1a2
 # Make sure to mount the git root inside this container
-docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build:528bc79 /bin/bash
+docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build:2aea1a2 /bin/bash
 cd /home/openwrt/scale-network
 ```
 > There is no latest tag so make sure to specify the version (short commit hash)
@@ -32,11 +43,11 @@ cd /home/openwrt/scale-network
 
 Then continue onto whichever image you'd like to build.
 
-### Stock Image
+## Build
 
-Currently we support Netgear `3700v2`, `3800`, & `3800ch` images.
+### Image No Templates
 
-We build all 3 modules at once:
+Build are done per arch with `TARGET` environment variable (defaults to `TARGET=ar71xx`:
 
 ```sh
 cd ./openwrt
@@ -45,10 +56,11 @@ make build-img
 > This requires an internet connection since it downloads the Openwrt src
 > github.com and uses some openwrt mirrors.
 
-You will find the images in `./build/source-<commit>/bin/targets/ar71xx/generic/`
+You will find the images in `./build/source-<commit>/bin/targets/<target>/generic/`
 The `*sysupgrade.bin` and `*factory.img` files match the AP models
 
 ### Image with Templates
+
 To get the configuration thats used at scale the templates need to be baked into
 the image.
 
@@ -80,7 +92,9 @@ make build-img
 This will populate the templates with the necessary values and include them
 into the Openwrt build
 
-# Adding new packages
+## Misc
+
+### Adding new packages
 
 Leverage the existing `diffconfig` via the `Makefile`:
 ```
@@ -99,14 +113,7 @@ make diffconfig commonconfig
 At which point you should have a diff in git which can then be tested against a new
 build of the img
 
-## Issues
-
-When iterating on new packages there have been times were the existing config is stale
-and needs to be completely blown away and regenerated off of `master` then reconfigured
-with `menuconfig`. This is just something to be aware of since its come up during the development
-of this image.
-
-# Updating target info
+### Updating target info
 
 This is similar to `Adding a new package` however after running `menuconfig` go back to the Makefile in `openwrt`
 and run:
@@ -114,75 +121,29 @@ and run:
 make diffconfig targetconfig
 ```
 
-# Upgrading
+### Identity
 
-1. Connect an ethernet cable from your workstation's ethernet port to one
-   of the LAN (not WAN) ports on the router.
-2. Set  static ip in `192.168.1.1/24` on your workstations ethernet port.
-3. Create symlink to `.img` due to tftp being picky about long filenames:
-
-```sh
-cd openwrt
-ln -s <locationof>.img factory.img
-```
-
-4. Start the AP up while holding down the reset button. Once the power lede is
-   flashing green you can let go of the reset button.
-
-The AP is now ready to accept a new `.img`, continue with either method below:
-
-## Auto TFTP
-
-Use the `flash` script:
-
-```sh
-cd openwrt
-./flash
-```
-> This will also update the .csv with the mac address
-
-## Manual TFTP
-
-Manual interaction with `tftp` client:
-
-```sh
-ln -s locationof.img factory.img
-tftp 192.168.1.1
-> bin
-> put factory.img
-> quit
-```
-
-## Inplace
-Assuming Openwrt is already installed:
-
-```sh
-scp <sysupgrade.bin> root@<AP IP>:/tmp/
-ssh root@<AP IP>
-cd /tmp
-sysupgrade -v <sysupgrade.bin> # Wait for the AP to load and reboot
-```
-
-Once it comes back online `ssh` back in an confirm the version
-
-```sh
-ssh root@<AP IP>
-cat /etc/os-release
-```
-# Notes
-## Identity
-
-Depending on the SCaLE conference number, the WPS LED will be green for even years and off
+Depending on the SCaLE conference number, the WPS LED will be ON for even years and OFF
 for odd years.
-> NOTE: This depends on the SCaLE conference number not the year since the build
+> NOTE: This depends on the SCaLE conference number from `facts.yaml` not the year since the build
 > would drift based on when it was built.
 
-## Files
+## Notes
+
+### Issues
+
+1. When iterating on new packages there have been times were the existing config is stale
+and needs to be completely blown away and regenerated off of `master` then reconfigured
+with `menuconfig`. This is just something to be aware of since its come up during the development
+of this image.
+
 ### SSH
+
 1. `/root` - Must be permissions `755` (or less perm) or ssh-key auth wont work
 2. openssh needs to have both `/etc/passwd` and `/etc/hosts` to allow ssh login
 
-## Useful commands
+### Useful commands
+
 To check which vlans are loaded onto a switch:
 
 ```sh
@@ -195,7 +156,7 @@ Check to see the status of the wifi radios:
 wifi status
 ```
 
-## Make
+### Make
 
 * http://makefiletutorial.com/
 * https://bost.ocks.org/mike/make/
