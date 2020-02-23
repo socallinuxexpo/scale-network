@@ -45,8 +45,9 @@ jobs:
           name: copy ar71xx artifacts
           command: |
               mkdir -p /tmp/ar71xx
-              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ar71xx/generic/*factory.img /tmp/ar71xx
-              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ar71xx/generic/sha256sums /tmp/ar71xx
+              # TODO: unify build refs with new ath79 type
+              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/*factory.img /tmp/ar71xx
+              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/sha256sums /tmp/ar71xx
 
       - store_artifacts:
           path: /tmp/ar71xx
