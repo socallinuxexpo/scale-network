@@ -17,7 +17,7 @@ my $PS_Page_Preamble = <<EOF;
 << /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
 11 Inch 0 translate % move origin to lower right edge of portrait page
 90 rotate % rotate page clockwise 90 degrees around the bottom right corner
-0 0.25 Inch translate % Move origin slightly off the bottom of the page
+0.25 Inch 0.25 Inch translate % Move origin slightly off the bottom and left edge of the page
 EOF
 
 # General recipe for rotating and translating for landscape printing on 11x17"
@@ -44,6 +44,12 @@ foreach(@maps)
     $map_pos %= 5;
     showpage();
   }
+}
+
+if ($map_pos) # We didn't fill the last page
+{
+  $map_pos = 0;
+  showpage();
 }
 
 sub show_preamble()
