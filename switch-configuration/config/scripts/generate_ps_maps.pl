@@ -52,7 +52,7 @@ if ($map_pos) # We didn't fill the last page
   showpage();
 }
 
-sub show_preamble()
+sub show_preamble
 {
   print $PS_Preamble;      # File Preamble
   print $PS_Page_Preamble; # Leadin for first page
