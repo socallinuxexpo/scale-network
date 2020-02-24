@@ -9,7 +9,7 @@ RSpec.shared_examples "openwrt" do
 
   REMOVED_BINS=["snmpd", "dropbear"]
 
-  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "zabbix"]
+  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "zabbix", "lldpd"]
 
   DEFAULT_BINS.each do |bin|
     describe command("which #{bin} 2> /dev/null") do
