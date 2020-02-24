@@ -77,7 +77,7 @@ foreach(@{$VL_CONFIG})
  
 # Pull in private configuration objects (not stored in repo)
 open(PASSWD, "< ../../facts/secrets/jroot_pw") ||
-    die "Couldnt find root PW: $!\n";
+    die "Couldn't find root PW: $!\n";
 my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
 chomp $rootpw;
 close PASSWD;

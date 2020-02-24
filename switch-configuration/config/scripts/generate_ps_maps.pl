@@ -1,20 +1,23 @@
 #!/usr/bin/env perl
 #
 # Collect EPS files in switch-maps directory and generate a single PS file that will print
-# them 4 to a page.
+# them 5 to a page.
 #
 # Currently output is to STDOUT. Might convert to sending to a file later.
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe
-% Set up page and draw title
+/Inch { 72 mul } bind def
 
+EOF
+
+my $PS_Page_Preamble = <<EOF;
 % Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
 % Assumes a 17" wide 11" tall page.
-/Inch { 72 mul } def
 << /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
 11 Inch 0 translate % move origin to lower right edge of portrait page
 90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+0 0.25 Inch translate % Move origin slightly off the bottom of the page
 EOF
 
 # General recipe for rotating and translating for landscape printing on 11x17"
@@ -36,16 +39,17 @@ foreach(@maps)
   embed($_);
   $map_number++;
   $map_pos++;
-  if ($map_pos > 3)
+  if ($map_pos > 4)
   {
-    $map_pos %= 4;
+    $map_pos %= 5;
     showpage();
   }
 }
 
 sub show_preamble()
 {
-  print $PS_Preamble;
+  print $PS_Preamble;      # File Preamble
+  print $PS_Page_Preamble; # Leadin for first page
 }
 
 
@@ -59,6 +63,7 @@ sub setorigin
     print <<EOF;
       0 -6 Inch translate
 EOF
+    print $PS_Page_Preamble;
   }
   else
   {
