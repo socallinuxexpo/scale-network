@@ -493,9 +493,6 @@ EOF
       $port += $count;
     }
   }
-  $portmap_PS .= <<EOF;
-end %End of local dictionary (SwitchMapDict) for EPS
-EOF
   return($OUTPUT, $portmap_PS);
 }
 
@@ -1385,8 +1382,12 @@ vlans {
 $VLAN_CONFIGURATION
 }
 EOF
+  my $postamble = <<EOF;
+end %End of local dictionary (SwitchMapDict) for EPS
+EOF
 
-  return($OUTPUT, $portmap.$portmap_vendor);
+
+  return($OUTPUT, $portmap.$portmap_vendor.$postamble);
 }
 
 #my $cf = build_config_from_template("NW-IDF",
