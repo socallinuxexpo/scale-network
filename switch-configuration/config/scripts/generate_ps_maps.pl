@@ -1,0 +1,88 @@
+#!/usr/bin/env perl
+#
+# Collect EPS files in switch-maps directory and generate a single PS file that will print
+# them 4 to a page.
+#
+# Currently output is to STDOUT. Might convert to sending to a file later.
+
+my $PS_Preamble = <<EOF;
+%!PS-Adobe
+% Set up page and draw title
+
+% Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
+% Assumes a 17" wide 11" tall page.
+/Inch { 72 mul } def
+<< /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
+11 Inch 0 translate % move origin to lower right edge of portrait page
+90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+EOF
+
+# General recipe for rotating and translating for landscape printing on 11x17"
+#% Convert coordinate system from portrait to landscape
+#% Replace the code below (original 1 map per page) with code to stack them
+#%11 Inch 0 translate % move origin to lower right edge of portrait page
+#%90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+
+my $map_number = 0;		# Current number in sequence of maps
+my $map_pos = 0;		# Current position on page (0-3)
+
+my @maps = <switch-maps/*.eps>;
+
+show_preamble();
+
+foreach(@maps)
+{
+  setorigin($map_pos) if ($map_number);	# Don't move the origin for the first map.
+  embed($_);
+  $map_number++;
+  $map_pos++;
+  if ($map_pos > 3)
+  {
+    $map_pos %= 4;
+    showpage();
+  }
+}
+
+sub show_preamble()
+{
+  print $PS_Preamble;
+}
+
+
+
+sub setorigin
+{
+  my $position = shift(@_);
+  if ($position == 0)
+  {
+    # Reset the origin to the bottom of the page.
+    print <<EOF;
+      0 -6 Inch translate
+EOF
+  }
+  else
+  {
+    print <<EOF;
+      0 2 Inch translate
+EOF
+  }
+}
+
+sub embed
+{
+  my $file = shift(@_);
+  open INPUT, "<$file" || die("Could not read $file: ");
+  foreach(<INPUT>)
+  {
+    print $_;
+  }
+  close INPUT;
+}
+
+sub showpage
+{
+  print <<EOF;
+    showpage
+EOF
+}
+

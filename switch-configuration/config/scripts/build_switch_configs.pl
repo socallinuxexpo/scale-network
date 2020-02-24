@@ -2,7 +2,7 @@
 #
 # This script will iterate through each of the switches named in the switchtypes
 # file and produce a configuration file for that switch named <switchname>.conf
-# It will also produce a port map file for each switch named <switchname>-map.ps
+# It will also produce a port map file for each switch named <switchname>-map.eps
 #
 # Switch configurations are stored in ./output/
 # Port map files are stored in ./switch-maps/
@@ -29,7 +29,7 @@ if (scalar(@ARGV))
     foreach $file (@{$switchlist})
     {
         push @outputs, "output/".$file.".conf";
-        push @maps, "switch-maps/".$file."-map.ps";
+        push @maps, "switch-maps/".$file."-map.eps";
     }
 }
 else
@@ -107,7 +107,7 @@ foreach $switch (@{$switchlist})
              die("Couldn't write configuration for ".$switch." $!\n");
     print OUTPUT $cf;
     close OUTPUT;
-    open MAP, ">switch-maps/$switch-map.ps" ||
+    open MAP, ">switch-maps/$switch-map.eps" ||
              die("Couldn't write port map for ".$switch." $!\n");
     print MAP $portmap;
     close MAP;
