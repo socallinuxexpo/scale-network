@@ -15,7 +15,55 @@ The following is needed to flash the `c2600`:
 
 ## Linux
 
-TBD
+> Assuming you are on raspbian
+
+Setup the interface for the expected IP (`eth0 in this case):
+
+```
+auto eth0
+iface eth0 inet static
+	address 192.168.0.66/24
+```
+
+Reboot the host to set the new interface up
+
+nstall following packages.
+
+```
+sudo apt-get install xinetd tftpd tftp tcpdump
+```
+
+Create /etc/xinetd.d/tftp and put this entry
+
+```
+service tftp
+{
+protocol        = udp
+port            = 69
+socket_type     = dgram
+wait            = yes
+user            = nobody
+server          = /usr/sbin/in.tftpd
+server_args     = /tftpboot
+disable         = no
+}
+```
+
+Create a folder /tftpboot this should match whatever you gave in server_args. mostly it will be tftpboot
+
+```
+sudo mkdir /tftpboot
+sudo chmod -R 777 /tftpboot
+sudo chown -R nobody /tftpboot
+```
+
+Restart the xinetd service.
+
+newer systems:
+
+```
+sudo service xinetd restart
+```
 
 ## FreeBSD
 
@@ -68,4 +116,10 @@ ifconfig ue0 delete
 ifconfig ue0 down
 ifconfig ue0 inet 192.168.254.1 netmask 255.255.255.0
 ifconfig ue0 up
+```
+
+Setup dhcp server:
+
+```
+sudo apt-get install isc-dhcp-server
 ```
