@@ -248,11 +248,15 @@ sub build_interfaces_from_config
   my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
-  my $portmap_PS = "%!PS-Adobe\n%\n% Generated Interface Portmap for ".
+  my $portmap_PS = "%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 1008 144 % 14\" x 2\"\n%\n".
+            "% Generated Interface Portmap for ".
             "Switch #$Number Name: $hostname (Type: $Type)\n%\n";
   $portmap_PS .= <<EOF;
 % Initialization of graphical context for portmap
+% Each portmap is roughly 14" wide by 2" high.
 
+/SwitchMapDict 20 dict def
+SwitchMapDict begin
 % Font Definitions
 /BoxFont { /Helvetica findfont 6 scalefont setfont } bind def
 /TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
@@ -355,16 +359,20 @@ sub build_interfaces_from_config
   Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
 } bind def
 
-% Set up page and draw title
-
-% Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
-% Assumes a 17" wide 11" tall page.
-% Currently assumes a single map per page (wasteful, could stack them).
-% Convert coordinate system from portrait to landscape
-SetUpPage
 (Switch #$Number Name: $hostname (Type: $Type)) ShowTitle
 EOF
-  
+
+# Preamble information to put in generator pulling EPS files together for printing
+#% Set up page and draw title
+#
+#% Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
+#% Assumes a 17" wide 11" tall page.
+#<< /PageSize [ 11 Inch 17 Inch ] >> setpagedevice
+#% Convert coordinate system from portrait to landscape
+#% Replace the code below (original 1 map per page) with code to stack them
+#%11 Inch 0 translate % move origin to lower right edge of portrait page
+#%90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+
   my $port = 0;
   # Read Type file and produce interface configuration
   my $switchtype = read_config_file("types/$Type");
@@ -1386,8 +1394,12 @@ vlans {
 $VLAN_CONFIGURATION
 }
 EOF
+  my $postamble = <<EOF;
+end %End of local dictionary (SwitchMapDict) for EPS
+EOF
 
-  return($OUTPUT, $portmap.$portmap_vendor."showpage\n");
+
+  return($OUTPUT, $portmap.$portmap_vendor.$postamble);
 }
 
 #my $cf = build_config_from_template("NW-IDF",
