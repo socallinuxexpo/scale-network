@@ -3,8 +3,8 @@
 Instructions heavily influenced by https://youtu.be/T9AtKld8USU
 
 # Create bootable SDCARD:
-1. Download Raspbian Stretch Lite 
-  a. 2019-09-26-raspbian-buster-lite.img
+1. Download the current specified Raspbian image from https://www.raspberrypi.org/downloads/raspbian/
+   a. As of 2020-02-24 the specified image is 2019-09-26-raspbian-buster-lite.img
 2. Write to an SD Card using Etcher
 
 # Boot and setup system:
