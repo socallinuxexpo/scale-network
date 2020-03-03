@@ -8,19 +8,19 @@
     autoremove: yes
   register: updated
 
-- name: restart os
-  shell: sleep 10 && shutdown -r now "Ansible is restarting server"
-  async: 1
-  poll: 0
-  become: true
-  ignore_errors: true
-  when: updated.changed
-
-- name: pause
-  pause:
-    seconds: 90
-  when: updated.changed
-
-- name: gather facts
-  setup:
-    gather_timeout: 30
+#- name: restart os
+#  shell: sleep 10 && shutdown -r now "Ansible is restarting server"
+#  async: 1
+#  poll: 0
+#  become: true
+#  ignore_errors: true
+#  when: updated.changed
+#
+#- name: pause
+#  pause:
+#    seconds: 90
+#  when: updated.changed
+#
+#- name: gather facts
+#  setup:
+#    gather_timeout: 30
