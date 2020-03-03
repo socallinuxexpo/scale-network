@@ -30,7 +30,10 @@ if ENV['TEST_TYPE'].start_with?('openwrt')
   # Force os detection due to errors on openwrt
   set :os, :family => 'linux'
 else
-  options[:user] ||= Etc.getlogin
+  #options[:user] ||= Etc.getlogin
+  # TODO: Need to not hard code this
+  # But ok to assume this user for now
+  options[:user] = 'ubuntu'
 end
 # Set environment variables
 # set :env, :LANG => 'C', :LC_MESSAGES => 'C'

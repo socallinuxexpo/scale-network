@@ -34,3 +34,11 @@ Run openwrt show specific tests
 ```
 rake spec TEST_TYPE=openwrt_show TARGET_HOST=192.168.254.100
 ```
+
+## Servers
+
+Example of running `serverspec` on a VM with role=core:
+
+```
+rake spec TEST_TYPE=core TARGET_HOST=10.0.3.5
+```
