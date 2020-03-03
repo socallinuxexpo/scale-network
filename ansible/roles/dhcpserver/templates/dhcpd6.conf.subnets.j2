@@ -7,7 +7,7 @@ subnet6 {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"] }} {
 {% else %}
     range6 {{ vlan["ipv6dhcp2a"] }} {{ vlan["ipv6dhcp2b"] }};
 {% endif %}
-    option dhcp6.name-servers {{ vlan["ipv6dns1"] + vlan["ipv6dns2"] | join(',')}};
+    option dhcp6.name-servers {{ vlan["ipv6dns1"] }}, {{ vlan["ipv6dns2"] }}; 
 }
 {% endif %}
 {% endfor %}
