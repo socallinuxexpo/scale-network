@@ -9,8 +9,8 @@ def test_getfilelineshdr():
     '''test cases for getfilelines() with header no building'''
     cases = [
         ["testdata/testaplist.csv", [
-            "104-ap3,c6:04:15:90:57:c5,10.128.3.20,6,40,0,,,\n",
-            "105-ap1,0a:bd:43:ac:5f:6c,10.128.3.21,11,44,0,4,1450,128\n"
+            "104-ap3,ncc-1701,c6:04:15:90:57:c5,10.128.3.20,6,40,0,,,\n",
+            "105-ap1,bat-man1,0a:bd:43:ac:5f:6c,10.128.3.21,11,44,0,4,1450,128\n"
         ]],
         ["testdata/testpilist.csv", [
             "pieb1d1c,2001:470:f325:107:efcf:2f67:f127:ba26\n"
