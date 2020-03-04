@@ -10,9 +10,10 @@ def test_aplist_csv():
     meta = {
         "file": "./aps/aplist.csv",
         "header": True,
-        "count": 9,
+        "count": 10,
         "cols": [
             ds.isvalidhostname,
+            ds.isuntested,
             ds.isvalidmac,
             ds.isvalidip,
             ds.isvalidwifi24chan,

@@ -257,19 +257,19 @@ def populateaps(apsfile):
             continue
         elems = re.split(',', line)
         # Lets bail if we have an invalid number of columns
-        if len(elems) < 9:
+        if len(elems) < 10:
             continue
-        ipaddr = elems[2]
+        ipaddr = elems[3]
         # Lets bail if ip address is invalid
         if not isvalidip(ipaddr):
             continue
         aps.append({
             "name": elems[0],
-            "mac": elems[1],
+            "mac": elems[2],
             "ipv4": ipaddr,
-            "wifi2": elems[3],
-            "wifi5": elems[4],
-            "configver": elems[5].rstrip(),
+            "wifi2": elems[4],
+            "wifi5": elems[5],
+            "configver": elems[6],
         })
     return aps
 
