@@ -20,5 +20,6 @@ TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSi
 TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns
 TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns
 VLAN	cfCTF		6	// ge-0/0/{18-23}
-VLAN	cfInfra		1	// ge-0/0/{24} -- Conference Center Bhyve Server
+VLAN	cfInfra		1	// ge-0/0/24 -- Conference Center Bhyve Server
+VLAN	cfAVLAN		1	// ge-0/0/25 -- Conference Center AV Server
 RSRVD	23
