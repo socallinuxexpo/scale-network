@@ -21,7 +21,7 @@ our $VV_prefix4;
 our $VV_name_prefix;
 
 
-my $DEBUGLEVEL = 0;
+my $DEBUGLEVEL = 9;
 
 my %Switchtypes;
 
@@ -136,6 +136,7 @@ sub get_switchtype
   # Preload the cache if we don't have a hit or are specifically called to preload ("anonymous")
   if (!exists($Switchtypes{$hostname}) || $hostname eq "anonymous")
   {
+    debug(5, "Reading switchtypes configuration file");
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
@@ -157,7 +158,12 @@ sub get_switchtype
         ") does not match Address (".$Switchtypes{$hostname}[2].")\n");
   }
   # Return appropriate information
-  return(@{$Switchtypes{$hostname}});
+  debug(9, "Returning: (".  $hostname. ", ".
+                            $Switchtypes{$hostname}[0]. ", ".
+                            $Switchtypes{$hostname}[1]. ", ".
+                            $Switchtypes{$hostname}[2]. ", ".
+                            $Switchtypes{$hostname}[3]. ")\n");
+  return($hostname, @{$Switchtypes{$hostname}});
 }
 
 sub build_users_from_auth

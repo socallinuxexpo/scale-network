@@ -1,0 +1,80 @@
+#!/usr/bin/perl
+#
+# Override the current configuration on a switch with the appropriate configuration file from
+# the output directory. Uses SCP to place the configuratino file and then uses SSH to load and
+# activate it.
+
+# Not yet ready for use... Do not use
+#die "Don't use this script yet. It's not ready"
+
+# Ideally this will eventually be obviated by ansible
+
+# Pull in dependencies
+use strict;
+require "./scripts/switch_template.pl";
+use FileHandle;
+use IPC::Open2;
+
+STDERR->autoflush(1);   # Turn on autoflush for STDERR
+
+# Parse arguments (if any) or default to all switches
+##FIXME## Allow for exception syntax on command line
+my @list = @ARGV;
+if (scalar(@list) == 0)
+{
+    @list = get_switchlist();
+    print "Pulled ", scalar(@list), " switches from configuration list\n";
+}
+else
+{
+    print "Have ", scalar(@list), " Switch names from command line.\n";
+}
+
+# This works in three phases for each switch...
+#
+# Assertions:
+#   output/* contains valid configuratin files for each switch
+#   Switches are accessible via SSH at their management address in the switchtypes file.
+# Phase 1: Push new configuration file to switch.
+# Phase 2: Remove possibly conflicting old configuration remnants
+# Phase 3: Merge new configuration file and commit
+#
+my $SWITCH_COMMANDS = <<EOF;
+edit
+load override /tmp/new_config.conf
+show | compare
+commit and-quit
+exit
+EOF
+
+$SIG{PIPE} = \&catch_pipe;
+
+sub catch_pipe {
+    my $signame = shift;
+    print STDERR "Pipe signal cauthg ($signame) $! $?\n";
+}
+
+foreach my $switch (@list)
+{
+    my ($Name, $Num, $MgtVL, $IPv6Addr, $Type);
+    print "Looking up switch $switch\n";
+    ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
+    die("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
+    print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
+
+    # Phase 1: Copy configuration to device
+    if (!-f "output/$Name.conf")
+    {
+        die("Error: Couldn't read configuration file for $Name");
+    }
+    ##FIXME## Using system is an attrocious hack -- do something better
+    print STDERR "Sending configuration file to $Name\n";
+    die("Failed to copy configuration to device $Name ($? : $!)\n") if 
+        system("scp \"output/$Name.conf\" $Name".":/tmp/new_config.conf");
+    
+    print STDERR "Activating...\n";
+    open(JUNIPER, "| ssh $Name");
+    print JUNIPER $SWITCH_COMMANDS;
+    print STDERR "Finished sending commands to switch...\n";
+    close JUNIPER || warn "Switch $Name Bad exit from SSH: $! $?\n";
+}
