@@ -66,13 +66,14 @@ foreach(sort(keys(%Hierarchy)))
             print " " x (10+(4*$i)), $i, " -> ";
             printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
             debug(9, "Pinging ${$sw}[1]\n");
+	    my $r;
             if ($^O == "darwin")
             {
-                my $r = system('ping6 -c 1 -n -q '.${$sw}[1].' >/dev/null');
+                $r = system('ping6 -c 1 -n -q '.${$sw}[1].' >/dev/null');
             }
             else
             {
-                my $r = system('ping6 -c 1 -W 1 -n -q '.${$sw}[1].' >/dev/null');
+                $r = system('ping6 -c 1 -W 1 -n -q '.${$sw}[1].' >/dev/null');
             }
             if ($r == -1)
             {
