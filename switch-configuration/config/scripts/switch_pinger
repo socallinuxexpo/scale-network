@@ -67,8 +67,9 @@ foreach(sort(keys(%Hierarchy)))
             printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
             debug(9, "Pinging ${$sw}[1]\n");
 	    my $r;
-            if ($^O == "darwin")
+            if ($^O eq "darwin")
             {
+	        print "D->";
                 $r = system('ping6 -c 1 -n -q '.${$sw}[1].' >/dev/null');
             }
             else
