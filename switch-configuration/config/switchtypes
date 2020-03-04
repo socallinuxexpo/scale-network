@@ -28,14 +28,14 @@ Rm211		19	503	2001:470:f325:503::200:19	cfRoom			//	I.9		Normal
 Rm104		20	503	2001:470:f325:503::200:20	cfRoom			//	I.9		Quiet
 NOC		21	503	2001:470:f325:503::200:21	cfIDF			//	I.2		Normal
 ExpoB1		22	103	2001:470:f325:103::200:22	Booth			//	W.9		Loud
-CTF1		23	503	2001:470:f325:503::200:23	cfCTF			//	I.9		Normal
+CTF1		23	504	2001:470:f325:504::200:23	cfCTF			//	I.9		Normal
 ExpoC1		24	103	2001:470:f325:103::200:24	Booth			//	W.9		Loud
 Rm106		25	503	2001:470:f325:503::200:25	cfRoom			//	I.9		Quiet
-CTF2		26	503	2001:470:f325:503::200:26	cfCTF			//	I.9		Normal
-CTF3		27	503	2001:470:f325:503::200:27	cfCTF			//	I.9		Normal
+CTF2		26	504	2001:470:f325:504::200:26	cfCTF			//	I.9		Normal
+CTF3		27	504	2001:470:f325:504::200:27	cfCTF			//	I.9		Normal
 ExpoA2		28	103	2001:470:f325:103::200:28	Booth			//	W.9		Loud
 ExpoB2		29	103	2001:470:f325:103::200:29	Booth			//	W.9		Loud
-CTF4		30	503	2001:470:f325:503::200:30	cfCTF			//	I.9		Normal
+CTF4		30	504	2001:470:f325:504::200:30	cfCTF			//	I.9		Normal
 Rm107		31	503	2001:470:f325:503::200:31	cfRoom			//	I.9		Quiet
 RegDesk		32	103	2001:470:f325:103::200:32	registration		//	X.9		Normal
 ExpoC2		33	103	2001:470:f325:103::200:33	Booth			//	W.9		Normal
@@ -51,5 +51,5 @@ ExpoA5		42	103	2001:470:f325:103::200:42	Booth			//	W.9		Normal
 ExpoB5		43	103	2001:470:f325:103::200:43	Booth			//	W.9		Normal
 ExpoC5		44	103	2001:470:f325:103::200:44	Booth			//	W.9		Loud
 ExpoAW		45	103	2001:470:f325:103::200:45	Booth			//	W.9		Normal
-CTF5		46	103	2001:470:f325:103::200:46	cfCTF			//	I.9		Loud
-CTF6		47	103	2001:470:f325:103::200:47	cfCTF			//	I.9		Normal
+CTF5		46	504	2001:470:f325:504::200:46	cfCTF			//	I.9		Loud
+CTF6		47	504	2001:470:f325:504::200:47	cfCTF			//	I.9		Normal
