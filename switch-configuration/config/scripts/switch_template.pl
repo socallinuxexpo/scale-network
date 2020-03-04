@@ -251,7 +251,7 @@ sub build_interfaces_from_config
   ##FIXME## Covers all but fiber ports for SCALE 17x.
   my $hostname = shift @_;
   # Retrieve Switch Type Information
-  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
   my $portmap_PS = "%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 1008 144 % 14\" x 2\"\n%\n".
@@ -505,7 +505,7 @@ EOF
 sub build_l3_from_config
 {
   my $hostname = shift @_;
-  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   my $OUTPUT = "        # Automatically Generated Layer 3 Configuration ".
                 "for $hostname (MGT: $MgtVL Addr: $IPv6addr Type: $Type\n";
   $OUTPUT .= <<EOF;
@@ -522,7 +522,7 @@ EOF
 sub build_vlans_from_config
 {
   my $hostname = shift @_;
-  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   # MgtVL is treated special because it has a layer 3 interface spec
   # to interface vlan.$MgtVL.
 
@@ -931,7 +931,7 @@ sub build_vendor_from_config
   my $hostname = shift @_;
   debug(5, "Building Vendor VLANs for $hostname\n");
   # Retrieve Switch Type Information
-  my ($Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
   
   my $port = 0;
   # Read Type file and produce interface configuration
