@@ -14,11 +14,15 @@ use strict;
 require "./scripts/switch_template.pl";
 use FileHandle;
 use IPC::Open2;
+use Getopt::Std;
+our $opt_l;
+getopts('l');
 
 STDERR->autoflush(1);   # Turn on autoflush for STDERR
 
 # Parse arguments (if any) or default to all switches
 ##FIXME## Allow for exception syntax on command line
+
 my @list = @ARGV;
 if (scalar(@list) == 0)
 {
@@ -28,6 +32,11 @@ if (scalar(@list) == 0)
 else
 {
     print "Have ", scalar(@list), " Switch names from command line.\n";
+}
+
+if ($opt_l && scalar(@list) != 1)
+{
+    print STDERR "Use of -l option requires exactly one switch be specified.\n";
 }
 
 # This works in three phases for each switch...
@@ -69,11 +78,26 @@ foreach my $switch (@list)
     }
     ##FIXME## Using system is an attrocious hack -- do something better
     print STDERR "Sending configuration file to $Name\n";
-    die("Failed to copy configuration to device $Name ($? : $!)\n") if 
-        system("scp \"output/$Name.conf\" $Name".":/tmp/new_config.conf");
+    if ($opt_l) # If -l is specified, install configuration via directly attached management port
+    {
+        die("Failed to copy configuration to device $Name ($? : $!)\n") if 
+            system("scp \"output/$Name.conf\" 192.168.255.76".":/tmp/new_config.conf");
+    }
+    else
+    {
+        die("Failed to copy configuration to device $Name ($? : $!)\n") if 
+            system("scp \"output/$Name.conf\" $Name".":/tmp/new_config.conf");
+    }
     
     print STDERR "Activating...\n";
-    open(JUNIPER, "| ssh $Name");
+    if ($opt_l) # If -l is specified, activate configuration via directly attached management port
+    {
+        open(JUNIPER, "| ssh 192.168.255.76");
+    }
+    else
+    {
+        open(JUNIPER, "| ssh $Name");
+    }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";
     close JUNIPER || warn "Switch $Name Bad exit from SSH: $! $?\n";
