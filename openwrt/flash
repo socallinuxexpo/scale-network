@@ -1,13 +1,13 @@
 #!/usr/bin/env expect
 spawn /usr/sbin/arp -d 192.168.1.1
-spawn ping -n 192.168.1.1
+spawn ./ping -n 192.168.1.1
 expect {
   Unreachable exp_continue
   "taking countermeasures"
 }
 close
-send_user "enter the name of this AP: "
-expect_user -re "(.*)\n"
+send_user "enter the name,serial of this AP: "
+expect_user -timeout -1 -re "(.*)\n"
 set ap $expect_out(1,string)
 spawn /usr/sbin/arp -n 192.168.1.1
 expect -re "192.168.1.1 *ether *(\[^ \]*) "
