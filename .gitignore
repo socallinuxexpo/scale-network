@@ -4,6 +4,9 @@ openwrt/*.img
 openwrt/aplist
 *.swp
 
+# Ignore aplist MAC conversion output file
+facts/aps/aplist.out
+
 # Ignore openwrt test dir
 tests/unit/openwrt/tmp*
 
