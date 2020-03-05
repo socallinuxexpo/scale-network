@@ -16,7 +16,11 @@ use FileHandle;
 use IPC::Open2;
 use Getopt::Std;
 our $opt_l;
-getopts('l');
+our $opt_n;
+getopts('ln');
+
+# -l -- configure locally attached switch via management interface rather than remote.
+# -n -- Don't actually apply the configuration, just show the compare and then roll back.
 
 STDERR->autoflush(1);   # Turn on autoflush for STDERR
 
@@ -61,13 +65,27 @@ foreach(@list)
 #
 
 # Commands used for phase 2
-my $SWITCH_COMMANDS = <<EOF;
+my $SWITCH_COMMANDS;
+unless ($opt_n) {
+    $SWITCH_COMMANDS = <<EOF;
 edit
 load override /tmp/new_config.conf
 show | compare
 commit and-quit
 exit
 EOF
+}
+else
+{
+    $SWITCH_COMMANDS = <<EOF;
+edit
+load override /tmp/new_config.conf
+show | compare
+rollback
+exit
+exit
+EOF
+}
 
 $SIG{PIPE} = \&catch_pipe;
 
