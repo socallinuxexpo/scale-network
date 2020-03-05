@@ -26,18 +26,35 @@ STDERR->autoflush(1);   # Turn on autoflush for STDERR
 my @list = @ARGV;
 if (scalar(@list) == 0)
 {
-    @list = get_switchlist();
+    @list = @{get_switchlist()};
     print "Pulled ", scalar(@list), " switches from configuration list\n";
 }
 else
 {
-    print "Have ", scalar(@list), " Switch names from command line.\n";
+    print "Have ", scalar(@list), " Switch or group names from command line.\n";
 }
 
-if ($opt_l && scalar(@list) != 1)
+# If @list doesn't contain exactly one item or the item in the list is not 2+ characters
+# long, then it's not a single switch (might be a group).
+if ($opt_l && (scalar(@list) != 1 || length($list[0]) < 2))
 {
     print STDERR "Use of -l option requires exactly one switch be specified.\n";
 }
+
+print "List before expansion:\n";
+foreach(@list)
+{
+    print "\t$_\n";
+}
+my @list = expand_switch_groups(@list);
+print "List after expansion:\n";
+foreach(@list)
+{
+    print "\t$_\n";
+}
+
+exit 0;
+
 
 # This works in three phases for each switch...
 #
