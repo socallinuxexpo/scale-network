@@ -65,8 +65,9 @@ foreach(@list)
 #
 
 # Commands used for phase 2
-if ($opt_n) {
-    my $SWITCH_COMMANDS = <<EOF;
+my $SWITCH_COMMANDS;
+unless ($opt_n) {
+    $SWITCH_COMMANDS = <<EOF;
 edit
 load override /tmp/new_config.conf
 show | compare
@@ -76,7 +77,7 @@ EOF
 }
 else
 {
-    my $SWITCH_COMMANDS = <<EOF;
+    $SWITCH_COMMANDS = <<EOF;
 edit
 load override /tmp/new_config.conf
 show | compare
