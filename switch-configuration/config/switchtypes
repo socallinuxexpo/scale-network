@@ -19,7 +19,7 @@ ConfIDF		    10	503	2001:470:f325:503::200:10	cfIDF			I.1		Loud
 BallroomH	    11	103	2001:470:f325:103::200:11	exRoom			F.9		Normal
 BallroomA	    12	103	2001:470:f325:103::200:12	exRoom			C.9		Normal
 BallroomB	    13	103	2001:470:f325:103::200:13	exRoom			C.9		Normal
-AVSwitch	    14	503	2001:470:f325:503::200:14	cfAV			F.9		Normal
+AVSwitch	    14	503	2001:470:f325:503::200:14	cfAV			I.9		Normal
 Party		    15	103	2001:470:f325:103::200:15	Party			X.9		Loud
 Expo-Catwalk	16	103	2001:470:f325:103::200:16	Catwalk			W.1		Loud
 Rm209-210	    17	503	2001:470:f325:503::200:17	cfRoom			I.9		Normal
