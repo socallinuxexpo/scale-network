@@ -14,7 +14,7 @@ RSpec.shared_examples "dhcpd" do
       its(:exit_status) { should eq 0 }
     end
   end
-  
+
   DEFAULT_PKGS.each do |bin|
     describe package(bin) do
       it { should be_installed }
@@ -33,6 +33,26 @@ RSpec.shared_examples "dhcpd" do
       it { should be_running }
     end
   end
+
+  # Test dhcpd config
+  describe command('dhcpd -t -cf /etc/dhcp/dhcpd.conf') do
+    its(:exit_status) { should eq 0 }
+  end
+
+  # Test leases
+  describe command('dhcpd -T') do
+    its(:exit_status) { should eq 0 }
+  end
+
+  describe command('dhcpd -t -6 -cf /etc/dhcp/dhcpd6.conf') do
+    its(:exit_status) { should eq 0 }
+  end
+
+  # TODO: Set pools via server config
+  # ipv6 pools are not set
+  #describe command('dhcpd -T -6') do
+  #  its(:exit_status) { should eq 0 }
+  #end
 
   describe command('rsyslogd -N1') do
     its(:exit_status) { should eq 0 }
