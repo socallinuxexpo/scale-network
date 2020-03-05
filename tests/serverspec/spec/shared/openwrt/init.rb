@@ -74,19 +74,34 @@ RSpec.shared_examples "openwrt" do
     its(:exit_status) { should eq 1 }
   end
 
+  describe file('/tmp/resolv.conf.d/resolv.conf.auto') do
+      it { should exist }
+      it { should be_mode 644 }
+      it { should be_owned_by 'root' }
+      it { should be_grouped_into 'root' }
+  end
+
   describe file('/etc/resolv.conf') do
+      # exist checks for target file of symlink
+      it { should exist }
       it { should be_symlink }
+      # TODO: Support be_linked_to
+      #it { should be_linked_to '/tmp/resolv.conf.d/resolv.conf.auto' }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
   end
 
   describe file('/etc/config/network') do
+      # exist checks for target file of symlink
+      it { should exist }
       it { should be_symlink }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
   end
 
   describe file('/etc/config/wireless') do
+      # exist checks for target file of symlink
+      it { should exist }
       it { should be_symlink }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
