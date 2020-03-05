@@ -53,18 +53,14 @@ foreach(@list)
     print "\t$_\n";
 }
 
-exit 0;
-
-
-# This works in three phases for each switch...
-#
 # Assertions:
 #   output/* contains valid configuratin files for each switch
 #   Switches are accessible via SSH at their management address in the switchtypes file.
 # Phase 1: Push new configuration file to switch.
-# Phase 2: Remove possibly conflicting old configuration remnants
-# Phase 3: Merge new configuration file and commit
+# Phase 2: Apply new configuration file using "load override <filename>" and commit it.
 #
+
+# Commands used for phase 2
 my $SWITCH_COMMANDS = <<EOF;
 edit
 load override /tmp/new_config.conf
