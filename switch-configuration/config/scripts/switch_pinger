@@ -29,7 +29,7 @@ foreach(<TYPES>)
         chomp;
         $_ =~ s/ +//g; # Get rid of spaces. Only tabs matter.
         debug(9, "Splitting $_\n");
-        my ($name, $num, $mvl, $ipv6, $type, $discard, $hierarchy, $noise) = split(/\t+/, $_);
+        my ($name, $num, $mvl, $ipv6, $type, $hierarchy, $noise) = split(/\t+/, $_);
         debug(8, "Parsing $hierarchy -> $name ($ipv6)\n");
         my ($hi, $Tier) = split(/\./, $hierarchy);
         debug(8, "H-> $hi, T->$Tier N->$name, I->$ipv6\n");

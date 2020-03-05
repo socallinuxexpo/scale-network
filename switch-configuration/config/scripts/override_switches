@@ -26,28 +26,41 @@ STDERR->autoflush(1);   # Turn on autoflush for STDERR
 my @list = @ARGV;
 if (scalar(@list) == 0)
 {
-    @list = get_switchlist();
+    @list = @{get_switchlist()};
     print "Pulled ", scalar(@list), " switches from configuration list\n";
 }
 else
 {
-    print "Have ", scalar(@list), " Switch names from command line.\n";
+    print "Have ", scalar(@list), " Switch or group names from command line.\n";
 }
 
-if ($opt_l && scalar(@list) != 1)
+# If @list doesn't contain exactly one item or the item in the list is not 2+ characters
+# long, then it's not a single switch (might be a group).
+if ($opt_l && (scalar(@list) != 1 || length($list[0]) < 2))
 {
     print STDERR "Use of -l option requires exactly one switch be specified.\n";
 }
 
-# This works in three phases for each switch...
-#
+print "List before expansion:\n";
+foreach(@list)
+{
+    print "\t$_\n";
+}
+my @list = expand_switch_groups(@list);
+print "List after expansion:\n";
+foreach(@list)
+{
+    print "\t$_\n";
+}
+
 # Assertions:
 #   output/* contains valid configuratin files for each switch
 #   Switches are accessible via SSH at their management address in the switchtypes file.
 # Phase 1: Push new configuration file to switch.
-# Phase 2: Remove possibly conflicting old configuration remnants
-# Phase 3: Merge new configuration file and commit
+# Phase 2: Apply new configuration file using "load override <filename>" and commit it.
 #
+
+# Commands used for phase 2
 my $SWITCH_COMMANDS = <<EOF;
 edit
 load override /tmp/new_config.conf

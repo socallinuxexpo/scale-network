@@ -24,6 +24,7 @@ our $VV_name_prefix;
 my $DEBUGLEVEL = 9;
 
 my %Switchtypes;
+my %Switchgroups;
 
 sub set_debug_level
 {
@@ -127,6 +128,29 @@ sub get_switchlist
   }
 }
 
+sub expand_switch_groups
+{
+    print "Expanding switch list...\n";
+    my @list = @_;
+    my @output = ();
+    # Make sure cache is prepopulated from configuration file
+    get_switchtype("anonymous");
+    foreach(@list)
+    {
+        if (defined($Switchgroups{$_}))
+        {
+            print "Expanding $_\n";
+            push @output, @{$Switchgroups{$_}};
+        }
+        else
+        {
+            print "Passing $_\n";
+            push @output, $_;
+        }
+    }
+    print "Expansion ends\n";
+    return @output;
+}
 
 sub get_switchtype
 {
@@ -140,9 +164,17 @@ sub get_switchtype
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
-      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = split(/\t+/, $_);
-      debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type)\n");
-      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type ];
+      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel) = split(/\t+/, $_);
+      my ($group, $level) = split(/\./, $hierarchy);
+      debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type, $group, $level)\n");
+      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level ];
+      # Build cache of groups
+      debug(5, "Adding $Name to group $group at level $level\n");
+      if (!defined($Switchgroups{$group}))
+      {
+          @{$Switchgroups{$group}} = ();
+      }
+      push(@{$Switchgroups{$group}}, $Name);
     }
   }
   # If we're just doing a cache preload, we're done.
@@ -162,7 +194,10 @@ sub get_switchtype
                             $Switchtypes{$hostname}[0]. ", ".
                             $Switchtypes{$hostname}[1]. ", ".
                             $Switchtypes{$hostname}[2]. ", ".
-                            $Switchtypes{$hostname}[3]. ")\n");
+                            $Switchtypes{$hostname}[3]. ", ".
+                            $Switchtypes{$hostname}[4]. ", ".
+                            $Switchtypes{$hostname}[5]. ", ".
+                            $Switchtypes{$hostname}[6]. ")\n");
   return($hostname, @{$Switchtypes{$hostname}});
 }
 

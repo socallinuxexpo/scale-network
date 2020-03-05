@@ -5,51 +5,51 @@
 // .1 = First priority, head-end for hierarchy (e.g. C.1 = NE-IDF Switch)
 // ... Switch chain order from .1 (e.g. C.2 is plugged into C.1 level, C.3 is plugged into C.2 level, etc.)
 // .9 = Stub (No subordinate switches) regardless of next level up switch
-//Name		Num	MgtVL	IPv6				Type			// Hierarchy	Switch Noiselevel
-Rm101-102	1	503	2001:470:f325:503::200:1	cfRoom			//	I.9		Quiet
-NW-IDF		2	103	2001:470:f325:103::200:2	exIDF			//	F.1		Loud
-NE-IDF		3	103	2001:470:f325:103::200:3	exIDF			//	C.1		Loud
-BallroomC	4	103	2001:470:f325:103::200:4	exRoom			//	C.9		Normal
-BallroomDE	5	103	2001:470:f325:103::200:5	exRoom			//	F.9		Normal
-ExpoIDF		6	103	2001:470:f325:103::200:6	exIDF			//	X.1		Loud
-BallroomF	7	103	2001:470:f325:103::200:7	exRoom			//	F.9		Normal
-Rm103		8	503	2001:470:f325:503::200:8	cfRoom			//	I.9		Quiet
-BallroomG	9	103	2001:470:f325:103::200:9	exRoom			//	F.9		Normal
-ConfIDF		10	503	2001:470:f325:503::200:10	cfIDF			//	I.1		Loud
-BallroomH	11	103	2001:470:f325:103::200:11	exRoom			//	F.9		Normal
-BallroomA	12	103	2001:470:f325:103::200:12	exRoom			//	C.9		Normal
-BallroomB	13	103	2001:470:f325:103::200:13	exRoom			//	C.9		Normal
-AVSwitch	14	503	2001:470:f325:503::200:14	cfAV			//	F.9		Normal
-Party		15	103	2001:470:f325:103::200:15	Party			//	X.9		Loud
-Expo-Catwalk	16	103	2001:470:f325:103::200:16	Catwalk			//	W.1		Loud
-Rm209-210	17	503	2001:470:f325:503::200:17	cfRoom			//	I.9		Normal
-ExpoA1		18	103	2001:470:f325:103::200:18	Booth			//	W.9		Loud
-Rm211		19	503	2001:470:f325:503::200:19	cfRoom			//	I.9		Normal
-Rm104		20	503	2001:470:f325:503::200:20	cfRoom			//	I.9		Quiet
-NOC		21	503	2001:470:f325:503::200:21	cfIDF			//	I.2		Normal
-ExpoB1		22	103	2001:470:f325:103::200:22	Booth			//	W.9		Loud
-CTF1		23	504	2001:470:f325:504::200:23	cfCTF			//	I.4		Normal
-ExpoC1		24	103	2001:470:f325:103::200:24	Booth			//	W.9		Loud
-Rm106		25	503	2001:470:f325:503::200:25	cfRoom			//	I.9		Quiet
-CTF2		26	504	2001:470:f325:504::200:26	cfCTF			//	I.5		Normal
-CTF3		27	504	2001:470:f325:504::200:27	cfCTF			//	I.6		Normal
-ExpoA2		28	103	2001:470:f325:103::200:28	Booth			//	W.9		Loud
-ExpoB2		29	103	2001:470:f325:103::200:29	Booth			//	W.9		Loud
-CTF4		30	504	2001:470:f325:504::200:30	cfCTF			//	I.7		Normal
-Rm107		31	503	2001:470:f325:503::200:31	cfRoom			//	I.2		Quiet
-RegDesk		32	103	2001:470:f325:103::200:32	registration		//	X.9		Normal
-ExpoC2		33	103	2001:470:f325:103::200:33	Booth			//	W.9		Normal
-ExpoA3		34	103	2001:470:f325:103::200:34	Booth			//	W.9		Loud
-ExpoB3		35	103	2001:470:f325:103::200:35	Booth			//	W.9		Loud
-ExpoC3		36	103	2001:470:f325:103::200:36	Booth			//	W.9		Normal
-Rm214		37	503	2001:470:f325:503::200:37	cfRoom			//	I.9		Quiet
-ExpoA4		38	103	2001:470:f325:103::200:38	Booth			//	W.9		Normal
-ExpoB4		39	103	2001:470:f325:103::200:39	Booth			//	W.9		Normal
-Rm105		40	503	2001:470:f325:503::200:40	cfRoom			//	I.9		Quiet
-ExpoC4		41	103	2001:470:f325:103::200:41	Booth			//	W.9		Normal
-ExpoA5		42	103	2001:470:f325:103::200:42	Booth			//	W.9		Normal
-ExpoB5		43	103	2001:470:f325:103::200:43	Booth			//	W.9		Normal
-ExpoC5		44	103	2001:470:f325:103::200:44	Booth			//	W.9		Loud
-ExpoAW		45	103	2001:470:f325:103::200:45	Booth			//	W.9		Normal
-CTF5		46	504	2001:470:f325:504::200:46	cfCTF			//	I.8		Loud
-CTF6		47	504	2001:470:f325:504::200:47	cfCTF			//	I.9		Normal
+//Name		    Num	MgtVL	IPv6				    Type			Hierarchy	Switch Noiselevel
+Rm101-102	    1	503	2001:470:f325:503::200:1	cfRoom			I.9		Quiet
+NW-IDF		    2	103	2001:470:f325:103::200:2	exIDF			F.1		Loud
+NE-IDF		    3	103	2001:470:f325:103::200:3	exIDF			C.1		Loud
+BallroomC	    4	103	2001:470:f325:103::200:4	exRoom			C.9		Normal
+BallroomDE	    5	103	2001:470:f325:103::200:5	exRoom			F.9		Normal
+ExpoIDF		    6	103	2001:470:f325:103::200:6	exIDF			X.1		Loud
+BallroomF	    7	103	2001:470:f325:103::200:7	exRoom			F.9		Normal
+Rm103		    8	503	2001:470:f325:503::200:8	cfRoom			I.9		Quiet
+BallroomG	    9	103	2001:470:f325:103::200:9	exRoom			F.9		Normal
+ConfIDF		    10	503	2001:470:f325:503::200:10	cfIDF			I.1		Loud
+BallroomH	    11	103	2001:470:f325:103::200:11	exRoom			F.9		Normal
+BallroomA	    12	103	2001:470:f325:103::200:12	exRoom			C.9		Normal
+BallroomB	    13	103	2001:470:f325:103::200:13	exRoom			C.9		Normal
+AVSwitch	    14	503	2001:470:f325:503::200:14	cfAV			I.9		Normal
+Party		    15	103	2001:470:f325:103::200:15	Party			X.9		Loud
+Expo-Catwalk	16	103	2001:470:f325:103::200:16	Catwalk			W.1		Loud
+Rm209-210	    17	503	2001:470:f325:503::200:17	cfRoom			I.9		Normal
+ExpoA1		    18	103	2001:470:f325:103::200:18	Booth			W.9		Loud
+Rm211		    19	503	2001:470:f325:503::200:19	cfRoom			I.9		Normal
+Rm104		    20	503	2001:470:f325:503::200:20	cfRoom			I.9		Quiet
+NOC		        21	503	2001:470:f325:503::200:21	NOC 			I.2		Normal
+ExpoB1		    22	103	2001:470:f325:103::200:22	Booth			W.9		Loud
+CTF1		    23	504	2001:470:f325:504::200:23	cfCTF			I.4		Normal
+ExpoC1		    24	103	2001:470:f325:103::200:24	Booth			W.9		Loud
+Rm106		    25	503	2001:470:f325:503::200:25	cfRoom			I.9		Quiet
+CTF2		    26	504	2001:470:f325:504::200:26	cfCTF			I.5		Normal
+CTF3		    27	504	2001:470:f325:504::200:27	cfCTF			I.6		Normal
+ExpoA2		    28	103	2001:470:f325:103::200:28	Booth			W.9		Loud
+ExpoB2		    29	103	2001:470:f325:103::200:29	Booth			W.9		Loud
+CTF4		    30	504	2001:470:f325:504::200:30	cfCTF			I.7		Normal
+Rm107		    31	503	2001:470:f325:503::200:31	cfRoom			I.2		Quiet
+RegDesk		    32	103	2001:470:f325:103::200:32	registration	X.9		Normal
+ExpoC2		    33	103	2001:470:f325:103::200:33	Booth			W.9		Normal
+ExpoA3		    34	103	2001:470:f325:103::200:34	Booth			W.9		Loud
+ExpoB3		    35	103	2001:470:f325:103::200:35	Booth			W.9		Loud
+ExpoC3		    36	103	2001:470:f325:103::200:36	Booth			W.9		Normal
+Rm214		    37	503	2001:470:f325:503::200:37	cfRoom			I.9		Quiet
+ExpoA4		    38	103	2001:470:f325:103::200:38	Booth			W.9		Normal
+ExpoB4		    39	103	2001:470:f325:103::200:39	Booth			W.9		Normal
+Rm105		    40	503	2001:470:f325:503::200:40	cfRoom			I.9		Quiet
+ExpoC4		    41	103	2001:470:f325:103::200:41	Booth			W.9		Normal
+ExpoA5		    42	103	2001:470:f325:103::200:42	Booth			W.9		Normal
+ExpoB5		    43	103	2001:470:f325:103::200:43	Booth			W.9		Normal
+ExpoC5		    44	103	2001:470:f325:103::200:44	Booth			W.9		Loud
+ExpoAW		    45	103	2001:470:f325:103::200:45	Booth			W.9		Normal
+CTF5		    46	504	2001:470:f325:504::200:46	cfCTF			I.8		Loud
+CTF6		    47	504	2001:470:f325:504::200:47	cfCTF			I.9		Normal
