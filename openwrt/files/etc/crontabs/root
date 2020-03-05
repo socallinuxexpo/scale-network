@@ -1,1 +1,2 @@
 0 * * * * /usr/sbin/logrotate -f /etc/logrotate.conf -s /tmp/logrotate.status
+*/5 * * * * /usr/bin/logger "AP=$(uname -n) running $(cat /etc/scale-release | head -n 1)"
