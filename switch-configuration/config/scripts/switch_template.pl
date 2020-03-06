@@ -1405,6 +1405,7 @@ protocols {
     rstp;
     lldp {
         interface all;
+        port-id-subtype interface-name;
     }
     lldp-med {
         interface all;
