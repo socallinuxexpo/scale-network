@@ -1,11 +1,5 @@
 ---
 
-- hosts: servers
-  become: yes
-  serial: 1
-  roles:
-    - aptupdate
-
 - hosts: core
   become: yes
   serial: 1
