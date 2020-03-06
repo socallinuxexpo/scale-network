@@ -8,7 +8,7 @@
     - dhcpserver
     - zabbixagent
 
-- hosts: servers
+- hosts: core,automation,monitoring
   become: yes
   roles:
     - techteam
