@@ -5,6 +5,9 @@ CSV validation library
 import ipaddress
 import re
 
+from os import listdir
+from os.path import isfile, join
+
 
 def isuntested(value):
     # pylint: disable=unused-argument
@@ -71,9 +74,44 @@ def isintorempty(val):
     return val.isdigit() or val == ''
 
 
+def isvalidhierarchy(val):
+    '''test for valid switch hierarchy'''
+    pattern = r"^([A-Z][.][0-9])$"
+    result = re.match(pattern, val)
+    if result:
+        return True
+    return False
+
+
+def isvalidnoiselevel(val):
+    '''test for valid noise level [Quiet, Normal, Loud]'''
+    if val in ["Quiet", "Normal", "Loud"]:
+        return True
+    return False
+
+
+def isvalidtype(val):
+    '''test for valid switch type, denoted by existence of file in types dir'''
+    type_path = "../switch-configuration/config/types/"
+    valid = [f for f in listdir(type_path) if isfile(join(type_path, f))]
+    if val in valid:
+        return True
+    return False
+
+
 def test_csvfile(meta):
+    '''csv wrapper for test_datafile'''
+    return test_datafile(r',', meta)
+
+
+def test_tsvfile(meta):
+    '''tsv wrapper for test_datafile'''
+    return test_datafile(r'\t+', meta)
+
+
+def test_datafile(delimiter, meta):
     '''
-    test a file using the supplied metadata
+    test a file using the supplied delimiter and metadata
     structured as:
     {
         file: file's path
@@ -87,7 +125,10 @@ def test_csvfile(meta):
     lines = fha.readlines()
     fha.close()
     for linenum, line in enumerate(lines):
-        elems = re.split(',', line)
+        # skip comments
+        if line[0] == '/' and line[1] == '/':
+            continue
+        elems = re.split(delimiter, line)
         # check for expected number of columns
         if len(elems) != meta["count"]:
             return False, "invalid col count at line " + str(linenum)
