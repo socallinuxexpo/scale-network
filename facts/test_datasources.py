@@ -74,3 +74,23 @@ def test_serverlist_csv():
     }
     result, err = ds.test_csvfile(meta)
     assert result, err
+
+
+def test_switchtypes_tsv():
+    '''test switchtypes'''
+    meta = {
+        "file": "../switch-configuration/config/switchtypes",
+        "header": False,
+        "count": 7,
+        "cols": [
+            ds.isvalidhostname,
+            ds.isint,
+            ds.isint,
+            ds.isvalidip,
+            ds.isvalidtype,
+            ds.isvalidhierarchy,
+            ds.isvalidnoiselevel
+        ]
+    }
+    result, err = ds.test_tsvfile(meta)
+    assert result, err
