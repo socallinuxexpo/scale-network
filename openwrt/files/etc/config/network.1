@@ -21,6 +21,7 @@ config switch
 config interface 'mgmt'
         option ifname 'eth1'
         option proto 'dhcp'
+        option reqopts '226'
         option type 'bridge'
 
 config interface 'mgmt6'
