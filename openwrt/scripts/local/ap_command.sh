@@ -5,7 +5,7 @@ UP=()
 
 tally_down(){
   DOWN+=($1)
-  echo "Can't ping $1"
+  echo "Can't ping $1" >&2
 }
 
 tally_up(){
@@ -27,9 +27,9 @@ do
   fi
 done
 
-echo "------"
+(echo "------"
 echo "Down list: ${DOWN[@]}"
 echo "Down total: ${#DOWN[@]}"
 echo "------"
 echo "Up list: ${UP[@]}"
-echo "Up total: ${#UP[@]}"
+echo "Up total: ${#UP[@]}") >&2
