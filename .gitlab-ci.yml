@@ -1,0 +1,45 @@
+---
+#shallow clones to speed up build
+variables:
+    GIT_DEPTH: 10
+
+# Keep all jobs within these 3 stages
+stages:
+  - test
+  - build
+  - integ
+
+# This build takes a long time and should be done
+# outside of initial PR CI testing
+openwrt-ar71xx-build:
+  stage: build
+  # Takes more than 1 hr to build on gitlab shared runners
+  timeout: 3 hours
+  only:
+    variables:
+      - $OPENWRT_BUILD == "YES"
+  image:
+    name: sarcasticadmin/openwrt-build@sha256:bab6de3f66f5365d866de646bb9fd1f2000061d1a5fe8a07b6a714661a9a9a63
+  script:
+    - cd ${CI_PROJECT_DIR}/openwrt
+    - TARGET=ar71xx make templates build-img 2>&1 | tee build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
+  artifacts:
+    paths:
+      - openwrt/build.log
+      - openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/
+    expire_in: 1 week
+
+openwrt-3800ch-integ:
+  variables:
+    CI_DEBUG_TRACE: "false"
+  stage: integ
+  only:
+    variables:
+      - $OPENWRT_INTEG == "YES"
+  tags:
+    - openwrt
+  script:
+    - cd ${CI_PROJECT_DIR}/openwrt/
+    - sudo -s ./autoflash
+    - cd ${CI_PROJECT_DIR}/tests/serverspec
+    - rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100
