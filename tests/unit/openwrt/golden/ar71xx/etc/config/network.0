@@ -19,11 +19,82 @@ config switch
         
 
 
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '100'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '500'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '101'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '501'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '102'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '502'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '103'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '503'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '105'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '505'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 1 2 3t 5t'
+        option vlan '107'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 1 2 3t 5t'
+        option vlan '507'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '108'
+        
+config switch_vlan
+        option device 'rtl8366s'
+        option ports '0t 3t 5t'
+        option vlan '508'
+        
 
 
 config interface 'mgmt'
-        option ifname 'eth1'
+        option ifname 'eth0.103 eth0.503 eth1.103 eth1.503'
         option proto 'dhcp'
+        option reqopts '224 225'
         option type 'bridge'
         
 config interface 'mgmt6'
@@ -32,19 +103,25 @@ config interface 'mgmt6'
         option reqprefix 'no'
         
 config interface 'staffwifi'
-        option ifname 'eth1.108 eth1.508'
+        option ifname 'eth0.108 eth0.508 eth1.108 eth1.508'
         option proto 'none'
         option type 'bridge'
         
 config interface 'scaleslow'
-        option ifname 'eth1.100 eth1.500'
+        option ifname 'eth0.100 eth0.500 eth1.100 eth1.500'
         option proto 'none'
         option type 'bridge'
         
 config interface 'scalefast'
-        option ifname 'eth1.101 eth1.501'
+        option ifname 'eth0.101 eth0.501 eth1.101 eth1.501'
         option proto 'none'
         option type 'bridge'
+        
+config interface 'backdoor'
+        option ifname 'eth1.3517'
+        option ipaddr '192.168.255.76'
+        option netmask '255.255.255.0'
+        option proto 'static'
         
 
 
