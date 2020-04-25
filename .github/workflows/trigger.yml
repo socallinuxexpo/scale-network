@@ -1,0 +1,34 @@
+name: PR comments to trigger gitlab-ci jobs
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  build:
+  # if comment string starts with "build"
+  # event must be a pull request (not a regular issue)
+    if: >
+      startsWith(github.event.comment.body, 'tux')
+      && startsWith(github.event.issue.pull_request.url, 'https://')
+      && github.actor == "sarcasticadmin"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Call gitlab API with event data'
+      id: event-data
+      run: |
+        set -eu
+        JOB=$( cut -d ' ' -f 2 <<< "${{ github.event.comment.body }}" )
+        JOB_ARG=$( cut -d ' ' -f 3 <<< "${{ github.event.comment.body }}" )
+        RESP=$(curl -sSf \
+          --url ${{ github.event.issue.pull_request.url }} \
+          --header 'content-type: application/json')
+        BRANCH=$(python3 -c "import sys, json; print(json.load(sys.stdin)['head']['ref'])" <<< "$RESP")
+        # Call gitlab
+        curl --request POST \
+          --form token=${{ secrets.GITLAB_TOKEN }}  \
+          --form "ref=$BRANCH" \
+          --form "variables[$JOB]=YES" \
+          --form "variables[WORMHOLE_CODE]=$JOB_ARG" \
+          https://gitlab.com/api/v4/projects/17362342/trigger/pipeline
