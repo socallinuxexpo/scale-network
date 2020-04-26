@@ -40,6 +40,7 @@ openwrt-3800ch-integ:
     - openwrt
   script:
     - cd ${CI_PROJECT_DIR}/openwrt/
+    - ${CI_PROJECT_DIR}/openwrt/scripts/local/gather-artifact.sh
     - sudo -s ./autoflash
     - cd ${CI_PROJECT_DIR}/tests/serverspec
     - rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100
