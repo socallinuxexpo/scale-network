@@ -35,6 +35,19 @@ else
   # But ok to assume this user for now
   options[:user] = 'ubuntu'
 end
+
+if ENV['ASK_LOGIN_PASSWORD']
+  begin
+    require 'highline/import'
+  rescue LoadError
+    fail "highline is not available. Try installing it."
+  end
+
+  options[:password] = ask("\nEnter login password: ") { |q| q.echo = false }
+else
+  options[:password] = ENV['LOGIN_PASSWORD']
+end
+
 # Set environment variables
 # set :env, :LANG => 'C', :LC_MESSAGES => 'C'
 

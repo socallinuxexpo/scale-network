@@ -1,0 +1,50 @@
+#!/usr/bin/env expect
+log_file -noappend /tmp/autoflash.log
+spawn gpioctl -c 2 OUT
+spawn gpioctl -c 3 OUT
+# Off
+spawn gpioctl -p 2 1
+spawn sudo service isc-dhcpd onestop
+spawn /usr/sbin/arp -d 192.168.254.100
+sleep 5
+# on
+spawn ifconfig ue1 192.168.1.2 255.255.255.0
+spawn gpioctl -p 2 0
+spawn gpioctl -p 3 0
+spawn /usr/sbin/arp -d 192.168.1.1
+spawn ping -n 192.168.1.1
+expect {
+  Unreachable exp_continue
+  "taking countermeasures"
+}
+close
+# Wait for AP light to be blinking green
+sleep 30
+spawn gpioctl -p 3 1
+spawn tftp 192.168.1.1
+expect tftp
+send "bin\n"
+expect tftp
+send "put factory.img\n"
+expect {
+  Sent exp_continue
+  tftp {
+    send "quit\n\n"
+  }
+}
+close
+spawn /usr/sbin/arp -d 192.168.1.1
+spawn sudo ifconfig ue1.503 create
+spawn sudo ifconfig ue1.503 inet 192.168.254.1 255.255.255.0
+spawn sudo service isc-dhcpd onestart
+sleep 5
+spawn ping -n 192.168.254.100
+expect {
+  Unreachable exp_continue
+  ping exp_continue
+  PING exp_continue
+  "taking countermeasures"
+  "64 bytes"
+}
+close
+send_user "\n\nFinished flashing AP!\n\n"

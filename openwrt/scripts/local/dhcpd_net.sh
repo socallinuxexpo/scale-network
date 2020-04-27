@@ -1,11 +1,18 @@
 #!/bin/sh
 
+#####
+#
+# dhcpd service setup during flashing
+# this currently has issue being called via the gitlab-runner
+# so only use this for local testing for now
+#
+#####
+
 usage(){
   cat << EOF
 usage: $(basename $0) [OPTIONS] ARGS
 
-
-Simple template of getopts
+dhcpd service setup during flashing
 
 OPTIONS:
   -h      Show this message
@@ -47,12 +54,12 @@ option domain-name "example.org";
 option domain-name-servers 8.8.8.8, 8.8.4.4;
 option subnet-mask 255.255.255.0;
 
-default-lease-time 600;
-max-lease-time 72400;
+default-lease-time 30;
+max-lease-time 60;
 ddns-update-style none;
 
 subnet 192.168.254.0 netmask 255.255.255.0 {
-  range 192.168.254.100 192.168.254.200;
+  range 192.168.254.100 192.168.254.100;
   option routers 192.168.254.1;
 }
 EOF

@@ -78,7 +78,7 @@ build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	  && echo SCALE_VER=$(shell git rev-parse HEAD) > $(TMPL_SRC_DIR)/etc/scale-release \
 	  && echo OPENWRT_VER=$(OPENWRT_VER) >> $(TMPL_SRC_DIR)/etc/scale-release \
 	  && $(MAKE) download \
-	  && $(MAKE) V=s -j 4
+	  && $(MAKE) V=s -j 2
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
