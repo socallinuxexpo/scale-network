@@ -1,50 +1,81 @@
 #!/usr/bin/env expect
-log_file -noappend /tmp/autoflash.log
+#
+# Script intended to be run for gitlab-runner for CI flashing
+#
+
+# Dir where build artifacts should be stored
+set workdir "work"
+
+# Make sure dir exists and is owned by correct user
+# since gitlab CI will try to clean up old artifacts
+# inbetween runs
+file mkdir $workdir
+file attributes $workdir -owner gitlab-runner
+log_file -noappend $workdir/autoflash.log
 spawn gpioctl -c 2 OUT
 spawn gpioctl -c 3 OUT
+
 # Off
 spawn gpioctl -p 2 1
-spawn sudo service isc-dhcpd onestop
-spawn /usr/sbin/arp -d 192.168.254.100
+
+# Cleanup interfaces and arp table
+spawn ifconfig ue1 down
+spawn ifconfig ue1.503 destroy
+spawn sudo pkill dnsmasq
+spawn sudo /usr/sbin/arp -d 192.168.1.1
+spawn sudo /usr/sbin/arp -d 192.168.254.100
 sleep 5
+
 # on
-spawn ifconfig ue1 192.168.1.2 255.255.255.0
+spawn sudo ifconfig ue1 192.168.1.2 255.255.255.0
 spawn gpioctl -p 2 0
 spawn gpioctl -p 3 0
-spawn /usr/sbin/arp -d 192.168.1.1
-spawn ping -n 192.168.1.1
+set timeout 120
+spawn ping -o -i 10 -n 192.168.1.1
 expect {
-  Unreachable exp_continue
-  "taking countermeasures"
+  # renew timer if no reply
+  "Unreachable" exp_continue
+  "ping*" exp_continue
+  "PING*" exp_continue
+  "taking countermeasures*"
+  "40 bytes from*"
 }
-close
 # Wait for AP light to be blinking green
 sleep 30
 spawn gpioctl -p 3 1
+# TFTP takes about 10 sec
+# bump to timeout to accommodate this
+set timeout 30
 spawn tftp 192.168.1.1
-expect tftp
+expect tftp>
 send "bin\n"
-expect tftp
+expect tftp>
 send "put factory.img\n"
 expect {
   Sent exp_continue
-  tftp {
+  "tftp>" {
     send "quit\n\n"
   }
+  "receive_packet: timeout" { exit 1 }
+  "Try " { exit 1 }
 }
 close
-spawn /usr/sbin/arp -d 192.168.1.1
+# Set back to default
+set timeout 10
+spawn sudo /usr/sbin/arp -d 192.168.1.1
 spawn sudo ifconfig ue1.503 create
 spawn sudo ifconfig ue1.503 inet 192.168.254.1 255.255.255.0
-spawn sudo service isc-dhcpd onestart
-sleep 5
-spawn ping -n 192.168.254.100
+spawn sudo dnsmasq -i ue1.503 --dhcp-range=192.168.254.100,192.168.254.100,255.255.255.0,30s --dhcp-option=3,192.168.254.1
+# Ping wait will be set to 10 sec
+# Make sure expect timeout is longer than
+# ping wait and account for initial ping taking
+# longer
+set timeout 120
+spawn ping -o -i 10 -n 192.168.254.100
 expect {
-  Unreachable exp_continue
-  ping exp_continue
-  PING exp_continue
-  "taking countermeasures"
-  "64 bytes"
+    # renew timer if no reply
+    "ping*" exp_continue
+    "PING*" exp_continue
+    timeout { puts "expect timeout waiting for AP to get DHCP lease"; exit 1 }
 }
-close
 send_user "\n\nFinished flashing AP!\n\n"
