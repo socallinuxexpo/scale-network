@@ -1,3 +1,4 @@
+---
 name: PR comments to trigger gitlab-ci jobs
 
 on:
@@ -5,30 +6,76 @@ on:
     types: [created]
 
 jobs:
-  build:
-  # if comment string starts with "build"
-  # event must be a pull request (not a regular issue)
+  verify:
+    name: Verify Commenter
+    runs-on: ubuntu-18.04
+    # Currently limiting this to robs user til stable
     if: >
-      startsWith(github.event.comment.body, 'tux')
-      && startsWith(github.event.issue.pull_request.url, 'https://')
-      && github.actor == "sarcasticadmin"
-    runs-on: ubuntu-latest
-
+      startsWith(github.event.comment.body, '/tux')
+      && github.event.issue.pull_request
+      && github.actor == 'sarcasticadmin'
     steps:
-    - name: 'Call gitlab API with event data'
-      id: event-data
+    - name: 'Collect event data'
+      id: job
       run: |
-        set -eu
-        JOB=$( cut -d ' ' -f 2 <<< "${{ github.event.comment.body }}" )
-        JOB_ARG=$( cut -d ' ' -f 3 <<< "${{ github.event.comment.body }}" )
-        RESP=$(curl -sSf \
+        set -eux
+        SUBCOMM=$(cut -d ' ' -f 2 <<< "${{ github.event.comment.body }}")
+        SUBARGS="$(cut -d ' ' -f 3- <<< "${{ github.event.comment.body }}")"
+        # Have to do this to get git commit ref for comments in PRs
+        # "github.event.pull_request.head" will not work since this
+        # is not a PR event
+        REF=$(curl -sSf \
           --url ${{ github.event.issue.pull_request.url }} \
-          --header 'content-type: application/json')
-        BRANCH=$(python3 -c "import sys, json; print(json.load(sys.stdin)['head']['ref'])" <<< "$RESP")
-        # Call gitlab
-        curl --request POST \
+          --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'Content-Type: application/json' | jq -r '.head.ref' \
+        )
+        echo ::set-output name=subcomm::$SUBCOMM
+        echo ::set-output name=subargs::$SUBARGS
+        echo ::set-output name=ref::$REF
+      continue-on-error: true
+    outputs:
+      subcomm: ${{ steps.job.outputs.subcomm }}
+      subargs: ${{ steps.job.outputs.subargs }}
+      ref: ${{ steps.job.outputs.ref }}
+  flash:
+    name: Flash netgear hardware
+    runs-on: ubuntu-18.04
+    needs: verify
+    if: >
+      needs.verify.outputs.subcomm == 'openwrt'
+      && startsWith(needs.verify.outputs.subargs, 'flash')
+    steps:
+    - name: 'call gitlab pipeline'
+      id: flash
+      run: |
+        set -euo pipefail
+        WORMHOLE_CODE=$(cut -d ' ' -f 2 <<< "${{ needs.verify.outputs.subargs }}")
+        PIPELINE=$(curl -f --request POST \
           --form token=${{ secrets.GITLAB_TOKEN }}  \
-          --form "ref=$BRANCH" \
-          --form "variables[$JOB]=YES" \
-          --form "variables[WORMHOLE_CODE]=$JOB_ARG" \
-          https://gitlab.com/api/v4/projects/17362342/trigger/pipeline
+          --form "ref=${{ needs.verify.outputs.ref }}" \
+          --form "variables[OPENWRT_INTEG]=YES" \
+          --form variables[WORMHOLE_CODE]=$WORMHOLE_CODE \
+          https://gitlab.com/api/v4/projects/17362342/trigger/pipeline | jq -r .web_url)
+        echo ::set-output name=pipeline::$PIPELINE
+    - name: Create status PR Comment
+      if: ${{ success() }}
+      uses: jungwinter/comment@5acbb  # SHA ref v1.0.2
+      with:
+        type: create
+        body: |
+          [RUNNING] - Successfully triggered gitlab flash pipeline:
+            - gitlab pipeline: ${{ steps.flash.outputs.pipeline }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue_number: ${{ github.event.issue.number }}
+    - name: Create status PR comment failure
+      if: ${{ failure() }}
+      uses: jungwinter/comment@5acbb  # SHA ref v1.0.2
+      with:
+        type: create
+        body: |
+          [FAIL] - Error triggering gitlab flash pipeline
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue_number: ${{ github.event.issue.number }}
+    outputs:
+      pipeline: ${{ steps.flash.outputs.pipeline }}
+
