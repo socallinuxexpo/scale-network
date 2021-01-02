@@ -10,6 +10,7 @@
 
 ## Table of Contents
 * [CONTRIBUTING](./CONTRIBUTING.md)
+* [CI](./CI.md)
 * [MAPS](./MAPS.md)
 * [SWITCH CONFIG](./switch-configuration/README.md)
 * [ANSIBLE](./ansible/README.md)

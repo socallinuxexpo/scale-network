@@ -19,7 +19,7 @@ ln -s <locationof>.img factory.img
 
 The AP is now ready to accept a new `.img`, continue with either method below:
 
-### Auto TFTP
+### Auto TFTP (Legacy)
 
 Use the `flash` script:
 
@@ -29,19 +29,19 @@ cd openwrt
 ```
 > This will also update the .csv with the mac address
 
-## Manual TFTP
+### Manual TFTP
 
 Manual interaction with `tftp` client:
 
 ```sh
-ln -s locationof.img factory.img
+ln -s <locationof.img> factory.img
 tftp 192.168.1.1
 > bin
 > put factory.img
 > quit
 ```
 
-## Inplace
+### In-place
 
 Assuming Openwrt is already installed:
 
