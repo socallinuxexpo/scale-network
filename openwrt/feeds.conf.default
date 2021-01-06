@@ -1,5 +1,5 @@
 # off openwrt pkg master branch
-src-git packages https://git.openwrt.org/feed/packages.git^6cff09119bb2d4e5819325bfa2ff3997241fb80f
+src-git packages https://git.openwrt.org/feed/packages.git^fbdab5bb089bfd5060121d0cbf393c33a2e41600
 #src-git luci https://git.openwrt.org/project/luci.git
 #src-git routing https://git.openwrt.org/feed/routing.git
 #src-git telephony https://git.openwrt.org/feed/telephony.git
