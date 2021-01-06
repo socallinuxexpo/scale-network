@@ -19,7 +19,7 @@ BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER ?= 87b14bc6c289e7e80052b344c0f0c35e95ced267
+OPENWRT_VER ?= b4c0d377f6bc13c555b69659ac001a25ab22bbd4
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
 TAR_EXT = .tar.gz
