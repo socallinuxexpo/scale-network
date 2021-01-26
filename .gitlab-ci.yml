@@ -43,4 +43,8 @@ openwrt-3800ch-integ:
     - ${CI_PROJECT_DIR}/openwrt/scripts/local/gather-artifact.sh
     - sudo -s ./autoflash
     - cd ${CI_PROJECT_DIR}/tests/serverspec
-    - rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100
+    - rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100 | tee ${CI_PROJECT_DIR}/openwrt/work/serverspec.log
+  artifacts:
+    paths:
+      - openwrt/work/
+    expire_in: 1 week
