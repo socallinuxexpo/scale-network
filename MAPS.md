@@ -9,6 +9,8 @@ Maps of the layout for SCaLE 16x/17x at Pasadena Convention Center maps can be f
 * [ballroom-diagram-5](http://sarcasticadmin.com/scale/maps/16x/ballroom-diagram-5-scale.pdf)
 * [ballroom-diagram-6](http://sarcasticadmin.com/scale/maps/16x/ballroom-diagram-6-scale.pdf)
 * [expohall-diagram-1](http://sarcasticadmin.com/scale/maps/17x/expohall-diagram-1-scale.pdf)
+* [Zpasadena-cc-exp_GES.dwg](http://sarcasticadmin.com/scale/maps/Zpasadena-cc-exp_GES.dwg)
+* [Zpasadena-cc_GES.dwg](http://sarcasticadmin.com/scale/maps/Zpasadena-cc_GES.dwg)
 
 ## Updates
 
