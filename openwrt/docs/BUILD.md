@@ -116,6 +116,32 @@ and run:
 make diffconfig targetconfig
 ```
 
+### Update openwrt/opkg
+
+After bumping the version of openwrt/opkg make sure to ensure that the configs are
+still generated cleanly (no diff)
+
+```
+make config
+make menuconfig
+```
+> Ensure the selections in menuconfig are what your expecting
+
+If it looks good save them back to `config/` using:
+
+```
+make diffconfig commonconfig targetconfig
+```
+> This generates the diff of the base config, then we split it out
+> into the common components and last its arch target configs
+
+Repeat this for `TARGET=ipq806x`
+
+```
+TARGET=ipq806x make config
+TARGET=ipq806x make diffconfig commonconfig targetconfig
+```
+
 ### Build Identity
 
 Depending on the SCaLE conference number, the WPS LED will be ON for even years and OFF
