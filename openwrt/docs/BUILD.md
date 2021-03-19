@@ -118,6 +118,12 @@ make diffconfig targetconfig
 
 ### Update openwrt/opkg
 
+To bump the Makefile to reference the current upstream master branches
+
+```
+make bump
+```
+
 After bumping the version of openwrt/opkg make sure to ensure that the configs are
 still generated cleanly (no diff)
 

@@ -21,6 +21,8 @@ GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
 OPENWRT_VER ?= b4c0d377f6bc13c555b69659ac001a25ab22bbd4
+OPENWRT_PKG_VERSION ?= fbdab5bb089bfd5060121d0cbf393c33a2e41600
+
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
 TAR_EXT = .tar.gz
@@ -31,6 +33,10 @@ TMPL_OUT_DIR = $(BUILD_DIR)/$(IMAGEBUILDER)/files
 ifndef CURL
   $(error "curl is not available please install it")
 endif
+
+define FEEDS_CONF_DEFAULT
+src-git packages https://git.openwrt.org/feed/packages.git^$(OPENWRT_PKG_VERSION)
+endef
 
 PHONY: download-image extract templates clean clean-templates
 
@@ -48,7 +54,7 @@ $(BUILD_DIR)/$(IMAGEBUILDER): $(BUILD_DIR)/$(OPENWRT_VER)$(TAR_EXT)
 
 $(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default: extract
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) \
-	  && cp ../../feeds.conf.default feeds.conf.default
+	  && echo "$$FEEDS_CONF_DEFAULT" > feeds.conf.default
 
 feeds: $(BUILD_DIR)/$(IMAGEBUILDER)/feeds.conf.default
 
@@ -117,3 +123,6 @@ endif
 	@cd $(TMPL_OUT_DIR)/etc/config && ln -s network.0 network && ln -s wireless.0 wireless
 	@cd $(TMPL_OUT_DIR)/etc && ln -s /tmp/resolv.conf.d/resolv.conf.auto resolv.conf
 	touch $(TMPL_OUT_DIR)
+
+bump:
+	bash scripts/openwrt_bump.sh
