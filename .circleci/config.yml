@@ -26,6 +26,19 @@ jobs:
         name: openwrt ipq806x golden file test
         command: sh -x test.sh -t ipq806x
 
+  check_openwrt_vers:
+    docker:
+    - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+    resource_class: medium
+    working_directory: ~/scale-network/openwrt
+    steps:
+    - checkout:
+        path: ~/scale-network
+
+    - run:
+        name: get current openwrt and pkg masters
+        command: sh +x scripts/openwrt_bump.sh
+
   # This build takes a long time and should be done
   # outside of initial PR CI testing
   openwrt_build_ar71xx:
@@ -83,14 +96,14 @@ jobs:
     steps:
     - checkout:
         path: ~/scale-network
-    
+
     - run:
         name: lint python files
         command: pylint *.py
-    
+
     - run:
         name: data file unit tests
-        command: pytest -vv 
+        command: pytest -vv
 
   ansible_tests:
     docker:
@@ -163,3 +176,26 @@ workflows:
     jobs:
       - openwrt_build_ar71xx
       - openwrt_build_ipq806x
+
+  quarterly:
+    triggers:
+      - schedule:
+          cron: "15 8 1 1,4,7,10 *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - check_openwrt_vers:
+          context: $SOME_CONTEXT_WITH_GITHUB_CREDS
+
+  openwrt_bump:
+    jobs:
+      - openwrt_build_ar71xx:
+          filters:
+            branches:
+              include: /openwrt\/.*/
+      - openwrt_build_ipq806x:
+          filters:
+            branches:
+              include: /openwrt\/.*/
