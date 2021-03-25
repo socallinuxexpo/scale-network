@@ -33,7 +33,7 @@
   authorized_key:
     user: "{{ item }}"
     state: present
-    key: "{{ lookup('file', '{{ inventory_dir }}/../switch-configuration/authentication/keys/{{ item }}_id_rsa.pub') }}"
+    key: "{{ lookup('file', '{{ inventory_dir }}/../facts/keys/{{ item }}_id_rsa.pub') }}"
   with_items:
     # - owen
     - rob
