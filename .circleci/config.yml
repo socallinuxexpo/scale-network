@@ -83,14 +83,14 @@ jobs:
     steps:
     - checkout:
         path: ~/scale-network
-    
+
     - run:
         name: lint python files
         command: pylint *.py
-    
+
     - run:
         name: data file unit tests
-        command: pytest -vv 
+        command: pytest -vv
 
   ansible_tests:
     docker:

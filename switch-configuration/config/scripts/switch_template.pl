@@ -222,10 +222,10 @@ sub build_users_from_auth
 
   ##FIXME## In the future add support for users that don't get superuser
 
-  foreach $file (glob("../authentication/keys/*"))
+  foreach $file (glob("../../facts/keys/*"))
   {
     debug(9, "Examining key file $file\n");
-    $file =~ /..\/authentication\/keys\/(.*)_id_(.*).pub/;
+    $file =~ /..\/..\/facts\/keys\/(.*)_id_(.*).pub/;
     if (length($1) < 3)
     {
       warn("Skipping key $file -- Invalid username $1\n");

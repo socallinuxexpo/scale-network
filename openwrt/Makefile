@@ -14,6 +14,7 @@ TARGET ?= ar71xx
 BUILD_DIR ?= build
 
 BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
+KEYFILE ?= ../facts/keys/
 
 # bins
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
@@ -98,7 +99,7 @@ $(TMPL_OUT_DIR): $(TMPL_SRC_DIR) $(BUILD_SECRETS) | $(BUILD_DIR)/$(IMAGEBUILDER)
 ifndef GOMPLATE
   $(error "gomplate is not available please install it")
 endif
-	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
+	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) -d keys_dir=$(KEYPATH) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/config-version.sh
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
