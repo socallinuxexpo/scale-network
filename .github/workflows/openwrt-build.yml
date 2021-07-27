@@ -1,0 +1,35 @@
+---
+on:
+  workflow_dispatch:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '15 3 * * 0'
+
+jobs:
+  build:
+    name: Building openwrt img
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        target: ["ar71xx", "ipq806x"]
+    container:
+      image: sarcasticadmin/openwrt-build@sha256:bab6de3f66f5365d866de646bb9fd1f2000061d1a5fe8a07b6a714661a9a9a63
+      # Since user is openwrt and gets 1001 from inside container
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          ref: ${{ env.BRANCH }}
+      - name: Build openwrt
+        run: |
+          cd ${GITHUB_WORKSPACE}/openwrt
+          TARGET=${{ matrix.target }} make templates build-img 2>&1 | tee ${{ matrix.target }}-build.log
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          # Cant use relative pathing .. or . for artifacts action
+          path: |
+            /__w/action_sanity/scale-network/openwrt/${{ matrix.target }}-build.log
+            /__w/action_sanity/scale-network/openwrt/build/source-${{ matrix.target }}-*/bin/targets/*/generic/
+          retention-days: 30
