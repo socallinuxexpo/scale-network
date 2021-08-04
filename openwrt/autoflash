@@ -13,7 +13,8 @@ file mkdir $workdir
 file attributes $workdir -owner gitlab-runner
 log_file -noappend $workdir/autoflash.log
 spawn gpioctl -c 2 OUT
-spawn gpioctl -c 3 OUT
+# set Pulldown to keep pin 2 from effecting pin 3
+spawn gpioctl -c 3 OUT PD
 
 # Off
 spawn gpioctl -p 2 1
