@@ -20,16 +20,23 @@ jobs:
       - uses: actions/checkout@v1
         with:
           ref: ${{ env.BRANCH }}
-      - name: Build openwrt
+      - name: 'Build openwrt'
         run: |
-          cd ${GITHUB_WORKSPACE}/openwrt
-          TARGET=${{ matrix.target }} make templates build-img 2>&1 | tee ${{ matrix.target }}-build.log
-      - name: 'Upload Artifact'
+          cd openwrt
+          TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
+      - name: 'Upload openwrt build artifact tarball'
         uses: actions/upload-artifact@v2
         with:
-          name: artifacts
+          name:  ${{ matrix.target }}-openwrt-build-artifacts
           # Cant use relative pathing .. or . for artifacts action
+          # Also dont bother with '${{ github.workspace }}'
           path: |
-            /__w/action_sanity/scale-network/openwrt/${{ matrix.target }}-build.log
-            /__w/action_sanity/scale-network/openwrt/build/source-${{ matrix.target }}-*/bin/targets/*/generic/
+            openwrt/build/artifacts/*.tar.gz
+          retention-days: 30
+      - name: 'Upload openwrt build log'
+        uses: actions/upload-artifact@v2
+        with:
+          name:  ${{ matrix.target }}-openwrt-buildlog
+          path: |
+            openwrt/*build.log
           retention-days: 30
