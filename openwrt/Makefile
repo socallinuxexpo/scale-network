@@ -80,6 +80,14 @@ build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	  && $(MAKE) download \
 	  && $(MAKE) V=s -j 2
 
+# Common way to package up the build artifacts due to the various limits of
+# some CI tools
+package:
+	mkdir -p $(BUILD_DIR)/artifacts
+	# TODO: Look into striping path to only be from targets/ onward
+	tar zcvf $(BUILD_DIR)/artifacts/$(TARGET)-$(SHORT_VER)-artifacts.tar.gz \
+	  -C $(BUILD_DIR)/$(IMAGEBUILDER)/bin/targets/*/generic ./
+
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
