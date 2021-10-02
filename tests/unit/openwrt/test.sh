@@ -42,11 +42,13 @@ TARGET=${TARGET:-'ar71xx'}
 UPDATE=${UPDATE:-0}
 
 TMPLOC="tmp/${TARGET}"
+KEYPATH="../../../facts/keys/"
 
 gen_templates(){
   # Export to support ENV datasource
   export TARGET=$TARGET
-  gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml --input-dir=../../../openwrt/files --output-dir="./${1}"
+  export KEYPATH=$KEYPATH
+  gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files --output-dir="./${1}"
 }
 
 if [ "${UPDATE}" == "1" ]; then
