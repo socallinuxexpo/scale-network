@@ -4,6 +4,7 @@
   apt:
     name: zabbix-agent
     state: present
+    update_cache: yes
 
 - name: copy zabbix_agentd.conf
   template:

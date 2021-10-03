@@ -4,10 +4,18 @@
   apt:
     name: ['docker.io', 'python3-pip', 'git']
     state: present
+    update_cache: yes
+  register: pip
+
+- name: upgrade pip
+  pip:
+    name: 'pip'
+    state: latest
+  when: pip.changed
 
 - name: install docker-compose
   pip:
-    name: docker-compose
+    name: 'docker-compose'
     state: present
 
 - name: pull scale-signs repo
@@ -37,6 +45,9 @@
   file:
     path: "{{ scale_signs_root }}/secrets.env"
     state: touch
+    owner: root
+    group: root
+    mode: 0640
   when: not signs_secrets.stat.exists
 
 - name: copy scale-signs systemd unit file
