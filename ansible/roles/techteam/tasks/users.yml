@@ -1,0 +1,26 @@
+---
+
+- name: create tech team users
+  user:
+    name: "{{ item }}"
+    home: "/home/{{ item }}"
+    groups: tech
+    shell: /bin/bash
+
+- name: get all ssh keys
+  find:
+    path: "{{ inventory_dir }}/../facts/keys/"
+    file_type: file
+    patterns: "*{{ item }}*.pub"
+  delegate_to: localhost
+  become: no
+  register: found_keys
+
+- name: copy ssh keys
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', keyfile.path) }}"
+  loop: "{{ found_keys.files }}"
+  loop_control:
+    loop_var: keyfile

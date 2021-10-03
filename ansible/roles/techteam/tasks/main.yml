@@ -6,12 +6,8 @@
     state: present
     gid: "900"
 
-- name: create tech team users
-  user:
-    name: "{{ item }}"
-    home: "/home/{{ item }}"
-    groups: tech
-    shell: /bin/bash
+- include_tasks:
+    file: users.yml
   with_items:
     - owen
     - rob
@@ -26,20 +22,6 @@
     owner: root
     group: root
     mode: 0700
-
-# Owen's key is currently invalid
-
-- name: copy tech team rsa keys
-  authorized_key:
-    user: "{{ item }}"
-    state: present
-    key: "{{ lookup('file', '{{ inventory_dir }}/../facts/keys/{{ item }}_id_rsa.pub') }}"
-  with_items:
-    # - owen
-    - rob
-    - dlang
-    - kyle
-    - steveb
 
 - name: copy tech team sudoers file
   copy:
