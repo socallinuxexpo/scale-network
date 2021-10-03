@@ -17,6 +17,5 @@ loghost     IN  CNAME   {{ hostvars[item].fqdn }}.
 
 {% for item in groups["automation"] %}
 signs   IN  CNAME    {{ hostvars[item].fqdn }}.
+xymon   IN  CNAME    {{ hostvars[item].fqdn }}.
 {% endfor -%}
-
-

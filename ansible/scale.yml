@@ -21,3 +21,4 @@
   roles:
     - signs
     - zabbixagent
+    - xymon
