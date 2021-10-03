@@ -1,0 +1,26 @@
+
+#group servers
+{% for item in groups["servers"] -%}
+{{ hostvars[item].ipv4 }}    {{ item }}-v4    # conn
+{{ hostvars[item].ipv6 }}    {{ item }}-v6    # conn
+{% endfor -%}
+
+#group routers
+{% for item in groups["routers"] -%}
+{{ hostvars[item].ipv6 }}    {{ item }}    # conn
+{% endfor -%}
+
+#group switches
+{% for item in groups["switches"] -%}
+{{ hostvars[item].ipv6 }}    {{ item }}    # conn
+{% endfor -%}
+
+#group aps
+{% for item in groups["aps"] -%}
+{{ hostvars[item].ipv4 }}    {{ item }}    # conn
+{% endfor -%}
+
+#group pis
+{% for item in groups["pis"] -%}
+{{ hostvars[item].ipv6 }}    {{ item }}    # conn
+{% endfor -%}
