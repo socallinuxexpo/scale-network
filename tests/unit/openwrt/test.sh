@@ -51,7 +51,7 @@ gen_templates(){
   gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files --output-dir="./${1}"
 }
 
-if [ "${UPDATE}" == "1" ]; then
+if [ ${UPDATE} -eq 1 ]; then
   rm -rf "golden/${TARGET}"
   gen_templates "golden/${TARGET}"
 fi
