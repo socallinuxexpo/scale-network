@@ -3,7 +3,7 @@ require 'serverspec' # If you want to use serverspec matchers, you will need thi
 
 RSpec.shared_examples "openwrt" do
 
-  DEFAULT_BINS=["apinger", "bash", "logrotate",
+  DEFAULT_BINS=["apinger", "awk", "bash", "logrotate",
                 "python3", "rsyslogd", "zabbix_agentd",
                 "tcpdump"]
 
@@ -91,4 +91,10 @@ RSpec.shared_examples "openwrt" do
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
   end
+
+  # Make sure bash is roots shell
+  describe command("awk -F: -v user='root' '$1 == user {print $NF}' /etc/passwd") do
+      its(:stdout) { should match /\/bin\/bash/ }
+  end
+
 end
