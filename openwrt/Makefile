@@ -14,7 +14,7 @@ TARGET ?= ar71xx
 BUILD_DIR ?= build
 
 BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
-KEYFILE ?= ../facts/keys/
+KEYPATH ?= ../facts/keys/
 
 # bins
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
