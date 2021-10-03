@@ -28,9 +28,9 @@ for all members of the tech team.
 To start building:
 
 ```
-docker pull sarcasticadmin/openwrt-build:2aea1a2
+docker pull sarcasticadmin/openwrt-build:d25cfb5
 # Make sure to mount the git root inside this container
-docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build:2aea1a2 /bin/bash
+docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build:d25cfb5 /bin/bash
 cd /home/openwrt/scale-network
 ```
 > There is no latest tag so make sure to specify the version (short commit hash)
