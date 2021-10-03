@@ -18,6 +18,7 @@
 * [TESTING](./tests/README.md)
 * [KERMIT](./.kermit/README.md)
 * [RELEASE](./RELEASE.md)
+* [PI](./pi/README.md)
 
  
 ## Contributing
