@@ -115,5 +115,5 @@ endif
 	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
 	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
 	@cd $(TMPL_OUT_DIR)/etc/config && ln -s network.0 network && ln -s wireless.0 wireless
-	@cd $(TMPL_OUT_DIR)/etc && ln -s /tmp/resolv.conf.auto resolv.conf
+	@cd $(TMPL_OUT_DIR)/etc && ln -s /tmp/resolv.conf.d/resolv.conf.auto resolv.conf
 	touch $(TMPL_OUT_DIR)
