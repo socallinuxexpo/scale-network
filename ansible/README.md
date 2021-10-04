@@ -36,8 +36,8 @@ This playbook is used for deploying and maintaining the SCaLE Server Infrastruct
 ## Requirements:
   * vagrant 2.1
   * virtualbox 5.2
-  * ansible 2.6
-  * python 3.7
+  * ansible >= 2.6
+  * python >= 3.7
 
 ## Usage
 
