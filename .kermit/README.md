@@ -6,13 +6,16 @@ and flowcontrol settings
 ## Config
 
 Make sure your user is added to the `dialer` group so that you dont have to `sudo`
-to user the console devices
+to use the console devices
 
 To make a connection using kermit:
 
 ```
-kermit bhyve.kermit
+kermit <type>.kermit
 ```
+
+Where <type> is one of the files in this directory depending on the type of
+  device you are connecting to.
 
 ## Controls
 
