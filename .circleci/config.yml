@@ -26,55 +26,6 @@ jobs:
         name: openwrt ipq806x golden file test
         command: sh -x test.sh -t ipq806x
 
-  # This build takes a long time and should be done
-  # outside of initial PR CI testing
-  openwrt_build_ar71xx:
-    docker:
-      - image: sarcasticadmin/openwrt-build@sha256:d5af9eb1228e31a959923c47e47e2b84fbe3c8b6c607416d79d8e55518810385
-    resource_class: medium
-    working_directory: ~/scale-network/openwrt
-    steps:
-      - checkout:
-          path: ~/scale-network
-
-      - run:
-          name: build openwrt image
-          command: TARGET=ar71xx make templates build-img
-
-      - run:
-          name: copy ar71xx artifacts
-          command: |
-              mkdir -p /tmp/ar71xx
-              # TODO: unify build refs with new ath79 type
-              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/*factory.img /tmp/ar71xx
-              cp /home/openwrt/scale-network/openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/sha256sums /tmp/ar71xx
-
-      - store_artifacts:
-          path: /tmp/ar71xx
-
-  openwrt_build_ipq806x:
-    docker:
-      - image: sarcasticadmin/openwrt-build@sha256:d5af9eb1228e31a959923c47e47e2b84fbe3c8b6c607416d79d8e55518810385
-    resource_class: medium
-    working_directory: ~/scale-network/openwrt
-    steps:
-      - checkout:
-          path: ~/scale-network
-
-      - run:
-          name: build openwrt image
-          command: TARGET=ipq806x make templates build-img
-
-      - run:
-          name: copy ipq806x artifacts
-          command: |
-              mkdir -p /tmp/ipq806x
-              cp /home/openwrt/scale-network/openwrt/build/source-ipq806x-*/bin/targets/ipq806x/generic/*factory.bin /tmp/ipq806x
-              cp /home/openwrt/scale-network/openwrt/build/source-ipq806x-*/bin/targets/ipq806x/generic/sha256sums /tmp/ipq806x
-
-      - store_artifacts:
-          path: /tmp/ipq806x
-
   validate_datafiles:
     docker:
     - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
@@ -152,14 +103,3 @@ workflows:
           requires:
             - validate_datafiles
       - perl_lint
-  weekly:
-    triggers:
-      - schedule:
-          cron: "15 3 * * 0"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - openwrt_build_ar71xx
-      - openwrt_build_ipq806x
