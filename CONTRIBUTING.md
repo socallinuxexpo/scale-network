@@ -69,10 +69,10 @@ Flow see: https://guides.github.com/introduction/flow/
 7. Once in `[READY]` another SCALE Tech member will review the PR. The reviewer should
    ensure that the changes being proposed conform to the spirit of the existing efforts
    and do their best to test any changes manually to ensure accuracy. The reviewer should
-   also verify that all Circle CI checks are passing at this time. No PR with failing
+   also verify that all CI checks are passing at this time. No PR with failing
    test should ever be approved under normal circumstances.
 
-8. The approving reviewer should then merge the PR, ensuring Circle CI checks are passing
+8. The approving reviewer should then merge the PR, ensuring all CI checks are passing
    against `master`.
 
 9. Once your branch is merged, sit back and pat yourself on the back for
