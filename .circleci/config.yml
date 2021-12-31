@@ -3,29 +3,6 @@
 version: 2
 jobs:
 
-  gomplate_tests:
-    docker:
-    - image: hairyhenderson/gomplate:v3.2.0-alpine
-    resource_class: medium
-    working_directory: ~/scale-network/tests/unit/openwrt
-    steps:
-    - checkout:
-        path: ~/scale-network
-
-    - run:
-        name: install diffutils
-        command: apk update && apk add diffutils
-
-    # Netgear WNDR 3700v2, 3800, 3800ch configs
-    - run:
-        name: openwrt ar71xx golden file test
-        command: sh -x test.sh -t ar71xx
-
-    # TP-Link c2600 configs
-    - run:
-        name: openwrt ipq806x golden file test
-        command: sh -x test.sh -t ipq806x
-
   validate_datafiles:
     docker:
     - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
@@ -72,7 +49,6 @@ workflows:
   version: 2
   test_all:
     jobs:
-      - gomplate_tests
       - validate_datafiles
       - ansible_tests:
           requires:
