@@ -1,0 +1,52 @@
+---
+name: ansible-test
+
+on:
+  pull_request:
+    paths:
+      - 'ansible/**'
+      - 'facts/**'
+      - 'tests/**'
+  push:   # This is only run when PRs are merged into master
+    branches:
+      - master
+  workflow_dispatch:
+
+
+jobs:
+  validate_datafiles:
+    name: validate_datafiles
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: facts/
+    container:
+      - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+    steps:
+      - name: checkout
+        id: checkout
+        uses: actions/checkout@v2
+      - name: lint_python_files
+        run: pylint *.py
+      - name: datafile_unittest
+        run: pytest -vv
+  ansible_tests:
+    name: ansible_tests
+    runs-on: ubuntu-latest
+    container:
+      - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+    defaults:
+      run:
+        working-directory: ansible/
+    steps:
+      - name: checkout
+        id: checkout
+        uses: actions/checkout@v2
+      - name: lint_ansible_playbook
+        run: ansible-lint -x 403 -x 503 scale.yml
+      - name: lint_ansible_python
+        run: pylint *.py
+      - name: lint_ansible_python_unittests
+        run: pytest -vv
+      - name: ansible_inventory_properly_formed
+        run: ./inventory.py | jq
