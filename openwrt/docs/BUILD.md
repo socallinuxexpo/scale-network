@@ -189,3 +189,27 @@ wifi status
 * https://bost.ocks.org/mike/make/
 * http://mrbook.org/blog/tutorials/make/
 * ftp://ftp.gnu.org/old-gnu/Manuals/make-3.79.1/html_chapter/make_2.html
+
+## Troubleshooting
+
+### build fails
+
+There are many different packages in the openwrt and the open pkgs repo. Some of the requirements for the build system
+differ based on upstream changes to both repos. Its best to check the log to see if there was a dependency missed due to
+these changes. This is also something to account for when bumping the based build system (ubuntu 16.04 vs ubuntu 18.04)
+
+### mkhash
+
+If early in the build you recieve `bin/mkhash: No such file or directory`. Check to make sure that the `mkhash` binary is
+linked against the right linker/loader. In some cases you could have mkhash that was build inside or outside of the
+environment and its unable to the expected loader.
+
+```
+$ file ./staging_dir/host/bin/mkhash
++ file ./staging_dir/host/bin/mkhash
+./staging_dir/host/bin/mkhash: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /nix/store/9bh3986bpragfjmr32gay8p95k91q4gy-glibc-2.33-47/lib/ld-linux-x86-64.so.2, for GNU/Linu
+x 2.6.32, with debug_info, not stripped
+```
+> Note: `mkhash` will exist but be unable to run and fail with the following `No such file or directory`
+
+`make clean-all` and rerun inside the local environment should fix it
