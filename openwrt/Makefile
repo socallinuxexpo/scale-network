@@ -12,6 +12,8 @@ include include/*.mk
 TARGET ?= ar71xx
 
 BUILD_DIR ?= build
+# Set to configure -j (good rules is equal to number of cores on machine)
+JOBS ?= 2
 
 BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 KEYPATH ?= ../facts/keys/
@@ -85,7 +87,7 @@ build-img: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 	  && echo SCALE_VER=$(shell git rev-parse HEAD) > $(TMPL_SRC_DIR)/etc/scale-release \
 	  && echo OPENWRT_VER=$(OPENWRT_VER) >> $(TMPL_SRC_DIR)/etc/scale-release \
 	  && $(MAKE) download \
-	  && $(MAKE) V=s -j 2
+	  && $(MAKE) V=s -j $(JOBS)
 
 # Common way to package up the build artifacts due to the various limits of
 # some CI tools
