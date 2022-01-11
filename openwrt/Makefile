@@ -20,8 +20,8 @@ KEYPATH ?= ../facts/keys/
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER ?= b4c0d377f6bc13c555b69659ac001a25ab22bbd4
-OPENWRT_PKG_VERSION ?= fbdab5bb089bfd5060121d0cbf393c33a2e41600
+OPENWRT_VER ?= 4a2cca78245e9291096e7c8c98627426df50ef58
+OPENWRT_PKG_VERSION ?= b434cd71b950185cbf57308466eb0e3473ba484e
 
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
