@@ -8,7 +8,7 @@ let
       (pythonPackages: with pythonPackages; [ pytest pylint ]);
 
   # Trying to keep these pkg sets separate for later
-  global = [ bash curl git jq kermit  screen ] ++ [ scale_python ];
+  global = [ bash curl git jq kermit  screen glibcLocales ] ++ [ scale_python ];
   ansible_sub = [ansible_2_11 ansible-lint];
   openwrt_sub = [ expect gomplate magic-wormhole tftp-hpa ];
   network_sub = [ perl532 ];
