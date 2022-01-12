@@ -49,4 +49,4 @@ jobs:
       - name: lint_ansible_python_unittests
         run: pytest -vv
       - name: ansible_inventory_properly_formed
-        run: ./inventory.py | jq
+        run: ./inventory.py | jq .
