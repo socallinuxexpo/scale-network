@@ -4,7 +4,8 @@ name: switches
 on:
   pull_request:
     paths:
-      - 'switch-configurations/**'
+      - '.github/**'
+      - 'switch-configuration/**'
   push:   # This is only run when PRs are merged into master
     branches:
       - master
@@ -23,7 +24,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v2
       - name: lint
-        working_directory: switch-configuration
+        working-directory: switch-configuration
         run: make lint
   build:
     name: switch_build
@@ -36,5 +37,5 @@ jobs:
         id: checkout
         uses: actions/checkout@v2
       - name: build_switch_configs
-        working_directory: switch-configuration
+        working-directory: switch-configuration
         run: make build-switch-configs
