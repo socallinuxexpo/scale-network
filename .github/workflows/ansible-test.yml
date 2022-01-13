@@ -4,6 +4,7 @@ name: ansible-test
 on:
   pull_request:
     paths:
+      - '.github/**'
       - 'ansible/**'
       - 'facts/**'
       - 'tests/**'
@@ -21,7 +22,7 @@ jobs:
       run:
         working-directory: facts/
     container:
-      - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+      image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
     steps:
       - name: checkout
         id: checkout
@@ -34,7 +35,7 @@ jobs:
     name: ansible_tests
     runs-on: ubuntu-latest
     container:
-      - image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
+      image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
     defaults:
       run:
         working-directory: ansible/
@@ -49,4 +50,4 @@ jobs:
       - name: lint_ansible_python_unittests
         run: pytest -vv
       - name: ansible_inventory_properly_formed
-        run: ./inventory.py | jq
+        run: ./inventory.py | jq .

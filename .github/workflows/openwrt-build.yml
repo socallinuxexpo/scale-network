@@ -1,4 +1,6 @@
 ---
+name: openwrt-build
+
 on:
   workflow_dispatch:
   schedule:

@@ -4,6 +4,7 @@ name: openwrt-golden
 on:
   pull_request:
     paths:
+      - '.github/**'
       - 'openwrt/**'
       - 'facts/**'
       - 'tests/**'
@@ -26,14 +27,16 @@ jobs:
         uses: actions/checkout@v2
       - name: install_diffutils
         id: diffutils
-        shell: bash
+        shell: sh
         run: |
           apk update && apk add diffutils
       - name: openwrt_golden_ar71xx
-        shell: bash
+        shell: sh
+        run: |
           cd tests/unit/openwrt
-          bash -x test.sh -t ar71xx
+          sh -x test.sh -t ar71xx
       - name: openwrt_golden_ipq806x
-        shell: bash
+        shell: sh
+        run: |
           cd tests/unit/openwrt
-          bash -x test.sh -t ipq806x
+          sh -x test.sh -t ipq806x
