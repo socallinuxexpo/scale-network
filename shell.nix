@@ -4,6 +4,8 @@
 with pkgs;
 
 let
+  scale_pkgs = import ./nix/pkgs/default.nix { };
+  scale_ruby = ruby.withPackages ( ps: with ps; [ nokogiri pry ] ++ [ scale_pkgs.scaleGems] );
   scale_python = python38.withPackages
       (pythonPackages: with pythonPackages; [ pytest pylint ]);
 
@@ -14,5 +16,6 @@ let
   network_sub = [ perl532 ];
 in
 mkShell {
-  buildInputs = [ global ] ++ [ ansible_sub ] ++ [ openwrt_sub ] ++ [ network_sub ];
+  #buildInputs = [ global ] ++ [ ansible_sub ] ++ [ openwrt_sub ] ++ [ network_sub ] ++ [ scale_pkgs.serverspec ] ++ [ scale_ruby ];
+  buildInputs = [ global ] ++ [ ansible_sub ] ++ [ openwrt_sub ] ++ [ network_sub ] ++ [ scale_ruby ];
 }
