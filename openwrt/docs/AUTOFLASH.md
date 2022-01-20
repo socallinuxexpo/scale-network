@@ -32,8 +32,8 @@ Wormhole code is: 8-amusement-drumbeat
 
 ## Hardware Prereqs
 
-We'll be using the Raspberry Pi 2 for our autoflash coordinator. This should work with any version of the Pi
-or similar hardware but we have many extra Pi 2s as they were old sign clients.
+We'll be using the Raspberry Pi 4 for our autoflash coordinator. This should work with any version of the Pi
+or similar hardware and the appropriate OS img.
 
 Parts list:
 
@@ -75,27 +75,61 @@ References:
 
 ## Software Prereqs
 
-Using `FreeBSD pi2` image:
+Using `FreeBSD pi4` image:
 
 ```
-FreeBSD generic 12.2-RELEASE FreeBSD 12.2-RELEASE r366954 GENERIC  arm
+SHA512 (FreeBSD-13.0-STABLE-arm64-aarch64-RPI-20211230-3684bb89d52-248759.img.xz) = bd3ac2e7a7190afeb4763d7aacc4e5587d675f49c04b5cab59c40220e1d6c16655aa168f26a0531591d946d98343df5eb3b134b71bd5521e93a1bd3d3ac38fa1
+```
+> Using STABLE since RELEASE was too old and had firmware problems reading for SD card slot
+> See: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=255080
+> If using 13.0-RELEASE USB -> SD card adapter did work
+
+`uname -a` on running system resulted in:
+
+```
+FreeBSD generic 13.0-STABLE FreeBSD 13.0-STABLE #0 stable/13-n248759-3684bb89d52: Thu Dec 30 03:49:13 UTC 2021     root@releng3.nyi.freebsd.org:/usr/obj/usr/src/arm64.aarch64/sys/GENERIC  arm64
 ```
 
 Install pkgs:
 
 ```
-pkg install -y bash expect \
+$ pkg update
+$ pkg install -y bash expect \
                ruby rubygem-serverspec \
                rubygem-rake curl sudo \
-               py37-magic-wormhole git dnsmasq
+               py38-magic-wormhole git \
+               dnsmasq gitlab-runner
 ```
 
-Build the `gitlab-runner`:
+Register the gitlab-runner (one time operation). [More notes here](https://docs.gitlab.com/runner/register/index.html#freebsd):
 
-1. Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
-2. Copy gitlab-runner binary to pi
-3. Need to setup gitlab configuration: https://docs.gitlab.com/runner/install/freebsd.html
-> Reach out to Rob for registration token for the runner
+```
+$ sudo -u gitlab-runner -H /usr/local/bin/gitlab-runner register
+```
+> Reach out to Rob for registration token for the gitlab-runner
+
+```
+$ cat << EOF >> /etc/rc.conf
+gitlab_runner_enable="YES"
+ntpdate_enable="YES"
+ntpdate_hosts="in.pool.ntp.org"
+ifconfig_ue0_name="flash0"
+EOF
+```
+> Set the `flash0` interface to `ue0` but your interface might be different
+
+Enable `sudo` elevation without password for gitlab-runner using `visudo` and add:
+
+```
+gitlab-runner ALL=(ALL) NOPASSWD: ALL
+```
+
+Set `gitlab-runner` users default shell to bash:
+
+```
+pw usermod gitlab-runner -s /usr/local/bin/bash
+```
+> This might just need to be fixed upstream since its set to nologin by default
 
 Thats it! And you should be able to confirm your runner is up and running by looking at
 [Gitlab settings](https://gitlab.com/socallinuxexpo/scale-network/-/settings/ci_cd#js-runners-settings)
@@ -104,3 +138,11 @@ Additionally considerations:
 - Make sure USB interface connected to Pi is set to interface `ue1`
 - `serverspec` needs to be passed `LOGIN_PASSWORD` environment var to match default pass for image (current set in gitlab
   CI env var at runtime)
+- Double check [hardware prereqs](#hardware-preqs)
+
+### Rpi2
+
+If you choose to run on the rpi2 (armv6) youll need to manually build the gitlab-runner from source:
+
+1. Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
+2. Copy gitlab-runner binary to pi2
