@@ -4,8 +4,10 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-# gem "rails"
+# Should all go away after net-ssh releases 6.3.0
+# Ref: https://github.com/net-ssh/net-ssh/pull/838
+gem 'net-ssh', github: 'net-ssh/net-ssh.git', ref: 'a45f54f'
 
-gem "serverspec", "~> 2.41"
+gem "serverspec"
 
-gem "rake", "~> 12.3"
+gem "rake"

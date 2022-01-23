@@ -42,3 +42,13 @@ Example of running `serverspec` on a VM with role=core:
 ```
 rake spec TEST_TYPE=core TARGET_HOST=10.0.3.5
 ```
+
+## Overriding remote bundle
+
+To reference a repo thats already on the machine:
+
+```
+git clone https://github.com/net-ssh/net-ssh.git
+bundle config --local local.net-ssh ./net-ssh
+bundle config --local disable_local_branch_check true
+```
