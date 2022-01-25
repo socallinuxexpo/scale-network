@@ -5,6 +5,9 @@
 # This script assumes your root based on the nature of what
 # its manipulating: interfaces, gpio pins, etc.
 
+# Set script to debug, equal to expect -d
+#exp_internal 1
+
 # Dir where build artifacts should be stored
 set workdir "work"
 
