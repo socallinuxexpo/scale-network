@@ -25,9 +25,9 @@ spawn gpioctl -p 2 1
 spawn ifconfig flash0 down
 spawn ifconfig flash0.503 destroy
 spawn pkill dnsmasq
-spawn /usr/sbin/arp -d 192.168.1.1
-spawn /usr/sbin/arp -d 192.168.254.100
-sleep 5
+spawn arp -d 192.168.1.1
+spawn arp -d 192.168.254.100
+sleep 2
 
 # on
 spawn ifconfig flash0 192.168.1.2 255.255.255.0
@@ -51,21 +51,20 @@ spawn gpioctl -p 3 1
 set timeout 30
 spawn tftp 192.168.1.1
 expect tftp>
-send "bin\n"
+send "bin\r"
 expect tftp>
-send "put factory.img\n"
+send "put factory.img\r"
 expect {
   Sent exp_continue
   "tftp>" {
-    send "quit\n\n"
+    send "quit\r"
   }
   "receive_packet: timeout" { exit 1 }
   "Try " { exit 1 }
 }
-close
 # Set back to default
 set timeout 10
-spawn /usr/sbin/arp -d 192.168.1.1
+spawn arp -d 192.168.1.1
 spawn ifconfig flash0.503 create
 spawn ifconfig flash0.503 inet 192.168.254.1 255.255.255.0
 sleep 2
