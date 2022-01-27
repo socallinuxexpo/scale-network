@@ -2,6 +2,11 @@
 #
 # Script intended to be run for gitlab-runner for CI flashing
 #
+# This script assumes your root based on the nature of what
+# its manipulating: interfaces, gpio pins, etc.
+
+# Set script to debug, equal to expect -d
+#exp_internal 1
 
 # Dir where build artifacts should be stored
 set workdir "work"
@@ -20,15 +25,15 @@ spawn gpioctl -c 3 OUT PD
 spawn gpioctl -p 2 1
 
 # Cleanup interfaces and arp table
-spawn ifconfig ue1 down
-spawn ifconfig ue1.503 destroy
-spawn sudo pkill dnsmasq
-spawn sudo /usr/sbin/arp -d 192.168.1.1
-spawn sudo /usr/sbin/arp -d 192.168.254.100
-sleep 5
+spawn ifconfig flash0 down
+spawn ifconfig flash0.503 destroy
+spawn pkill dnsmasq
+spawn arp -d 192.168.1.1
+spawn arp -d 192.168.254.100
+sleep 2
 
 # on
-spawn sudo ifconfig ue1 192.168.1.2 255.255.255.0
+spawn ifconfig flash0 192.168.1.2 255.255.255.0
 spawn gpioctl -p 2 0
 spawn gpioctl -p 3 0
 set timeout 120
@@ -49,24 +54,28 @@ spawn gpioctl -p 3 1
 set timeout 30
 spawn tftp 192.168.1.1
 expect tftp>
-send "bin\n"
+send "bin\r"
 expect tftp>
-send "put factory.img\n"
+send "put factory.img\r"
 expect {
   Sent exp_continue
   "tftp>" {
-    send "quit\n\n"
+    send "quit\r"
   }
   "receive_packet: timeout" { exit 1 }
   "Try " { exit 1 }
 }
-close
 # Set back to default
 set timeout 10
-spawn sudo /usr/sbin/arp -d 192.168.1.1
-spawn sudo ifconfig ue1.503 create
-spawn sudo ifconfig ue1.503 inet 192.168.254.1 255.255.255.0
-spawn sudo dnsmasq -i ue1.503 --dhcp-range=192.168.254.100,192.168.254.100,255.255.255.0,30s --dhcp-option=3,192.168.254.1
+spawn arp -d 192.168.1.1
+spawn ifconfig flash0.503 create
+spawn ifconfig flash0.503 inet 192.168.254.1 255.255.255.0
+sleep 2
+
+# Our DHCP server to the AP
+# This will fail without the full path to dnsmasq, unsure why
+spawn /usr/local/sbin/dnsmasq -u gitlab-runner -i flash0.503 --dhcp-range=192.168.254.100,192.168.254.100,255.255.255.0,30s --dhcp-option=3,192.168.254.1
+
 # Ping wait will be set to 10 sec
 # Make sure expect timeout is longer than
 # ping wait and account for initial ping taking

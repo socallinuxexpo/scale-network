@@ -15,7 +15,7 @@ jobs:
       matrix:
         target: ["ar71xx", "ipq806x"]
     container:
-      image: sarcasticadmin/openwrt-build@sha256:d5af9eb1228e31a959923c47e47e2b84fbe3c8b6c607416d79d8e55518810385
+      image: sarcasticadmin/openwrt-build@sha256:8dc545cb1cbb2cb507f4e5c8df2f3632335abf7230f9574eb39080c2fc67cc3f
       # Since user is openwrt and gets 1001 from inside container
       options: --user 1001
     steps:
@@ -23,7 +23,10 @@ jobs:
         with:
           ref: ${{ env.BRANCH }}
       - name: 'Build openwrt'
+        shell: bash
         run: |
+          # Make tee pipeline raises in case of fail
+          set -o pipefail
           cd openwrt
           TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
       - name: 'Upload openwrt build artifact tarball'
