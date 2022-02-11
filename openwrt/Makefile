@@ -12,8 +12,8 @@ include include/*.mk
 TARGET ?= ar71xx
 
 BUILD_DIR ?= build
-# Set to configure -j (good rules is equal to number of cores on machine)
-JOBS ?= 2
+# Set to configure -j (defaults to nproc)
+JOBS ?= $(shell nproc)
 
 BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
 KEYPATH ?= ../facts/keys/
