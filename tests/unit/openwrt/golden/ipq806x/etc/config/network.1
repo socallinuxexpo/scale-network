@@ -22,6 +22,7 @@ config interface 'mgmt'
         option ifname 'eth1'
         option proto 'dhcp'
         option type 'bridge'
+        reqopts: '224 225 226'
 
 config interface 'mgmt6'
         option ifname '@mgmt'
