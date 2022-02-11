@@ -107,6 +107,23 @@ RSpec.shared_examples "openwrt" do
       it { should be_grouped_into 'root' }
   end
 
+  describe "correct_num_configs" do
+    it "should always be equal" do
+      network_configs = command("find /etc/config/ -type f -name 'network.*' | wc -l").stdout
+      wireless_configs = command("find /etc/config/ -type f -name 'wireless.*' | wc -l").stdout
+      network_configs == wireless_configs
+    end
+  end
+
+  describe "ensure_dhcp_client_options" do
+    it "should contain the following options" do
+      options = command("awk -F\"'\" '{if(/reqopts/) print $2}' /etc/config/network").stdout.split(" ")
+      options.include?"224"
+      options.include?"225"
+      options.include?"226"
+    end
+  end
+
   # Make sure bash is roots shell
   describe command("awk -F: -v user='root' '$1 == user {print $NF}' /etc/passwd") do
       its(:stdout) { should match /\/bin\/bash/ }
