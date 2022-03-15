@@ -32,6 +32,7 @@ config switch_vlan
 config interface 'mgmt'
         option ifname 'eth0.2'
         option proto 'dhcp'
+        option reqopts '224 225 226'
         option type 'bridge'
         
 config interface 'mgmt6'

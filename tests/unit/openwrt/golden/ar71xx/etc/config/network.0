@@ -94,7 +94,7 @@ config switch_vlan
 config interface 'mgmt'
         option ifname 'eth0.103 eth0.503 eth1.103 eth1.503'
         option proto 'dhcp'
-        option reqopts '224 225'
+        option reqopts '224 225 226'
         option type 'bridge'
         
 config interface 'mgmt6'
