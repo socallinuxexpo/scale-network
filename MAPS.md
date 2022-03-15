@@ -1,6 +1,16 @@
 # Maps
 
-Maps of the layout for SCaLE 16x/17x at Pasadena Convention Center maps can be found:
+## LAX Hilton
+
+Maps of the layout for SCaLE 19x at LAX Hilton
+
+* [function-space-capacity-chart](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-function-space-capacity-chart.pdf)
+* [function-space-lobby-level](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-function-space-lobby-level.pdf)
+* [mtg-space-second-flr](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-mtg-space-second-flr.pdf)
+
+## Pasadena
+
+Maps of the layout for SCaLE 16x/17x at Pasadena Convention Center
 
 * [cbll-diagram-1](http://sarcasticadmin.com/scale/maps/16x/cbll-diagram-1-scale.pdf)
 * [cbul-diagram-2](http://sarcasticadmin.com/scale/maps/16x/cbul-diagram-2-scale.pdf)
