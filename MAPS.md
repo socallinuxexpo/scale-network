@@ -4,6 +4,9 @@
 
 Maps of the layout for SCaLE 19x at LAX Hilton
 
+* [meeting-space-floor-plans.pdf](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-meeting-space-floor-plans.pdf)
+* [floor-plans-3-levels-3d](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-floor-plans-3-levels-3d.pdf)
+* [capacity-chart-2019](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-capacity-chart-2019.pdf)
 * [function-space-capacity-chart](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-function-space-capacity-chart.pdf)
 * [function-space-lobby-level](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-function-space-lobby-level.pdf)
 * [mtg-space-second-flr](http://sarcasticadmin.com/scale/maps/19x/lax-hilton-mtg-space-second-flr.pdf)
