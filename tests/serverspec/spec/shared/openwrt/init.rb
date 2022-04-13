@@ -129,4 +129,12 @@ RSpec.shared_examples "openwrt" do
       its(:stdout) { should match /\/bin\/bash/ }
   end
 
+  # Ensure admin key is present
+  describe "ensure_admin_ssh_key_present" do
+    it "should match the following key fingerprint" do
+      options = command("ssh-keygen -l -E sha256 -f \/root\/.ssh\/authorized_keys").stdout
+      options.include?"SHA256:l85v05Ht3PVq4BHgHXHtSZKYmC+yOHmJbXowPezyBvA"
+    end
+  end
+
 end
