@@ -109,7 +109,16 @@ $ sudo -u gitlab-runner -H /usr/local/bin/gitlab-runner register
 > Reach out to Rob for registration token for the gitlab-runner
 
 ```
-$ cat << EOF >> /etc/rc.conf
+$ cat << EOF > /etc/rc.conf
+hostname="generic"
+#ifconfig_DEFAULT="DHCP"
+ifconfig_genet0="DHCP"
+sshd_enable="YES"
+sendmail_enable="NONE"
+sendmail_submit_enable="NO"
+sendmail_outbound_enable="NO"
+sendmail_msp_queue_enable="NO"
+growfs_enable="YES"
 gitlab_runner_enable="YES"
 ntpdate_enable="YES"
 ntpdate_hosts="in.pool.ntp.org"
@@ -117,6 +126,7 @@ ifconfig_ue0_name="flash0"
 EOF
 ```
 > Set the `flash0` interface to `ue0` but your interface might be different
+> Ensure that dhclient isnt defaulting to all interfaces, just genet0
 
 Enable `sudo` elevation without password for gitlab-runner using `visudo` and add:
 
@@ -146,3 +156,15 @@ If you choose to run on the rpi2 (armv6) youll need to manually build the gitlab
 
 1. Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
 2. Copy gitlab-runner binary to pi2
+
+## Troubleshooting
+
+- Checking AP for renewals that are being unanswered:
+
+Startup `tcpdump` on each side:
+
+```
+tcpdump -vvv -n -i <IF> udp port 67 or udp port 68
+```
+
+Uncomment the rsyslog local log on the AP by uncomment confg in `/etc/rsyslog`
