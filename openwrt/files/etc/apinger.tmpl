@@ -16,12 +16,9 @@
 user "root"
 group "nogroup"
 
-## Location of the pid-file (default: "/var/run/apinger.pid")
-#pid_file "/var/run/apinger.pid"
-
 status {
 	## File where the status information whould be written to
-	file "/tmp/apinger.status"
+	file "/var/log/apinger.status"
 	## Interval between file updates
 	## when 0 or not set, file is written only when SIGUSR1 is received
 	interval 10s
