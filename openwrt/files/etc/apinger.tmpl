@@ -53,7 +53,7 @@ alarm down "wifi" {
 	combine 10s
 }
 
-target "{{ (datasource "openwrt").apinger.endpoint }}" {
+target "<DEFAULTGATEWAY>" {
         description "endpoint validation"
         alarms override "wifi"
 }
