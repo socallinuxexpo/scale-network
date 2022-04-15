@@ -74,7 +74,8 @@ sleep 2
 
 # Our DHCP server to the AP
 # This will fail without the full path to dnsmasq, unsure why
-spawn /usr/local/sbin/dnsmasq -u gitlab-runner -i flash0.503 --dhcp-range=192.168.254.100,192.168.254.100,255.255.255.0,30s --dhcp-option=3,192.168.254.1
+# Lease time must be >=120s otherwise its set this min
+spawn /usr/local/sbin/dnsmasq -u gitlab-runner -i flash0.503 --dhcp-range=192.168.254.100,192.168.254.100,255.255.255.0,120s --dhcp-option=3,192.168.254.1
 
 # Ping wait will be set to 10 sec
 # Make sure expect timeout is longer than
