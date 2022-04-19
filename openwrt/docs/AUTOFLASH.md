@@ -56,19 +56,29 @@ NC -> Barrel Plug
 
 ```
 GND -> Pi pin 9
-IN ->  Pi pin 3
+IN  -> Pi pin 3
 VCC -> Pi pin 2
 ```
 
 3. Next you'll need to solder 2 wires to the board. One to a ground spot and the other to the reset switch.
-  With those in place, the wires connect o the pi:
+   Then connect them to the pi:
 
 ```
-AP Board ground -> Pi pin 6
+AP Board ground       -> Pi pin 6
 AP Board reset switch -> Pi pin 5
 ```
 
-4. Connect USB ethernet interface to LAN port 1 (closest to the barrel plug) on the AP
+4. Pi Serial to AP serial:
+
+```
+GND -> Pi pin 14
+TX  -> Pi pin 10
+RX  -> Pi pin 8
+```
+> Note: TX/RX are flipped from the AP TX/RX
+> No need to VCC since serial chipsets already have power from each board
+
+5. Connect USB ethernet interface to LAN port 1 (closest to the barrel plug) on the AP
 
 References:
 - Pi header (pins) diagram: https://www.raspberrypi.org/documentation/usage/gpio/
@@ -98,7 +108,26 @@ $ pkg install -y bash expect \
                ruby rubygem-serverspec \
                rubygem-rake curl sudo \
                py38-magic-wormhole git \
-               dnsmasq gitlab-runner
+               dnsmasq gitlab-runner \
+               socat
+```
+
+Disable the tty console for pi so that we can use to it monitor the AP
+
+```
+$ vim /boot/loader.conf
+# Comment out
+#boot_multicons="YES"
+#boot_serial="YES"
+```
+
+Remove configuration for tty:
+
+```
+$ vim /etc/ttys
+# Comment out
+#ttyu0  "/usr/libexec/getty 3wire"      vt100   onifconsole secure
+$ kill -HUP 1
 ```
 
 Register the gitlab-runner (one time operation). [More notes here](https://docs.gitlab.com/runner/register/index.html#freebsd):
@@ -150,16 +179,11 @@ Additionally considerations:
   CI env var at runtime)
 - Double check [hardware prereqs](#hardware-preqs)
 
-### Rpi2
 
-If you choose to run on the rpi2 (armv6) youll need to manually build the gitlab-runner from source:
-
-1. Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
-2. Copy gitlab-runner binary to pi2
 
 ## Troubleshooting
 
-- Checking AP for renewals that are being unanswered:
+1. Checking AP for renewals that are being unanswered:
 
 Startup `tcpdump` on each side:
 
@@ -167,4 +191,15 @@ Startup `tcpdump` on each side:
 tcpdump -vvv -n -i <IF> udp port 67 or udp port 68
 ```
 
-Uncomment the rsyslog local log on the AP by uncomment confg in `/etc/rsyslog`
+2. Uncomment the rsyslog local log on the AP by uncomment confg in `/etc/rsyslog`
+
+## Known issues
+
+1. If you choose to run on the Pi2 (armv6) youll need to manually build the gitlab-runner from source:
+
+  - Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
+  - Copy gitlab-runner binary to pi2
+
+2. Pi4 might have issue booting due to text being sent from the serial interface of the AP and boot loader treating it as
+   input. Red LED indicator will remain on if this is happening. In these cases power off the AP when rebooting or
+   powering on the Pi initially.

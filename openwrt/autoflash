@@ -32,10 +32,17 @@ spawn arp -d 192.168.1.1
 spawn arp -d 192.168.254.100
 sleep 2
 
+# Cleanup serial
+spawn pkill socat
+
 # on
 spawn ifconfig flash0 192.168.1.2 255.255.255.0
 spawn gpioctl -p 2 0
 spawn gpioctl -p 3 0
+# Connect to ttyu0 on pi GPIO
+# raw,echo=0 was used purposely instead of rawer since rawer hung socat serial capture
+# currently set to highest verbosity
+spawn socat -lf $workdir/serial-debug.log -d -d -d -d -u /dev/ttyu0,ispeed=115200,ospeed=115200,parenb=0,cstopb=0,cs8,raw,echo=0 OPEN:$workdir/serial.log,creat,wronly,append
 set timeout 120
 spawn ping -o -i 10 -n 192.168.1.1
 expect {
@@ -90,3 +97,6 @@ expect {
     timeout { puts "expect timeout waiting for AP to get DHCP lease"; exit 1 }
 }
 send_user "\n\nFinished flashing AP!\n\n"
+
+# Clean up processes
+spawn pkill socat
