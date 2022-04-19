@@ -124,6 +124,11 @@ RSpec.shared_examples "openwrt" do
     end
   end
 
+  # apinger target matches default gateway
+  describe command('cat /etc/apinger.conf | grep "^target \"$(ip route | grep default | cut -d \' \' -f 3)\""') do
+    its(:exit_status) { should eq 0 }
+  end
+
   # Make sure bash is roots shell
   describe command("awk -F: -v user='root' '$1 == user {print $NF}' /etc/passwd") do
       its(:stdout) { should match /\/bin\/bash/ }
