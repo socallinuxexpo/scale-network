@@ -3,4 +3,3 @@ PermitRootLogin yes
 PasswordAuthentication yes
 AuthorizedKeysFile %h/.ssh/authorized_keys
 LogLevel VERBOSE
-
