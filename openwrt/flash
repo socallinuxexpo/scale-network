@@ -1,6 +1,13 @@
 #!/usr/bin/env expect
-spawn /usr/sbin/arp -d 192.168.1.1
-spawn ./ping -n 192.168.1.1
+
+set timeout 120
+
+spawn arp -d 192.168.1.1
+# Leverage the nix-shell ping for this script
+# ubuntu ping as of 18.04,20.04 doesnt seem to
+# return the malformed packet
+# TODO: Could us single ping and then look at arp table
+spawn ping -n 192.168.1.1
 expect {
   Unreachable exp_continue
   "taking countermeasures"
@@ -9,7 +16,7 @@ close
 send_user "enter the name,serial of this AP: "
 expect_user -timeout -1 -re "(.*)\n"
 set ap $expect_out(1,string)
-spawn /usr/sbin/arp -n 192.168.1.1
+spawn arp -n 192.168.1.1
 expect -re "192.168.1.1 *ether *(\[^ \]*) "
 set mac $expect_out(1,string)
 set file [open aplist a]
@@ -23,5 +30,5 @@ send "put factory.img\n"
 expect tftp
 send "quit\n"
 close
-spawn /usr/sbin/arp -d 192.168.1.1
+spawn arp -d 192.168.1.1
 send_user "\n\nfinished, do the next AP\n\n"
