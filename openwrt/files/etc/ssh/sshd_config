@@ -1,6 +1,11 @@
 Port 22
 PermitRootLogin yes
+{{- if (datasource "openwrt").sshd.password_auth }}
 PasswordAuthentication yes
+ChallengeResponseAuthentication yes
+{{- else }}
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+{{- end }}
 AuthorizedKeysFile %h/.ssh/authorized_keys
 LogLevel VERBOSE
-
