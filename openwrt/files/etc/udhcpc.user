@@ -29,7 +29,7 @@ case "$1" in
     if [ ! -z "$hostname" ]; then
       uci set 'system.@system[0].hostname'="$hostname"
       uci commit
-      if [ "$HOSTNAME" != "$hostname" ]; then reboot; fi
+      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then reboot; fi
     fi
     if [ ! -z "$opt226" ]; then
       /root/bin/config-version.sh -c $(printf %d "0x$opt226")
