@@ -1,0 +1,156 @@
+#!/usr/bin/env expect
+
+# Set script to debug, equal to expect -d
+#exp_internal 1
+
+set hook [lindex $argv 0];
+
+switch $hook {
+  leases4_committed {
+    puts "lease4_commited"
+    puts $env(QUERY4_REMOTE_ADDR)
+    exit 0
+  }
+  # Renew is what we want
+  lease4_renew {
+    puts $hook
+    #puts $env(QUERY4_REMOTE_ADDR)
+    #puts $env(LEASE4_HOSTNAME)
+    #puts $env(LEASE4_ADDRESS)
+    if { $env(QUERY4_TYPE) ne "DHCPREQUEST" } { exit 0 }
+
+    # All the options passed via kea script plugin
+    # https://kea.readthedocs.io/en/latest/arm/hooks.html#run-script-support
+    #foreach { item value } [ array get env ] { puts "$item $value" }
+    #exit 0
+  }
+  default {
+    puts $hook
+    exit 0
+  }
+}
+
+set timeout 120
+set script_dir [file dirname [file normalize [info script]]]
+set sshuser "root"
+set host $env(LEASE4_ADDRESS)
+set port "22"
+
+# Read in passwords from password file
+set fp [open "$scripts_dir/passwords.txt" r]
+set passwords {}
+while { [gets $fp data] >= 0 } {
+  lappend passwords $data
+}
+
+# TODO: nc/ssh-keyscan until port 22 is up instead of sleeping
+sleep 20
+
+set success 0
+# Try to connect 5 times to the AP
+for {set i 0} {$i < 5} {incr i} {
+  spawn ssh -p $port \
+            -i $script_dir/id_priv \
+            -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+            -o NumberOfPasswordPrompts=[llength $passwords] $sshuser@$host
+
+  set try 0
+  set goodpass "empty"
+  expect {
+      "*password: " {
+          if { $try >= [llength $passwords] } {
+              send_error ">>> wrong passwords\n"
+              exit 1
+          }
+
+          send [lindex $passwords $try]\r
+          incr try
+          exp_continue
+      }
+
+      "*:~#*" {
+          # TODO parse board/cpu info
+          # Also might be looking in /tmp/board.json
+          send { cat /tmp/cpuinfo | grep -E "machine" | cut -d " " -f3 }
+          send \r
+          # Reduce counter to get the right pass in the list
+          incr try -1
+          set goodpass [lindex $passwords $try]
+          # exit our for loop
+          set success 1
+          break
+
+          #TODO: This is fragile
+          #expect -re {^[^\n]+\n(.*)\r\n.*$}
+          #set arch $expect_out(1,string)
+          #interact
+      }
+
+      timeout {
+          send_error ">>> timed out\n"
+          exit 1
+      }
+  }
+  puts "failed $i time(s)"
+  sleep 5
+}
+
+# check if loop was successful
+if { $success } {
+  puts "connected"
+} else {
+  puts "failed connection $env(LEASE4_HWADDR)"
+  exit 1
+}
+
+send "\r\r"
+
+# Print out password that worked
+#puts "$goodpass"
+
+# TODO: Dynamic architecture/board detection
+#puts "$arch"
+#set archb [format "hello%s" $arch]
+# Concat the arch and a string (eventually will be flash .bin)
+#puts [format "hello%s" $arch]
+#set archb "hello"
+
+spawn scp -P $port \
+  -i $script_dir/id_priv \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  $script_dir/flash.bin $sshuser@$host:/tmp/
+expect {
+    "*password: " {
+        send $goodpass\r
+        exp_continue
+    }
+    timeout {
+        send_error ">>> scp timed out\n"
+        exit 1
+    }
+}
+
+puts "scp good!"
+
+# Warning: Be careful about the escaping when spawning an ssh connection and executing commands
+set pid [spawn ssh -i $script_dir/id_priv -p $port -t\
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  $sshuser@$host "grep 7fdf577afb4bf2bd3134520eef929fb3b02090c6 /etc/scale-release; if \[ $? == 0 \]; then init 0; else sysupgrade -n -v /tmp/flash.bin; fi" ]
+expect {
+    "*password: " {
+        send $goodpass\r
+        exp_continue
+    }
+
+    "*:~#*" {
+        exp_continue
+    }
+
+    eof {
+      puts "eof received"
+    }
+    #timeout {
+    #    send_error ">>> scp timed out\n"
+    #    exit 1
+    #}
+}
