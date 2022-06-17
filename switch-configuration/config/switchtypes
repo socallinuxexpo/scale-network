@@ -1,56 +1,67 @@
 //Switch Definitions
 //
-// Hierarchy Key:
+// Hierarchy Key (PCC):
 // I = Conference Center, C = Fed from Ballroom C (NE) IDF, F = Fed from Ballroom F (NW) IDF, X = Fed from Expo IDF (near Reg.), W = Fed from Catwalk
+// Hilton Hierarchy Key:
+// M = MDF/Server Room
+// 	L = TTLB (IDF Behind Pacific on Lobby Level)
+//	A = TTAB (IDF on lower level behind Plaza A)
+//	F = Old MDF (IDF Behind Front Desk)
+//	D = TT2D (IDF on 2nd floor near stairwell)
+//	E = TT2E (IDF on 2nd floor near Catalina A)
+// X = Unused switch, do not monitor,
 // .1 = First priority, head-end for hierarchy (e.g. C.1 = NE-IDF Switch)
 // ... Switch chain order from .1 (e.g. C.2 is plugged into C.1 level, C.3 is plugged into C.2 level, etc.)
 // .9 = Stub (No subordinate switches) regardless of next level up switch
 //Name		Num	MgtVL	IPv6				Type			Hierarchy	Switch Noiselevel
-Carmel		1	503	2001:470:f325:503::200:1	hiRoom			I.9		Quiet
-TTAB-BMT	2	503	2001:470:f325:503::200:2	hiIDF			F.1		Loud
-MDF-LBY		3	503	2001:470:f325:503::200:3	hiIDF			C.1		Loud
-LaJolla		4	503	2001:470:f325:503::200:4	hiRoom			C.9		Normal
-Marina		5	503	2001:470:f325:503::200:5	hiRoom			F.9		Normal
-TTSR-BMT	6	503	2001:470:f325:503::200:6	hiIDF			X.1		Loud
-LosAngelesAB	7	503	2001:470:f325:503::200:7	hiRoom			F.9		Normal
-LosAngelesC	8	503	2001:470:f325:503::200:8	hiRoom			I.9		Quiet
-CenturyAB	9	503	2001:470:f325:503::200:9	hiRoom			F.9		Normal
-SanLorenzoB	10	503	2001:470:f325:503::200:10	hiIDF			I.1		Loud
-CenturyCD	11	503	2001:470:f325:503::200:11	hiRoom			F.9		Normal
-SantaMonicaA	12	503	2001:470:f325:503::200:12	hiRoom			C.9		Normal
-CatalinaB	13	503	2001:470:f325:503::200:13	hiRoom			C.9		Normal
-AVSwitch	14	503	2001:470:f325:503::200:14	hiAV			I.9		Normal
-CatalinaC	17	503	2001:470:f325:503::200:17	hiRoom			I.9		Normal
-ExpoA1		18	503	2001:470:f325:503::200:18	Booth			W.9		Loud
-CatalinaD	19	503	2001:470:f325:503::200:19	hiRoom			I.9		Normal
-NewportA	20	503	2001:470:f325:503::200:20	hiRoom			I.9		Quiet
-NOC		21	503	2001:470:f325:503::200:21	NOC			I.2		Normal
-ExpoB1		22	503	2001:470:f325:503::200:22	Booth			W.9		Loud
-CTF1		23	504	2001:470:f325:504::200:23	hiCTF			I.4		Normal
-ExpoC1		24	503	2001:470:f325:503::200:24	Booth			W.9		Loud
-NewportB	25	503	2001:470:f325:503::200:25	hiRoom			I.9		Quiet
-CTF2		26	504	2001:470:f325:504::200:26	hiCTF			I.5		Normal
-SanLorenzoC	27	504	2001:470:f325:504::200:27	hiRoom			I.6		Normal
-ExpoA2		28	503	2001:470:f325:503::200:28	Booth			W.9		Loud
-ExpoB2		29	503	2001:470:f325:503::200:29	Booth			W.9		Loud
-SanLorenzoD	30	504	2001:470:f325:504::200:30	hiRoom			I.7		Normal
-NewportC	31	503	2001:470:f325:503::200:31	hiRoom			I.2		Quiet
-RegDesk		32	503	2001:470:f325:503::200:32	registration		X.9		Normal
-ExpoC2		33	503	2001:470:f325:503::200:33	Booth			W.9		Normal
-ExpoA3		34	503	2001:470:f325:503::200:34	Booth			W.9		Loud
-ExpoB3		35	503	2001:470:f325:503::200:35	Booth			W.9		Loud
-ExpoC3		36	503	2001:470:f325:503::200:36	Booth			W.9		Normal
-SantaMonicaB	37	503	2001:470:f325:503::200:37	hiRoom			I.9		Quiet
-ExpoA4		38	503	2001:470:f325:503::200:38	Booth			W.9		Normal
-ExpoB4		39	503	2001:470:f325:503::200:39	Booth			W.9		Normal
-SantaMonicaC	40	503	2001:470:f325:503::200:40	hiRoom			I.9		Quiet
-ExpoC4		41	503	2001:470:f325:503::200:41	hiRoom			W.9		Normal
-ExpoA5		42	503	2001:470:f325:503::200:42	hiRoom			W.9		Normal
-ExpoB5		43	503	2001:470:f325:503::200:43	hiRoom			W.9		Normal
-BelAir		44	503	2001:470:f325:503::200:44	hiRoom			W.9		Loud
-SanLorenzoA	45	503	2001:470:f325:503::200:45	hiRoom			W.9		Normal
-SanLorenzoE	46	504	2001:470:f325:504::200:46	hiRoom			I.8		Loud
-SanLorenzoF	47	504	2001:470:f325:504::200:47	hiRoom			I.9		Normal
-TTLB-LBY	48	504	2001:470:f325:504::200:47	hiIDF			I.9		??
-TT2E-2FCat	49	504	2001:470:f325:504::200:47	hiIDF			I.9		??
-TT2D-2FReg	50	504	2001:470:f325:504::200:47	hiIDF			I.9		??
+Carmel		1	503	2001:470:f325:503::200:1	hiRoom			D.9		Quiet
+TTAB-BMT	2	503	2001:470:f325:503::200:2	hiIDF			M.2		Loud
+MDF-SR		3	503	2001:470:f325:503::200:3	hiIDF			M.1		Loud
+LaJolla		4	503	2001:470:f325:503::200:4	hiRoom			E.9		Normal
+Marina		5	503	2001:470:f325:503::200:5	hiRoom			D.9		Normal
+TTSR-BMT	6	503	2001:470:f325:503::200:6	hiIDF			M.2		Loud
+LosAngelesAB	7	503	2001:470:f325:503::200:7	hiRoom			D.9		Normal
+LosAngelesC	8	503	2001:470:f325:503::200:8	hiRoom			D.9		Quiet
+CenturyAB	9	503	2001:470:f325:503::200:9	hiRoom			D.9		Normal
+SanLorenzoB	10	503	2001:470:f325:503::200:10	hiIDF			D.1		Loud
+CenturyCD	11	503	2001:470:f325:503::200:11	hiRoom			D.9		Normal
+SantaMonicaA	12	503	2001:470:f325:503::200:12	hiRoom			D.9		Normal
+CatalinaB	13	503	2001:470:f325:503::200:13	hiRoom			E.9		Normal
+AVSwitch	14	503	2001:470:f325:503::200:14	hiAV			?.9		Normal
+CatalinaC	17	503	2001:470:f325:503::200:17	hiRoom			E.9		Normal
+ExpoA1		18	503	2001:470:f325:503::200:18	Booth			L.2		Loud
+CatalinaD	19	503	2001:470:f325:503::200:19	hiRoom			E.9		Normal
+NewportA	20	503	2001:470:f325:503::200:20	hiRoom			D.9		Quiet
+NOC		21	503	2001:470:f325:503::200:21	NOC			?.2		Normal
+ExpoB1		22	503	2001:470:f325:503::200:22	Booth			L.2		Loud
+CTF1		23	504	2001:470:f325:504::200:23	hiCTF			Z.9		Normal
+ExpoC1		24	503	2001:470:f325:503::200:24	Booth			L.2		Loud
+NewportB	25	503	2001:470:f325:503::200:25	hiRoom			D.9		Quiet
+CTF2		26	504	2001:470:f325:504::200:26	hiCTF			Z.9		Normal
+SanLorenzoC	27	504	2001:470:f325:504::200:27	hiRoom			D.9		Normal
+ExpoA2		28	503	2001:470:f325:503::200:28	Booth			L.2		Loud
+ExpoB2		29	503	2001:470:f325:503::200:29	Booth			L.2		Loud
+SanLorenzoD	30	504	2001:470:f325:504::200:30	hiRoom			D.9		Normal
+NewportC	31	503	2001:470:f325:503::200:31	hiRoom			E.9		Quiet
+RegDesk		32	503	2001:470:f325:503::200:32	registration		?.9		Normal
+ExpoC2		33	503	2001:470:f325:503::200:33	Booth			L.2		Normal
+ExpoA3		34	503	2001:470:f325:503::200:34	Booth			L.2		Loud
+ExpoB3		35	503	2001:470:f325:503::200:35	Booth			L.2		Loud
+ExpoC3		36	503	2001:470:f325:503::200:36	Booth			L.2		Normal
+SantaMonicaB	37	503	2001:470:f325:503::200:37	hiRoom			D.9		Quiet
+ExpoA4		38	503	2001:470:f325:503::200:38	Booth			L.2		Normal
+ExpoB4		39	503	2001:470:f325:503::200:39	Booth			L.2		Normal
+SantaMonicaC	40	503	2001:470:f325:503::200:40	hiRoom			D.9		Quiet
+ExpoC4		41	503	2001:470:f325:503::200:41	hiRoom			L.2		Normal
+ExpoA5		42	503	2001:470:f325:503::200:42	hiRoom			L.2		Normal
+ExpoB5		43	503	2001:470:f325:503::200:43	hiRoom			L.2		Normal
+BelAir		44	503	2001:470:f325:503::200:44	hiRoom			E.9		Loud
+SanLorenzoA	45	503	2001:470:f325:503::200:45	hiRoom			D.9		Normal
+SanLorenzoE	46	503	2001:470:f325:504::200:46	hiRoom			D.9		Loud
+SanLorenzoF	47	503	2001:470:f325:503::200:47	hiRoom			D.9		Normal
+TTLB-LBY	48	503	2001:470:f325:503::200:48	hiIDF			M.2		??
+TT2E-2FCat	49	503	2001:470:f325:503::200:49	hiIDF			M.2		??
+TT2D-2FReg	50	503	2001:470:f325:503::200:50	hiIDF			M.2		??
+SpareA		51	503	2001:470:f325:503::200:51	hiIDF			Z.9		??
+SpareB		52	503	2001:470:f325:503::200:52	hiIDF			Z.9		??
+SpareC		53	503	2001:470:f325:503::200:53	hiIDF			Z.9		??
