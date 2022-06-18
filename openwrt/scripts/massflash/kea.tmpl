@@ -1,0 +1,29 @@
+{
+    "Dhcp4": {
+        "interfaces-config": {
+            "interfaces": [ "<INTERFACE>" ],
+            "dhcp-socket-type": "raw"
+        },
+        "valid-lifetime": 600,
+        "renew-timer": 300,
+        "rebind-timer": 400,
+        "subnet4": [{
+           "pools": [ { "pool": "192.168.252.50-192.168.254.254" } ],
+           "subnet": "192.168.252.0/22"
+        }],
+
+       "loggers": [{
+            "name": "*",
+            "severity": "DEBUG"
+        }],
+      "hooks-libraries": [
+          {
+              "library": "<LIBRUNSCRIPT>",
+              "parameters": {
+                  "name": "<MASSFLASH>",
+                  "sync": false
+              }
+          }
+      ]
+    }
+}
