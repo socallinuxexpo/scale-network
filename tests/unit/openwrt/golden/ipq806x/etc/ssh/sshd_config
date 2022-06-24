@@ -1,6 +1,6 @@
 Port 22
 PermitRootLogin yes
 PasswordAuthentication yes
+ChallengeResponseAuthentication yes
 AuthorizedKeysFile %h/.ssh/authorized_keys
 LogLevel VERBOSE
-

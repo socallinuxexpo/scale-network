@@ -40,5 +40,5 @@ config led 'led_lan'
 config led 'led_wps'
         option name 'WPS for build ID'
         option sysfs 'c2600:white:wps'
-        option default '1'
+        option default '0'
 

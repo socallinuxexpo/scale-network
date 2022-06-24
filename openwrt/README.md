@@ -5,6 +5,7 @@ The SCaLE network teams build of openwrt for the APs for the conference.
 ## Table of Contents
 
 * [Autoflash](./docs/AUTOFLASH.md)
+* [Massflash](./docs/MASSFLASH.md)
 * [Build Openwrt](./docs/BUILD.md)
 * [Dynamic Network Config](./docs/DYNAMIC_CONFIG.md)
 * [TPLink c2600](./docs/IPQ806X.md)
