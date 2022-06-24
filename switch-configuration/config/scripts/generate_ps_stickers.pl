@@ -20,16 +20,19 @@ my $PS_Preamble = <<EOF;
 /Sheet_Boundary_Color 
 
 EOF
+# Values for 14" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
+my $PageWidth = 20;
+my $PageHeight = 17;
 
 my $PS_Page_Preamble = <<EOF;
 % Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
-% Assumes a 28" wide 17" tall page. (30 inch media roll)
-/PageWidth { 28 Inch } bind def
-/PageHeight { 17 Inch } bind def
+% Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
+/PageWidth { $PageWidth Inch } bind def
+/PageHeight { $PageHeight Inch } bind def
 << /PageSize [ PageWidth PageHeight ] >> setpagedevice
 
 PageWidth 0 translate % move origin to lower right edge of portrait page
-90 rotate % rotate page clockwise 90 degrees around the bottom right corner
+90 rotate % rotate page clockwise 90 degrees around the bottom right corner (what was bottom right corner is now bottom left corner)
 
 0.25 Inch 0.25 Inch translate % Move origin slightly off the bottom and left edge of the page
 EOF
@@ -53,9 +56,9 @@ foreach(sort(@maps))
   embed($_);
   $map_number++;
   $map_pos++;
-  if ($map_pos > 13)
+  if ($map_pos > 10)
   {
-    $map_pos %= 14;
+    $map_pos %= 11;
     showpage();
   }
 }
@@ -65,6 +68,7 @@ if ($map_pos) # We didn't fill the last page
   $map_pos = 0;
   showpage();
 }
+print "showpage\n";
 
 sub show_preamble
 {
@@ -82,9 +86,10 @@ sub setorigin
   if ($position == 0)
   {
     # Reset the origin to the bottom of the page.
-    $Yorigin -= 26;
+    $Yorigin -= 20;
+    $Xorigin += 17;
     print <<EOF;
-      -26 Inch 0 translate
+      -20 Inch PageHeight translate
       (new origin ($Xorigin, $Yorigin)) =
 EOF
     print $PS_Page_Preamble;
@@ -109,15 +114,16 @@ sub embed
   }
   close INPUT;
   # Draw sticker cut bounding box around sticker with 0.25" radius corners
+  ## FIXME ## The following code is hard coded for a particular sticker size
   print <<EOF;
     gsave
-    0 0.5 0 0 (StickerCut) /tint exch def
+    0.5 0 0 0 (StickerCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
     tint 1 exch sub setcustomcolor
     0.1 setlinewidth
     0.25 Inch -0.1 Inch moveto % lower left point of bottom edge
-    13.9 Inch -0.1 Inch moveto % lower right end of straight line
+    13.9 Inch -0.1 Inch lineto % lower right end of straight line
     13.9 Inch 0.15 Inch 0.25 Inch 270 360 arc % arc to right edge vertical
     14.15 Inch 1.35 Inch lineto % right edge
     13.9 Inch 1.35 Inch 0.25 Inch 0 90 arc % arc to top edge
@@ -133,22 +139,23 @@ EOF
 
 sub showpage
 {
+  ## FIXME ## The following code is hard coded for a particular sticker size and grouping
   print <<EOF;
     gsave
     -0.1 Inch $Yorigin Inch -1 mul 0.1 Inch sub translate
-    0.5 0 0 0 (FullCut) /tint exch def
+    0 0.5 0 0 (FullCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
     tint 1 exch sub setcustomcolor
     0.1 setlinewidth
     0 -0.1 Inch moveto
     14.4 Inch -0.1 Inch lineto
-    14.4 Inch 27.75 Inch lineto
-    0 27.75 Inch lineto
+    14.4 Inch PageWidth 0.1 Inch sub lineto
+    0 PageWidth 0.1 Inch sub lineto
     closepath
     stroke
     grestore
-    showpage
+    %showpage
 EOF
 }
 
