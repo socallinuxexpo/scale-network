@@ -308,7 +308,7 @@ SwitchMapDict begin
 
 % Constants for use in building portmaps
 /Origin           [ 0.5 Inch 0.25 Inch ] def    % Bottom Left Corner of port map (After rotation and translatin of [0,0])
-/Label_Ligature   1.5 Inch def                  % Ligature Line Position for Label
+/Label_Ligature   1.25 Inch def                 % Ligature Line Position for Label
 /Box_Height       0.5 Inch def                  % Height of boxes for portmap
 /Odd_Bottom       0.0 Inch def                  % Bottom Line for Even Ports
 /Even_Bottom      Odd_Bottom Box_Height add def % Bottom Line for Even Ports
