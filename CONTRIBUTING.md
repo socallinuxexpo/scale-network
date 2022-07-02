@@ -102,6 +102,11 @@ Flow see: https://guides.github.com/introduction/flow/
      git checkout <feature_branch>
      git rebase master
      ```
+     _Any subsequent push to the remote will require a force push since history_
+     _was rewritten instead of just appended to:_
+     ```bash
+     git push -f origin <feature_branch>
+     ```
 * **Q:** How can I checkout an existing remote branch on another machine?
 
   **A:** _From the machine that didn't originate the branch,_
