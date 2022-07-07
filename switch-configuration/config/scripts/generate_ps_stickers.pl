@@ -1,10 +1,19 @@
 #!/usr/bin/env perl
 #
-# Collect EPS files in switch-maps directory and generate a single EPS file
-# optimized for 30 inch wide media (Stickers are printed vertically, 27
-# stickers wide, one row of stickers per "page".
+# Collect EPS files in switch-maps directory and generate a single PS file
+# optimized for 24 inch wide roll media (Stickers are printed vertically, 10
+# stickers wide per row of stickers. Everything is on 1 page for roll media.
+# So as many rows as are needed are fed to the output on a single page.
 #
 # Currently output is to STDOUT. Might convert to sending to a file later.
+
+# Values for 17" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
+my $PageWidth = 20;
+my $PageHeight = 15;
+
+my $StickerHeight = 1.5;
+my $StickerWidth  = 14;
+my $Radius = 0.25;
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe
@@ -19,22 +28,24 @@ my $PS_Preamble = <<EOF;
 /Inch { 72 mul } bind def
 /Sheet_Boundary_Color 
 
-EOF
-# Values for 14" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
-my $PageWidth = 20;
-my $PageHeight = 17;
-
-my $PS_Page_Preamble = <<EOF;
 % Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
 % Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
 /PageWidth { $PageWidth Inch } bind def
 /PageHeight { $PageHeight Inch } bind def
+/StickerWidth { $StickerWidth } bind def
+/StickerHeight { $StickerHeight Inch } bind def
+/CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
 << /PageSize [ PageWidth PageHeight ] >> setpagedevice
 
 PageWidth 0 translate % move origin to lower right edge of portrait page
 90 rotate % rotate page clockwise 90 degrees around the bottom right corner (what was bottom right corner is now bottom left corner)
 
 0.25 Inch 0.25 Inch translate % Move origin slightly off the bottom and left edge of the page
+
+EOF
+
+my $PS_Page_Preamble = <<EOF;
+
 EOF
 
 # General recipe for rotating and translating for landscape printing on 11x17"
@@ -114,7 +125,6 @@ sub embed
   }
   close INPUT;
   # Draw sticker cut bounding box around sticker with 0.25" radius corners
-  ## FIXME ## The following code is hard coded for a particular sticker size
   print <<EOF;
     gsave
     0.5 0 0 0 (StickerCut) 0 /tint exch def
@@ -122,15 +132,38 @@ sub embed
     false setoverprint
     tint 1 exch sub setcustomcolor
     0.1 setlinewidth
-    0.25 Inch -0.1 Inch moveto % lower left point of bottom edge
-    13.9 Inch -0.1 Inch lineto % lower right end of straight line
-    13.9 Inch 0.15 Inch 0.25 Inch 270 360 arc % arc to right edge vertical
-    14.15 Inch 1.35 Inch lineto % right edge
-    13.9 Inch 1.35 Inch 0.25 Inch 0 90 arc % arc to top edge
-    0.25 Inch 1.6 Inch lineto % Top edge
-    0.25 Inch 1.35 Inch 0.25 Inch 90 180 arc % arc to left edge
-    0 Inch 0.15 Inch lineto % left edge
-    0.25 Inch 0.15 Inch 0.25 Inch 180 270 arc % arc to bottom edge
+
+    % Draw curved box line to cut sticker for peeling off of backing
+
+    % Adjustments to box position
+    /XLOffset {  0    Inch } bind def
+    /YLOffset {  0    Inch } bind def
+    /XROffset {  0    Inch } bind def
+    /YUOffset {  0    Inch } bind def
+
+    % Bounding box is (XLOffset, YLOffset) to (StickerWidth+XROffset, StickerHeight+YUOffset
+    % offset left and right side X values by 0.25 (+Left, -Right) Inch on horizontal lines
+    % offset top and bottom Y values by 0.25 (+bottom, -top) Inch on vertical lines
+    %
+    % Draw Bottom Line
+    XLOffset CornerRadius add YLOffset moveto 								% Start at Left point of line for bottom edge
+    StickerWidth XROffset add CornerRadius sub YLOffset lineto						% Line to Right point of line for bottom edge
+
+    StickerWidth XROffset add CornerRadius sub YLOffset CornerRadius add CornerRadius 270 360 arc	% Draw Arc bottom right corner
+
+    StickerWidth XROffset add StickerHeight YUOffset add CornerRadius sub lineto			% Line to top point of line for right edge
+
+    StickerWidth XROffset add CornerRadius sub StickerHeight YUOffset add CornerRadius sub CornerRadius 0 90 arc
+													% Draw Arc top right corner
+
+    XLOffset CornerRadius add StickerHeight YUOffset add lineto						% Line to Left point of line for top edge
+
+    XLOffset CornerRadius add StickerHeight YUOffset add CornerRadius sub CornerRadius 90 180 arc	% Draw Arc top left corner
+
+    XLOFFset YLOffset CornerRadius add lineto								% Line to bottom point of line for left edge
+
+    XLOffset CornerRadius add YLOffset CornerRadius add CornerRadius 180 270 arc			% Draw Ark bottom left corner
+
     closepath
     stroke
     grestore
