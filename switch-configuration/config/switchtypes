@@ -28,6 +28,8 @@ CenturyCD	11	503	2001:470:f325:503::200:11	hiRoom			D.9		Normal
 SantaMonicaA	12	503	2001:470:f325:503::200:12	hiRoom			D.9		Normal
 CatalinaB	13	503	2001:470:f325:503::200:13	hiRoom			E.9		Normal
 AVSwitch	14	503	2001:470:f325:503::200:14	hiAV			?.9		Normal
+SpareD		15	503	2001:470:f325:503::200:15	hiIDF			Z.9		??
+SpareE		16	503	2001:470:f325:503::200:16	hiIDF			Z.9		??
 CatalinaC	17	503	2001:470:f325:503::200:17	hiRoom			E.9		Normal
 ExpoA1		18	503	2001:470:f325:503::200:18	Booth			L.2		Loud
 CatalinaD	19	503	2001:470:f325:503::200:19	hiRoom			E.9		Normal

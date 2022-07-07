@@ -8,12 +8,16 @@
 # Currently output is to STDOUT. Might convert to sending to a file later.
 
 # Values for 17" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
-my $PageWidth = 20;
+my $PageWidth = 21;
 my $PageHeight = 15;
 
 my $StickerHeight = 1.5;
 my $StickerWidth  = 14;
+my $StickersPerPage = 10;
 my $Radius = 0.25;
+
+my @maps = <switch-maps/*.eps>;
+my $SheetCount = ($#maps / $StickersPerPage ) + ($#maps % $StickersPerPage ? 1 : 0);
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe
@@ -26,16 +30,22 @@ my $PS_Preamble = <<EOF;
 %%Extensions: CMYK
 %%EndComments
 /Inch { 72 mul } bind def
-/Sheet_Boundary_Color 
+%/Sheet_Boundary_Color 
 
 % Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
 % Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
 /PageWidth { $PageWidth Inch } bind def
 /PageHeight { $PageHeight Inch } bind def
-/StickerWidth { $StickerWidth } bind def
+/StickerWidth { $StickerWidth Inch } bind def
 /StickerHeight { $StickerHeight Inch } bind def
 /CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
-<< /PageSize [ PageWidth PageHeight ] >> setpagedevice
+<< /PageSize [ PageWidth 0.1 Inch add PageHeight $SheetCount mul ] >> setpagedevice
+
+% Adjustments to box position
+/XLOffset {  0    Inch } def
+/YLOffset { -0.2  Inch } def
+/XROffset {  0.1  Inch } def
+/YUOffset {  0.2  Inch } def
 
 PageWidth 0 translate % move origin to lower right edge of portrait page
 90 rotate % rotate page clockwise 90 degrees around the bottom right corner (what was bottom right corner is now bottom left corner)
@@ -57,7 +67,6 @@ EOF
 my $map_number = 0;		# Current number in sequence of maps
 my $map_pos = 0;		# Current position on page (0-3)
 
-my @maps = <switch-maps/*.eps>;
 
 show_preamble();
 
@@ -67,9 +76,9 @@ foreach(sort(@maps))
   embed($_);
   $map_number++;
   $map_pos++;
-  if ($map_pos > 10)
+  if ($map_pos >= $StickersPerPage)
   {
-    $map_pos %= 11;
+    $map_pos %= ($StickersPerPage);
     showpage();
   }
 }
@@ -100,7 +109,7 @@ sub setorigin
     $Yorigin -= 20;
     $Xorigin += 17;
     print <<EOF;
-      -20 Inch PageHeight translate
+      PageHeight -18 Inch translate
       (new origin ($Xorigin, $Yorigin)) =
 EOF
     print $PS_Page_Preamble;
@@ -135,12 +144,6 @@ sub embed
 
     % Draw curved box line to cut sticker for peeling off of backing
 
-    % Adjustments to box position
-    /XLOffset {  0    Inch } bind def
-    /YLOffset {  0    Inch } bind def
-    /XROffset {  0    Inch } bind def
-    /YUOffset {  0    Inch } bind def
-
     % Bounding box is (XLOffset, YLOffset) to (StickerWidth+XROffset, StickerHeight+YUOffset
     % offset left and right side X values by 0.25 (+Left, -Right) Inch on horizontal lines
     % offset top and bottom Y values by 0.25 (+bottom, -top) Inch on vertical lines
@@ -160,7 +163,7 @@ sub embed
 
     XLOffset CornerRadius add StickerHeight YUOffset add CornerRadius sub CornerRadius 90 180 arc	% Draw Arc top left corner
 
-    XLOFFset YLOffset CornerRadius add lineto								% Line to bottom point of line for left edge
+    XLOffset YLOffset CornerRadius add lineto								% Line to bottom point of line for left edge
 
     XLOffset CornerRadius add YLOffset CornerRadius add CornerRadius 180 270 arc			% Draw Ark bottom left corner
 
@@ -175,7 +178,7 @@ sub showpage
   ## FIXME ## The following code is hard coded for a particular sticker size and grouping
   print <<EOF;
     gsave
-    -0.1 Inch $Yorigin Inch -1 mul 0.1 Inch sub translate
+    -0.2 Inch -18.5 Inch 0.3 Inch add translate
     0 0.5 0 0 (FullCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
