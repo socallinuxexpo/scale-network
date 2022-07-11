@@ -8,15 +8,17 @@ endif
 
 all: switch-maps-bundle
 
+lint:	.lint
+
 .lint: config/scripts/*.pl
 	find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
 	touch .lint
 
-lint:	.lint
-
 .secrets: .lint
 	echo "$(JROOT_SECRET)" > ../facts/secrets/jroot_pw
 	touch .secrets
+
+build-switch-configs: .build-switch-configs
 
 .build-switch-configs: .lint .secrets config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pl
 	cd config && \
