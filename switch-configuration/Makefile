@@ -8,9 +8,11 @@ endif
 
 all: switch-maps-bundle
 
-.lint:
+.lint: config/scripts/*.pl
 	find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
 	touch .lint
+
+lint:	.lint
 
 .secrets: .lint
 	echo "$(JROOT_SECRET)" > ../facts/secrets/jroot_pw
