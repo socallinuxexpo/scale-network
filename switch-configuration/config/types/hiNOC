@@ -1,7 +1,12 @@
 // Room Switch Template -- All conference rooms Conference Center
-TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns	// Uplink
-TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns	// Downlink
-RSRVD	6
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns,hiNOC	// Uplink
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns,hiNOC	// Downlink
+TRUNK	ge-0/0/2	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/3	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/4	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/5	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/6	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/7	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/8	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/9	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/10	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
@@ -12,10 +17,6 @@ TRUNK	ge-0/0/14	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/15	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/16	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/17	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-VLAN	hiSigns		4	// ge-0/0/{18-21}
-VLAN	hiAVLAN		6	// ge-0/0/{22-27}
-VLAN	hiSpeaker	2	// ge-0/0/{28,29}
-VLAN	hiCTF		1	// ge-0/0/30
-RSRVD	1			// ge-0/0/31 (was HAM_BRIDGE)
-VLAN	hiInstall	8	// ge-0/0/{32-39}
-RSRVD	8
+VLAN	hiSigns		6	// ge-0/0/{18-23}
+VLAN	hiNOC		12	// ge-0/0/{24-35}
+VLAN	hiInfra		12	// ge-0/0/{36-47}

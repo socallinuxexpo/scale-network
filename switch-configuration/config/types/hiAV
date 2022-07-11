@@ -1,12 +1,12 @@
 // Room Switch Template -- AV Room Switch
-TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,HAM_BRIDGE	// Uplink
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfStaff,cfSigns,HAM_BRIDGE	// Downlink
-TRUNK	ge-0/0/2	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-TRUNK	ge-0/0/3	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-TRUNK	ge-0/0/4	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-TRUNK	ge-0/0/5	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-TRUNK	ge-0/0/6	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-TRUNK	ge-0/0/7	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfStaff,cfAVLAN				// AP
-VLAN	cfSigns		4										  // ge-0/0/{8-11}
-VLAN	cfAVLAN		36										// ge-0/0/{12-47}
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns		// Uplink
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns		// Downlink
+TRUNK	ge-0/0/2	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+TRUNK	ge-0/0/3	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+TRUNK	ge-0/0/4	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+TRUNK	ge-0/0/5	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+TRUNK	ge-0/0/6	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+TRUNK	ge-0/0/7	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff,hiAVLAN				// AP
+VLAN	hiSigns		4										 // ge-0/0/{8-11}
+VLAN	hiAVLAN		36										// ge-0/0/{12-47}
 
