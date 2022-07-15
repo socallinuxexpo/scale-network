@@ -8,7 +8,7 @@
 # Port map files are stored in ./switch-maps/
 #
 require "./scripts/switch_template.pl";   # Pull in configuration library
-set_debug_level(5);
+set_debug_level(9);
 my $switchlist = "";
 my $switch;
 

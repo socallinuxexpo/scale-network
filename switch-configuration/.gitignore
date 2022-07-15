@@ -1,0 +1,4 @@
+.scripts
+.lint
+.secrets
+.build-switch-configs

@@ -283,7 +283,9 @@ sub build_interfaces_from_config
 {
   ##FIXME## There are a number of places where this subroutine assumes
   ##FIXME## that all interaces are ge-0/0/*
-  ##FIXME## Covers all but fiber ports for SCALE 17x.
+  ##FIXME## There are special excpetions coded for FIBER ports at ge-0/1/[0-3] to partially compensate
+  ##FIXME## This is adequate for our current switch inventory which does not include any multi-U switches or chassis.
+  ##FIXME## Fiber_Left_Edge (Position of Fiber Port List) is currently above 4th port grouping. Should be to right, but involves expanding sticker size to accommodate
   my $hostname = shift @_;
   # Retrieve Switch Type Information
   my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
@@ -316,6 +318,10 @@ SwitchMapDict begin
 /Port_Width       0.5625 Inch def               % Width of each port
 /Port_Group_Gap   0.125 Inch def                % Width of gap between port groups
 /Center           7 Inch def                    % Center of box diagram
+/Fiber_Bottom     Even_Bottom Box_Height add 0.1 Inch add def
+/Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add 3 mul Port_Width add def % Compute position for left edge of Fiber Ports
+/Fiber_Port_Width 0.583 Inch def		% Width of SFP Port
+
 
 % String for storing port numbers
 /s 3 string def
@@ -371,6 +377,45 @@ SwitchMapDict begin
   setrgbcolor
   % Build Box path
   Left Bottom Port_Width Box_Height Box
+  % Fill Box
+  gsave
+  fill
+  % Draw outline
+  grestore
+  0 0 0 setrgbcolor %black
+  stroke
+  % Draw Text [ Text ] -> [ ]
+  BoxFont
+  dup stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature moveto
+  show
+  /P PortNum s cvs def
+  P stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+} bind def
+
+ % DrawFiberPort [ Text r g b Number ] -> [ ]
+/DrawFiberPort {
+  % Convert Number to X and Y position
+    % Identify the ligature line and bottom of box
+    % [ Text r g b Number ] -> [ Text r g b Number ]
+    % Save Port Number
+  dup /PortNum exch def
+
+    % Determine bottom edge of box
+  /Bottom Fiber_Bottom def
+  /Ligature Bottom 0.35 Inch add def
+    % Identify left and bottom edge of Port Box on Map (consumes Number)
+    % [ Text r g b Number ] -> [ Text r g b ]
+  Fiber_Left_Edge                 % Place FiberPort Group Left Edge on stack
+  exch                            % Swap Fiber port group position with subgroup Port Horizontal Position
+  cvi Fiber_Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
+  Left_Port_Edge add              % Add offset for left port edge
+  /Left exch def                  % Save as Left
+  % Set color for fill [ Text r g b ] -> [ Text ] (consumes r g b)
+  setrgbcolor
+  % Build Box path
+  Left Bottom Port_Width Box_Height Box % Graphics context now includes a path for the box
   % Fill Box
   gsave
   fill
@@ -451,7 +496,7 @@ EOF
       ##FIXME## Build interface ranges
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
-      debug(9, "\t\t$iface ($vlans)\n");
+      debug(9, "\t$cmd\t$iface ($vlans)\n");
       $vlans =~ s/\s*,\s*/ /g;
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
@@ -478,12 +523,26 @@ EOF
         }
     }
 EOF
+      debug(9, "$cmd reached PS Output\n");
       if ($cmd eq "TRUNK")
       {
-        # Fiber ports aren't part of the map (at least for now)
+        # Fiber ports are special in the map
+        debug(9, "$cmd output standard box for port $portnum ($iface)\n");
         $portmap_PS .= <<EOF;
 (TRUNK) 1 0.75 0.75 $portnum DrawPort
 EOF
+      }
+
+      if ( $cmd eq "FIBER")
+      {
+        # Fiber ports are special in the map
+        my ($first, $second, $portnum) = split(/\//, $iface);
+	print STDERR "REACHED DrawFiberPort IF statement\n";
+        $portmap_PS .= <<EOF;
+(FIBER) 0 1 1 $portnum DrawFiberPort
+EOF
+        debug(9, "$cmd output Fiber box for port $portnum ($iface)\n");
+
       }
     }
     elsif ($cmd eq "VLAN")

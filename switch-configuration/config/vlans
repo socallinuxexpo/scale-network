@@ -1,9 +1,11 @@
 // Expo Center -- VLANS 100-499
-#include vlans.d/Expo
+//#include vlans.d/Expo
 
 // Conference Center -- VLANS 500-899
-#include vlans.d/Conference
+//#include vlans.d/Conference
 
 // Bridged -- VLANS 900-999 (carried across fiber between buildings)
-#include vlans.d/Bridged
+//#include vlans.d/Bridged
 
+// Hilton -- SCaLE 19x special
+#include vlans.d/Hilton
