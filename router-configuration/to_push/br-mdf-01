@@ -1,8 +1,7 @@
 version 15.1X49-D70.3;
 system {
     host-name br-mdf-01;
-    root-authentication {
-    }
+    ##FIXME## Prior to pushing to router, add root-authentication with proper encrypted password.
     name-server {
         8.8.8.8;
         8.8.4.4;
@@ -194,15 +193,20 @@ interfaces {
         }
     }
     ge-0/0/1 {
-        description "Not in Use";
+        description "Emergency access";
         unit 0 {
-            family ethernet-switching {
+            family inet {
+                address 172.24.37.1/24;
+            }
+            family inet6 {
+                address 2001:470:f0fb:ffff::1/64;
+            }
         }
     }
     ge-0/0/2 {
         description "Not in Use";
         unit 0 {
-            family ethernet-switching {
+            family ethernet-switching;
         }
     }
     ge-0/0/3 {
@@ -545,6 +549,7 @@ protocols {
             }
         }
     }
+}
 routing-options {
     rib inet6.0 {
         static {
