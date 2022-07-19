@@ -45,7 +45,7 @@ ExpoA2		28	103	2001:470:f0fb:103::200:28	Booth		L.2		Loud		ex4200-48p
 ExpoB2		29	103	2001:470:f0fb:103::200:29	Booth		L.2		Loud		ex4200-48p
 SanLorenzoD	30	103	2001:470:f0fb:103::200:30	hiRoom		D.9		Normal		ex4200-48p
 NewportC	31	103	2001:470:f0fb:103::200:31	hiRoom		E.9		Quiet		ex4200-48p
-RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	?.9		Normal		ex4200-48p
+RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	D.9		Normal		ex4200-48p
 ExpoC2		33	103	2001:470:f0fb:103::200:33	Booth		L.2		Normal		ex4200-48p
 ExpoA3		34	103	2001:470:f0fb:103::200:34	Booth		L.2		Loud		ex4200-48p
 ExpoB3		35	103	2001:470:f0fb:103::200:35	Booth		L.2		Loud		ex4200-48p

@@ -167,7 +167,7 @@ security {
     }
 }
 interfaces {
-    ge-0/0/0 {
+    ge-0/0/5 {
         description "Trunk to MDF-SR switch"
         unit 0 {
             family ethernet-switching {
@@ -221,7 +221,7 @@ interfaces {
             family ethernet-switching;
         }
     }
-    ge-0/0/5 {
+    ge-0/0/0 {
         description "Physical uplink to Internet";
         unit 0 {
             family ethernet-switching {

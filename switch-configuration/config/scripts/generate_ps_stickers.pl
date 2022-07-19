@@ -1,5 +1,4 @@
-#!/usr/bin/env perl
-#
+#!/usr/bin/env perl #
 # Collect EPS files in switch-maps directory and generate a single PS file
 # optimized for 24 inch wide roll media (Stickers are printed vertically, 10
 # stickers wide per row of stickers. Everything is on 1 page for roll media.
@@ -8,7 +7,7 @@
 # Currently output is to STDOUT. Might convert to sending to a file later.
 
 # Values for 17" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
-my $PageWidth = 21;
+my $PageWidth = 20;
 my $PageHeight = 15;
 
 my $StickerHeight = 1.5;
@@ -25,8 +24,8 @@ my $PS_Preamble = <<EOF;
 %%DocumentProcess Colors: Cyan Magenta Yellow Black
 %%DocumentCustomColors: (FullCut)
 %%+ (StickerCut)
-%%CMYKCustomColor: 0.5 0 0 0 (FullCut)
-%%+ 0 0.5 0 0 (StickerCut)
+%%CMYKCustomColor: 0.5 0 0 0 (StickerCut)
+%%+ 0 0.5 0 0 (FullCut)
 %%Extensions: CMYK
 %%EndComments
 /Inch { 72 mul } bind def
@@ -39,7 +38,7 @@ my $PS_Preamble = <<EOF;
 /StickerWidth { $StickerWidth Inch } bind def
 /StickerHeight { $StickerHeight Inch } bind def
 /CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
-<< /PageSize [ PageWidth 0.1 Inch add PageHeight $SheetCount mul ] >> setpagedevice
+<< /PageSize [ PageWidth 0.25 Inch add PageHeight $SheetCount mul ] >> setpagedevice
 
 % Adjustments to box position
 /XLOffset {  0    Inch } def
@@ -50,7 +49,7 @@ my $PS_Preamble = <<EOF;
 PageWidth 0 translate % move origin to lower right edge of portrait page
 90 rotate % rotate page clockwise 90 degrees around the bottom right corner (what was bottom right corner is now bottom left corner)
 
-0.25 Inch 0.25 Inch translate % Move origin slightly off the bottom and left edge of the page
+0.15 Inch 0.15 Inch translate % Move origin slightly off the bottom and left edge of the page
 
 EOF
 
@@ -106,7 +105,7 @@ sub setorigin
   if ($position == 0)
   {
     # Reset the origin to the bottom of the page.
-    $Yorigin -= 20;
+    $Yorigin -= 18;
     $Xorigin += 17;
     print <<EOF;
       PageHeight -18 Inch translate
@@ -178,16 +177,16 @@ sub showpage
   ## FIXME ## The following code is hard coded for a particular sticker size and grouping
   print <<EOF;
     gsave
-    -0.2 Inch -18.5 Inch 0.3 Inch add translate
+    -0.2 Inch $Yorigin neg Inch 0.45 Inch sub translate
     0 0.5 0 0 (FullCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
     tint 1 exch sub setcustomcolor
-    0.1 setlinewidth
-    0 -0.1 Inch moveto
-    14.4 Inch -0.1 Inch lineto
-    14.4 Inch PageWidth 0.1 Inch sub lineto
-    0 PageWidth 0.1 Inch sub lineto
+    1 setlinewidth
+    0 0.15 Inch moveto
+    14.4 Inch 0.15 Inch lineto
+    14.4 Inch PageWidth 0.2 Inch add lineto
+    0 PageWidth 0.2 Inch add lineto
     closepath
     stroke
     grestore
