@@ -164,10 +164,10 @@ sub get_switchtype
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
-      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel) = split(/\t+/, $_);
+      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel, $model, $mgmtMAC) = split(/\t+/, $_);
       my ($group, $level) = split(/\./, $hierarchy);
       debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type, $group, $level)\n");
-      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level ];
+      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level, $noiselevel, $model, $mgmtMAC ];
       # Build cache of groups
       debug(5, "Adding $Name to group $group at level $level\n");
       if (!defined($Switchgroups{$group}))
@@ -197,9 +197,28 @@ sub get_switchtype
                             $Switchtypes{$hostname}[3]. ", ".
                             $Switchtypes{$hostname}[4]. ", ".
                             $Switchtypes{$hostname}[5]. ", ".
-                            $Switchtypes{$hostname}[6]. ")\n");
+                            $Switchtypes{$hostname}[6]. ", ".
+                            $Switchtypes{$hostname}[7]. ", ".
+                            $Switchtypes{$hostname}[8]. ", ".
+                            $Switchtypes{$hostname}[9]. ")\n");
   return($hostname, @{$Switchtypes{$hostname}});
 }
+
+sub get_switch_by_mac
+{
+  ## FIXME ## Assertion -- Switchtypes hash has been preloaded
+  my $macaddr = shift(@_);
+  my @switches = ();
+  foreach(keys(%Switchtypes))
+  {
+    ## FIXME ## Stupid stringwise comparison may not accurately find MAC addresses
+    if (lc($macaddr) eq lc($Switchtypes{$_}[9]))
+    {
+      push(@switches, $_);
+    }
+  }
+  return(@switches);
+};
 
 sub build_users_from_auth
 {
