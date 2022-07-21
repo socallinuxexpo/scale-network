@@ -1,0 +1,190 @@
+%!PS-Adobe
+%%DocumentNeededResources: font Helvetica
+%%DocumentProcess Colors: Cyan Magenta Yellow Black
+%%DocumentCustomColors: (FullCut)
+%%+ (StickerCut)
+%%CMYKCustomColor: 0.5 0 0 0 (FullCut)
+%%+ 0 0.5 0 0 (StickerCut)
+%%Extensions: CMYK
+%%EndComments
+/Inch { 72 mul } bind def
+%/Sheet_Boundary_Color
+
+% Set up environment (landscape page, [0,0] origin at rotated bottom left corner)
+% Assumes a 21 Wide 15 tall page. (Change below, according to media roll)
+/PageWidth { 21 Inch } bind def
+/PageHeight { 10 Inch } bind def
+/StickerWidth { 9 Inch } bind def
+/StickerHeight { 1.5 Inch } bind def
+/CornerRadius { 0.25 Inch } bind def   % Radius for Corner of sticker cut line
+<< /PageSize [ PageWidth 0.1 Inch add PageHeight 6.2 mul ] >> setpagedevice
+
+% Adjustments to box position
+/XLOffset {  0    Inch } def
+/YLOffset { -0.2  Inch } def
+/XROffset {  0.1  Inch } def
+/YUOffset {  0.2  Inch } def
+
+PageWidth 0 translate % move origin to lower right edge of portrait page
+90 rotate % rotate page clockwise 90 degrees around the bottom right corner (what was bottom right corner is now bottom left corner)
+
+0.25 Inch 0.25 Inch translate % Move origin slightly off the bottom and left edge of the page
+
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 0 0 1008 144 % 14" x 2"
+%
+% Generated Interface Portmap for Switch #44 Name: BelAir (Type: hiRoom)
+%
+% Initialization of graphical context for portmap
+% Each portmap is roughly 14" wide by 2" high.
+%
+% Note, this file was prepared by hand for the SRX. It was not automatically
+% generated. It contains customized deinitions for several parameters in the
+% SwitchMap Dictionary and some of the functions defined below.
+
+/SwitchMapDict 20 dict def
+SwitchMapDict begin
+% Font Definitions
+/BoxFont { /Helvetica findfont 6 scalefont setfont } bind def
+/TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
+
+% Misc. Subroutines used in constant definitions (mostly unit conversions)
+/Inch { 72 mul } bind def   % Inch converted to points (I -> pts)
+/mm  { 2.835 mul } bind def % mm converted to points   (mm -> pts)
+
+% Constants for use in building portmaps
+/Origin           [ 0.5 Inch 0.25 Inch ] def    % Bottom Left Corner of port map (After rotation and translatin of [0,0])
+/Label_Ligature   1.25 Inch def                 % Ligature Line Position for Label
+/Box_Height       0.5 Inch def                  % Height of boxes for portmap
+/Odd_Bottom       0.0 Inch def                  % Bottom Line for Even Ports
+/Even_Bottom      Odd_Bottom Box_Height add def % Bottom Line for Even Ports
+/Left_Port_Edge   0.125 Inch def                % Left edge of first port column
+/Port_Width       0.5625 Inch def               % Width of each port
+/Port_Group_Gap   0.125 Inch def                % Width of gap between port groups
+/Center           7 Inch def                    % Center of box diagram
+/Fiber_Bottom     Odd_Bottom Box_Height add 0.1 Inch add def
+/Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add def % Compute position for left edge of Fiber Ports
+/Fiber_Port_Width 0.583 Inch def		% Width of SFP Port
+
+
+% String for storing port numbers
+/s 3 string def
+
+% Subroutines specific to drawing a portmap
+ % ShowTitle [ text ] -> [ ]
+/ShowTitle {
+  TitleFont                    % Set up Title Font
+  0 0 0 setrgbcolor            % Title in black
+  dup stringwidth pop          % Get width from font metrics (discard height) [ text ] -> [ text width ]
+  2 div                        % Convert to offset from center for left edge -> [ text width/2 ]
+  Center exch sub              % Subtract from Center position -> [ text Center-width/2 ]
+  Label_Ligature moveto        % Position at bottom left edge of text -> [ text ]
+  show                         % Display text [ text ] -> [ ]
+} bind def
+
+ % Box [ Left Bottom Width Height ] -> [ ]
+/Box {
+  /boxHeight exch def
+  /boxWidth exch def
+  /boxBottom exch def
+  /boxLeft exch def
+  /boxTop boxBottom boxHeight add def
+  /boxRight boxLeft boxWidth add def
+  newpath
+  boxLeft boxBottom moveto
+  boxRight boxBottom lineto
+  boxRight boxTop lineto
+  boxLeft boxTop lineto
+  closepath % Draw line from boxLeft BoxTop to boxLeft boxBottom
+ } bind def
+
+ % DrawPort [ Text r g b Number ] -> [ ]
+/DrawPort {
+  % Convert Number to X and Y position
+    % Identify the ligature line and bottom of box
+    % [ Text r g b Number ] -> [ Text r g b Number ]
+    % Save Port Number
+  dup /PortNum exch def
+    % Determine bottom edge of box
+  dup /Bottom exch 2 mod 0 eq { Odd_Bottom } { Odd_Bottom } ifelse def
+  /Ligature Bottom 0.35 Inch add def
+    % Identify left and bottom edge of Port Box on Map (consumes Number)
+    % [ Text r g b Number ] -> [ Text r g b ]
+  % Don't divide by 2, SRX has a single row of interfaces
+  % 2 div                     % Get horizontal port position
+  dup cvi 6 idiv            % Get number of preceding port groups
+  Port_Group_Gap mul        % Convert to width
+  exch                      % Swap port group width with Port Horizontal Position
+  cvi Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
+  Left_Port_Edge add        % Add offset for left port edge
+  /Left exch def            % Save as Left
+  % Set color for fill [ Text r g b ] -> [ Text ]
+  setrgbcolor
+  % Build Box path
+  Left Bottom Port_Width Box_Height Box
+  % Fill Box
+  gsave
+  fill
+  % Draw outline
+  grestore
+  0 0 0 setrgbcolor %black
+  stroke
+  % Draw Text [ Text ] -> [ ]
+  BoxFont
+  dup stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature moveto
+  show
+  /P PortNum s cvs def
+  P stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+} bind def
+
+ % DrawFiberPort [ Text r g b Number ] -> [ ]
+/DrawFiberPort {
+  % Convert Number to X and Y position
+    % Identify the ligature line and bottom of box
+    % [ Text r g b Number ] -> [ Text r g b Number ]
+    % Save Port Number
+  dup /PortNum exch def
+
+    % Determine bottom edge of box
+  /Bottom Fiber_Bottom def
+  /Ligature Bottom 0.35 Inch add def
+    % Identify left and bottom edge of Port Box on Map (consumes Number)
+    % [ Text r g b Number ] -> [ Text r g b ]
+  Fiber_Left_Edge                 % Place FiberPort Group Left Edge on stack
+  exch                            % Swap Fiber port group position with subgroup Port Horizontal Position
+  cvi Fiber_Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
+  Left_Port_Edge add              % Add offset for left port edge
+  /Left exch def                  % Save as Left
+  % Set color for fill [ Text r g b ] -> [ Text ] (consumes r g b)
+  setrgbcolor
+  % Build Box path
+  Left Bottom Port_Width Box_Height Box % Graphics context now includes a path for the box
+  % Fill Box
+  gsave
+  fill
+  % Draw outline
+  grestore
+  0 0 0 setrgbcolor %black
+  stroke
+  % Draw Text [ Text ] -> [ ]
+  BoxFont
+  dup stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature moveto
+  show
+  /P PortNum s cvs def
+  P stringwidth pop 2 div /W exch def
+  Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+} bind def
+
+(BR-MDF Border Router) ShowTitle
+(Internet)  0.5 1   0.5 0 DrawPort
+(Emergency) 1   0.5 0.5 1 DrawPort
+(Unused)    0.5 0.5 0.5 2 DrawPort
+(Unused)    0.5 0.5 0.5 3 DrawPort
+(Unused)    0.5 0.5 0.5 4 DrawPort
+(MDF-SR)    1   0.8 0.8 5 DrawPort
+(TT2E)      0   1   1   0 DrawFiberPort
+(TTSR)      0   1   1   1 DrawFiberPort
+end %End of local dictionary (SwitchMapDict) for EPS

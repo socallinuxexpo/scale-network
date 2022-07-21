@@ -27,14 +27,14 @@ SanLorenzoB	10	103	2001:470:f0fb:103::200:10	hiRoom		D.1		Loud		ex4200-48p
 CenturyCD	11	103	2001:470:f0fb:103::200:11	hiRoom		D.9		Normal		ex4200-48p
 SantaMonicaA	12	103	2001:470:f0fb:103::200:12	hiRoom		D.9		Normal		ex4200-48p
 SpareD		13	103	2001:470:f0fb:103::200:13	hiRoom		E.9		Normal		ex4200-48p
-AVSwitch-CatB	14	103	2001:470:f0fb:103::200:14	hiAV		?.9		Normal		ex4200-48p
+AVSwitch-CatB	14	103	2001:470:f0fb:103::200:14	hiAV		E.9		Normal		ex4200-48p
 SpareE		15	103	2001:470:f0fb:103::200:15	hiRoom		Z.9		??		ex4200-48p
 SpareF		16	103	2001:470:f0fb:103::200:16	hiRoom		Z.9		??		ex4200-48p
 CatalinaC	17	103	2001:470:f0fb:103::200:17	hiRoom		E.9		Normal		ex4200-48p
 ExpoA1		18	103	2001:470:f0fb:103::200:18	Booth		L.2		Loud		ex4200-48p
 CatalinaD	19	103	2001:470:f0fb:103::200:19	hiRoom		E.9		Normal		ex4200-48p
 NewportA	20	103	2001:470:f0fb:103::200:20	hiRoom		D.9		Quiet		ex4200-48p
-NOC-CatA	21	103	2001:470:f0fb:103::200:21	hiNOC		?.2		Normal		ex4200-48p
+NOC-CatA	21	103	2001:470:f0fb:103::200:21	hiNOC		E.2		Normal		ex4200-48p
 ExpoB1		22	103	2001:470:f0fb:103::200:22	Booth		L.2		Loud		ex4200-48p
 CTF1		23	103	2001:470:f0fb:103::200:23	hiCTF		Z.9		Normal		ex4200-48p
 ExpoC1		24	103	2001:470:f0fb:103::200:24	Booth		L.2		Loud		ex4200-48p
@@ -45,7 +45,7 @@ ExpoA2		28	103	2001:470:f0fb:103::200:28	Booth		L.2		Loud		ex4200-48p
 ExpoB2		29	103	2001:470:f0fb:103::200:29	Booth		L.2		Loud		ex4200-48p
 SanLorenzoD	30	103	2001:470:f0fb:103::200:30	hiRoom		D.9		Normal		ex4200-48p
 NewportC	31	103	2001:470:f0fb:103::200:31	hiRoom		E.9		Quiet		ex4200-48p
-RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	?.9		Normal		ex4200-48p
+RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	D.9		Normal		ex4200-48p
 ExpoC2		33	103	2001:470:f0fb:103::200:33	Booth		L.2		Normal		ex4200-48p
 ExpoA3		34	103	2001:470:f0fb:103::200:34	Booth		L.2		Loud		ex4200-48p
 ExpoB3		35	103	2001:470:f0fb:103::200:35	Booth		L.2		Loud		ex4200-48p
