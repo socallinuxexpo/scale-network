@@ -58,8 +58,9 @@ foreach(@list)
 }
 
 # Assertions:
-#   output/* contains valid configuratin files for each switch
+#   output/* contains valid configuration files for each switch
 #   Switches are accessible via SSH at their management address in the switchtypes file.
+#	(unless -l in which case accessible via SSH on attached management interface)
 # Phase 1: Push new configuration file to switch.
 # Phase 2: Apply new configuration file using "load override <filename>" and commit it.
 #
