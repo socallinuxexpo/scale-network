@@ -14,7 +14,6 @@ def isuntested(value):
     ''' dummy function for untested values'''
     return True
 
-
 def isvalidhostname(hostname):
     '''
     test for valid short hostname with letters, numbers, and dashes
@@ -26,6 +25,18 @@ def isvalidhostname(hostname):
         return True
     return False
 
+def isvalidmodel(model):
+    '''
+    test for valid switch model (enumerated)
+    '''
+    if model in [
+            "ex4200-48p", "ex4200-48t",
+            "ex4200-24p", "ex4200-24t",
+            "ex2200-48p", "ex2200-48t",
+            "ex2200-24p", "ex2200-24t"
+        ]:
+        return True
+    return False
 
 def isvalidip(addr):
     '''test for valid v4 or v6 ip'''
@@ -48,7 +59,6 @@ def isvalidmac(macaddr):
     if result:
         return True
     return False
-
 
 def isvalidwifi24chan(chan):
     '''test for valid 2.4Ghz WiFi channel'''
@@ -85,7 +95,7 @@ def isvalidhierarchy(val):
 
 def isvalidnoiselevel(val):
     '''test for valid noise level [Quiet, Normal, Loud]'''
-    if val in ["Quiet", "Normal", "Loud"]:
+    if val in ["Quiet", "Normal", "Loud", "??"]:
         return True
     return False
 
@@ -130,8 +140,15 @@ def test_datafile(delimiter, meta):
             continue
         elems = re.split(delimiter, line)
         # check for expected number of columns
-        if len(elems) != meta["count"]:
-            return False, "invalid col count at line " + str(linenum)
+        #  OD -- Add ability to specify count >= n using "n+" syntax.
+        if str(meta["count"])[-1] == "+":
+            count = str(meta["count"])[:-1]
+            if len(elems) < int(count):
+                return False, "insufficient col count: " + len(elems) + \
+                   " wanted " + meta["count"] + "at line " + str(linenum)
+        elif len(elems) != meta["count"]:
+            return False, "invalid col count: " + len(elems) + " wanted " + \
+                meta["count"] + " at line " + str(linenum)
         # skip validators for header row
         if meta["header"] and linenum == 0:
             continue
