@@ -100,5 +100,26 @@ Flow see: https://guides.github.com/introduction/flow/
      git checkout master
      git pull --rebase origin master
      git checkout <feature_branch>
-     git rebase develop
+     git rebase master
+     ```
+     _Any subsequent push to the remote will require a force push since history_
+     _was rewritten instead of just appended to:_
+     ```bash
+     git push -f origin <feature_branch>
+     ```
+* **Q:** How can I checkout an existing remote branch on another machine?
+
+  **A:** _From the machine that didn't originate the branch,_
+         _fetch the branches from the existing remote and checkout_
+         _that branch exclusively on the local machine:_
+     ```bash
+     git fetch origin
+     git checkout -b <new_branch_name> origin/<remote_branch_name>
+     ```
+* **Q:** How do I update my local branch with its corresponding remote branch?
+
+  **A:** _Always make sure your `rebase` when updating. Disregard the cli's_
+         _suggestions since that aren't helpful here. Instead:_
+     ```bash
+     git pull --rebase origin <feature_branch>:<feature_branch>
      ```
