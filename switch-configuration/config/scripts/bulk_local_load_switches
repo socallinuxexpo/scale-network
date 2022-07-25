@@ -25,8 +25,11 @@
 
 my $IP = "192.168.255.76"; # Switch target management IP
 
-print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary.";
-print "The following test will confirm that you are able to provide the necessary credentials.";
+print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary.\n";
+print "The following test will confirm that you are able to provide the necessary credentials.\n";
+print "It may prompt for a password. If so, enter your local user password on this system.\n";
+print "You may occasionally be prompted to re-enter this password when you start to load a new switch.\n";
+print "If you are ever prompted to enter a password while this script is running, this is why and you should use that password.\n";
 
 my $result = system("sudo", "date");
 if ($result)
