@@ -140,7 +140,7 @@ JUNOS	<junos_version>
 FIBER   <port> <vlan_name>[,<vlan_name>...]
 ```
 
-## config/routers/<name>
+## config/routers/{backups,to_push}/<name>
 These files describe the base configuration for a router. The information in
 these files is combined with certain assumptions and other data in the other
 configuration files to produce a router configuration. This is a work in
@@ -166,6 +166,11 @@ will use the same library (template.pl) to read configuration files.
 Each file describes one router and shares the same name as the router for which
 the configuraiton is being produced. (E.g. ExMDF will produce the ExMDF router
 configuration)
+
+The backups directory contains configuartions pulled from routers.
+The to_push directory contains edited configuration files intended for loading onto routers.
+In some cases, there may be accompanying encapsulated PostScript (.eps) files. In such a case, the eps file should produce
+a port label for the router in question. Such labels are hand coded, use with caution.
 
 ### L3 VLAN configuration Directives
 
@@ -235,7 +240,12 @@ https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuY
 scripts/
 
 # Standard Operational Procedures
+
 ## How to build a set of switch configurations
+The procedure below is mostly replaced with a Makefile now.
+
+You should be able to go into the switch-configuration directory and simply type 'make'.
+
 Once the configuration files are all set up (as described above) and you
 have set up authentication parameters as described below, simply run
 ```
@@ -269,6 +279,7 @@ scripts/update_switches BallroomG Room126
 ```
 
 ## How to set up a switch initially
+##FIXME## This section needs updating and some reqork
 1.	Restore switch to factory defaults
     ```
     https://www.juniper.net/documentation/en_US/release-independent/junos/topics/task/configuration/ex-series-switch-default-factory-configuration-reverting.html#jd0e60

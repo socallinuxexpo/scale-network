@@ -8,7 +8,7 @@
 #
 # General theory:
 # 	Each switch should have a common configuration on the management ethernet interface (me-0):
-#		192.168.255.76/24
+#		192.168.255.76/24 (If this changes, update the $IP variable definition below)
 #
 #	The system where this software is running should have an interface set up on that same network.
 #
@@ -21,10 +21,13 @@
 #	7. Repeat beginning with step 1 above.
 
 # Not yet ready for use... Do not use
-die "Don't use this script yet. It's not ready"
+#die "Don't use this script yet. It's not ready";
 
-print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary."
-print "The following test will confirm that you are able to provide the necessary credentials."
+my $IP = "192.168.255.76"; # Switch target management IP
+
+print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary.";
+print "The following test will confirm that you are able to provide the necessary credentials.";
+
 my $result = system("sudo", "date");
 if ($result)
 {
@@ -53,35 +56,50 @@ get_switchtype("anonymous");
 while (1) {
     
     # delete ARP entry for 192.168.255.76 (Requires sudo for privileges)
-    system("sudo", "arp","-d","192.168.255.76");
+    system("sudo", "arp","-d","$IP");
     
-    # ping 192.168.255.76 until success
+    # ping $IP until success
     my $success = 0;
     print "Looking for switch on line.\n";
     do {
         ## FIXME ## Clean this up to avoid using a shell call.
-        my $result = system("ping -t 1 -c 1 192.168.255.76 >/dev/null 2>/dev/null");
-        $success++ unless($result)
+        my $result = system("ping -t 1 -c 1 $IP >/dev/null 2>/dev/null");
+        $success++ unless($result);
         sleep 1; # Retry every second until success.
     } until($success);
     
     print "Switch detected, identifying.\n";
-    my $arp = `arp 192.168.255.76`;
-    $arp =~ s@^.*at \(([0-9a-f]{2}:){5}[0-9a-f]\).*@\1@;
+    my $arp = `arp $IP`;
+    chomp($arp);
+    $arp = lc($arp);
+    #$arp =~ s@^.*at (([0-9a-f]{2}:){5}[0-9a-f]{2}).*@\1@m;
+    $arp =~ s@^.*at ([0-9a-f:]+) on.*$@\1@m;
+    if ($arp =~ /\n/)
+    {
+        warn("Multiple ARP table entries for address $IP:\n");
+        foreach(split(/\n/, $arp))
+        {
+            warn("\t$_\n");
+        }
+        warn("Basing configuration load on first one.\n");
+        $arp =~ s/\n.*//;
+    }
     
     print "Looking for MAC $arp in switchtypes table...";
     my @switchname = get_switch_by_mac($arp);
-    if ($#switchname < 1)
+    print "Got ", scalar(@switchname), " names back fromget_switch_by_mac($arp)\n";
+    
+    if (scalar(@switchname) < 1)
     {
-      print STDERR "Error: No switchtype entry matching $arp\n";
-      sleep 10;
-      continue; # Retry -- until file is corrected or a valid switch is provided
-    )
-    elsif ($#switchname > 1)
+        print STDERR "Error: No switchtype entry matching $arp\n";
+        sleep 10;
+        next; # Retry -- until file is corrected or a valid switch is provided
+    }
+    elsif (scalar(@switchname) > 1)
     {
-      print STDERR "Error: $arp matches multiple switches (", join(", ", @switchname),").\n";
-      sleep 10;
-      continue; # Retry -- until file is corrected or a valid switch is provided
+        print STDERR "Error: $arp matches multiple switches (", join(", ", @switchname),").\n";
+        sleep 10;
+        continue; # Retry -- until file is corrected or a valid switch is provided
     }
     print "Found: $switchname[0].\n";
     my $switch = $switchname[0];
@@ -98,22 +116,22 @@ while (1) {
     my $SWITCH_COMMANDS;
     unless ($opt_n) {
         $SWITCH_COMMANDS = <<EOF;
-    edit
-    load override /tmp/new_config.conf
-    show | compare
-    commit and-quit
-    exit
+edit
+load override /tmp/new_config.conf
+show | compare
+commit and-quit
+exit
 EOF
     }
     else
     {
         $SWITCH_COMMANDS = <<EOF;
-    edit
-    load override /tmp/new_config.conf
-    show | compare
-    rollback
-    exit
-    exit
+edit
+load override /tmp/new_config.conf
+show | compare
+rollback
+exit
+exit
 EOF
     }
     
@@ -135,8 +153,22 @@ EOF
     print STDERR "Sending configuration file to $Name\n";
     if ($opt_l) # If -l is specified, install configuration via directly attached management port
     {
-        die("Failed to copy configuration to device $Name ($? : $!)\n") if 
-            system("scp \"output/$Name.conf\" 192.168.255.76".":/tmp/new_config.conf");
+        my $result;
+        if($result = system("scp \"output/$Name.conf\" $IP".":/tmp/new_config.conf"))
+        {
+            while ($result == 1 || $result == 256)
+            {
+                # Connection error, probably switch isn't fully online
+                print STDERR "Switch didn't accept SCP, retrying in 5 seconds.\n";
+                sleep 5; 
+                $result = system("scp \"output/$Name.conf\" $IP".":/tmp/new_config.conf");
+            }
+            if ($result)
+            {
+                # Something else went wrong, probably can't recover.
+                die("Failed to copy configuration (on retry) to device $Name ($result : $!)\n");
+            }
+        }
     }
     else
     {
@@ -147,7 +179,7 @@ EOF
     print STDERR "Activating...\n";
     if ($opt_l) # If -l is specified, activate configuration via directly attached management port
     {
-        open(JUNIPER, "| ssh 192.168.255.76");
+        open(JUNIPER, "| ssh $IP");
     }
     else
     {
@@ -155,7 +187,26 @@ EOF
     }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";
-    close JUNIPER || warn "Switch $Name Bad exit from SSH: $! $?\n";
+    unless(close JUNIPER)
+    {
+        warn "Switch $Name Bad exit from SSH: $! $?\n";
+    }
+    else
+    {
+        print STDERR "$Name successfully loaded.\n";
+    }
+
+    # Wait for the switch to go off line before trying to find next switch.
+    $success = 1;
+    do {
+        ## FIXME ## Clean this up to avoid using a shell call (or system altogether, TBH).
+        my $result = system("ping -t 1 -c 1 $IP >/dev/null 2>/dev/null");
+	$success=0 if($result);
+        sleep 1; # Retry every second until success.
+    } while($success);
+    
+    print STDERR "\n\nReady for next switch.\n\n";
+    
 }
 
 
