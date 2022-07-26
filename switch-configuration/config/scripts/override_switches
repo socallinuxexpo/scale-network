@@ -109,16 +109,16 @@ foreach my $switch (@list)
         die("Error: Couldn't read configuration file for $Name");
     }
     ##FIXME## Using system is an attrocious hack -- do something better
-    print STDERR "Sending configuration file to $Name\n";
+    print STDERR "Sending configuration file to $Name ($IPv6Addr)\n";
     if ($opt_l) # If -l is specified, install configuration via directly attached management port
     {
-        die("Failed to copy configuration to device $Name ($? : $!)\n") if 
+        die("Failed to copy configuration to device $Name at $IPv6Addr ($? : $!)\n") if 
             system("scp \"output/$Name.conf\" 192.168.255.76".":/tmp/new_config.conf");
     }
     else
     {
-        die("Failed to copy configuration to device $Name ($? : $!)\n") if 
-            system("scp \"output/$Name.conf\" $Name".":/tmp/new_config.conf");
+        die("Failed to copy configuration to device $Name at $IPv6Addr ($? : $!)\n") if 
+            system("scp \"output/$Name.conf\" \[$IPv6Addr\]".":/tmp/new_config.conf");
     }
     
     print STDERR "Activating...\n";
@@ -128,7 +128,7 @@ foreach my $switch (@list)
     }
     else
     {
-        open(JUNIPER, "| ssh $Name");
+        open(JUNIPER, "| ssh $IPv6Addr");
     }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";

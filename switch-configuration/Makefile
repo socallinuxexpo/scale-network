@@ -1,5 +1,6 @@
 PERL := $(shell command -v perl 2> /dev/null)
 
+JROOT_SECRET = `cat ../facts/secrets/jroot_pw`
 JROOT_SECRET ?= scale # Dummy value
 
 ifndef PERL
@@ -14,8 +15,11 @@ lint:	.lint
 	find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
 	touch .lint
 
-.secrets: .lint
+../facts/secrets/jroot_pw:
 	echo "$(JROOT_SECRET)" > ../facts/secrets/jroot_pw
+
+.secrets: .lint ../facts/secrets/jroot_pw
+	echo "Using $JROOT_SECRET as secret"
 	touch .secrets
 
 build-switch-configs: .build-switch-configs

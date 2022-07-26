@@ -1,38 +1,38 @@
 // Conference Center MDF Switch Configuration
 TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
-			hiStaff,hiSigns // UpLink to BR-MDF Router
+			hiStaff,hiSigns,hiRegistration, hiInstall // UpLink to BR-MDF Router
 TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
-			hiStaff,hiSigns // DownLink to NOC Switch
-TRUNK	ge-0/0/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/4	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/5	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/6	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/7	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
+			hiStaff,hiSigns,hiRegistration, hiInstall // DownLink to NOC Switch
+TRUNK	ge-0/0/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/4	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/5	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/6	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/7	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiStaff,hiInfra,hiAVLAN,hiStaff,hiSigns
 VLAN	hiCTF		6	// ge-0/0/{18-23}
 VLAN	hiInfra		1	// ge-0/0/24 -- Conference Center Bhyve Server
 VLAN	hiAVLAN		1	// ge-0/0/25 -- Conference Center AV Server
 RSRVD	22
-FIBER	ge-0/1/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, \
-			hiAVLAN,hiStaff, \
-			hiSigns,hiRegistration // Downlink to TTAB-NW-BMT
-FIBER	ge-0/1/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, \
-			hiAVLAN,hiStaff, \
-			hiSigns,hiRegistration // Downlink to TTSR-GM-BMT
-FIBER	ge-0/1/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, \
-			hiAVLAN,hiStaff, \
-			hiSigns,hiRegistration // Downlink to TTLB-LBY
-FIBER	ge-0/1/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, \
-			hiAVLAN,hiStaff, \
-			hiSigns,hiRegistration // Downlink to TT2D-2FReg
+FIBER	ge-0/1/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, hiCTF, hiAVLAN, hiNOC, \
+			hiStaff, hiSigns, hiRegistration, hiInstall\
+			hiSigns,hiRegistration, hiInstall // Downlink to TTAB-NW-BMT
+FIBER	ge-0/1/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, hiCTF, hiAVLAN, hiNOC, \
+			hiStaff, hiSigns, hiRegistration, hiInstall\
+			hiSigns,hiRegistration, hiInstall // Downlink to TTSR-GM-BMT
+FIBER	ge-0/1/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, hiCTF, hiAVLAN, hiNOC, \
+			hiStaff, hiSigns, hiRegistration, hiInstall\
+			hiSigns,hiRegistration, hiInstall // Downlink to TTLB-LBY
+FIBER	ge-0/1/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, hiCTF, hiAVLAN, hiNOC, \
+			hiStaff, hiSigns, hiRegistration, hiInstall\
+			hiSigns,hiRegistration, hiInstall // Downlink to TT2D-2FReg
 
