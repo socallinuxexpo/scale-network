@@ -1,19 +1,77 @@
 # Base configuration:
-set date 201802101200
+set date 202207241637
 edit
-set system root-authentication encrypted-password "$1$pYRuS5Lf$7kaB/a3Qiez7alkFcZbXz0"
-delete system services telnet
-set system services netconf ssh
-set system services ssh protocol-version v2
-set system services dhcp traceoptions file dhcp_logfile
-set system services dhcp traceoptions level all
-set system services dhcp traceoptions flag all
-set interfaces me0 unit 0 family inet dhcp
-set interfaces vme unit 0 family inet dhcp vendor-id Juniper-ex4200-48p
-set poe interface all
+load override terminal
+system {
+    root-authentication {
+        encrypted-password "scale ";
+    }
+    login {
+        user dlang {
+            class super-user;
+            authentication {
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4h99AAkDj+fq2K0hMv/SdgiXDaPQRc28ofuEGGW5ru+sjW51QGKsETXnTq5/Q5dO/AONKboM38qJ3BBimRJt3y1CsxMUpVE4A1Xq+PybROFbxuFogxfnEDJqonz+F/0wYC6SWkjctMv4b3qWbR0e3b3db4voy8XU/5sycqI9hRGdLkgjxP3AVmdwKyVZ21B0JITw03up9CNhy+e0tMs3Dw60vmRQMYrxO6Gg447ttMB7sAVHuCG85GSQjFSpee3J4efcQFgNO7V4BJvm7daIicFh5qzh+DRh/QDs1kHLOuf56C0h0HcKUY1V2fbmtBBOX4YzS38ywXY5RrVNDVnOZ dlang@localhost";
+            }
+        }
+        user owen {
+            class super-user;
+            authentication {
+                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
+            }
+        }
+    }
+    services {
+        ssh {
+            protocol-version v2;
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+}
+interfaces {
+# Generated interface configuration for NOC-CatA (Type: hiNOC)
+    me-0 {
+        unit 0 {
+            family inet {
+                    address 192.168.255.76/24;
+            }
+        }
+    }
+}
+protocols {
+    igmp-snooping {
+        vlan all;
+    }
+    rstp;
+    lldp {
+        interface all;
+        port-id-subtype interface-name;
+    }
+    lldp-med {
+        interface all;
+    }
+;
+}
+ethernet-switching-options {
+    storm-control {
+        interface all;
+    }
+}
+
 commit and-quit
-request system configuration rescue save
-show interfaces me0.0 terse
+
+
+
 
 
 # Firmware Check:

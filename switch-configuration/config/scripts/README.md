@@ -30,6 +30,13 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
 ---- Use the command as "override_switches -l <switch_name>" e.g. "override_switches -l NOC" if you are connected to the NOC switch.
 ---- USE CAUTION: This will load the configuration for the specified <switch_name> onto whatever switch you are connected to.
 --- Can take group names as arguments. For example, group F (Ballroom F IDF and dependents) will replace configurations on NW-IDF, BallroomDE, BallroomF, BallroomG, BallroomH
+
+* bulk_local_load_switches
+-- Similar to override_switches, but set up for doing multiple switches in a row.
+-- Uses MAC address of whatever switch is pingable at me0 address (see a senior team member for more information) to identify switch
+-- Loads configuration for switch identified by MAC address
+-- Once configuration load is complete, waits for switch to go off line and then begins looking for another switch
+-- If the switch doesn't have an me0 interface configuration for SCaLE, that may need to be put on via the serial port to enable loading.
  
 ## Contributing
 SCaLE happens once a year but the team has ongoing projects and prep year round.

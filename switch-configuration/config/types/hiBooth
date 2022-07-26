@@ -1,0 +1,19 @@
+// Expo Booth Area switch Template
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN, \
+				hiSigns,hiStaff
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN, \
+				hiSigns,hiStaff
+RSRVD	6
+TRUNK	ge-0/0/8	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/9	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/10	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/11	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/12	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/13	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/14	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/15	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/16	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+TRUNK	ge-0/0/17	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff	// AP
+RSRVD	6
+VVLAN	16			// Dynamically assigned Vendor VLAN ports
+RSRVD	8

@@ -199,8 +199,7 @@ sub get_switchtype
                             $Switchtypes{$hostname}[5]. ", ".
                             $Switchtypes{$hostname}[6]. ", ".
                             $Switchtypes{$hostname}[7]. ", ".
-                            $Switchtypes{$hostname}[8]. ", ".
-                            $Switchtypes{$hostname}[9]. ")\n");
+                            $Switchtypes{$hostname}[8]. ")\n");
   return($hostname, @{$Switchtypes{$hostname}});
 }
 
@@ -212,7 +211,10 @@ sub get_switch_by_mac
   foreach(keys(%Switchtypes))
   {
     ## FIXME ## Stupid stringwise comparison may not accurately find MAC addresses
-    if (lc($macaddr) eq lc($Switchtypes{$_}[9]))
+    ## FIXME ## Currently assume switchtypes file has fully 0 filled MAC addresses
+    my @octets = split(/:/, $macaddr);
+    my $macaddr = sprintf("%02s:%02s:%02s:%02s:%02s:%02s", @octets);
+    if (lc($macaddr) eq lc($Switchtypes{$_}[8]))
     {
       push(@switches, $_);
     }
@@ -1449,6 +1451,13 @@ chassis {
     alarm {
         management-ethernet {
         link-down ignore;
+        }
+    }
+    fpc 0 {
+	pic 1 {
+            sfpplus {
+                pic-mode 1g;
+            }
         }
     }
 }
