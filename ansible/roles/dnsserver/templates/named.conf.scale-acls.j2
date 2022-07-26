@@ -16,7 +16,7 @@ acl conference {
 };
 
 acl expo {
-{% if hostvars[ansible_hostname].building == "Expo" %}
+{% if hostvars[ansible_hostname].building != "Conference" %}
     localhost;
 {% endif %}
 {% for vlan in vlans %}
