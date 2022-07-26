@@ -1453,6 +1453,13 @@ chassis {
         link-down ignore;
         }
     }
+    fpc 0 {
+	pic 1 {
+            sfpplus {
+                pic-mode 1g;
+            }
+        }
+    }
 }
 snmp {
     community Junitux {
