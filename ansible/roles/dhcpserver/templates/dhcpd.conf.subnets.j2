@@ -7,7 +7,7 @@ subnet {{ vlan["ipv4prefix"] }} netmask {{ vlan["ipv4netmask"]}} {
 {% else %}
     range {{ vlan["ipv4dhcp2a"] }} {{ vlan["ipv4dhcp2b"] }};
 {% endif %}
-    option domain-name-servers {{ vlan["ipv4dns1"] }}, {{ vlan["ipv4dns2"] }}; 
+    option domain-name-servers {{ vlan["ipv4dns1"] + vlan["ipv4dns2"] | join(',')}};
     option routers {{ vlan["ipv4router"]}};
 }
 {% endif %}
