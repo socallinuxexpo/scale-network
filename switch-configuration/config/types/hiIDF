@@ -23,7 +23,6 @@ VLAN	hiCTF		6	// ge-0/0/{18-23}
 VLAN	hiInfra		1	// ge-0/0/24 -- Conference Center Bhyve Server
 VLAN	hiAVLAN		1	// ge-0/0/25 -- Conference Center AV Server
 RSRVD	22
-FIBER	ge-0/1/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra, \
-			hiAVLAN,hiStaff, \
-			hiSigns,hiRegistration // Uplink to hiMDF Switch or BR-MDF
+FIBER	ge-0/1/0	hiSCALE-SLOW,hiSCLE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
+			hiStaff,hiSigns // Uplink to hiMDF Switch or BR-MDF
 
