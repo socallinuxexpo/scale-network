@@ -8,7 +8,7 @@ VLAN	hiAVLAN			105	2001:470:f0fb:105::/64	10.0.5.0/24	Audio Visual Network (DHCP
 VLAN	hiNOC			106	2001:470:f0fb:106::/64	10.0.6.0/24	Wired network in NOC
 VLAN	hiSigns			107	2001:470:f0fb:107::/64	0.0.0.0/0	Signs network (IPv6 Only)
 VLAN	hiStaff			108	2001:470:f0fb:108::/64	10.0.8.0/24	Staff Wifi Network
-VLAN	hiRegistration		110	2001:470:f0fb:110::/64	10.0.10.0/24	Install Fests and Workshops
+VLAN	hiRegistration		110	2001:470:f0fb:110::/64	10.0.10.0/24	Registration
 VLAN	hiInstall		111	2001:470:f0fb:111::/64	10.0.11.0/24	Install Fests and Workshops
 //111 through 199 not used
 //200 through 499 Vendors
