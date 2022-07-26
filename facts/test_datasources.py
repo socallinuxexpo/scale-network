@@ -81,7 +81,7 @@ def test_switchtypes_tsv():
     meta = {
         "file": "../switch-configuration/config/switchtypes",
         "header": False,
-        "count": 7,
+        "count": "9+",
         "cols": [
             ds.isvalidhostname,
             ds.isint,
@@ -89,7 +89,9 @@ def test_switchtypes_tsv():
             ds.isvalidip,
             ds.isvalidtype,
             ds.isvalidhierarchy,
-            ds.isvalidnoiselevel
+            ds.isvalidnoiselevel,
+            ds.isvalidmodel,
+            ds.isvalidmac
         ]
     }
     result, err = ds.test_tsvfile(meta)
