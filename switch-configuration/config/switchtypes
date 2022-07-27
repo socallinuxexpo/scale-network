@@ -26,10 +26,10 @@ CenturyAB	9	103	2001:470:f0fb:103::200:9	hiRoom		D.9		Normal		ex4200-48p	00:26:8
 SanLorenzoB	10	103	2001:470:f0fb:103::200:10	hiRoom		D.1		Loud		ex4200-48p	2c:6b:f5:39:cb:ff
 CenturyCD	11	103	2001:470:f0fb:103::200:11	hiRoom		D.9		Normal		ex4200-48p	00:26:88:60:71:7f
 SantaMonicaA	12	103	2001:470:f0fb:103::200:12	hiRoom		D.9		Normal		ex4200-48p	b0:c6:9a:dc:4d:ff
-SpareD		13	103	2001:470:f0fb:103::200:13	hiRoom		E.9		Normal		ex4200-48p	00:26:88:7a:8f:ff
+PlazaA		13	103	2001:470:f0fb:103::200:13	hiRoom		A.9		Normal		ex4200-48p	00:26:88:7a:8f:ff
 AVSwitch-CatB	14	103	2001:470:f0fb:103::200:14	hiAV		E.9		Normal		ex4200-48p	00:26:88:7d:e5:ff
-SpareE		15	103	2001:470:f0fb:103::200:15	hiRoom		Z.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
-SpareF		16	103	2001:470:f0fb:103::200:16	hiRoom		Z.9		??		ex4200-48p	00:26:88:7e:3e:7f
+PlazaC		15	103	2001:470:f0fb:103::200:15	hiRoom		A.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
+Chairmans	16	103	2001:470:f0fb:103::200:16	hiRoom		D.9		??		ex4200-48p	00:26:88:7e:3e:7f
 CatalinaC	17	103	2001:470:f0fb:103::200:17	hiRoom		E.9		Normal		ex4200-48p	00:26:88:6e:a6:ff
 ExpoA1		18	103	2001:470:f0fb:103::200:18	hiBooth		L.2		Loud		ex4200-48p	78:fe:3d:d2:85:7f
 CatalinaD	19	103	2001:470:f0fb:103::200:19	hiRoom		E.9		Normal		ex4200-48p	00:26:88:6e:b3:ff
