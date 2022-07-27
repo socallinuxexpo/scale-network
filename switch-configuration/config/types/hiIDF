@@ -1,28 +1,25 @@
 // Conference Center IDF Switch Configuration
-TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
-			hiStaff,hiSigns // Link to CF Router
-TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
-			hiStaff,hiSigns // Link to CF Router
-TRUNK	ge-0/0/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/4	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/5	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/6	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/7	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
-TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/2	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/3	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/4	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/5	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/6	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/7	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 VLAN	hiCTF		6	// ge-0/0/{18-23}
 VLAN	hiInfra		1	// ge-0/0/24 -- Conference Center Bhyve Server
 VLAN	hiAVLAN		1	// ge-0/0/25 -- Conference Center AV Server
 RSRVD	22
-FIBER	ge-0/1/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiCTF,hiAVLAN,hiNOC, \
-			hiStaff,hiSigns // Uplink to hiMDF Switch or BR-MDF
+FIBER	ge-0/1/0	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 

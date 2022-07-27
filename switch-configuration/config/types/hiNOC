@@ -1,6 +1,6 @@
 // Room Switch Template -- All conference rooms Conference Center
-TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns,hiNOC	// Uplink
-TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiStaff,hiSigns,hiNOC	// Downlink
+TRUNK	ge-0/0/0	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra hiMDF hiAVLAN hiSigns hiStaff hiRegistration vendor_backbone hiNOC hiInstall
+TRUNK	ge-0/0/1	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra hiMDF hiAVLAN hiSigns hiStaff hiRegistration vendor_backbone hiNOC hiInstall
 TRUNK	ge-0/0/2	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/3	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
 TRUNK	ge-0/0/4	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
