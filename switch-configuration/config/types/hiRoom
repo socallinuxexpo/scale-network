@@ -1,18 +1,17 @@
 // Room Switch Template -- All conference rooms Conference Center
-TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiMDF,hiAVLAN,hiSigns,hiStaff,hiRegistration,vendor_backbone,hiNOC,hiInstall
-TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiMDF,hiAVLAN,hiSigns,hiStaff,hiRegistration,vendor_backbone,hiNOC,hiInstall
-RSRVD	4
-VLAN	hiRegistration
-TRUNK	ge-0/0/8	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/9	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/10	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/11	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/12	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/13	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/14	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/15	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/16	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/17	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+RSRVD	6
+TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 VLAN	hiSigns		4	// ge-0/0/{18-21}
 VLAN	hiAVLAN		6	// ge-0/0/{22-27}
 VLAN	hiSpeaker	2	// ge-0/0/{28,29}

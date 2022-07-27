@@ -1,5 +1,5 @@
 // Conference Center MDF Switch Configuration
-TRUNK	ge-0/0/0	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 TRUNK	ge-0/0/1	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 TRUNK	ge-0/0/2	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 TRUNK	ge-0/0/3	hiSCALE-SLOW hiSCALE-FAST hiSpeaker hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall

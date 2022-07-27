@@ -2,14 +2,14 @@
 TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 RSRVD	6
-TRUNK	ge-0/0/8	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/9	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/10	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/11	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/12	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/13	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/14	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
-TRUNK	ge-0/0/15	hiInfra,hiSCALE-SLOW,hiSCALE-FAST,hiStaff				// AP
+TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
+TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiStaff,hiRegistration,hiNOC,hiInstall
 VLAN	hiSigns		2					//ge-0/0/{16,17}
 RSRVD	2
 VLAN	hiRegistration	20					//ge-0/0/20 thru ge-0/0/39
