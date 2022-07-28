@@ -1,20 +1,13 @@
 #!/bin/bash
 
-# this script reads in a csv that has the room-name of an AP and which scale serial number (i.e. white label) the AP is
-# It then generates a new file aplist.new.csv
-#   updated with
-#     new name
-#     new unique IP
-#     new channel numbers
-
 c2=1
 c5=36
 ip=1
 cat aplist.csv |sed s/,/' '/g |while read name serial mac ipv4 ch24 ch5 netconf map x y
   do
-    grep -i $serial name-serial-map-sample-input |sed s/,/' '/g |while read name2 serial2 other
+    grep -w -i $serial scale-ap-locations.csv |sed s/,/' '/g |while read name2 serial2 other
       do
-        echo "$name2,$serial,$mac,10.3.0.$ip,$c2,$c5,0,50,50"
+        echo "$name2,$serial,$mac,10.3.0.$ip,$c2,$c5,0,0,50,50"
       done
     ip=$(($ip+1))
     c2=$(($c2+5))
@@ -33,4 +26,4 @@ cat aplist.csv |sed s/,/' '/g |while read name serial mac ipv4 ch24 ch5 netconf 
       fi
  done |tr [A-Z] [a-z] |sort >aplist.new.csv
 cut -f 1 -d , aplist.new.csv >apnames
-grep -v -i -f apnames name-serial-map-sample-input >apnames.missing.csv
+grep -v -i -f apnames scale-ap-locations.csv >apnames.missing.csv
