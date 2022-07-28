@@ -72,7 +72,7 @@ while (1) {
     } until($success);
     
     print "Switch detected, identifying.\n";
-    my $arp = `arp $IP`;
+    my $arp = `arp -n $IP`;
     chomp($arp);
     $arp = lc($arp);
     #$arp =~ s@^.*at (([0-9a-f]{2}:){5}[0-9a-f]{2}).*@\1@m;
