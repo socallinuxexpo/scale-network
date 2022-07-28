@@ -30,11 +30,11 @@ def isvalidmodel(model):
     test for valid switch model (enumerated)
     '''
     return model in {
-            "ex4200-48p", "ex4200-48t",
-            "ex4200-24p", "ex4200-24t",
-            "ex2200-48p", "ex2200-48t",
-            "ex2200-24p", "ex2200-24t"
-        }
+        "ex4200-48p", "ex4200-48t",
+        "ex4200-24p", "ex4200-24t",
+        "ex2200-48p", "ex2200-48t",
+        "ex2200-24p", "ex2200-24t"
+    }
 
 def isvalidip(addr):
     '''test for valid v4 or v6 ip'''
