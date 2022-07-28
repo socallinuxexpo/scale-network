@@ -33,14 +33,14 @@ build-switch-configs: .build-switch-configs
 # this is a for printing for the cable team
 switch-maps-bundle: config/switch-maps/bundle.ps config/switch-maps/refs.ps config/switch-maps/stickers.ps
 
-config/switch-maps/bundle.ps: .build-switch-configs config/switch-maps/*.eps
+config/switch-maps/bundle.ps: .build-switch-configs .build-switch-configs
 	cd config && \
 		perl scripts/generate_ps_maps.pl > switch-maps/bundle.ps
 
-config/switch-maps/refs.ps: .build-switch-configs config/switch-maps/*.eps
+config/switch-maps/refs.ps: .build-switch-configs .build-switch-configs
 	cd config && \
 		perl scripts/generate_ps_refs.pl > switch-maps/refs.ps
 
-config/switch-maps/stickers.ps: .build-switch-configs config/switch-maps/*.eps
+config/switch-maps/stickers.ps: .build-switch-configs .build-switch-configs
 	cd config && \
 		perl scripts/generate_ps_stickers.pl > switch-maps/stickers.ps
