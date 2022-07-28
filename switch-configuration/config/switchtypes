@@ -9,7 +9,7 @@
 //	F = Old MDF (IDF Behind Front Desk)
 //	D = TT2D (IDF on 2nd floor near stairwell)
 //	E = TT2E (IDF on 2nd floor near Catalina A)
-// X = Unused switch, do not monitor,
+// Z = Unused switch, do not monitor,
 // .1 = First priority, head-end for hierarchy (e.g. C.1 = NE-IDF Switch)
 // ... Switch chain order from .1 (e.g. C.2 is plugged into C.1 level, C.3 is plugged into C.2 level, etc.)
 // .9 = Stub (No subordinate switches) regardless of next level up switch
@@ -23,16 +23,16 @@ TTSR-GM-BMT	6	103	2001:470:f0fb:103::200:6	hiIDF		M.2		Loud		ex4200-48p	00:26:88
 LosAngelesAB	7	103	2001:470:f0fb:103::200:7	hiRoom		D.9		Normal		ex4200-48p	00:26:88:6e:b6:ff
 LosAngelesC	8	103	2001:470:f0fb:103::200:8	hiRoom		D.9		Quiet		ex4200-48p	00:26:88:7d:dd:ff
 CenturyAB	9	103	2001:470:f0fb:103::200:9	hiRoom		D.9		Normal		ex4200-48p	00:26:88:6e:a1:7f
-SanLorenzoB	10	103	2001:470:f0fb:103::200:10	hiRoom		D.1		Loud		ex4200-48p	2c:6b:f5:39:cb:ff
+SanLorenzoB	10	103	2001:470:f0fb:103::200:10	hiRoom		D.9		Loud		ex4200-48p	2c:6b:f5:39:cb:ff
 CenturyCD	11	103	2001:470:f0fb:103::200:11	hiRoom		D.9		Normal		ex4200-48p	00:26:88:60:71:7f
 SantaMonicaA	12	103	2001:470:f0fb:103::200:12	hiRoom		D.9		Normal		ex4200-48p	b0:c6:9a:dc:4d:ff
-PlazaA		13	103	2001:470:f0fb:103::200:13	hiRoom		A.9		Normal		ex4200-48p	00:26:88:7a:8f:ff
+PlazaBCD	13	103	2001:470:f0fb:103::200:13	hiRoom		A.9		Normal		ex4200-48p	00:26:88:7a:8f:ff
 AVSwitch-CatB	14	103	2001:470:f0fb:103::200:14	hiAV		E.9		Normal		ex4200-48p	00:26:88:7d:e5:ff
-PlazaC		15	103	2001:470:f0fb:103::200:15	hiRoom		A.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
+PlazaA		15	103	2001:470:f0fb:103::200:15	hiRoom		A.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
 Chairmans	16	103	2001:470:f0fb:103::200:16	hiRoom		D.9		??		ex4200-48p	00:26:88:7e:3e:7f
 CatalinaC	17	103	2001:470:f0fb:103::200:17	hiRoom		E.9		Normal		ex4200-48p	00:26:88:6e:a6:ff
 ExpoA1		18	103	2001:470:f0fb:103::200:18	hiBooth		L.2		Loud		ex4200-48p	78:fe:3d:d2:85:7f
-CatalinaD	19	103	2001:470:f0fb:103::200:19	hiRoom		E.9		Normal		ex4200-48p	00:26:88:6e:b3:ff
+SpareF		19	103	2001:470:f0fb:103::200:19	hiRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:b3:ff
 NewportA	20	103	2001:470:f0fb:103::200:20	hiRoom		D.9		Quiet		ex4200-48p	2c:6b:f5:39:7e:7f
 NOC-CatA	21	103	2001:470:f0fb:103::200:21	hiNOC		E.2		Normal		ex4200-48p	00:26:88:7e:25:ff
 ExpoB1		22	103	2001:470:f0fb:103::200:22	hiBooth		L.2		Loud		ex4200-48p	00:26:88:6e:bd:ff
@@ -44,7 +44,7 @@ SanLorenzoC	27	103	2001:470:f0fb:103::200:27	hiRoom		D.9		Normal		ex4200-48p	2c:
 ExpoA2		28	103	2001:470:f0fb:103::200:28	hiBooth		L.2		Loud		ex4200-48p	00:26:88:6e:c6:ff
 ExpoB2		29	103	2001:470:f0fb:103::200:29	hiBooth		L.2		Loud		ex4200-48p	28:c0:da:33:38:7f
 SanLorenzoD	30	103	2001:470:f0fb:103::200:30	hiRoom		D.9		Normal		ex4200-48p	00:26:88:7e:36:7f
-NewportC	31	103	2001:470:f0fb:103::200:31	hiRoom		E.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
+SpareG		31	103	2001:470:f0fb:103::200:31	hiRoom		Z.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
 RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	D.9		Normal		ex4200-48p	00:26:88:7a:76:ff
 ExpoC2		33	103	2001:470:f0fb:103::200:33	hiBooth		L.2		Normal		ex4200-48p	00:26:88:7d:f8:7f
 ExpoA3		34	103	2001:470:f0fb:103::200:34	hiBooth		L.2		Loud		ex4200-48p	00:26:88:6f:1e:7f
