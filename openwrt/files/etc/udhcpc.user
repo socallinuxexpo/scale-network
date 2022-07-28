@@ -18,12 +18,7 @@ case "$1" in
 
     # apinger template population
     if [ ! -z "$router" ]; then
-      sed "s/<DEFAULTGATEWAY>/$router/g" /etc/apinger.tmpl > /tmp/apinger.conf
-      # Only restart apinger if compare has diff
-      if ! cmp /tmp/apinger.conf /etc/apinger.conf; then
-        # Cant use "service" since thats a shell function
-        cp /tmp/apinger.conf /etc/apinger.conf && /etc/init.d/apinger restart
-      fi
+      /root/bin/apinger-pop.sh "$router"
     fi
 
     if [ ! -z "$hostname" ]; then

@@ -119,6 +119,7 @@ endif
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/config-version.sh
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
+	chmod 750 $(TMPL_OUT_DIR)/root/bin/apinger-pop.sh
 	chmod 755 $(TMPL_OUT_DIR)/root
 	chmod 700 $(TMPL_OUT_DIR)/root/.ssh
 	chmod 640 $(TMPL_OUT_DIR)/root/.ssh/authorized_keys
