@@ -18,7 +18,7 @@ lint:	.lint
 ../facts/secrets/jroot_pw:
 	echo "$(JROOT_SECRET)" > ../facts/secrets/jroot_pw
 
-.secrets: .lint ../facts/secrets/jroot_pw
+.secrets: .lint ../facts/secrets/jroot_pw ../facts/keys/*
 	echo "Using $JROOT_SECRET as secret"
 	touch .secrets
 
