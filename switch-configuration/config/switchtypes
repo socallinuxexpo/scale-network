@@ -44,7 +44,7 @@ SanLorenzoC	27	103	2001:470:f0fb:103::200:27	hiRoom		D.9		Normal		ex4200-48p	2c:
 ExpoA2		28	103	2001:470:f0fb:103::200:28	hiBooth		L.2		Loud		ex4200-48p	00:26:88:6e:c6:ff
 ExpoB2		29	103	2001:470:f0fb:103::200:29	hiBooth		L.2		Loud		ex4200-48p	28:c0:da:33:38:7f
 SanLorenzoD	30	103	2001:470:f0fb:103::200:30	hiRoom		D.9		Normal		ex4200-48p	00:26:88:7e:36:7f
-SpareG		31	103	2001:470:f0fb:103::200:31	hiRoom		Z.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
+ExpoSignFront	31	103	2001:470:f0fb:103::200:31	hiRoom		Z.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
 RegDesk		32	103	2001:470:f0fb:103::200:32	hiRegistration	D.9		Normal		ex4200-48p	00:26:88:7a:76:ff
 ExpoC2		33	103	2001:470:f0fb:103::200:33	hiBooth		L.2		Normal		ex4200-48p	00:26:88:7d:f8:7f
 ExpoD1		34	103	2001:470:f0fb:103::200:34	hiBooth		L.2		Loud		ex4200-48p	00:26:88:6f:1e:7f
@@ -54,7 +54,7 @@ SantaMonicaB	37	103	2001:470:f0fb:103::200:37	hiRoom		D.9		Quiet		ex4200-48p	2c:
 ExpoE2		38	103	2001:470:f0fb:103::200:38	hiBooth		L.2		Normal		ex4200-48p	00:26:88:7e:1b:ff
 ExpoB4		39	103	2001:470:f0fb:103::200:39	hiBooth		L.2		Normal		ex4200-48p	00:26:88:70:d6:7f
 SantaMonicaC	40	103	2001:470:f0fb:103::200:40	hiRoom		D.9		Quiet		ex4200-48p	b0:c6:9a:64:85:ff
-ExpoC4		41	103	2001:470:f0fb:103::200:41	hiBooth		L.2		Normal		ex4200-48p	00:26:88:70:bb:7f
+ExpoSignRear	41	103	2001:470:f0fb:103::200:41	hiRoom		L.2		Normal		ex4200-48p	00:26:88:70:bb:7f
 ExpoA5		42	103	2001:470:f0fb:103::200:42	hiBooth		L.2		Normal		ex4200-48p	00:26:88:60:40:7f
 ExpoB5		43	103	2001:470:f0fb:103::200:43	hiBooth		L.2		Normal		ex4200-48p	00:26:88:7d:1b:ff
 BelAir		44	103	2001:470:f0fb:103::200:44	hiRoom		E.9		Loud		ex4200-48p	00:26:88:7c:41:7f
