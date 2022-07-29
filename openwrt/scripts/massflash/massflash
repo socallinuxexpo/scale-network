@@ -37,7 +37,7 @@ set host $env(LEASE4_ADDRESS)
 set port "22"
 
 # Read in passwords from password file
-set fp [open "$scripts_dir/passwords.txt" r]
+set fp [open "$script_dir/passwords.txt" r]
 set passwords {}
 while { [gets $fp data] >= 0 } {
   lappend passwords $data
@@ -71,6 +71,7 @@ for {set i 0} {$i < 5} {incr i} {
       "*:~#*" {
           # TODO parse board/cpu info
           # Also might be looking in /tmp/board.json
+          # cat /etc/board.json | jq -r .model.id | cut -d',' -f2
           send { cat /tmp/cpuinfo | grep -E "machine" | cut -d " " -f3 }
           send \r
           # Reduce counter to get the right pass in the list
