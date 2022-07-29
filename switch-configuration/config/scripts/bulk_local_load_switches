@@ -25,17 +25,17 @@
 
 my $IP = "192.168.255.76"; # Switch target management IP
 
-print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary.\n";
-print "The following test will confirm that you are able to provide the necessary credentials.\n";
-print "It may prompt for a password. If so, enter your local user password on this system.\n";
-print "You may occasionally be prompted to re-enter this password when you start to load a new switch.\n";
-print "If you are ever prompted to enter a password while this script is running, this is why and you should use that password.\n";
+#print "This program requires privileged operations. As such, it uses sudo to gain privileges when necessary.\n";
+#print "The following test will confirm that you are able to provide the necessary credentials.\n";
+#print "It may prompt for a password. If so, enter your local user password on this system.\n";
+#print "You may occasionally be prompted to re-enter this password when you start to load a new switch.\n";
+#print "If you are ever prompted to enter a password while this script is running, this is why and you should use that password.\n";
 
-my $result = system("sudo", "date");
-if ($result)
-{
-    die("SUDO result: $result -- fail\n");
-}
+#my $result = system("sudo", "date");
+#if ($result)
+#{
+#    die("SUDO result: $result -- fail\n");
+#}
 
 # Ideally this will eventually be obviated by ansible
 
@@ -59,7 +59,8 @@ get_switchtype("anonymous");
 while (1) {
     
     # delete ARP entry for 192.168.255.76 (Requires sudo for privileges)
-    system("sudo", "arp","-d","$IP");
+    # Turns out to be unnecessary and annoying.
+    # system("sudo", "arp","-d","$IP");
     
     # ping $IP until success
     my $success = 0;
@@ -72,11 +73,10 @@ while (1) {
     } until($success);
     
     print "Switch detected, identifying.\n";
-    my $arp = `arp -n $IP`;
+    my $arp = `arp -n $IP | grep $IP`;
     chomp($arp);
     $arp = lc($arp);
-    #$arp =~ s@^.*at (([0-9a-f]{2}:){5}[0-9a-f]{2}).*@\1@m;
-    $arp =~ s@^.*at ([0-9a-f:]+) on.*$@\1@m;
+    $arp =~ s@^.*(at|ether)\s+([0-9a-f:]+)\s+.*$@\2@m;
     if ($arp =~ /\n/)
     {
         warn("Multiple ARP table entries for address $IP:\n");
@@ -157,14 +157,14 @@ EOF
     if ($opt_l) # If -l is specified, install configuration via directly attached management port
     {
         my $result;
-        if($result = system("scp \"output/$Name.conf\" $IP".":/tmp/new_config.conf"))
+        if($result = system("scp \"output/$Name.conf\" admin\@$IP".":/tmp/new_config.conf"))
         {
             while ($result == 1 || $result == 256)
             {
                 # Connection error, probably switch isn't fully online
                 print STDERR "Switch didn't accept SCP, retrying in 5 seconds.\n";
                 sleep 5; 
-                $result = system("scp \"output/$Name.conf\" $IP".":/tmp/new_config.conf");
+                $result = system("scp \"output/$Name.conf\" admin\@$IP".":/tmp/new_config.conf");
             }
             if ($result)
             {
@@ -182,11 +182,11 @@ EOF
     print STDERR "Activating...\n";
     if ($opt_l) # If -l is specified, activate configuration via directly attached management port
     {
-        open(JUNIPER, "| ssh $IP");
+        open(JUNIPER, "| ssh admin\@$IP");
     }
     else
     {
-        open(JUNIPER, "| ssh $Name");
+        open(JUNIPER, "| ssh admin\@$Name");
     }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";

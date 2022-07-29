@@ -7,10 +7,10 @@ system {
         encrypted-password "scale ";
     }
     login {
-        user dlang {
+        user admin {
             class super-user;
             authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4h99AAkDj+fq2K0hMv/SdgiXDaPQRc28ofuEGGW5ru+sjW51QGKsETXnTq5/Q5dO/AONKboM38qJ3BBimRJt3y1CsxMUpVE4A1Xq+PybROFbxuFogxfnEDJqonz+F/0wYC6SWkjctMv4b3qWbR0e3b3db4voy8XU/5sycqI9hRGdLkgjxP3AVmdwKyVZ21B0JITw03up9CNhy+e0tMs3Dw60vmRQMYrxO6Gg447ttMB7sAVHuCG85GSQjFSpee3J4efcQFgNO7V4BJvm7daIicFh5qzh+DRh/QDs1kHLOuf56C0h0HcKUY1V2fbmtBBOX4YzS38ywXY5RrVNDVnOZ dlang@localhost";
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnRaYbdYsnVqTZNRpXxgK1LlEk9QWa/JwaYAbOZFXiC scale19x-04032022";
             }
         }
         user owen {
@@ -20,6 +20,7 @@ system {
             }
         }
     }
+
     services {
         ssh {
             protocol-version v2;
