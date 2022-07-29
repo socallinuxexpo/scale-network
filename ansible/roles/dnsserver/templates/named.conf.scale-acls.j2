@@ -1,32 +1,16 @@
+// acls managed by ansible
+// FIX: this makes assumes for the building and ip mapping
 
 acl conference {
-{% if hostvars[ansible_hostname].building == "Conference" %}
-    localhost;
-{% endif %}
-{% for vlan in vlans %}
- {% if vlan["building"] == "Conference" %}
-  {% if vlan["ipv6prefix"] != " " %}
-   {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"]}};
-  {% endif %}
-  {% if vlan["ipv4prefix"] != " " %}
-   {{ vlan["ipv4prefix"] }}/{{ vlan["ipv4bitmask"] }};
-  {% endif %}
- {% endif -%}
-{% endfor -%}
+    10.128.0.0/16;
+    2001:470:f0fb:500::/56;
+    2001:470:f0fb:600::/55;
+    2001:470:f0fb:800::/56;
 };
 
 acl expo {
-{% if hostvars[ansible_hostname].building != "Conference" %}
     localhost;
-{% endif %}
-{% for vlan in vlans %}
- {% if vlan["building"] != "Conference" %}
-  {% if vlan["ipv6prefix"] != " " %}
-   {{ vlan["ipv6prefix"] }}/{{ vlan["ipv6bitmask"]}};
-  {% endif %}
-  {% if vlan["ipv4prefix"] != " " %}
-   {{ vlan["ipv4prefix"] }}/{{ vlan["ipv4bitmask"] }};
-  {% endif %}
- {% endif -%}
-{% endfor -%}
+    10.0.0.0/16;
+    2001:470:f0fb:0::/54;
+    2001:470:f0fb:400::/56;
 };
