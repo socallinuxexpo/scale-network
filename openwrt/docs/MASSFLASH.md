@@ -19,6 +19,7 @@ Place the following files in `openwrt/scripts/massflash`:
 <INTERFACE> = enp5s0.503
 <LIBRUNSCRIPT> = /nix/store/5qr44w8fm0vf5whsa683444wv4q0bwns-kea-2.0.2/lib/kea/hooks/libdhcp_run_script.so
 <MASSFLASH> = /home/user/scale-network/scripts/massflash/massflash
+SHAHERE = 7fdf577afb4bf2bd3134520eef929fb3b02090c6
 ```
 
 Outside of the necessary files:
@@ -57,3 +58,12 @@ env: QUERY4_TYPE, LEASE4_ADDRESS, LEASE4_HWADDR
 ```
 
 - Hardcoded paths. These will get cleaned up in followups to the repo. Right now they will be left in for as references.
+
+## Running oneoff
+
+One off to run the `massflash`:
+```
+export QUERY4_TYPE=DHCPREQUEST
+export LEASE4_ADDRESS=<IP>
+expect massflash lease4_renew
+```

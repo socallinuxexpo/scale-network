@@ -136,7 +136,7 @@ puts "scp good!"
 # Warning: Be careful about the escaping when spawning an ssh connection and executing commands
 set pid [spawn ssh -i $script_dir/id_priv -p $port -t\
   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  $sshuser@$host "grep 7fdf577afb4bf2bd3134520eef929fb3b02090c6 /etc/scale-release; if \[ $? == 0 \]; then init 0; else sysupgrade -n -v /tmp/flash.bin; fi" ]
+  $sshuser@$host "grep SHAHERE /etc/scale-release; if \[ $? == 0 \]; then init 0; else sysupgrade -n -v /tmp/flash.bin; fi" ]
 expect {
     "*password: " {
         send $goodpass\r
