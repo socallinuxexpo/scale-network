@@ -40,11 +40,15 @@ else
 }
 foreach $file (@outputs)
 {
+    open TMP, ">>$file";
+    close TMP;
     unlink($file) || die "Failed to delete $file: $!\n";
     debug(3, "Deleted $file from output directory\n");
 }
 foreach $file (@maps)
 {
+    open TMP, ">>$file";
+    close TMP;
     unlink($file) || die "Failed to delete $file: $!\n";
     debug(3, "Deleted $file from output directory\n");
 }

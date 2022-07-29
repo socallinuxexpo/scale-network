@@ -109,9 +109,14 @@ if ($opt_i)
 my %errors=();
 foreach my $switch (@list)
 {
-    my ($Name, $Num, $MgtVL, $IPv6Addr, $Type);
+    my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy);
     print "Looking up switch $switch\n";
-    ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
+    ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy) = (get_switchtype($switch));
+    if ($hierarchy =~ /^Z/)
+    {
+        print STDERR "Skipping switch $Name in hierarchy $hierarchy.\n";
+        next;
+    }
     die("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
     print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
 

@@ -841,6 +841,17 @@ sub VV_init_firewall
   my  $VV_firewall = <<EOF;
     family inet {
         filter only_to_internet {
+            term ping {
+                from {
+                    destination-address {
+                        10.0.0.0/8;
+                    }
+                    protocol icmp;
+                }
+                then {
+                    accept;
+                }
+            }
             term dns {
                 from {
                     destination-address {
@@ -937,8 +948,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     destination-address {
-                        2001:470:f325:103::/64;
-                        2001:470:f325:503::/64;
+                        2001:470:f0fb:103::/64;
+                        2001:470:f0fb:503::/64;
                     }
                     destination-port domain;
                 }
@@ -946,11 +957,22 @@ sub VV_init_firewall
                     accept;
                 }
           }
+          term ping {
+              from {
+                  destination-address {
+                        2001:470:f0fb::/48
+                  }
+                  icmp-type [ echo-reply echo-request packet-too-big time-exceeded ];
+              }
+              then {
+                  accept;
+              }
+          }
           term dhcp {
                 from {
                     destination-address {
-                        2001:470:f325:103::/64;
-                        2001:470:f325:503::/64;
+                        2001:470:f0fb:103::/64;
+                        2001:470:f0fb:503::/64;
                     }
                     destination-port [ bootps dhcp ];
                 }
@@ -961,7 +983,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     destination-address {
-                        2001:470:f325::/48;
+                        2001:470:f0fb::/48;
                         fc00::/7;
                     }
                 }
@@ -984,8 +1006,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     source-address {
-                        2001:470:f325:103::/64;
-                        2001:470:f325:503::/64;
+                        2001:470:f0fb:103::/64;
+                        2001:470:f0fb:503::/64;
                     }
                     source-port domain;
                 }
@@ -996,8 +1018,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     source-address {
-                        2001:470:f325:103::/64;
-                        2001:470:f325:503::/64;
+                        2001:470:f0fb:103::/64;
+                        2001:470:f0fb:503::/64;
                     }
                     source-port [ bootps dhcp ];
                 }
@@ -1008,7 +1030,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     source-address {
-                        2001:470:f325::/48;
+                        2001:470:f0fb::/48;
                         fc00::/7;
                     }
                 }
@@ -1224,7 +1246,7 @@ EOF
     }
     elsif ($cmd eq "VVBB")
     {
-      $VV_vlans = <<EOF;
+      $VV_vlans .= <<EOF;
     vendor_backbone {
         description "Vendor Backbone";
         vlan-id 499;
@@ -1232,7 +1254,7 @@ EOF
     }
 EOF
       my $ipv4_suffix = $VV_COUNT + 10;
-      $VV_vlans_l3 = <<EOF;
+      $VV_vlans_l3 .= <<EOF;
         unit 499 {
             family inet {
                 address 10.1.0.$ipv4_suffix/24;
@@ -1243,7 +1265,9 @@ EOF
   }
   # Finish up strings that need to be terminated (currently just $VV_vlans_l3)
   # Finalize DHCP Forwarder configuration
-  my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
+  ##FIXME## Hack for Hilton
+  #my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
+  my $active_srv_grp = ($MgtVL < 500) ? "Hilton" : "Conference";
   $VV_dhcp = <<EOF;
 forwarding-options {
     dhcp-relay {
@@ -1264,13 +1288,16 @@ EOF
             }
             server-group {
                 Conference {
-                    2001:470:f325:503::5;
+                    2001:470:f0fb:503::5;
                 }
                 Expo {
-                    2001:470:f325:103::5;
+                    2001:470:f0fb:103::5;
+                }
+                Hilton {
+                    2001:470:f0fb:103::5;
                 }
                 AV {
-                    2001:470:f325:105::10;
+                    2001:470:f0fb:105::10;
                 }
             }
             active-server-group $active_srv_grp;
@@ -1280,6 +1307,9 @@ EOF
                 10.128.3.5;
             }
             Expo {
+                10.0.3.5;
+            }
+            Hilton {
                 10.0.3.5;
             }
             AV {
@@ -1317,8 +1347,8 @@ EOF
     $VV_protocols .= <<EOF;
         interface $_ {
             other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
+            dns-server-address 2001:470:f0fb:103::5;
+            dns-server-address 2001:470:f0fb:103::15;
             prefix $pfx {
                 on-link;
                 autonomous;
@@ -1330,6 +1360,7 @@ EOF
     }
     ospf {
         area 0.0.0.0 {
+            interface vlan.103;
             interface vlan.499;
 EOF
   foreach (@VV_intlist)
@@ -1465,8 +1496,8 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-        2001:470:f325:103::/64;
-        2001:470:f325:503::/64;
+        2001:470:f0fb:103::/64;
+        2001:470:f0fb:503::/64;
         }
     }
 }

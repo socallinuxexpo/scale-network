@@ -157,14 +157,14 @@ EOF
     if ($opt_l) # If -l is specified, install configuration via directly attached management port
     {
         my $result;
-        if($result = system("scp \"output/$Name.conf\" admin\@$IP".":/tmp/new_config.conf"))
+        if($result = system("scp \"output/$Name.conf\" owen\@$IP".":/tmp/new_config.conf"))
         {
             while ($result == 1 || $result == 256)
             {
                 # Connection error, probably switch isn't fully online
                 print STDERR "Switch didn't accept SCP, retrying in 5 seconds.\n";
                 sleep 5; 
-                $result = system("scp \"output/$Name.conf\" admin\@$IP".":/tmp/new_config.conf");
+                $result = system("scp \"output/$Name.conf\" owen\@$IP".":/tmp/new_config.conf");
             }
             if ($result)
             {
@@ -182,11 +182,11 @@ EOF
     print STDERR "Activating...\n";
     if ($opt_l) # If -l is specified, activate configuration via directly attached management port
     {
-        open(JUNIPER, "| ssh admin\@$IP");
+        open(JUNIPER, "| ssh owen\@$IP");
     }
     else
     {
-        open(JUNIPER, "| ssh admin\@$Name");
+        open(JUNIPER, "| ssh owen\@$Name");
     }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";
