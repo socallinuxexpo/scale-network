@@ -1,3 +1,4 @@
+name,serial,mac,ipv4,2.4Ghz_chan,5Ghz_chan,config_ver,map_id,map_x,map_y
 av-1,n8t-0035,08:bd:43:ba:ac:b2,10.0.3.106,1,157,0,0,50,50
 av-2,n8t-0059,08:bd:43:b1:52:5e,10.0.3.107,6,161,0,0,50,50
 belair-1,n8t-0061,c4:04:15:9a:fd:13,10.0.3.69,1,153,0,0,50,50
