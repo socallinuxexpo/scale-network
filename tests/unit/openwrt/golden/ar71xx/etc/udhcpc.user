@@ -18,18 +18,19 @@ case "$1" in
 
     # apinger template population
     if [ ! -z "$router" ]; then
-      sed "s/<DEFAULTGATEWAY>/$router/g" /etc/apinger.tmpl > /tmp/apinger.conf
-      # Only restart apinger if compare has diff
-      if ! cmp /tmp/apinger.conf /etc/apinger.conf; then
-        # Cant use "service" since thats a shell function
-        cp /tmp/apinger.conf /etc/apinger.conf && /etc/init.d/apinger restart
-      fi
+      /root/bin/apinger-pop.sh "$router"
     fi
 
     if [ ! -z "$hostname" ]; then
       uci set 'system.@system[0].hostname'="$hostname"
       uci commit
-      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then reboot; fi
+      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
+        # reload/restart whatever needs the hostname updated
+        /etc/init.d/system reload
+        service zabbix_agentd restart
+        service rsyslog restart
+        service lldpd restart
+      fi
     fi
     if [ ! -z "$opt226" ]; then
       /root/bin/config-version.sh -c $(printf %d "0x$opt226")
