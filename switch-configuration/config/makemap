@@ -1,0 +1,36 @@
+#!/bin/bash
+#This goes through all switches in switchtypes, connects to them and gets a LLDP dump of what's connected to them.
+
+grep -v "^/" switchtypes |while read name num m ip type h n model mac
+  do
+    ssh  $ip 'show lldp nei' </dev/null |grep "^g" |while read line
+      do
+        echo  "$name $line"
+      done
+   done |tee map.lldp
+
+cat map.lldp |grep -v ") TT"|sort -r |sed -e s/\(.*\)// -e s/"TRUNK Port "/"Trunk"/ -e s/"FIBER Port "/"Fiber"/ |cut -f 1,2,5- -d ' ' |sed s/' '/=/g |sed -e s/=/' '/ -e s/=/' '/ -e s/=/_/g -e s/"[^ ]*_"//g -e s/"\/"/-/g  |tr "[A-Z]" "[a-z]">map.parts
+
+( echo "blockdiag { orientation = landscape "
+#(echo "blockdiag {"
+grep br-mdf-01 map.parts |cut -f 1 |while read b if a; do
+  echo "br-mdf-01 -- $b;"
+done
+cat map.parts |grep -v -i br-mdf-01|grep -i ^tt |while read a if b
+  do
+    echo "$a -- $b;"
+    #echo -n "$a -- $b;"
+    echo "group { orientation = portrait"
+    grep -i "^$b" map.parts |grep -v br-mdf-01 |while read c if2 d
+      do
+        echo  "$c -- $d;"
+      done
+  # echo ";" 
+  echo "  }"
+  done 
+echo "}" )|sed -e s/"->,"/"->"/ -e s/" ->;"/";"/ > map.diag
+
+#(echo "blockdiag { orientation = portrait "; cat map.parts |grep -i ^tt |while read a if b; do echo -n "$a -- $b[label=\"$if\"] ->"; grep -i "^$b" map.parts |while read c if2 d; do echo -n  ", $d[label=\"$if2\"]"; done; echo ";" ; done ; echo "}" )|sed -e s/"->,"/"->"/ -e s/" ->;"/";"/ > map.diag
+
+/usr/bin/blockdiag3 map.diag -T png -o map.png
+/usr/bin/blockdiag3 map.diag -T png -o map.svg
