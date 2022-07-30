@@ -4,4 +4,11 @@
 # TODO make this a true service
 /root/bin/wifi-details.sh >/dev/null 2>/dev/null </dev/null &
 
+# apinger initial template population
+# this needs to remain in the case where DHCP isnt working initially
+# there is also a race condition with the wifi interfaces coming online
+# and requires a 30 sec grace period before checking via apinger. If not
+# the result is wifi is up but the wifi tool detects it as down
+(sleep 30 && /root/bin/apinger-pop.sh "8.8.8.8") &> /dev/null &
+
 exit 0
