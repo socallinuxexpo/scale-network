@@ -3,8 +3,11 @@
 # Push an updated copy of the configuration file to a switch and activate it.
 #
 
-# Not yet ready for use... Do not use
-die "Don't use this script yet. It's not ready"
+# Deprecated in favor of override_switches
+# Code kept around as template to later improve communications in override_switches and bulk_load_local_switches
+
+# Deprecated... Do not use
+die "Don't use this script yet. It's deprecated. See override_switches or bulk_load_ocal_switches."
 
 # Ideally this will eventually be obviated by ansible
 

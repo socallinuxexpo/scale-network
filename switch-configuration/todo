@@ -7,13 +7,12 @@ x   3.	L3 Interfaces for management VLAN on switches
 x   4.	Scripts to build configuration files
 x       Switches
 x       Routers
-    5.	Scripts for switch installation and maintenance (Robert)
-            Started, but likely replace with ansible
+    5.	Scripts for switch installation and maintenance (Owen)
 x   7.  V6 only VLANs (Staff, Signs, Registration (-Reg due to eBay))
     8.  Firewall Rules
-    9.  Troubleshoot LAN connectivity issues (SRX policy?)
+x   9.  Troubleshoot LAN connectivity issues (SRX policy?)
 O  10.  Verify Tabs in TDF (vim on Mac tends to produce spaces instead)
-   11.  Add postscript port map generation to switch config builder
+x  11.  Add postscript port map generation to switch config builder
 
 #### Notes
 

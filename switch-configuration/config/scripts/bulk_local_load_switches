@@ -12,7 +12,7 @@
 #
 #	The system where this software is running should have an interface set up on that same network.
 #
-#	1. Delete 192.168.255.76 from the local ARP cache.
+#	1. Delete 192.168.255.76 from the local ARP cache. -- Deprecated
 #	2. ping 192.168.255.76 until success
 #	3. Get MAC address of 192.168.255.76 from ARP table.
 #	4. Identify switch name based on MAC address lookup in switchtypes file (column 9 Mgmt MAC -> Column 1 Name)
@@ -36,8 +36,6 @@ my $IP = "192.168.255.76"; # Switch target management IP
 #{
 #    die("SUDO result: $result -- fail\n");
 #}
-
-# Ideally this will eventually be obviated by ansible
 
 # Pull in dependencies
 use strict;
@@ -76,6 +74,7 @@ while (1) {
     my $arp = `arp -n $IP | grep $IP`;
     chomp($arp);
     $arp = lc($arp);
+    # Harry regex to support differing arp outputs (BSD vs. Linux vs. MacOS)
     $arp =~ s@^.*(at|ether)\s+([0-9a-f:]+)\s+.*$@\2@m;
     if ($arp =~ /\n/)
     {
@@ -90,7 +89,7 @@ while (1) {
     
     print "Looking for MAC $arp in switchtypes table...";
     my @switchname = get_switch_by_mac($arp);
-    print "Got ", scalar(@switchname), " names back fromget_switch_by_mac($arp)\n";
+    print "Got ", scalar(@switchname), " names back from get_switch_by_mac($arp)\n";
     
     if (scalar(@switchname) < 1)
     {
@@ -102,6 +101,7 @@ while (1) {
     {
         print STDERR "Error: $arp matches multiple switches (", join(", ", @switchname),").\n";
         sleep 10;
+	get_switchtype("anonymous");
         continue; # Retry -- until file is corrected or a valid switch is provided
     }
     print "Found: $switchname[0].\n";
@@ -140,7 +140,6 @@ EOF
     
     $SIG{PIPE} = \&catch_pipe;
     
-    ##FIXME## Optimize this to be done in one step above. This is an artifact of basing this on an earlier script.
     my ($Name, $Num, $MgtVL, $IPv6Addr, $Type);
     print "Looking up switch $switch\n";
     ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
@@ -152,7 +151,7 @@ EOF
     {
         die("Error: Couldn't read configuration file for $Name");
     }
-    ##FIXME## Using system is an attrocious hack -- do something better
+    ##FIXME## Using system is an attrocious hack -- do something better (ideally expect.pm)
     print STDERR "Sending configuration file to $Name\n";
     if ($opt_l) # If -l is specified, install configuration via directly attached management port
     {
