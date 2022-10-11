@@ -35,7 +35,7 @@ Rm209-210	17	503	2001:470:f0fb:503::200:17	cfRoom		I.9		Normal		ex4200-48p	00:26
 ExpoA1		18	103	2001:470:f0fb:103::200:18	exRoom		W.9		Loud		ex4200-48p	78:fe:3d:d2:85:7f
 Rm211		19	503	2001:470:f0fb:503::200:19	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:b3:ff
 Rm104		20	503	2001:470:f0fb:503::200:20	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5:39:7e:7f
-NOC		21	503	2001:470:f0fb:503::200:21	NOC		I.2		Normal		ex4200-48p	00:26:88:7e:25:ff
+NOC		21	503	2001:470:f0fb:503::200:21	cfNOC		I.2		Normal		ex4200-48p	00:26:88:7e:25:ff
 ExpoB1		22	103	2001:470:f0fb:103::200:22	Booth		W.9		Loud		ex4200-48p	00:26:88:6e:bd:ff
 CTF1		23	504	2001:470:f0fb:504::200:23	cfCTF		I.4		Normal		ex4200-48p	b0:c6:9a:6c:0d:7f
 ExpoC1		24	103	2001:470:f0fb:103::200:24	Booth		W.9		Loud		ex4200-48p	00:26:88:6e:c2:ff
