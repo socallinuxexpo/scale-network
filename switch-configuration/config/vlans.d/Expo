@@ -10,7 +10,8 @@ VLAN	exSigns				107	2001:470:f0fb:107::/64	0.0.0.0/0	Signs network (Expo Center)
 VLAN	exStaff				108	2001:470:f0fb:108::/64	10.0.8.0/24	Staff Wireless Network
 //109 not used
 VLAN	exRegistration  	110	2001:470:f0fb:110::/64	10.0.10.0/24	Registration Network (Expo Center) IPv6 Only
-VLAN	exAkamai			111	2001:470:f0fb:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
+// Akamai cache is deprecated
+//VLAN	exAkamai			111	2001:470:f0fb:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
 //112 through 199 not used
 //200 through 499 Vendors
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.

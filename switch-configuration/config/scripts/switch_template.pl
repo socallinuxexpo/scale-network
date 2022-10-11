@@ -1265,9 +1265,9 @@ EOF
   }
   # Finish up strings that need to be terminated (currently just $VV_vlans_l3)
   # Finalize DHCP Forwarder configuration
-  ##FIXME## Hack for Hilton
-  #my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
-  my $active_srv_grp = ($MgtVL < 500) ? "Hilton" : "Conference";
+  my $active_srv_grp = ($MgtVL < 500) ? "Expo" : "Conference";
+  # Hack for Hilton (SCaLE 19x)
+  #my $active_srv_grp = ($MgtVL < 500) ? "Hilton" : "Conference";
   $VV_dhcp = <<EOF;
 forwarding-options {
     dhcp-relay {
