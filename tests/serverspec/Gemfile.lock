@@ -1,42 +1,36 @@
-GIT
-  remote: https://github.com/net-ssh/net-ssh.git
-  revision: a45f54fe1de434605af0b7195dd9a91bccd2cec5
-  ref: a45f54f
-  specs:
-    net-ssh (6.3.0.beta1)
-
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.5.0)
     multi_json (1.15.0)
-    net-scp (3.0.0)
-      net-ssh (>= 2.6.5, < 7.0.0)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (7.0.1)
     net-telnet (0.1.1)
     rake (13.0.6)
-    rspec (3.10.0)
-      rspec-core (~> 3.10.0)
-      rspec-expectations (~> 3.10.0)
-      rspec-mocks (~> 3.10.0)
-    rspec-core (3.10.1)
-      rspec-support (~> 3.10.0)
-    rspec-expectations (3.10.2)
+    rspec (3.11.0)
+      rspec-core (~> 3.11.0)
+      rspec-expectations (~> 3.11.0)
+      rspec-mocks (~> 3.11.0)
+    rspec-core (3.11.0)
+      rspec-support (~> 3.11.0)
+    rspec-expectations (3.11.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
+      rspec-support (~> 3.11.0)
     rspec-its (1.3.0)
       rspec-core (>= 3.0.0)
       rspec-expectations (>= 3.0.0)
-    rspec-mocks (3.10.2)
+    rspec-mocks (3.11.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-support (3.10.3)
-    serverspec (2.41.8)
+      rspec-support (~> 3.11.0)
+    rspec-support (3.11.0)
+    serverspec (2.42.0)
       multi_json
       rspec (~> 3.0)
       rspec-its
       specinfra (~> 2.72)
     sfl (2.3)
-    specinfra (2.83.1)
+    specinfra (2.83.3)
       net-scp
       net-ssh (>= 2.7)
       net-telnet (= 0.1.1)
@@ -46,7 +40,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  net-ssh!
+  net-ssh
   rake
   serverspec
 
