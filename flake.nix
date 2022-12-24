@@ -11,9 +11,19 @@
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
       # Nixpkgs instantiated for supported system types.
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ ]; });
+      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ self.overlays.default ]; });
     in
     {
+      overlays.default = (final: prev:
+        with final.pkgs;
+        rec {
+          scaleTests = import ./nix/tests/allTests.nix { inherit nixosTest; };
+        });
+
+      packages = forAllSystems (system: {
+        inherit (nixpkgsFor.${system}) scaleTests;
+      });
+
       nixosConfigurations = forAllSystems (system:
         let
           # All scale common modules
