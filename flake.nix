@@ -14,6 +14,26 @@
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; overlays = [ ]; });
     in
     {
+      nixosConfigurations = forAllSystems (system:
+        let
+          # All scale common modules
+          common =
+            ({ modulesPath, ... }: {
+              imports = [
+                "${toString modulesPath}/virtualisation/qemu-vm.nix"
+              ];
+            });
+        in
+        {
+          loghost = nixpkgs.lib.nixosSystem {
+            inherit system;
+            modules = [
+              common
+              ./nix/machines/loghost.nix
+            ];
+          };
+        });
+
       # Like nix-shell
       # Good example: https://github.com/tcdi/pgx/blob/master/flake.nix
       devShells = forAllSystems
