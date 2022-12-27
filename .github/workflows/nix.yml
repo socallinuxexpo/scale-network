@@ -1,0 +1,22 @@
+---
+name: nixTests
+
+on:
+  pull_request:
+    paths:
+      - '**.nix'
+  push:   # This is only run when PRs are merged into master
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  nixFmt:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+      # Check formatting via treefmt
+      - name: check formatting
+        run: nix develop --command treefmt --fail-on-change --no-cache && git --no-pager diff
