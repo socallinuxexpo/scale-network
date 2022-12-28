@@ -23,7 +23,9 @@ GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
 OPENWRT_VER ?= fb15cb4ce9559021d463b5cb3816d8a9eeb8f3f9
-OPENWRT_PKG_VERSION ?= c8fcec9371fff43c0b62a58ec2064e83fe39f403
+# If bumping opkg it needs to be a commit that exists in the fork
+# https://github.com/sarcasticadmin/opkgs
+OPENWRT_PKG_VERSION ?= 4e46ebd5b900c7d3a7478564cba69e8bea8a4d60
 
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
@@ -36,8 +38,10 @@ ifndef CURL
   $(error "curl is not available please install it")
 endif
 
+# TODO: Fix this after getting feedback from upstream opkgs
+# https://github.com/openwrt/packages/issues/20184
 define FEEDS_CONF_DEFAULT
-src-git packages https://git.openwrt.org/feed/packages.git^$(OPENWRT_PKG_VERSION)
+src-git packages https://github.com/sarcasticadmin/opkgs.git^$(OPENWRT_PKG_VERSION)
 endef
 
 PHONY: download-image extract templates clean clean-templates
