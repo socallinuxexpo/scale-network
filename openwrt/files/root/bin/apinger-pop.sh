@@ -8,7 +8,10 @@ fi
 sed "s/<DEFAULTGATEWAY>/${1}/g" /etc/apinger.tmpl > /tmp/apinger.conf
 # Only restart apinger if compare has diff
 if ! cmp /tmp/apinger.conf /etc/apinger.conf; then
-  # Cant use "service" since thats a shell function
   sleep 5
+  # Make sure wifi always starts up since apinger will not trigger an alarm
+  # if it pings good but wifi was down to begin with
+  wifi up
+  # Cant use "service" since thats a shell function
   cp /tmp/apinger.conf /etc/apinger.conf && /etc/init.d/apinger restart
 fi
