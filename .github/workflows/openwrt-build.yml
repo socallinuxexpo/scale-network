@@ -30,7 +30,7 @@ jobs:
           cd openwrt
           TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
       - name: 'Upload openwrt build artifact tarball'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.1
         with:
           name:  ${{ matrix.target }}-openwrt-build-artifacts
           # Cant use relative pathing .. or . for artifacts action
@@ -39,7 +39,7 @@ jobs:
             openwrt/build/artifacts/*.tar.gz
           retention-days: 30
       - name: 'Upload openwrt build log'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.1
         with:
           name:  ${{ matrix.target }}-openwrt-buildlog
           path: |
