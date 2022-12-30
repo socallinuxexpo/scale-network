@@ -129,6 +129,11 @@ RSpec.shared_examples "openwrt" do
     its(:exit_status) { should eq 0 }
   end
 
+  # ensure wifi for all radios is up
+  describe command('wifi status | jq \'.[] | select(.up == false )\' | wc -l') do
+    its(:stdout) { should eq "0\n" }
+  end
+
   # Make sure bash is roots shell
   describe command("awk -F: -v user='root' '$1 == user {print $NF}' /etc/passwd") do
       its(:stdout) { should match /\/bin\/bash/ }
