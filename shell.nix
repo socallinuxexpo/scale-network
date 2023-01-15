@@ -4,8 +4,8 @@
 with pkgs;
 
 let
-  scale_python = python38.withPackages
-      (pythonPackages: with pythonPackages; [ pytest pylint ]);
+  scale_python = python310.withPackages
+      (pythonPackages: with pythonPackages; [ pytest pylint ipdb ]);
 
   # Trying to keep these pkg sets separate for later
   global = [ bash curl git jq kermit screen glibcLocales ] ++ [ scale_python ];
