@@ -482,7 +482,7 @@ def main():
     switches = populateswitches(switchesfile)
     # servers = populateservers(serversfile, vlans)
     # routers = populaterouters(routersfile)
-    # aps = populateaps(apsfile)
+    aps = populateaps(apsfile)
     # pis = populatepis(pisfile)
 
     # build the master inventory and json dump it to stdout
@@ -504,11 +504,64 @@ def main():
                 "persist": True,
                 "name": "/var/lib/kea/dhcp4.leases",
             },
+            "option-def": [
+				{
+					"name": "radio24-channel",
+					"code": 224,
+					"type": "uint8",
+					"array": False,
+					"record-types": "",
+					"space": "dhcp4",
+					"encapsulate": ""
+				},
+				{
+					"name": "radio5-channel",
+					"code": 225,
+					"type": "uint8",
+					"array": False,
+					"record-types": "",
+					"space": "dhcp4",
+					"encapsulate": ""
+				},
+				{
+					"name": "ap-network-config",
+					"code": 226,
+					"type": "uint8",
+					"array": False,
+					"record-types": "",
+					"space": "dhcp4",
+					"encapsulate": ""
+				}
+            ],
+            "reservation-mode": "global",
+            "reservations": [],
             # Finally, we list the subnets from which we will be leasing addresses.
             "subnet4": []
             # DHCPv4 configuration ends with the next line
         }
     }
+
+    reservations_dict = [
+        {
+          "hostname": ap["name"],
+          "hw-address": ap["mac"],
+          "option-data": [
+              {
+                "name": "radio24-channel",
+                "data": ap["wifi2"]
+              },
+              {
+                "name": "radio5-channel",
+                "data": ap["wifi5"]
+              },
+              {
+                "name": "ap-network-config",
+                "data": ap["configver"]
+              }
+          ]
+        }
+        for ap in aps
+        ]
 
     # TODO: support generating id for each subnet block
     # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
@@ -522,6 +575,7 @@ def main():
     ]
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
+    kea_config["Dhcp4"]["reservations"] = reservations_dict
     # key: d['accessPointDetailsDTO'][key] for key in keys} for d in s['queryResponse']['entity']]}
     # print(json.dumps(vlans))
     print(json.dumps(kea_config))
