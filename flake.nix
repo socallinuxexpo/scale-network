@@ -56,6 +56,13 @@
               ./nix/machines/massflash.nix
             ];
           };
+          core = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/core
+            ];
+          };
         });
 
       # Like nix-shell
