@@ -1,40 +1,40 @@
 // Expo Center IDF Switch Configuration
 TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Link to EX Router
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink to BallroomF
 TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink to BallroomG
 TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink to BallroomH
 TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink
 TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration // Downlink
-TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
-TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exInfra,exStaff // AP
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
+TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exInfra // AP
 VLAN	exSigns		4		// ge-0/0/{18-21}
 RSRVD	26
 FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
-            		exAVLAN,exStaff, \
+            		exAVLAN, \
 			        exSigns,HAM_BRIDGE,exRegistration // Uplink to ExMDF Switch

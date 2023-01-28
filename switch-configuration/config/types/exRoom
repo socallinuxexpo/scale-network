@@ -1,17 +1,17 @@
 // Room Switch Template -- All conference rooms Expo Center
-TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns// Uplink
-TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exStaff,exSigns// Downlink
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns// Uplink
+TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns// Downlink
 RSRVD	6
-TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/11	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/12	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/13	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
-TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST,exStaff				// AP
+TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/11	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/12	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/13	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
+TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
 VLAN	exSigns		4	// ge-0/0/{18-21}
 VLAN	exAVLAN		6	// ge-0/0/{22-27}
 VLAN	exSpeaker	2	// ge-0/0/{28,29}
