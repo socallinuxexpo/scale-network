@@ -1,0 +1,83 @@
+system {
+    host-name minimal;
+    root-authentication {
+        encrypted-password "$1$18YaROJR$tjBWNWQwSbnKvCV0I9B3m.";
+    }
+    syslog {
+        host loghost {
+        any any;
+        }
+    }
+    login {
+        user admin {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnRaYbdYsnVqTZNRpXxgK1LlEk9QWa/JwaYAbOZFXiC scale19x-04032022";
+            }
+        }
+        user dlang {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqPnzsYPKyURdnUpZx1nt9RFQjaz9q7m5wh525Crsho dlang@dlang-mobile";
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCtTtJZOyg/9/hbP6IuCyjpA1L0SqMR6wWOU8uJaoa3YlN2sqUkIGne1WYc+4jR+0F2uusDQ1Beb2a9Z0XGxP7nkEIGc5ontC6R/ZUHGf8axz5LXGk9VESR6sMdOjeotSYWwcuj6kPqa0XNXy0nG08dhe8Y+QkjiDQRhjMka4OOmcjMtRAjJyfhROEMpFM18M4Fh3+8j36TatzQQWO6wZ408dQYIc6ShleVfVCvEn5fZ0lm3BRe0UW3wfNs9qupk89VrfUWAEYqvh2uSz9SJBEkGAumreu6ASq7rfPC2DyI60vIT4uaRsqSzfQyT9o1n4v8WmgUKp4kRfZ+T8jWFoUXhj82+2WCCxUlq8D1SRcXDI1OQhHNmH7okorw7TgKJPdM0f96tvgdviH3As6xP/GdnEup8HL0nqKSX8dbRggS9xvmr5SKqGN8QSrclJ+cCsUOWRctgGasf7m+Q6XFNF/8LG6wbqBxxw7TLMLkjVdppHAFoewoBau5cRKGQ++G+BU= dlang@dlang-mobile";
+            }
+        }
+        user owen {
+            class super-user;
+            authentication {
+                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
+            }
+        }
+        user rhamel {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVZ7n1EOezedsbphq5atGtHm11xeGpLZBzEbgV7eZdb Ryan Hamel - SCALE";
+            }
+        }
+        user rob {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq sarcasticadmin";
+            }
+        }
+        user steveb {
+            class super-user;
+            authentication {
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUeOWNKOfE8kr/i076oG7oSp9CyhI/7I7kw0U2omWN1S7UEZoV/42DYnyakemHIp4Jyg0/Yk88oM+GtQWZYwnbJDETOY7xjA0btfpFoKYHY7TU4crsdTkE2qkekaa9plYRYQi4mZ/hl0/3Qkd+y2lLUzvEFa3RHv3JYMUi5ijv4mscXqSlBwIngX6l1pU7Wz6hexxa8YdKql17UF3oFwcqLLpnvTHmbI415f/EJNy+LSuXD1Au/ajLQbgdrDaOBNFKuyTjFd1VX0LrT+SD0MwwyT0I8vPU5E2WSkhBw6y932gDTFfmtwtDRrsJjz6w6y32cs0pns0miugLWrxwrWvC2tjzhS+QmCxrR00FK6jPHC/sHv21OVh93fyd9USAu6TCbkQ/FzCzqKbfEInoYAR+RaVeePXik5KvBqFqfUt0MMycVXj+XzHjpRAduG9aFA315Bu5k6w45m473BcFgHgq4/FVn88ImfPddXLtyJZN9oHorpI9bhQhMAopGAFyxuI+VjaP11mhylrjm+3+Q87gXPqvN0he9VPDvz/P30Id1S6me5rpsoiYilhFx8xxwiga4kjVQlXmC/NzlldM86dOIMr0PtGh5kGOe3X5ePKkjfstXnvvFfFeqiqUPp40jfX+Ocs68ozFR4PRDUWSqVrPgYVPOMViTH8BHKh1vcAEGQ== steve@loot5a";
+            }
+        }
+
+    }
+    services {
+        ssh {
+            protocol-version v2;
+        }
+        netconf {
+            ssh;
+        }
+    }
+}
+chassis {
+    alarm {
+        management-ethernet {
+        link-down ignore;
+        }
+    }
+    fpc 0 {
+	pic 1 {
+            sfpplus {
+                pic-mode 1g;
+            }
+        }
+    }
+}
+interfaces {
+    me-0 {
+        unit 0 {
+            family inet {
+                    address 192.168.255.76/24;
+            }
+        }
+    }
+
+}
