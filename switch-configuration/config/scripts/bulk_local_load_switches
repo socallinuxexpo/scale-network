@@ -45,7 +45,8 @@ use IPC::Open2;
 use Getopt::Std;
 our $opt_n;
 our $opt_l = 1;
-getopts('n');
+our $opt_u = "";
+getopts('nu:');
 
 # -n -- Don't actually apply the configuration, just show the compare and then roll back.
 
@@ -181,11 +182,13 @@ EOF
     print STDERR "Activating...\n";
     if ($opt_l) # If -l is specified, activate configuration via directly attached management port
     {
-        open(JUNIPER, "| ssh owen\@$IP");
+        my $TARGET = $opt_u ? "$opt_u\@$IP" : "$IP";
+        open(JUNIPER, "| ssh $TARGET");
     }
     else
     {
-        open(JUNIPER, "| ssh owen\@$Name");
+        my $TARGET = $opt_u ? "$opt_u\@$Name" : "$Name";
+        open(JUNIPER, "| ssh $TARGET");
     }
     print JUNIPER $SWITCH_COMMANDS;
     print STDERR "Finished sending commands to switch...\n";
