@@ -18,6 +18,7 @@
         with final.pkgs;
         rec {
           scaleTests = import ./nix/tests/allTests.nix { inherit nixosTest; };
+          massflash = callPackage ./nix/pkgs/massflash.nix { };
         });
 
       packages = forAllSystems (system: {
@@ -33,6 +34,7 @@
                 "${toString modulesPath}/virtualisation/qemu-vm.nix"
               ];
             });
+          pkgs = nixpkgsFor.${system};
         in
         {
           loghost = nixpkgs.lib.nixosSystem {
@@ -40,6 +42,17 @@
             modules = [
               common
               ./nix/machines/loghost.nix
+            ];
+          };
+          massflash = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              ({ modulesPath, ... }: {
+                imports = [
+                  "${toString modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+                ];
+              })
+              ./nix/machines/massflash.nix
             ];
           };
         });

@@ -2,47 +2,57 @@
 
 ## Overview
 
-Leverages `openwrt/scripts/massflash` and `kea` to provide a way to flash openwrt APs with new images prior to the scale conference
+Leverages `openwrt/scripts/massflash` and `kea` to provide a way to flash openwrt APs with new images prior to the
+scale conference
 
 ## Prereqs
 
-Place the following files in `openwrt/scripts/massflash`:
-
-1. `flash.bin` - An openwrt img for the sysupgrade.bin thats produced during a build. Currently the massflash is unable to distinguish
-   between multiple boards/architectures. 
-2. `passwords.txt` - A file that contains the ssh user password credentials. If you want it to try multiple then add one per line.
-3. `id_priv` - The private key for the ssh user credentials. This will probably be the main way to get in going forward. Might have to
-   support multiple keys in the future.
-4. `kea.tmpl` - Copy template to `kea.json` and update values accordingly based on your interfaces and file paths. Leverage tagged vlan `503`. Example values:
+Build the `massflash` livecd:
 
 ```
-<INTERFACE> = enp5s0.503
-<LIBRUNSCRIPT> = /nix/store/5qr44w8fm0vf5whsa683444wv4q0bwns-kea-2.0.2/lib/kea/hooks/libdhcp_run_script.so
-<MASSFLASH> = /home/user/scale-network/scripts/massflash/massflash
-SHAHERE = 7fdf577afb4bf2bd3134520eef929fb3b02090c6
+~$ nix build ".#nixosConfigurations.x86_64-linux.massflash.config.system.build.isoImage"
 ```
 
-Outside of the necessary files:
-
-5. Juniper switch needs to be setup for tagged vlan 503 on all ports
-6. Setup interface 503 vlan for dhcp on the massflash host:
+Connect the flashing interface to the bridge:
 
 ```
-sudo ip link add link enp5s0 name enp5s0.503 type vlan id 503
-sudo ip addr add 192.168.254.1/22 dev enp5s0.503
-sudo ip link set up enp5s0.503
+~$ sudo addtobr enp0s26u1u2
 ```
-> if you include a subnet mask during ip addr add then it wont default to 32
-> otherwise you need to add the route explicitly:
-> "ip route add 192.168.254.0/22 dev enp5s0.503"
-> 
-> if need to del route: "ip route del 192.168.254.0/24 dev enp5s0.503"
 
-## Start up
+Setup wifi:
 
 ```
-nix-shell
-sudo env "PATH=$PATH" kea-dhcp4 -c ./openwrt/scripts/massflash/kea.json
+~$ sudo systemctl start wpa_supplicant
+```
+
+Add wireless config directly to `/var/run/wpa_supplicant/wpa_supplicant.conf`
+```
+network = {
+  ssid="<name>"
+  psk="<password">
+}
+```
+
+Trigger a reloading of config:
+
+```
+~$ wpa_cli reconfigure
+```
+
+Create the dir layout expected for flashing:
+
+```
+~$ mkdir -p /persist/massflash
+```
+
+Under `/persist/massflash`:
+
+```
+flash_sha # commit hash used to build latest openwrt images
+id_priv # private key used to log into the APs
+wndr3700-v2/flash.bin # dir for this model of ap and its sysupgrade.bin
+wndr3800/flash.bin
+wndr3800ch/flash.bin
 ```
 
 ## Known issues
@@ -65,5 +75,5 @@ One off to run the `massflash`:
 ```
 export QUERY4_TYPE=DHCPREQUEST
 export LEASE4_ADDRESS=<IP>
-expect massflash lease4_renew
+massflash lease4_renew
 ```
