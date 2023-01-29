@@ -60,7 +60,7 @@ ExpoA5		42	103	2001:470:f0fb:103::200:42	Booth		W.9		Normal		ex4200-48p	00:26:88
 ExpoB5		43	103	2001:470:f0fb:103::200:43	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:1b:ff
 ExpoC5		44	103	2001:470:f0fb:103::200:44	Booth		W.9		Loud		ex4200-48p	00:26:88:7c:41:7f
 ExpoAW		45	103	2001:470:f0fb:103::200:45	Booth		W.9		Normal		ex4200-48p	00:26:88:6e:b1:ff
-CTF5		46	504	2001:470:f0fb:504::200:46	cfCTF		I.9		Loud		ex4200-48p	00:26:88:7f:0e:7f
+CTF5		46	504	2001:470:f0fb:504::200:46	cfCTF		I.8		Loud		ex4200-48p	00:26:88:7f:0e:7f
 CTF6		47	504	2001:470:f0fb:504::200:47	cfCTF		I.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
 MassFlash	48	103	2001:470:f0fb:103::200:48	MassFlash	Z.9		??		ex4200-48p	84:18:88:ac:d7:7f
 SpareB		49	103	2001:470:f0fb:103::200:49	cfRoom		Z.9		??		ex4200-48p	84:18:88:ab:df:ff
