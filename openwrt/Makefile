@@ -110,6 +110,10 @@ clean-all:
 clean:
 	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)
 
+clean-config:
+	rm -f ./$(BUILD_DIR)/$(IMAGEBUILDER)/.config
+	rm -f ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig
+
 clean-templates:
 	rm -rf $(BUILD_DIR)/$(IMAGEBUILDER)/files
 
