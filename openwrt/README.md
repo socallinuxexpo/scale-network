@@ -11,3 +11,4 @@ The SCaLE network teams build of openwrt for the APs for the conference.
 * [TPLink c2600](./docs/IPQ806X.md)
 * [WNDR 3700,3800,3800ch](./docs/AR71XX.md)
 * [Network Load Testing](./docs/LOADTEST.md)
+* [Troubleshooting](./docs/TROUBLESHOOTING.md)
