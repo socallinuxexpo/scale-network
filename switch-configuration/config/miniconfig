@@ -1,7 +1,7 @@
 system {
     host-name minimal;
     root-authentication {
-        encrypted-password "$1$18YaROJR$tjBWNWQwSbnKvCV0I9B3m.";
+        # Must supply a password during config install
     }
     syslog {
         host loghost {

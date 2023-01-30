@@ -2,16 +2,16 @@
 TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns,HAM_BRIDGE	// Uplink
 TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns,HAM_BRIDGE	// Downlink
 RSRVD	6
-TRUNK	ge-0/0/8	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/9	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/10	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/11	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/12	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/13	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/14	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/15	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/16	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
-TRUNK	ge-0/0/17	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/8	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/9	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/10	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/11	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/12	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/13	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/14	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/15	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/16	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
+PTRUNK	ge-0/0/17	cfInfra,cfSCALE-SLOW,cfSCALE-FAST					// AP
 VLAN	cfSigns		4	// ge-0/0/{18-21}
 VLAN	cfAVLAN		6	// ge-0/0/{22-27}
 VLAN	cfSpeaker	2	// ge-0/0/{28,29}
