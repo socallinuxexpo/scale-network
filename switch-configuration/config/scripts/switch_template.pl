@@ -482,10 +482,18 @@ EOF
         }
     }
 EOF
+  my @POEPORTS = ();
   foreach(@{$switchtype})
   {
+    my $POEFLAG = 0;
     my @tokens = split(/\t/, $_); # Split line into tokens
     my $cmd = shift(@tokens);     # Command is always first token.
+    # Handle POE Flag Hack (P<cmd>)
+    if ($cmd =~ /^PTRUNK/)
+    {
+      $POEFLAG = 1;
+      $cmd =~ s/^P//;
+    }
     debug(9, "\tCommand: $cmd ", join(",", @tokens), "\n");
     if ($cmd eq "RSRVD")
     {
@@ -522,6 +530,7 @@ EOF
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
       {
+        push @POEPORTS, $iface if ($POEFLAG);
         $portnum =~ s@^ge-0/0/(\d+)$@$1@;
         if ($portnum != $port)
         {
@@ -547,7 +556,7 @@ EOF
       debug(9, "$cmd reached PS Output\n");
       if ($cmd eq "TRUNK")
       {
-        # Fiber ports are special in the map
+        # Handle non-fiber trunk port
         debug(9, "$cmd output standard box for port $portnum ($iface)\n");
         $portmap_PS .= <<EOF;
 (TRUNK) 1 0.75 0.75 $portnum DrawPort
@@ -614,7 +623,7 @@ EOF
       $port += $count;
     }
   }
-  return($OUTPUT, $portmap_PS);
+  return($OUTPUT, \@POEPORTS, $portmap_PS);
 }
 
 sub build_l3_from_config
@@ -1417,6 +1426,17 @@ EOF
   }
 }
 
+# Build POE Configuration from port list
+sub build_poe_from_portlist
+{
+  my $OUTPUT = "";
+  foreach(@_)
+  {
+    $OUTPUT .= "    interface $_;\n";
+  }
+  return($OUTPUT);
+}
+
 # Put it all together
 sub build_config_from_template
 {
@@ -1426,7 +1446,8 @@ sub build_config_from_template
   
   # Add configuration file fetches here:
   my $USER_AUTHENTICATION = build_users_from_auth();
-  my ($INTERFACES_PHYSICAL, $portmap) = build_interfaces_from_config($hostname);
+  my ($INTERFACES_PHYSICAL, $POE_PORTS, $portmap) = build_interfaces_from_config($hostname);
+  my $POE_CONFIG = build_poe_from_portlist(@{$POE_PORTS});
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
   my ($vcfg, $portmap_vendor) = build_vendor_from_config($hostname);
   my %VENDOR_CONFIGURATION = {};
@@ -1515,6 +1536,9 @@ routing-options {
             route ::/0 next-hop $IPV6_DEFGW;
         }
     }
+}
+poe {
+$POE_CONFIG
 }
 protocols {
     igmp-snooping {
