@@ -545,6 +545,7 @@ def main():
         {
           "hostname": ap["name"],
           "hw-address": ap["mac"],
+          "ip-address": ap["ipv4"],
           "option-data": [
               {
                 "name": "radio24-channel",
