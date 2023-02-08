@@ -31,7 +31,7 @@
           common =
             ({ modulesPath, ... }: {
               imports = [
-                "${toString modulesPath}/virtualisation/qemu-vm.nix"
+                ./nix/modules/bhyve-image.nix
               ];
             });
           pkgs = nixpkgsFor.${system};
