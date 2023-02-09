@@ -17,7 +17,7 @@
       overlays.default = (final: prev:
         with final.pkgs;
         rec {
-          scaleTests = import ./nix/tests/allTests.nix { inherit nixosTest; };
+          scaleTests = callPackage ./nix/tests/allTests.nix { };
           massflash = callPackage ./nix/pkgs/massflash.nix { };
         });
 
@@ -31,7 +31,7 @@
           common =
             ({ modulesPath, ... }: {
               imports = [
-                "${toString modulesPath}/virtualisation/qemu-vm.nix"
+                ./nix/modules/bhyve-image.nix
               ];
             });
           pkgs = nixpkgsFor.${system};

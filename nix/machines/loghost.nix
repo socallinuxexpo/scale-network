@@ -3,15 +3,7 @@
   # If not present then warning and will be set to latest release during build
   system.stateVersion = "22.11";
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-    autoResize = true;
-  };
-  boot.growPartition = true;
   boot.kernelParams = [ "console=ttyS0" ];
-  boot.loader.grub.device = "/dev/vda";
-  boot.loader.timeout = 0;
 
   # TODO: How to handle to the root password
   users.extraUsers.root.password = "";
