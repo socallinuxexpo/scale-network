@@ -19,10 +19,11 @@
         rec {
           scaleTests = callPackage ./nix/tests/allTests.nix { };
           massflash = callPackage ./nix/pkgs/massflash.nix { };
+          scaleInventory = callPackage ./nix/pkgs/scaleInventory.nix { };
         });
 
       packages = forAllSystems (system: {
-        inherit (nixpkgsFor.${system}) scaleTests;
+        inherit (nixpkgsFor.${system}) scaleTests scaleInventory;
       });
 
       nixosConfigurations = forAllSystems (system:
@@ -53,6 +54,13 @@
                 ];
               })
               ./nix/machines/massflash.nix
+            ];
+          };
+          core = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/core
             ];
           };
         });
