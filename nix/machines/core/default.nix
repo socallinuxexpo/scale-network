@@ -19,22 +19,24 @@ in
     };
   };
 
-  networking.usePredictableInterfaceNames = false;
+  # disable legacy networking bits as recommended by:
+  #  https://github.com/NixOS/nixpkgs/issues/10001#issuecomment-905532069
+  #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
+  networking = {
+    useDHCP = false;
+    useNetworkd = true;
+  };
+
   # Make sure that the makes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
   # Ref: https://github.com/systemd/systemd/issues/9227#issuecomment-395500679
   systemd.network = {
     enable = true;
-    links = {
-      "10-lan" = {
-        matchConfig = { OriginalName = "*"; };
-        linkConfig = { MACAddress = "58:9c:fc:00:38:5f"; MACAddressPolicy = "none"; };
-      };
-    };
     networks = {
       "10-lan" = {
+        name = "enp0*";
+        enable = true;
         address = [ "10.0.3.5/24" "2001:470:f0fb:103::5/64" ];
         gateway = [ "10.0.3.1" ];
-        matchConfig = { Name = "eth0"; };
       };
     };
   };
