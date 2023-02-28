@@ -33,7 +33,7 @@
   testScript = ''
     start_all()
     # Kea needs a sec to startup so well sleep
-    coreServer.succeed("sleep 10")
+    coreServer.wait_for_unit("systemd-networkd-wait-online.service")
     coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
     client1.wait_for_unit("systemd-networkd-wait-online.service")
     client1.wait_until_succeeds("ping -c 5 10.0.3.5")
