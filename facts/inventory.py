@@ -561,6 +561,7 @@ def main():
     subnets_dict = [
         {
             "subnet": vlan["ipv4prefix"] + "/" + str(vlan["ipv4bitmask"]),
+            "user-context": { "vlan": vlan["name"] },
             "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
         }
         for vlan in vlans
