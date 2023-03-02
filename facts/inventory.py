@@ -556,11 +556,14 @@ def main():
         for ap in aps
     ]
 
-    # TODO: support generating id for each subnet block
-    # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
     subnets_dict = [
         {
             "subnet": vlan["ipv4prefix"] + "/" + str(vlan["ipv4bitmask"]),
+            # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
+            # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
+            # subnet ids must be greater than zero and less than 4294967295
+            "id": int(vlan["ipv4prefix"].replace('.', '')),
+            "user-context": { "vlan": vlan["name"] },
             "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
         }
         for vlan in vlans
