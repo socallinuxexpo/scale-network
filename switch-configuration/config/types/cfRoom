@@ -18,4 +18,4 @@ VLAN	cfSpeaker	2	// ge-0/0/{28,29}
 VLAN	cfCTF		1	// ge-0/0/30
 VLAN	HAM_BRIDGE	1	// ge-0/0/31						// HAM Link N6S to Expo
 VLAN	cfInstall	8	// ge-0/0/{32-39}
-RSRVD	8
+VLAN	cfSCALE-FAST	8	// ge-0/0/{40-47}
