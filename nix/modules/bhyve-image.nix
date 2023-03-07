@@ -46,7 +46,7 @@ in
     };
 
     boot.growPartition = true;
-
+    boot.initrd.availableKernelModules = [ "nvme" ];
     boot.loader.grub = {
       device = "/dev/sda";
     };
