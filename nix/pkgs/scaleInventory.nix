@@ -2,6 +2,7 @@
 , copyPathsToStore
 , lib
 , python310
+, python310Packages
 , jq
 }:
 let
@@ -15,7 +16,7 @@ stdenvNoCC.mkDerivation {
 
   name = "scaleInventory";
 
-  propagatedBuildInputs = [ python310 jq ];
+  propagatedBuildInputs = [ python310 python310Packages.jinja2 ];
 
   buildCommand = ''
     mkdir $out
@@ -26,6 +27,6 @@ stdenvNoCC.mkDerivation {
       cp -r $local_manifest .repo/$(stripHash $local_manifest; echo $strippedName)
     done
     cd $out/.repo/facts
-    python inventory.py | jq . > $out/config/kea.json
+    python inventory.py all $out/config
   '';
 }
