@@ -33,6 +33,7 @@
             ({ modulesPath, ... }: {
               imports = [
                 ./nix/modules/bhyve-image.nix
+                ./nix/machines/_common/users.nix
               ];
             });
           pkgs = nixpkgsFor.${system};
