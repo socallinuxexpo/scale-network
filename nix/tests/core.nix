@@ -2,7 +2,7 @@
   name = "core";
   nodes = {
     coreServer = { lib, ... }: {
-      imports = [ ../machines/core ];
+      imports = [ ../machines/core/master.nix ];
     } // {
       virtualisation.vlans = [ 1 ];
       virtualisation.graphics = false;

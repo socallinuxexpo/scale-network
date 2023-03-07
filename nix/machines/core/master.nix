@@ -18,14 +18,15 @@
     };
   };
 
+  imports =
+    [
+      ./common.nix
+    ];
+
   # disable legacy networking bits as recommended by:
   #  https://github.com/NixOS/nixpkgs/issues/10001#issuecomment-905532069
   #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
   networking = {
-    useDHCP = false;
-    useNetworkd = true;
-    firewall.allowedTCPPorts = [ 53 67 68 ];
-    firewall.allowedUDPPorts = [ 53 67 68 ];
     extraHosts = ''
       10.0.3.5 coreexpo.scale.lan
     '';
@@ -45,45 +46,16 @@
     };
   };
 
-  security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    ldns
-    bind
-    kea
-    scaleInventory
-  ];
-
-  environment.etc."bind/named.conf".source = config.services.bind.configFile;
-
-  systemd.services.bind =
-    let
-      # Get original config
-      cfg = config.services.bind;
-    in
-    {
-      serviceConfig.ExecStart = lib.mkForce "${cfg.package.out}/sbin/named -u named ${lib.strings.optionalString cfg.ipv4Only "-4"} -c /etc/bind/named.conf -f";
-    };
-
   services = {
-    resolved.enable = false;
-    openssh = {
-      enable = true;
-    };
-    kea = {
-      dhcp4 = {
-        enable = true;
-        configFile = "${pkgs.scaleInventory}/config/kea.json";
-      };
-    };
     bind = {
       enable = true;
-      cacheNetworks = [ "127.0.0.0/8" "10.0.0.0/8" "::1/128" ];
+      cacheNetworks = [ "::1/128" "127.0.0.0/8" "2001:470:f0fb::/48" "10.0.0.0/8" ];
       forwarders = [ "8.8.8.8" "8.8.4.4" ];
       zones =
         {
           "scale.lan." = {
             master = true;
+            slaves = [ "2001:470:f026:503::5" ];
             file = pkgs.writeText "named.scale.lan" (lib.strings.concatStrings [
               ''
                 $ORIGIN scale.lan.
@@ -103,6 +75,7 @@
           };
           "10.in-addr.arpa." = {
             master = true;
+            slaves = [ "2001:470:f026:503::5" ];
             file = pkgs.writeText "named-10.rev" (lib.strings.concatStrings [
               ''
                 $ORIGIN 10.in-addr.arpa.
@@ -123,6 +96,7 @@
           # 2001:470:f026::
           "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = true;
+            slaves = [ "2001:470:f026:503::5" ];
             file = pkgs.writeText "named-2001.470.f026-48.rev" (lib.strings.concatStrings [
               ''
                 $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.

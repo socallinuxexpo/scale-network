@@ -56,11 +56,18 @@
               ./nix/machines/massflash.nix
             ];
           };
-          core = nixpkgs.lib.nixosSystem {
+          coreMaster = nixpkgs.lib.nixosSystem {
             inherit system pkgs;
             modules = [
               common
-              ./nix/machines/core
+              ./nix/machines/core/master.nix
+            ];
+          };
+          coreSlave = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/core/slave.nix
             ];
           };
         });
