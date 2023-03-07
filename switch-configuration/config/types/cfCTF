@@ -1,3 +1,3 @@
 // CTF Table Switches -- All ports CTF VLAN, no trunks.
-VLAN	cfCTF		48	// ge-0/0/{0-47}
+VLAN	cfCTF		48	-	// ge-0/0/{0-47}
 

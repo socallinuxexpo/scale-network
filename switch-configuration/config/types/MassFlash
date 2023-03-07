@@ -1,49 +1,49 @@
 // Mass Flashing Switch Configuration
-TRUNK	ge-0/0/0	cfInfra
-TRUNK	ge-0/0/1	cfInfra
-TRUNK	ge-0/0/2	cfInfra
-TRUNK	ge-0/0/3	cfInfra
-TRUNK	ge-0/0/4	cfInfra
-TRUNK	ge-0/0/5	cfInfra
-TRUNK	ge-0/0/6	cfInfra
-TRUNK	ge-0/0/7	cfInfra
-TRUNK	ge-0/0/8	cfInfra
-TRUNK	ge-0/0/9	cfInfra
-TRUNK	ge-0/0/10	cfInfra
-TRUNK	ge-0/0/11	cfInfra
-TRUNK	ge-0/0/12	cfInfra
-TRUNK	ge-0/0/13	cfInfra
-TRUNK	ge-0/0/14	cfInfra
-TRUNK	ge-0/0/15	cfInfra
-TRUNK	ge-0/0/16	cfInfra
-TRUNK	ge-0/0/17	cfInfra
-TRUNK	ge-0/0/18	cfInfra
-TRUNK	ge-0/0/19	cfInfra
-TRUNK	ge-0/0/20	cfInfra
-TRUNK	ge-0/0/21	cfInfra
-TRUNK	ge-0/0/22	cfInfra
-TRUNK	ge-0/0/23	cfInfra
-TRUNK	ge-0/0/24	cfInfra
-TRUNK	ge-0/0/25	cfInfra
-TRUNK	ge-0/0/26	cfInfra
-TRUNK	ge-0/0/27	cfInfra
-TRUNK	ge-0/0/28	cfInfra
-TRUNK	ge-0/0/29	cfInfra
-TRUNK	ge-0/0/30	cfInfra
-TRUNK	ge-0/0/31	cfInfra
-TRUNK	ge-0/0/32	cfInfra
-TRUNK	ge-0/0/33	cfInfra
-TRUNK	ge-0/0/34	cfInfra
-TRUNK	ge-0/0/35	cfInfra
-TRUNK	ge-0/0/36	cfInfra
-TRUNK	ge-0/0/37	cfInfra
-TRUNK	ge-0/0/38	cfInfra
-TRUNK	ge-0/0/39	cfInfra
-TRUNK	ge-0/0/40	cfInfra
-TRUNK	ge-0/0/41	cfInfra
-TRUNK	ge-0/0/42	cfInfra
-TRUNK	ge-0/0/43	cfInfra
-TRUNK	ge-0/0/44	cfInfra
-TRUNK	ge-0/0/45	cfInfra
-TRUNK	ge-0/0/46	cfInfra
-TRUNK	ge-0/0/47	cfInfra
+TRUNK	ge-0/0/0	cfInfra		POE
+TRUNK	ge-0/0/1	cfInfra		POE
+TRUNK	ge-0/0/2	cfInfra		POE
+TRUNK	ge-0/0/3	cfInfra		POE
+TRUNK	ge-0/0/4	cfInfra		POE
+TRUNK	ge-0/0/5	cfInfra		POE
+TRUNK	ge-0/0/6	cfInfra		POE
+TRUNK	ge-0/0/7	cfInfra		POE
+TRUNK	ge-0/0/8	cfInfra		POE
+TRUNK	ge-0/0/9	cfInfra		POE
+TRUNK	ge-0/0/10	cfInfra		POE
+TRUNK	ge-0/0/11	cfInfra		POE
+TRUNK	ge-0/0/12	cfInfra		POE
+TRUNK	ge-0/0/13	cfInfra		POE
+TRUNK	ge-0/0/14	cfInfra		POE
+TRUNK	ge-0/0/15	cfInfra		POE
+TRUNK	ge-0/0/16	cfInfra		POE
+TRUNK	ge-0/0/17	cfInfra		POE
+TRUNK	ge-0/0/18	cfInfra		POE
+TRUNK	ge-0/0/19	cfInfra		POE
+TRUNK	ge-0/0/20	cfInfra		POE
+TRUNK	ge-0/0/21	cfInfra		POE
+TRUNK	ge-0/0/22	cfInfra		POE
+TRUNK	ge-0/0/23	cfInfra		POE
+TRUNK	ge-0/0/24	cfInfra		POE
+TRUNK	ge-0/0/25	cfInfra		POE
+TRUNK	ge-0/0/26	cfInfra		POE
+TRUNK	ge-0/0/27	cfInfra		POE
+TRUNK	ge-0/0/28	cfInfra		POE
+TRUNK	ge-0/0/29	cfInfra		POE
+TRUNK	ge-0/0/30	cfInfra		POE
+TRUNK	ge-0/0/31	cfInfra		POE
+TRUNK	ge-0/0/32	cfInfra		POE
+TRUNK	ge-0/0/33	cfInfra		POE
+TRUNK	ge-0/0/34	cfInfra		POE
+TRUNK	ge-0/0/35	cfInfra		POE
+TRUNK	ge-0/0/36	cfInfra		POE
+TRUNK	ge-0/0/37	cfInfra		POE
+TRUNK	ge-0/0/38	cfInfra		POE
+TRUNK	ge-0/0/39	cfInfra		POE
+TRUNK	ge-0/0/40	cfInfra		POE
+TRUNK	ge-0/0/41	cfInfra		POE
+TRUNK	ge-0/0/42	cfInfra		POE
+TRUNK	ge-0/0/43	cfInfra		POE
+TRUNK	ge-0/0/44	cfInfra		POE
+TRUNK	ge-0/0/45	cfInfra		POE
+TRUNK	ge-0/0/46	cfInfra		POE
+TRUNK	ge-0/0/47	cfInfra		POE

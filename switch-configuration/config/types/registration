@@ -1,19 +1,19 @@
 // Registration Desk Switch Template
-TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns,exRegistration
-TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns,exRegistration
+TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns,exRegistration	-
+TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN,exSigns,exRegistration	-
 RSRVD	6
-PTRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/11	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/12	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/13	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-PTRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST					// AP
-VLAN	exSigns		2					//ge-0/0/{16,17}
+TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/11	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/12	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/13	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST						POE	// AP
+VLAN	exSigns		2										-	//ge-0/0/{16,17}
 RSRVD	2
-VLAN	exRegistration	20					//ge-0/0/20 thru ge-0/0/39
+VLAN	exRegistration	20										-	//ge-0/0/20 thru ge-0/0/39
 RSRVD	7                   //ge-0/0/{40-46}
-VLAN	exInfra		1           //ge-0/0/47
+VLAN	exInfra		1           									-	//ge-0/0/47
 
 
