@@ -6,6 +6,7 @@
     } // {
       virtualisation.vlans = [ 1 ];
       virtualisation.graphics = false;
+      systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       systemd.network = {
         networks = lib.mkForce {
           "01-eth1" = {
@@ -27,15 +28,24 @@
         firewall.enable = false;
         interfaces.eth1.useDHCP = true;
       };
+      environment = {
+        systemPackages = with pkgs; [
+          ldns
+        ];
+      };
     };
-  };
 
+  };
   testScript = ''
     start_all()
-    # Kea needs a sec to startup so well sleep
     coreServer.wait_for_unit("systemd-networkd-wait-online.service")
     coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
     client1.wait_for_unit("systemd-networkd-wait-online.service")
     client1.wait_until_succeeds("ping -c 5 10.0.3.5")
+    # Have to wrap drill since retcode isnt necessarily 1 on query failure
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core1.scale.lan A)\"")
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core1.scale.lan AAAA)\"")
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x 10.0.3.5)\"")
   '';
 }
