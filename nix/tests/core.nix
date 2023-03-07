@@ -44,8 +44,8 @@
     client1.wait_until_succeeds("ping -c 5 10.0.3.5")
     # Have to wrap drill since retcode isnt necessarily 1 on query failure
     client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core1.scale.lan A)\"")
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core1.scale.lan AAAA)\"")
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
+    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
     client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x 10.0.3.5)\"")
   '';
 }
