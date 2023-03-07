@@ -38,7 +38,7 @@
       "10-lan" = {
         name = "enp0*";
         enable = true;
-        address = [ "10.0.3.5/24" "2001:470:f0fb:103::5/64" ];
+        address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
         gateway = [ "10.0.3.1" ];
       };
     };
@@ -119,12 +119,12 @@
               (builtins.readFile "${pkgs.scaleInventory}/config/db.ipv4.arpa.records")
             ]);
           };
-          # 2001:470:f0fb::
-          "b.f.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
+          # 2001:470:f026::
+          "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = true;
-            file = pkgs.writeText "named-2001.470.f0fb-48.rev" (lib.strings.concatStrings [
+            file = pkgs.writeText "named-2001.470.f026-48.rev" (lib.strings.concatStrings [
               ''
-                $ORIGIN b.f.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
+                $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
                 $TTL    86400
                 @ IN SOA coreexpo.scale.lan. admin.scale.lan. (
                 2014070201        ; serial number
