@@ -7,7 +7,10 @@ SCaLE specific text files to produce a sane inventory to ansible
 import ipaddress
 import json
 import math
+import os
 import re
+import sys
+import jinja2
 
 
 def getfilelines(filename, header=False, directory="./", building=None):
@@ -155,13 +158,12 @@ def isvalidip(addr):
 
 def ip4toptr(ip_address):
     """generate a split PTR for IPv4 and return it"""
-    splitip = re.split(r"\.", ipaddress.ip_address(ip_address).reverse_pointer)
-    return splitip[1] + "." + splitip[2] + "." + splitip[3]
+    return ipaddress.ip_address(ip_address).reverse_pointer
 
 
 def ip6toptr(ip_address):
     """generates a split PTR for IPv6 an returns it"""
-    return re.split(r"\.ip6", ipaddress.ip_address(ip_address).reverse_pointer)[0]
+    return ipaddress.ip_address(ip_address).reverse_pointer
 
 
 def dhcp6ranges(prefix, bitmask):
@@ -225,9 +227,11 @@ def populateswitches(switchesfile):
             roomalias(name)
             switches.append(
                 {
-                    "name": name,
+                    "name": name.lower(),
                     "num": elems[1],
                     "ipv6": elems[3],
+                    "ipv6ptr": ip6toptr(elems[3]),
+                    "fqdn": name.lower() + ".scale.lan",
                     "aliases": roomalias(name),
                 }
             )
@@ -252,8 +256,10 @@ def populaterouters(routersfile):
             continue
         routers.append(
             {
-                "name": elems[0],
+                "name": elems[0].lower(),
                 "ipv6": ipaddr,
+                "ipv6ptr": ip6toptr(ipaddr),
+                "fqdn": elems[0].lower() + ".scale.lan",
             }
         )
     return routers
@@ -277,12 +283,14 @@ def populateaps(apsfile):
             continue
         aps.append(
             {
-                "name": elems[0],
+                "name": elems[0].lower(),
                 "mac": elems[2],
                 "ipv4": ipaddr,
+                "ipv4ptr": ip4toptr(ipaddr),
                 "wifi2": elems[4],
                 "wifi5": elems[5],
                 "configver": elems[6],
+                "fqdn": elems[0].lower() + ".scale.lan",
             }
         )
     return aps
@@ -306,8 +314,10 @@ def populatepis(pisfile):
             continue
         pis.append(
             {
-                "name": elems[0],
+                "name": elems[0].lower(),
                 "ipv6": ipaddr,
+                "ipv6ptr": ip6toptr(ipaddr),
+                "fqdn": elems[0].lower() + ".scale.lan",
             }
         )
     return pis
@@ -322,7 +332,7 @@ def roomalias(name):
         comrooms = comrooms.replace("\n", "")
         rooms = re.split("-", comrooms)
         for room in rooms:
-            payload.append(room)
+            payload.append(f'rm{room}')
     return payload
 
 
@@ -344,152 +354,39 @@ def populateservers(serversfile, vlans):
         # unused server entries as well (where ip is blank)
         if not isvalidip(ipv6) or not isvalidip(ipv4):
             continue
-        ansiblerole = elems[4].rstrip()
+        serverrole = elems[4].rstrip()
         vlan = ""
         for vln in vlans:
             if ipv6.find(vln["ipv6prefix"]) == 0:
                 vlan = vln["name"]
                 building = vln["building"]
+
         servers.append(
             {
                 "name": elems[0],
                 "macaddress": elems[1],
+                "role": serverrole,
                 "ipv6": ipv6,
+                "ipv6ptr": ip6toptr(ipv6),
                 "ipv4": ipv4,
-                "ansiblerole": ansiblerole,
+                "ipv4ptr": ip4toptr(ipv4),
                 "vlan": vlan,
+                "fqdn": elems[0] + ".scale.lan",
                 "building": building,
             }
         )
-        if ansiblerole == "core":
-            for i, _ in enumerate(vlans):
-                vln = vlans[i]
-                if building == vln["building"]:
-                    vlans[i]["ipv6dns1"] = ipv6
-                    vlans[i]["ipv4dns1"] = ipv4
-                else:
-                    vlans[i]["ipv6dns2"] = ipv6
-                    vlans[i]["ipv4dns2"] = ipv4
     return servers
 
+def populatedhcpnameservers(servers, vlans):
+    coreservers = [x for x in servers if x['role'] == 'core']
+    for i, _ in enumerate(vlans):
+        vlans[i]["ipv6dns1"] = coreservers[0]['ipv4']
+        vlans[i]["ipv4dns1"] = coreservers[0]['ipv4']
+        if len(coreservers) > 1:
+            vlans[i]["ipv6dns2"] = coreservers[1]['ipv6']
+            vlans[i]["ipv4dns2"] = coreservers[1]['ipv4']
 
-def populateinv(listlist):
-    """populates the final inventory which will become the command's output"""
-    vlans = listlist[0]
-    switches = listlist[1]
-    servers = listlist[2]
-    routers = listlist[3]
-    aps = listlist[4]
-    pis = listlist[5]
-    ssh_args = "-o StrictHostKeyChecking=no -F /dev/null"
-    inv = {
-        "routers": {
-            "hosts": [],
-            "vars": {},
-        },
-        "servers": {
-            "hosts": [],
-            "vars": {},
-        },
-        "switches": {
-            "hosts": [],
-        },
-        "aps": {
-            "hosts": [],
-        },
-        "pis": {
-            "hosts": [],
-        },
-        "all": {
-            "vars": {
-                "ansible_ssh_common_args": ssh_args,
-                "ansible_python_interpreter": "/usr/bin/python3",
-            }
-        },
-        "_meta": {"hostvars": {}},
-    }
-    for switch in switches:
-        inv["switches"]["hosts"].append(switch["name"])
-        inv["_meta"]["hostvars"][switch["name"]] = {
-            "ipv6": switch["ipv6"],
-            "ipv6ptr": ip6toptr(switch["ipv6"]),
-            "fqdn": switch["name"] + ".scale.lan",
-            "num": switch["num"],
-            "aliases": switch["aliases"],
-        }
-    for apc in aps:
-        inv["aps"]["hosts"].append(apc["name"])
-        inv["_meta"]["hostvars"][apc["name"]] = {
-            "mac": apc["mac"],
-            "ipv4": apc["ipv4"],
-            "ipv4ptr": ip4toptr(apc["ipv4"]),
-            "ansible_host": apc["ipv4"],
-            "wifi2": apc["wifi2"],
-            "wifi5": apc["wifi5"],
-            "configver": apc["configver"],
-            "fqdn": apc["name"] + ".scale.lan",
-        }
-    for router in routers:
-        inv["routers"]["hosts"].append(router["name"])
-        inv["_meta"]["hostvars"][router["name"]] = {
-            "ipv6": router["ipv6"],
-            "ipv6ptr": ip6toptr(router["ipv6"]),
-            "fqdn": router["name"] + ".scale.lan",
-        }
-    for pii in pis:
-        inv["pis"]["hosts"].append(pii["name"])
-        inv["_meta"]["hostvars"][pii["name"]] = {
-            "ipv6": pii["ipv6"],
-            "ipv6ptr": ip6toptr(pii["ipv6"]),
-            "fqdn": pii["name"] + ".scale.lan",
-        }
-    for server in servers:
-        if server["ansiblerole"] not in inv.keys():
-            inv[server["ansiblerole"]] = {
-                "hosts": [],
-                "vars": {},
-            }
-        inv["servers"]["hosts"].append(server["name"])
-        inv[server["ansiblerole"]]["hosts"].append(server["name"])
-        inv["_meta"]["hostvars"][server["name"]] = {
-            "ansible_host": server["ipv4"],
-            "ipv6": server["ipv6"],
-            "ipv6ptr": ip6toptr(server["ipv6"]),
-            "ipv4": server["ipv4"],
-            "ipv4ptr": ip4toptr(server["ipv4"]),
-            "macaddress": server["macaddress"],
-            "vlan": server["vlan"],
-            "fqdn": server["name"] + ".scale.lan",
-            "building": server["building"],
-        }
-    inv["all"]["vars"]["vlans"] = vlans
-    return inv
-
-
-def main():
-    """command entry point"""
-
-    # Repository data files
-    swconfigdir = "../switch-configuration/config/"
-    vlansfile = "vlans"
-    switchesfile = "../switch-configuration/config/switchtypes"
-    serversfile = "../facts/servers/serverlist.csv"
-    routersfile = "../facts/routers/routerlist.csv"
-    apsfile = "../facts/aps/aplist.csv"
-    pisfile = "../facts/pi/pilist.csv"
-
-    # populate the device type lists
-    vlans = populatevlans(swconfigdir, vlansfile)
-    switches = populateswitches(switchesfile)
-    # servers = populateservers(serversfile, vlans)
-    # routers = populaterouters(routersfile)
-    aps = populateaps(apsfile)
-    # pis = populatepis(pisfile)
-
-    # build the master inventory and json dump it to stdout
-    # inv = populateinv([vlans, switches, servers, routers, aps, pis])
-    # print(json.dumps(inv))
-
+def generatekeaconfig(servers, aps, vlans, outputdir):
     kea_config = {
         # DHCPv4 configuration starts on the next line
         "Dhcp4": {
@@ -505,6 +402,10 @@ def main():
                 "persist": True,
                 "name": "/var/lib/kea/dhcp4.leases",
             },
+            "option-data": [{
+             "name": "domain-name-servers",
+             "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
+            }],
             "option-def": [
                 {
                     "name": "radio24-channel",
@@ -573,9 +474,87 @@ def main():
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
     kea_config["Dhcp4"]["reservations"] = reservations_dict
-    # key: d['accessPointDetailsDTO'][key] for key in keys} for d in s['queryResponse']['entity']]}
-    # print(json.dumps(vlans))
-    print(json.dumps(kea_config))
+    with open(f'{outputdir}/kea.json', 'w') as f:
+        f.write(json.dumps(kea_config, indent=2))
+
+
+def generatezones(switches,routers,pis,aps,servers, outputdir):
+    content=''
+    for batch in [switches, routers,pis,aps,servers]:
+        zonetemplate = jinja2.Template('''
+{% for item in batch -%}
+{% if item['ipv6'] -%}
+{{ item['name'] }}  IN  AAAA    {{ item['ipv6'] }}
+{% endif -%}
+{% if item['ipv4'] -%}
+{{ item['name'] }}  IN  A    {{ item['ipv4'] }}
+{% endif -%}
+{% if item['num'] -%}
+switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
+{% endif -%}
+{% for alias in item['aliases'] -%}
+{{ alias }} IN    CNAME   {{ item['fqdn'] }}.
+{% endfor -%}
+{% endfor -%}
+''')
+        content += zonetemplate.render(
+            batch=batch
+        )
+    with open(f'{outputdir}/db.scale.lan.records', "w") as f:
+        f.write(content)
+    # ipv4 and ipv6 ptr zones need to be in different zone files
+    for ip in ['ipv4','ipv6']:
+        content = ''
+        for batch in [switches, routers,pis,aps,servers]:
+            zonetemplate = jinja2.Template('''
+{% for item in batch -%}
+{%- set ptr = ip + 'ptr' -%}
+{% if item[ptr] -%}
+{{ item[ptr] }}.  IN  PTR    {{ item['fqdn'] }}.
+{% endif -%}
+{% endfor -%}
+''')
+            content += zonetemplate.render(
+                batch=batch,
+                ip=ip
+            )
+        with open(f'{outputdir}/db.{ip}.arpa.records', 'w') as f:
+            f.write(content)
+
+    return True
+
+def main():
+    """command entry point"""
+
+    # Repository data files
+    swconfigdir = "../switch-configuration/config/"
+    vlansfile = "vlans"
+    switchesfile = "../switch-configuration/config/switchtypes"
+    serversfile = "../facts/servers/serverlist.csv"
+    routersfile = "../facts/routers/routerlist.csv"
+    apsfile = "../facts/aps/aplist.csv"
+    pisfile = "../facts/pi/pilist.csv"
+
+    # populate the device type lists
+    vlans = populatevlans(swconfigdir, vlansfile)
+    switches = populateswitches(switchesfile)
+    servers = populateservers(serversfile, vlans)
+    routers = populaterouters(routersfile)
+    aps = populateaps(apsfile)
+    pis = populatepis(pisfile)
+
+    subcomm = sys.argv[1]
+    outputdir = sys.argv[2]
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+
+    if subcomm == 'kea':
+        generatekeaconfig(servers,aps,vlans,outputdir)
+    elif subcomm == 'nsd':
+        generatezones(switches,routers,pis,aps,servers,outputdir)
+    elif subcomm == 'all':
+        generatekeaconfig(servers,aps,vlans,outputdir)
+        generatezones(switches,routers,pis,aps,servers,outputdir)
 
 
 if __name__ == "__main__":
