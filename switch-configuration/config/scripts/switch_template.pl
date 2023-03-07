@@ -8,6 +8,8 @@
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
 
+##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
+
 use strict;
 use integer;
 use Scalar::Util qw/reftype/;
@@ -957,8 +959,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     destination-address {
-                        2001:470:f0fb:103::/64;
-                        2001:470:f0fb:503::/64;
+                        2001:470:f026:103::/64;
+                        2001:470:f026:503::/64;
                     }
                     destination-port domain;
                 }
@@ -969,7 +971,7 @@ sub VV_init_firewall
           term ping {
               from {
                   destination-address {
-                        2001:470:f0fb::/48
+                        2001:470:f026::/48
                   }
                   icmp-type [ echo-reply echo-request packet-too-big time-exceeded ];
               }
@@ -980,8 +982,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     destination-address {
-                        2001:470:f0fb:103::/64;
-                        2001:470:f0fb:503::/64;
+                        2001:470:f026:103::/64;
+                        2001:470:f026:503::/64;
                     }
                     destination-port [ bootps dhcp ];
                 }
@@ -992,7 +994,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     destination-address {
-                        2001:470:f0fb::/48;
+                        2001:470:f026::/48;
                         fc00::/7;
                     }
                 }
@@ -1015,8 +1017,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     source-address {
-                        2001:470:f0fb:103::/64;
-                        2001:470:f0fb:503::/64;
+                        2001:470:f026:103::/64;
+                        2001:470:f026:503::/64;
                     }
                     source-port domain;
                 }
@@ -1027,8 +1029,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     source-address {
-                        2001:470:f0fb:103::/64;
-                        2001:470:f0fb:503::/64;
+                        2001:470:f026:103::/64;
+                        2001:470:f026:503::/64;
                     }
                     source-port [ bootps dhcp ];
                 }
@@ -1039,7 +1041,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     source-address {
-                        2001:470:f0fb::/48;
+                        2001:470:f026::/48;
                         fc00::/7;
                     }
                 }
@@ -1297,16 +1299,16 @@ EOF
             }
             server-group {
                 Conference {
-                    2001:470:f0fb:503::5;
+                    2001:470:f026:503::5;
                 }
                 Expo {
-                    2001:470:f0fb:103::5;
+                    2001:470:f026:103::5;
                 }
                 Hilton {
-                    2001:470:f0fb:103::5;
+                    2001:470:f026:103::5;
                 }
                 AV {
-                    2001:470:f0fb:105::10;
+                    2001:470:f026:105::10;
                 }
             }
             active-server-group $active_srv_grp;
@@ -1356,8 +1358,8 @@ EOF
     $VV_protocols .= <<EOF;
         interface $_ {
             other-stateful-configuration;
-            dns-server-address 2001:470:f0fb:103::5;
-            dns-server-address 2001:470:f0fb:103::15;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:103::15;
             prefix $pfx {
                 on-link;
                 autonomous;
@@ -1517,8 +1519,8 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-        2001:470:f0fb:103::/64;
-        2001:470:f0fb:503::/64;
+        2001:470:f026:103::/64;
+        2001:470:f026:503::/64;
         }
     }
 }
