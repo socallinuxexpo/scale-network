@@ -10,6 +10,8 @@
 
 ##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
 
+##FIXME## Add a PS color block to PoE ports
+
 use strict;
 use integer;
 use Scalar::Util qw/reftype/;
@@ -309,6 +311,7 @@ sub build_interfaces_from_config
   ##FIXME## There are special excpetions coded for FIBER ports at ge-0/1/[0-3] to partially compensate
   ##FIXME## This is adequate for our current switch inventory which does not include any multi-U switches or chassis.
   ##FIXME## Fiber_Left_Edge (Position of Fiber Port List) is currently above 4th port grouping. Should be to right, but involves expanding sticker size to accommodate
+  ##FIXME## Draw boxes around all ports, not just the configured ones
   my $hostname = shift @_;
   # Retrieve Switch Type Information
   my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
@@ -491,10 +494,23 @@ EOF
     my @tokens = split(/\t/, $_); # Split line into tokens
     my $cmd = shift(@tokens);     # Command is always first token.
     # Handle POE Flag Hack (P<cmd>)
-    if ($cmd =~ /^PTRUNK/)
+    if ($tokens[2] =~ /poe/i)
     {
       $POEFLAG = 1;
       $cmd =~ s/^P//;
+    }
+    elsif ($tokens[2] !~ /^-$/)
+    {
+      if ($cmd =~ /^TRUNK$/ || $cmd =~ /^VLAN$/)
+      {
+	my $i=0;
+        foreach(@tokens)
+        {
+          debug(9, "Token[$i] = \"$tokens[$i]\"\n");
+          $i++;
+        }
+        die "Error in configuration for $Type at $_ -- Invalid POE specification ($tokens[2])";
+      }
     }
     debug(9, "\tCommand: $cmd ", join(",", @tokens), "\n");
     if ($cmd eq "RSRVD")
@@ -595,6 +611,7 @@ EOF
       {
           debug(9, "\t\tMember ge-0/0/$port remaining $count\n");
           $MEMBERS.= "        member ge-0/0/$port;\n";
+          push @POEPORTS, "ge-0/0/$port" if ($POEFLAG);
           $portmap_PS .= <<EOF;
 ($vlan) 0.75 0.75 1 $port DrawPort
 EOF

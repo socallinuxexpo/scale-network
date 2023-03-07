@@ -1,22 +1,22 @@
 // Room Switch Template -- All conference rooms Conference Center
-TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
+TRUNK	ge-0/0/0	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/1	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
 RSRVD	4
-VLAN	hiRegistration	2	// ge-0/0/{6-7}
-TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone
-VLAN	hiSigns		4	// ge-0/0/{18-21}
-VLAN	hiAVLAN		6	// ge-0/0/{22-27}
-VLAN	hiSpeaker	2	// ge-0/0/{28,29}
-VLAN	hiCTF		1	// ge-0/0/30
+VLAN	hiRegistration	2														-	// ge-0/0/{6-7}
+TRUNK	ge-0/0/8	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/9	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/10	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/11	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/12	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/13	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
+VLAN	hiSigns		4														-	// ge-0/0/{18-21}
+VLAN	hiAVLAN		6														POE	// ge-0/0/{22-27}
+VLAN	hiSpeaker	2														-	// ge-0/0/{28,29}
+VLAN	hiCTF		1														-	// ge-0/0/30
 RSRVD	1			// ge-0/0/31 (was HAM_BRIDGE)
-VLAN	hiInstall	8	// ge-0/0/{32-39}
+VLAN	hiInstall	8														-	// ge-0/0/{32-39}
 RSRVD	8

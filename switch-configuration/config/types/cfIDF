@@ -1,25 +1,25 @@
 // Conference Center IDF Switch Configuration
 TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE // Link to CF Router
+			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	// Link to CF Router
 TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE // Link to CF Router
-TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/5	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/6	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/7	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/8	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/9	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/10	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/11	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/12	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/13	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/14	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns
-VLAN	cfCTF		6	// ge-0/0/{18-23}
-VLAN	cfInfra		1	// ge-0/0/24 -- Conference Center Bhyve Server
-VLAN	cfAVLAN		1	// ge-0/0/25 -- Conference Center AV Server
+			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	// Link to CF Router
+TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/5	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/6	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/7	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/8	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/9	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/10	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/11	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/12	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/13	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/14	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-
+VLAN	cfCTF		6								-	/ ge-0/0/{18-23}
+VLAN	cfInfra		1								-	// ge-0/0/24 -- Conference Center Bhyve Server
+VLAN	cfAVLAN		1								-	// ge-0/0/25 -- Conference Center AV Server
 RSRVD	22
