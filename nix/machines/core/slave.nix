@@ -36,18 +36,18 @@
           "scale.lan." = {
             master = false;
             masters = [ "2001:470:f026:103::5" ];
-            file = "/var/named/sec-scale.lan";
+            file = "/var/run/named/sec-scale.lan";
           };
           "10.in-addr.arpa." = {
             master = false;
             masters = [ "2001:470:f026:103::5" ];
-            file = "/var/named/sec-10.rev";
+            file = "/var/run/named/sec-10.rev";
           };
           # 2001:470:f026::
           "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = false;
             masters = [ "2001:470:f026:103::5" ];
-            file = "/var/named/sec-2001.470.f026-48.rev";
+            file = "/var/run/named/sec-2001.470.f026-48.rev";
           };
         };
     };
