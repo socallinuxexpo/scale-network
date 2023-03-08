@@ -4,7 +4,6 @@ CSV validation library
 '''
 import ipaddress
 import re
-
 from os import listdir
 from os.path import isfile, join
 
@@ -142,11 +141,11 @@ def test_datafile(delimiter, meta):
         if str(meta["count"])[-1] == "+":
             count = str(meta["count"])[:-1]
             if len(elems) < int(count):
-                return False, "insufficient col count: " + len(elems) + \
-                   " wanted " + meta["count"] + "at line " + str(linenum)
+                return False, "insufficient col count: " + str(len(elems)) + \
+                   " wanted " + str(meta["count"]) + "at line " + str(linenum)
         elif len(elems) != meta["count"]:
-            return False, "invalid col count: " + len(elems) + " wanted " + \
-                meta["count"] + " at line " + str(linenum)
+            return False, "invalid col count: " + str(len(elems)) + " wanted " + \
+                str(meta["count"]) + " at line " + str(linenum)
         # skip validators for header row
         if meta["header"] and linenum == 0:
             continue
