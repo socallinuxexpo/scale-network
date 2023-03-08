@@ -26,9 +26,10 @@
         inherit (nixpkgsFor.${system}) scaleTests scaleInventory;
       });
 
-      nixosConfigurations = forAllSystems (system:
+      nixosConfigurations =
         let
           # All scale common modules
+          system = "x86_64-linux";
           common =
             ({ modulesPath, ... }: {
               imports = [
@@ -71,7 +72,7 @@
               ./nix/machines/core/slave.nix
             ];
           };
-        });
+        };
 
       # Like nix-shell
       # Good example: https://github.com/tcdi/pgx/blob/master/flake.nix
