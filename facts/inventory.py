@@ -12,7 +12,6 @@ import re
 import sys
 import jinja2
 
-
 def getfilelines(filename, header=False, directory="./", building=None):
     """returns the contents of a file as lines
     omits the top line for git beautification if the header boolean is set to true
@@ -466,6 +465,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "id": int(vlan["ipv4prefix"].replace('.', '')),
             "user-context": { "vlan": vlan["name"] },
             "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
+            "option-data": [{ "name": "routers", "data": str(vlan["ipv4router"]) }],
         }
         for vlan in vlans
         if vlan["ipv4bitmask"]
