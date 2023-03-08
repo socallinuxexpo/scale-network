@@ -22,6 +22,15 @@
         enable = true;
         address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
         gateway = [ "10.128.3.1" ];
+        # TODO: Causes double entry of [Network] in .network file
+        # Need to look into unifying into one block
+        extraConfig = ''
+          [Network]
+          IPv6Token=static:::5
+          LLDP=true
+          EmitLLDP=true;
+          IPv6PrivacyExtensions=false
+        '';
       };
     };
   };
