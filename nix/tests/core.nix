@@ -42,6 +42,7 @@
     coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
     client1.wait_for_unit("systemd-networkd-wait-online.service")
     client1.wait_until_succeeds("ping -c 5 10.0.3.5")
+    client1.wait_until_succeeds("ip route show | grep default | grep -w 10.0.3.1")
     # Have to wrap drill since retcode isnt necessarily 1 on query failure
     client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
     client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
