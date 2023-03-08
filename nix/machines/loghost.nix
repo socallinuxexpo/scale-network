@@ -10,6 +10,8 @@
 
   environment.systemPackages = with pkgs; [
     rsyslog
+    vim
+    git
   ];
 
   # Easy test of the service using logger
