@@ -23,6 +23,8 @@
     bind
     kea
     scaleInventory
+    vim
+    git
   ];
 
   environment.etc."bind/named.conf".source = config.services.bind.configFile;
