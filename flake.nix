@@ -33,6 +33,7 @@
             ({ modulesPath, ... }: {
               imports = [
                 ./nix/modules/bhyve-image.nix
+                ./nix/machines/_common/users.nix
               ];
             });
           pkgs = nixpkgsFor.${system};
@@ -56,11 +57,18 @@
               ./nix/machines/massflash.nix
             ];
           };
-          core = nixpkgs.lib.nixosSystem {
+          coreMaster = nixpkgs.lib.nixosSystem {
             inherit system pkgs;
             modules = [
               common
-              ./nix/machines/core
+              ./nix/machines/core/master.nix
+            ];
+          };
+          coreSlave = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/core/slave.nix
             ];
           };
         });

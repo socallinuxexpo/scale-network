@@ -5,19 +5,6 @@
 
   boot.kernelParams = [ "console=ttyS0" ];
 
-  # TODO: How to handle to the root password
-  users.extraUsers.root.password = "";
-
-  # TODO: Consume users from facts/keys instead of this
-  users.users = {
-    rherna = {
-      isNormalUser = true;
-      uid = 2005;
-      extraGroups = [ "wheel" ];
-      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq" ];
-    };
-  };
-
   # TODO: How to handle sudo esculation
   security.sudo.wheelNeedsPassword = false;
 
