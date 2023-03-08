@@ -1,6 +1,6 @@
 # Bhyve Hypervisor
 
-We have two hypervisor hosts running bhyve and FreeBSD: `bhyve1` and `bhyve2`
+We have two hypervisor hosts running bhyve and FreeBSD for Scale
 
 ## Prep Install Media
 
@@ -10,10 +10,7 @@ Add the following to a fresh version of FreeBSD `13.1`:
 SHA256 (FreeBSD-13.1-RELEASE-amd64-memstick.img) = f73ce6526ccd24dfe2e79740f6de1ad1a304c854bfcff03a4d5b0de35d69d4a0
 ```
 
-dd the image to a flash drive:
-
-```
-```
+dd the image to a flash drive
 
 Mount the flash drive and modify `/boot/loader.conf` for serial support:
 
@@ -63,7 +60,7 @@ EOF
 Setup interfaces in `/etc/rc.conf`. (Example for `conference` bhyve host):
 
 ```
-hostname="bhyve1"
+hostname="bhyveexpo"
 # Leave this if we need DHCP
 #ifconfig_igb0="DHCP"
 ifconfig_igb0="inet 10.0.3.20 netmask 255.255.255.0"
@@ -169,23 +166,6 @@ Grab the `Ubuntu 18.04` image that we'll be using for the linux guests:
 mkdir ~/imgs
 cd ~/imgs
 
-Lets get 18.04:
-```
-fetch http://cloud-images.ubuntu.com/bionic/20220713/bionic-server-cloudimg-amd64.img
-fetch http://cloud-images.ubuntu.com/bionic/20220713/SHA256SUMS
-shasum -a 256 -c SHA256SUMS --ignore-missing
-qemu-img convert -f qcow2 -O raw bionic-server-cloudimg-amd64.img bionic-server-cloudimg-amd64.raw
-```
-> NOTE: At the time of doing this the SHA256SUM for this img was
-> ceed4742cf9b21144a4719be01278892dcdcf2f2e2c5d5c82dba441195c2881f
-> Ubuntu only keeps about a months worth of images at this URL so
-> dont expect to find the same images :(
-
-Once converted the SHA256 bionic-server-cloudimg-amd64.raw have conversion:
-
-```
-fc095644b642cdd47df02401aefa2acf70b601cedc8856a1f330eb89150f7348  bionic-server-cloudimg-amd64.raw
-```
 
 Lets get 20.04:
 ```
@@ -206,16 +186,21 @@ Once converted the SHA256 focal-server-cloudimg-amd64.raw have conversion:
 Add the default vm templates and mix in some of the ones from this repo:
 
 ```
-cp /usr/local/share/examples/vm-bhyve/* /zroot/vm/.templates/
-cp ~/scale-network/ansible/roles/bhyve/files/*.conf /zroot/vm/.templates/
+cp ~/scale-network/utilities/bhyve/templates/*.conf /zroot/vm/.templates/
 ```
+> Example templates can be found in: /usr/local/share/examples/vm-bhyve/
 
-Add all admin keys to `~/.ssh/authorized_keys`:
+Adding all ssh keys for the tech team to authorized_keys:
 
 ```
 mkdir ~/.ssh
 chmod 700 ~/.ssh
 cat ~/scale-network/facts/keys/*.pub > ~/.ssh/authorized_keys
+```
+
+Add `admin` key to for vm default ssh key:
+
+```
 cat ~/scale-network/facts/keys/admin_id_ed25519.pub > ~/authorized_key_bootstrap
 ```
 > NOTE: Theres currently a limitation on cloudinit can only use a single ssh-key
