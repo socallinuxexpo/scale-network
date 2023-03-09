@@ -19,7 +19,7 @@ Rm101-102	1	503	2001:470:f026:503::200:1	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5
 NW-IDF		2	103	2001:470:f026:103::200:2	exIDF		F.1		Loud		ex4200-48p	00:26:88:60:79:7f
 NE-IDF		3	103	2001:470:f026:103::200:3	exIDF		C.1		Loud		ex4200-48p	00:26:88:6e:ba:ff
 BallroomC	4	103	2001:470:f026:103::200:4	exRoom		C.9		Normal		ex4200-48p	00:26:88:7d:fb:7f
-SpareC		50	103	2001:470:f026:103::200:50	exRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:aa:ff
+SpareC		5	103	2001:470:f026:103::200:50	exRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:aa:ff
 ExpoIDF		6	103	2001:470:f026:103::200:6	exIDF		X.1		Loud		ex4200-48p	00:26:88:7d:d3:7f
 BallroomF	7	103	2001:470:f026:103::200:7	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b6:ff
 Rm103		8	503	2001:470:f026:503::200:8	cfRoom		I.9		Quiet		ex4200-48p	00:26:88:7d:dd:ff
@@ -64,7 +64,7 @@ CTF5		46	504	2001:470:f026:504::200:46	cfCTF		IC.8		Loud		ex4200-48p	00:26:88:7f
 CTF6		47	504	2001:470:f026:504::200:47	cfCTF		IC.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
 MassFlash	48	103	2001:470:f026:103::200:48	MassFlash	Z.9		??		ex4200-48p	84:18:88:ac:d7:7f
 SpareB		49	103	2001:470:f026:103::200:49	cfRoom		Z.9		??		ex4200-48p	84:18:88:ab:df:ff
-BallroomDE	5	103	2001:470:f026:103::200:5	exRoom		F.9		??		ex4200-48p	84:18:88:ad:4e:ff
+BallroomDE	50	103	2001:470:f026:103::200:5	exRoom		F.9		??		ex4200-48p	84:18:88:ad:4e:ff
 SpareD		51	103	2001:470:f026:103::200:51	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:91:46:3f
 SpareE		52	103	2001:470:f026:103::200:52	cfRoom		Z.9		??		ex4200-24t	28:c0:da:31:71:ff
 SpareF		53	103	2001:470:f026:103::200:53	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:83:5c:ff
