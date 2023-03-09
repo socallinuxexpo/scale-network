@@ -72,6 +72,13 @@
               ./nix/machines/core/slave.nix
             ];
           };
+          signs = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/signs.nix
+            ];
+          };
         };
 
       # Like nix-shell

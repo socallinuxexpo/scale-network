@@ -36,6 +36,9 @@
     in
     {
       serviceConfig.ExecStart = lib.mkForce "${cfg.package.out}/sbin/named -u named ${lib.strings.optionalString cfg.ipv4Only "-4"} -c /etc/bind/named.conf -f";
+      restartTriggers = [
+        cfg.configFile
+      ];
     };
 
   services = {
