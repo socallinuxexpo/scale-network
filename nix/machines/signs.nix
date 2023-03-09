@@ -18,7 +18,7 @@
   virtualisation.oci-containers = {
     containers.scale-signs = {
       environmentFiles = [ /run/secrets/scale-sign-secrets.env ];
-      image = "sarcasticadmin/scale-signs";
+      image = "sarcasticadmin/scale-signs:1f66471";
       ports = [ "80:80" ];
       extraOptions = [
         "--network=host"
