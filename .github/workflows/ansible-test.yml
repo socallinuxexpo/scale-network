@@ -8,6 +8,7 @@ on:
       - 'ansible/**'
       - 'facts/**'
       - 'tests/**'
+      - 'switch-configuration/config/**'
   push:   # This is only run when PRs are merged into master
     branches:
       - master

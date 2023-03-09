@@ -83,12 +83,19 @@ def isintorempty(val):
 
 def isvalidhierarchy(val):
     '''test for valid switch hierarchy'''
-    pattern = r"^([A-Z][.][0-9])$"
+    pattern = r"^([A-Z]+[.][0-9])$"
     result = re.match(pattern, val)
     if result:
         return True
     return False
 
+def isvalid_p_o_e(val):
+    '''test for valid POE flag'''
+    pattern = r"^(POE)|(-)$"
+    result = re.match(pattern, val)
+    if result:
+        return True
+    return False
 
 def isvalidnoiselevel(val):
     '''test for valid noise level [Quiet, Normal, Loud]'''

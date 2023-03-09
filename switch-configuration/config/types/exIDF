@@ -23,12 +23,24 @@ TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
-TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
+TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
+            		exAVLAN, \
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
 TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
 TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
 TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP

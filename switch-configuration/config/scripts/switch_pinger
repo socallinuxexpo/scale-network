@@ -59,6 +59,7 @@ foreach(sort(keys(%Hierarchy)))
 {
     next if ($_ eq "Z"); # Skip hierarchy Z
     my $last_status = 0;
+    my $last_status_level = 0;
     print "Group $_\n";
     for (my $i = 0; $i < 10; $i++)
     {
@@ -70,7 +71,7 @@ foreach(sort(keys(%Hierarchy)))
             printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
             debug(9, "Pinging ${$sw}[1]\n");
 	    my $r;
-            if ($last_status) {
+            if ($last_status && $last_status_level < $i) {
                 print "\t..SKIPPED..\n";
                 next;
             }
@@ -98,6 +99,7 @@ foreach(sort(keys(%Hierarchy)))
                 print (($rc) ? "..down..($rc)" : "...OK...");
                 $status{$_}{$i} = $rc;
                 $last_status = $rc;
+                $last_status_level = $i;
             }
             print "\n";
         }
