@@ -165,7 +165,7 @@ Grab the `Ubuntu 18.04` image that we'll be using for the linux guests:
 ```
 mkdir ~/imgs
 cd ~/imgs
-
+```
 
 Lets get 20.04:
 ```
