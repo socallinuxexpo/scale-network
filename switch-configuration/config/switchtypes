@@ -1,7 +1,7 @@
 //Switch Definitions
 //
 // Hierarchy Key (PCC):
-// I = Conference Center, C = Fed from Ballroom C (NE) IDF, F = Fed from Ballroom F (NW) IDF, X = Fed from Expo IDF (near Reg.), W = Fed from Catwalk
+// I = Conference Center, IC = CTF Switch Hierarchy. C = Fed from Ballroom C (NE) IDF, F = Fed from Ballroom F (NW) IDF, X = Fed from Expo IDF (near Reg.), W = Fed from Catwalk
 // Hilton Hierarchy Key:
 // M = MDF/Server Room
 // 	L = TTLB (IDF Behind Pacific on Lobby Level) (primarily Expo)
@@ -19,7 +19,7 @@ Rm101-102	1	503	2001:470:f026:503::200:1	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5
 NW-IDF		2	103	2001:470:f026:103::200:2	exIDF		F.1		Loud		ex4200-48p	00:26:88:60:79:7f
 NE-IDF		3	103	2001:470:f026:103::200:3	exIDF		C.1		Loud		ex4200-48p	00:26:88:6e:ba:ff
 BallroomC	4	103	2001:470:f026:103::200:4	exRoom		C.9		Normal		ex4200-48p	00:26:88:7d:fb:7f
-BallroomDE	5	103	2001:470:f026:103::200:5	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:aa:ff
+SpareC		50	103	2001:470:f026:103::200:50	exRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:aa:ff
 ExpoIDF		6	103	2001:470:f026:103::200:6	exIDF		X.1		Loud		ex4200-48p	00:26:88:7d:d3:7f
 BallroomF	7	103	2001:470:f026:103::200:7	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b6:ff
 Rm103		8	503	2001:470:f026:503::200:8	cfRoom		I.9		Quiet		ex4200-48p	00:26:88:7d:dd:ff
@@ -37,14 +37,14 @@ Rm211		19	503	2001:470:f026:503::200:19	cfRoom		I.9		Normal		ex4200-48p	00:26:88
 Rm104		20	503	2001:470:f026:503::200:20	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5:39:7e:7f
 NOC		21	503	2001:470:f026:503::200:21	cfNOC		I.2		Normal		ex4200-48p	00:26:88:7e:25:ff
 ExpoB1		22	103	2001:470:f026:103::200:22	Booth		W.9		Loud		ex4200-48p	00:26:88:6e:bd:ff
-CTF1		23	504	2001:470:f026:504::200:23	cfCTF		I.4		Normal		ex4200-48p	b0:c6:9a:6c:0d:7f
+CTF1		23	504	2001:470:f026:504::200:23	cfCTF		IC.4		Normal		ex4200-48p	b0:c6:9a:6c:0d:7f
 ExpoC1		24	103	2001:470:f026:103::200:24	Booth		W.9		Loud		ex4200-48p	00:26:88:6e:c2:ff
 Rm106		25	503	2001:470:f026:503::200:25	cfRoom		I.9		Quiet		ex4200-48p	00:26:88:60:bc:ff
-CTF2		26	504	2001:470:f026:504::200:26	cfCTF		I.5		Normal		ex4200-48p	00:26:88:7f:27:7f
-CTF3		27	504	2001:470:f026:504::200:27	cfCTF		I.6		Normal		ex4200-48p	2c:21:72:95:e2:7f
+CTF2		26	504	2001:470:f026:504::200:26	cfCTF		IC.5		Normal		ex4200-48p	00:26:88:7f:27:7f
+CTF3		27	504	2001:470:f026:504::200:27	cfCTF		IC.6		Normal		ex4200-48p	2c:21:72:95:e2:7f
 ExpoA2		28	103	2001:470:f026:103::200:28	Booth		W.9		Loud		ex4200-48p	00:26:88:6e:c6:ff
 ExpoB2		29	103	2001:470:f026:103::200:29	Booth		W.9		Loud		ex4200-48p	28:c0:da:33:38:7f
-CTF4		30	504	2001:470:f026:504::200:30	cfCTF		I.7		Normal		ex4200-48p	00:26:88:7e:36:7f
+CTF4		30	504	2001:470:f026:504::200:30	cfCTF		IC.7		Normal		ex4200-48p	00:26:88:7e:36:7f
 Rm107		31	503	2001:470:f026:503::200:31	cfRoom		I.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
 RegDesk		32	103	2001:470:f026:103::200:32	registration	X.9		Normal		ex4200-48p	00:26:88:7a:76:ff
 ExpoC2		33	103	2001:470:f026:103::200:33	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:f8:7f
@@ -60,11 +60,11 @@ ExpoA5		42	103	2001:470:f026:103::200:42	Booth		W.9		Normal		ex4200-48p	00:26:88
 ExpoB5		43	103	2001:470:f026:103::200:43	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:1b:ff
 ExpoC5		44	103	2001:470:f026:103::200:44	Booth		W.9		Loud		ex4200-48p	00:26:88:7c:41:7f
 ExpoAW		45	103	2001:470:f026:103::200:45	Booth		W.9		Normal		ex4200-48p	00:26:88:6e:b1:ff
-CTF5		46	504	2001:470:f026:504::200:46	cfCTF		I.8		Loud		ex4200-48p	00:26:88:7f:0e:7f
-CTF6		47	504	2001:470:f026:504::200:47	cfCTF		I.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
+CTF5		46	504	2001:470:f026:504::200:46	cfCTF		IC.8		Loud		ex4200-48p	00:26:88:7f:0e:7f
+CTF6		47	504	2001:470:f026:504::200:47	cfCTF		IC.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
 MassFlash	48	103	2001:470:f026:103::200:48	MassFlash	Z.9		??		ex4200-48p	84:18:88:ac:d7:7f
 SpareB		49	103	2001:470:f026:103::200:49	cfRoom		Z.9		??		ex4200-48p	84:18:88:ab:df:ff
-SpareC		50	103	2001:470:f026:103::200:50	cfRoom		Z.9		??		ex4200-48p	84:18:88:ad:4e:ff
+BallroomDE	5	103	2001:470:f026:103::200:5	exRoom		F.9		??		ex4200-48p	84:18:88:ad:4e:ff
 SpareD		51	103	2001:470:f026:103::200:51	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:91:46:3f
 SpareE		52	103	2001:470:f026:103::200:52	cfRoom		Z.9		??		ex4200-24t	28:c0:da:31:71:ff
 SpareF		53	103	2001:470:f026:103::200:53	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:83:5c:ff
