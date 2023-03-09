@@ -5,3 +5,4 @@ monitoring1,58:9c:fc:07:84:4b,2001:470:f026:103::6,10.0.3.6,monitoring
 automation1,58:9c:fc:05:4a:f9,2001:470:f026:103::7,10.0.3.7,automation
 bhyveexpo,0c:c4:7a:d9:51:a6,2001:470:f026:103::20,10.0.3.20,bhyve
 bhyveconf,02:d7:ea:6f:f5:0b,2001:470:f026:503::20,10.128.3.20,bhyve
+tftp,58:9c:fc:0e:cb:90,2001:470:f026:503::10,10.128.3.10,bhyve
