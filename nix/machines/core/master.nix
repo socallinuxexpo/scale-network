@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-
+let
+  zoneSerial = "2023030802";
+in
 {
 
   imports =
@@ -45,7 +47,7 @@
                 $ORIGIN scale.lan.
                 $TTL    86400
                 @ IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                2014070201        ; serial number
+                ${zoneSerial}           ; serial number
                 3600                    ; refresh
                 900                     ; retry
                 1209600                 ; expire
@@ -65,7 +67,7 @@
                 $ORIGIN 10.in-addr.arpa.
                 $TTL    86400
                 10.in-addr.arpa. IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                2014070201        ; serial number
+                ${zoneSerial}           ; serial number
                 3600                    ; refresh
                 900                     ; retry
                 1209600                 ; expire
@@ -86,7 +88,7 @@
                 $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
                 $TTL    86400
                 @ IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                2014070201        ; serial number
+                ${zoneSerial}           ; serial number
                 3600                    ; refresh
                 900                     ; retry
                 1209600                 ; expire
