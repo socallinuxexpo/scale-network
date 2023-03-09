@@ -51,4 +51,11 @@
     dhcpcd.enable = false;
     nameservers = [ "10.128.3.5" "10.0.3.5" "2001:470:f026:103::5/64" "2001:470:f026:503::5/64" ];
   };
+
+  services = {
+    openssh = {
+      enable = true;
+    };
+  };
+
 }
