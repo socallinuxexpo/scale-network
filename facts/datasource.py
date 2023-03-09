@@ -89,7 +89,7 @@ def isvalidhierarchy(val):
         return True
     return False
 
-def isvalidPOE(val):
+def isvalid_p_o_e(val):
     '''test for valid POE flag'''
     pattern = r"^(POE)|(-)$"
     result = re.match(pattern, val)
