@@ -5,8 +5,9 @@
 ### Prereq
 
 1. Connect an ethernet cable from your workstation's ethernet port to one
-   of the LAN (not WAN) ports on the router.
-2. Set  static ip in `192.168.1.1/24` on your workstations ethernet port.
+   of the LAN (not WAN) ports on the router.  The router will be on
+   192.168.1.1.
+2. Set static ip in `192.168.1.5/24` on your workstation's ethernet port.
 3. Create symlink to `.img` due to tftp being picky about long filenames:
 
 ```sh
