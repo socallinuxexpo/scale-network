@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  zoneSerial = "2023030900";
+  zoneSerial = "2023030901";
 in
 {
 
