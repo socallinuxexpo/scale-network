@@ -10,6 +10,28 @@
 
   networking.firewall.allowedTCPPorts = [ 80 ];
 
+  systemd.network = {
+    enable = true;
+    networks = {
+      "10-lan" = {
+        name = "enp0*";
+        enable = true;
+        address = [ "10.128.3.12/24" "2001:470:f026:503::12/64" ];
+        gateway = [ "10.128.3.1" ];
+        # TODO: Causes double entry of [Network] in .network file
+        # Need to look into unifying into one block
+        extraConfig = ''
+          [Network]
+          IPv6Token=static:::12
+          LLDP=true
+          EmitLLDP=true;
+          IPv6PrivacyExtensions=false
+        '';
+      };
+    };
+  };
+
+
   environment.systemPackages = with pkgs; [
     rsyslog
     vim
