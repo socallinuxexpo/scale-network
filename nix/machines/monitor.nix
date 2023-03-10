@@ -8,6 +8,8 @@
   # TODO: How to handle sudo esculation
   security.sudo.wheelNeedsPassword = false;
 
+  networking.firewall.allowedTCPPorts = [ 80 ];
+
   environment.systemPackages = with pkgs; [
     rsyslog
     vim
