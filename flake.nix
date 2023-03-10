@@ -79,6 +79,13 @@
               ./nix/machines/signs.nix
             ];
           };
+          signs = nixpkgs.lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              common
+              ./nix/machines/monitor.nix
+            ];
+          };
         };
 
       # Like nix-shell
