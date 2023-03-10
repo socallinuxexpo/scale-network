@@ -79,7 +79,7 @@
               ./nix/machines/signs.nix
             ];
           };
-          signs = nixpkgs.lib.nixosSystem {
+          monitor = nixpkgs.lib.nixosSystem {
             inherit system pkgs;
             modules = [
               common
