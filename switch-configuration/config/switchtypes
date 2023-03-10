@@ -32,7 +32,7 @@ AVSwitch	14	503	2001:470:f026:503::200:14	cfAV		I.9		Normal		ex4200-48p	00:26:88
 Party		15	103	2001:470:f026:103::200:15	Party		X.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
 Expo-Catwalk	16	103	2001:470:f026:103::200:16	Catwalk		W.1		??		ex4200-48p	00:26:88:7e:3e:7f
 Rm209-210	17	503	2001:470:f026:503::200:17	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:a6:ff
-ExpoA1		18	103	2001:470:f026:103::200:18	exRoom		W.9		Loud		ex4200-48p	78:fe:3d:d2:85:7f
+ExpoA1		18	103	2001:470:f026:103::200:18	Booth		W.9		Loud		ex4200-48p	78:fe:3d:d2:85:7f
 Rm211		19	503	2001:470:f026:503::200:19	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:b3:ff
 Rm104		20	503	2001:470:f026:503::200:20	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5:39:7e:7f
 NOC		21	503	2001:470:f026:503::200:21	cfNOC		I.2		Normal		ex4200-48p	00:26:88:7e:25:ff
