@@ -106,4 +106,4 @@ TRUNK	ge-0/0/43	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
 TRUNK	ge-0/0/44	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
 TRUNK	ge-0/0/45	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
 TRUNK	ge-0/0/46	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
-TRUNK	ge-0/0/37	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
+TRUNK	ge-0/0/47	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
