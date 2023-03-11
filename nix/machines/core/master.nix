@@ -1,6 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, self, ... }:
 let
-  zoneSerial = "2023031000";
+  zoneSerial = toString self.lastModified;
 in
 {
 
