@@ -64,6 +64,7 @@
               common
               ./nix/machines/core/master.nix
             ];
+            specialArgs = {inherit self;};
           };
           coreSlave = nixpkgs.lib.nixosSystem {
             inherit system pkgs;
