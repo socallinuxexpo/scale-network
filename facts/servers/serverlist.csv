@@ -1,7 +1,7 @@
 name,mac-address,ipv6,ipv4,role
 coreexpo,58:9c:fc:00:38:5f,2001:470:f026:103::5,10.0.3.5,core
 coreconf,4c:72:b9:7c:41:17,2001:470:f026:503::5,10.128.3.5,core
-monitoring1,58:9c:fc:07:84:4b,2001:470:f026:103::6,10.0.3.6,monitoring
+monitoring1,58:9c:fc:0a:a8:f3,2001:470:f026:503::6,10.128.3.6,monitoring
 automation1,58:9c:fc:05:4a:f9,2001:470:f026:103::7,10.0.3.7,automation
 bhyveexpo,0c:c4:7a:d9:51:a6,2001:470:f026:103::20,10.0.3.20,bhyve
 bhyveconf,02:d7:ea:6f:f5:0b,2001:470:f026:503::20,10.128.3.20,bhyve
