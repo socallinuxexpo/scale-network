@@ -1,3 +1,22 @@
+#!/bin/sh
+# The splitaplist script splits the aplist.csv into apmac.csv (map of serial number to mac address)
+# and apuse.csv (the rest of the info, not counting the ipv4 network prefix)
+#
+# there is an additional file roommap.csv that identifies:
+#   what building each room prefix is in
+#   what the ip range is for that room
+#   what map id it would appear on
+#
+# buildaplist takes these files and creates a new aplist.csv that has the correct combination of information
+#
+# when editing the aplist directly we tend to change the name and the rest of the stuff stays the same
+# this breaks when the spare was in a different building
+# it also drags the rest of the per-location information from the spare
+#
+# This new approach lets us change what AP is where by editing the apuser.csv file
+# with the mac changing automatically in the aplist.csv file
+# while keeping the rest of the per-location information being the same
+
 cut -f 1,2,4-7,9,10 -d , aplist.csv |sed -e s/10\.128\.3\.// -e s/10\.0\.3\.// >apuse.csv 
 cut -f 2-3 -d , aplist.csv >apmac.csv 
 
