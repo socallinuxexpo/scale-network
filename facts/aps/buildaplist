@@ -1,0 +1,9 @@
+cat apuse.csv  |sed s/,/' '/g |while read name serial ip ch2 ch5 config x y
+do
+  export mac=`grep "$serial," apmac.csv |cut -f 2 -d , `
+  export prefix=`echo "$name" |cut -f 1 -d - `
+  grep "^$prefix," roommap.csv |sed s/,/' '/g |while read j ipprefix map
+  do
+    echo "$name,$serial,$mac,$ipprefix.$ip,$ch2,$ch5,$config,$map,$x,$y"
+  done
+done

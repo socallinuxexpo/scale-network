@@ -1,0 +1,3 @@
+cut -f 1,2,4-7,9,10 -d , aplist.csv |sed -e s/10\.128\.3\.// -e s/10\.0\.3\.// >apuse.csv 
+cut -f 2-3 -d , aplist.csv >apmac.csv 
+
