@@ -5,13 +5,13 @@ default: show
 
 bhyveImage:
 	@echo "nix building $(Arguments) bhyve Image"
-	nix build ".#nixosConfigurations.$(Arguments).config.system.build.bhyveImage"
+	nix build ".#nixosConfigurations.$(Arguments).config.system.build.bhyveImage" -o result-bhyveImage-$(Arguments)
 
 qemuVm:
 	@echo "nix building $(Arguments) qemu VM"
-	nix build ".#nixosConfigurations.$(Arguments).config.system.build.vm"
+	nix build ".#nixosConfigurations.$(Arguments).config.system.build.vm" -o result-qemuVm-$(Arguments)
 
-all:	bhyveImage qemuvm
+all:	bhyveImage qemuVm
         	
 
 show:
