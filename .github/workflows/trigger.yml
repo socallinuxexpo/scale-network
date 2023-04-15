@@ -15,12 +15,15 @@ jobs:
       && github.event.issue.pull_request
       && github.actor == 'sarcasticadmin'
     steps:
+    - name: Standardize PR comment
+      id: pr-standardize-comment
+      uses: nebulaworks/action-standardize-pr-comment@v1.0
     - name: 'Collect event data'
       id: job
       run: |
         set -eux
-        SUBCOMM=$(cut -d ' ' -f 2 <<< "${{ github.event.comment.body }}")
-        SUBARGS="$(cut -d ' ' -f 3- <<< "${{ github.event.comment.body }}")"
+        SUBCOMM=$(cut -d ' ' -f 2 <<< "${{ steps.pr-standardize-comment.outputs.comment }}")
+        SUBARGS="$(cut -d ' ' -f 3- <<< "${{ steps.pr-standardize-comment.outputs.comment }}")"
         # Have to do this to get git commit ref for comments in PRs
         # "github.event.pull_request.head" will not work since this
         # is not a PR event
