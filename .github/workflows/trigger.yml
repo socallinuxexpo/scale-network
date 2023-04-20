@@ -8,7 +8,7 @@ on:
 jobs:
   verify:
     name: Verify Commenter
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     # Currently limiting this to robs user til stable
     if: >
       startsWith(github.event.comment.body, '/tux')
@@ -39,7 +39,7 @@ jobs:
       ref: ${{ steps.job.outputs.ref }}
   flash:
     name: Flash netgear hardware
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: verify
     if: >
       needs.verify.outputs.subcomm == 'openwrt'
