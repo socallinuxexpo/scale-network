@@ -2,23 +2,26 @@
 name: PR comments to trigger gitlab-ci jobs
 
 on:
+  pull_request_review_comment:
+    types:
+    - created
   issue_comment:
-    types: [created]
+    types:
+    - created
 
 jobs:
   verify:
     name: Verify Commenter
     runs-on: ubuntu-22.04
-    # Currently limiting this to robs user til stable
-    if: >
-      startsWith(github.event.comment.body, '/tux')
-      && github.event.issue.pull_request
-      && github.actor == 'sarcasticadmin'
     steps:
     - name: Standardize PR comment
       id: pr-standardize-comment
       uses: nebulaworks/action-standardize-pr-comment@v1.0
     - name: 'Collect event data'
+      # Currently limiting this to robs user til stable
+      if: >
+        startsWith(steps.pr-standardize-comment.outputs.comment, '/tux')
+        && github.actor == 'sarcasticadmin'
       id: job
       run: |
         set -eux
