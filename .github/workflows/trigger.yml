@@ -31,7 +31,7 @@ jobs:
         # "github.event.pull_request.head" will not work since this
         # is not a PR event
         REF=$(curl -sSf \
-          --url ${{ github.event.issue.pull_request.url }} \
+          --url ${{ steps.pr-standardize-comment.outputs.url }} \
           --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'Content-Type: application/json' | jq -r '.head.ref' \
         )
@@ -72,7 +72,7 @@ jobs:
           [RUNNING] - Successfully triggered gitlab flash pipeline:
             - gitlab pipeline: ${{ steps.flash.outputs.pipeline }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        issue_number: ${{ github.event.issue.number }}
+        issue_number: ${{ steps.pr-standardize-comment.outputs.issue_number }}
     - name: Create status PR comment failure
       if: ${{ failure() }}
       uses: jungwinter/comment@5acbb5699b76c111821fb2540534cb339e2b32ed  # SHA ref v1.0.2
@@ -81,7 +81,7 @@ jobs:
         body: |
           [FAIL] - Error triggering gitlab flash pipeline
         token: ${{ secrets.GITHUB_TOKEN }}
-        issue_number: ${{ github.event.issue.number }}
+        issue_number: ${{ steps.pr-standardize-comment.outputs.issue_number }}
     outputs:
       pipeline: ${{ steps.flash.outputs.pipeline }}
 
