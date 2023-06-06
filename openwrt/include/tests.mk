@@ -1,3 +1,5 @@
+# gitlab trigger token
+# ref: https://docs.gitlab.com/ee/ci/triggers/#create-a-trigger-token
 GITLAB_TOKEN ?= empty
 # gitlab mirror project id
 GITLAB_PROJECT ?= 17362342

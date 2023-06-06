@@ -52,6 +52,8 @@ jobs:
       needs.verify.outputs.subcomm == 'openwrt'
       && startsWith(needs.verify.outputs.subargs, 'flash')
     steps:
+    # secret required is a gitlab trigger token
+    # ref: https://docs.gitlab.com/ee/ci/triggers/#create-a-trigger-token
     - name: 'call gitlab pipeline'
       id: flash
       run: |
