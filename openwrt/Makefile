@@ -8,6 +8,8 @@ include include/*.mk
 # Export all variables by default
 .EXPORT_ALL_VARIABLES:
 
+SHELL = /usr/bin/env bash
+
 # WNDR by default
 TARGET ?= ar71xx
 
