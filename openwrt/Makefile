@@ -78,10 +78,13 @@ diffconfig:
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && ./scripts/diffconfig.sh > .diffconfig
 
 commonconfig: diffconfig
+	ifneq ($(TARGET), x86)
+	  $(error "common config can only be generated from x86")
+	endif
 	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep -v CONFIG_TARGET > ./configs/common.config
 
 targetconfig: diffconfig
-	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep CONFIG_TARGET > ./configs/$(TARGET)-generic.config
+	comm -23 <(sort ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig) <(sort ./configs/common.config) > ./configs/$(TARGET)-generic.config
 
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
