@@ -7,8 +7,9 @@ Make sure you have the prereq pkgs for the [Openwrt Image Builder](https://openw
 To use this part of the git repo you will need the following pkgs:
   - git >= 1.8.2
   - git-lfs
-  - gomplate >= 3.2.0
+  - gomplate >= 3.11.0
   - Docker (Optional)
+  - Nixpkgs (Optional)
 
 ### Gomplate
 
@@ -90,29 +91,38 @@ into the Openwrt build
 
 ### Adding new packages
 
-Leverage the existing `diffconfig` via the `Makefile`:
-```
-make config
-cd build/source-<SHA>/
-make menuconfig
-```
+#### common.config
 
-At this point you can add any additional pkgs youd like. Afterwhich its time
-to save them back to the `diffconfig` using the makefile and then copy them
-to the commonconfig:
+Leverage the existing `diffconfig` via the `Makefile`:
+
 ```
-make diffconfig commonconfig
+TARGET=x86 make config menuconfig
+```
+> This assumes the additional packages are common to all architectures if not change TARGET
+> to specific board arch
+
+Save pkgs back to common.config with `diffconfig` using the Makefile and then copy them
+to the commonconfig:
+
+```
+TARGET=x86 make commonconfig
 ```
 
 At which point you should have a diff in git which can then be tested against a new
 build of the img
 
-### Updating target info
+#### mt7622-generic.config
 
-This is similar to `Adding a new package` however after running `menuconfig` go back to the Makefile in `openwrt`
-and run:
+Will use mt7622 as an example but this will work for any other arch we support:
+
 ```
-make diffconfig targetconfig
+TARGET=mt7622 make config menuconfig
+```
+
+After adding the specific mt7622 arch packages:
+
+```
+TARGET=mt7622 make targetconfig
 ```
 
 ### Update openwrt/opkg
@@ -127,24 +137,23 @@ After bumping the version of openwrt/opkg make sure to ensure that the configs a
 still generated cleanly (no diff)
 
 ```
-make config
-make menuconfig
+TARGET=x86 make config menuconfig
 ```
 > Ensure the selections in menuconfig are what your expecting
 
 If it looks good save them back to `config/` using:
 
 ```
-make diffconfig commonconfig targetconfig
+TARGET=x86 make commonconfig targetconfig
 ```
 > This generates the diff of the base config, then we split it out
 > into the common components and last its arch target configs
 
-Repeat this for `TARGET=ipq806x`
+Repeat this for `TARGET=ar71xx` and `TARGET=mt7622`
 
 ```
-TARGET=ipq806x make config
-TARGET=ipq806x make diffconfig commonconfig targetconfig
+TARGET=mt7622 make config menuconfig
+TARGET=mt7622 make commonconfig targetconfig
 ```
 
 ### Build Identity
@@ -212,3 +221,59 @@ x 2.6.32, with debug_info, not stripped
 > Note: `mkhash` will exist but be unable to run and fail with the following `No such file or directory`
 
 `make clean-all` and rerun inside the local environment should fix it
+
+### Config generation process
+
+Assuming we are starting from no existing `.config`. Lets generate the x86 config first since its
+the most generic (no specific drivers or modules):
+
+```
+cd <build source>
+rm -f *.config
+```
+
+If you already have a true common config (meaning no specific arch or arch packages inside) you can copy it in:
+
+```
+cp $(git root)/openwrt/configs/common.config ./.config
+```
+
+Or create a new one:
+
+```
+make defconfig
+```
+> Set target to `x86/generic`
+
+Install only packages which are utilities and non arch specific things. We dont want the hardware packages to pollute the common.config. When youve got all of it selected you can then create
+the `common.config`
+
+```
+./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git root)/openwrt/configs/common.config
+```
+
+```
+comm -23 <(sort ./.diffconfig) <(sort $(git root)/openwrt/configs/common.config) > $(git root)/openwrt/configs/x86-generic.config
+```
+
+Now we have the `common.config` and `x86-generic.config`. To add in a specific board:
+
+```
+cd <build source>
+cat $(git root)/openwrt/configs/common.config > ./.config
+cat $(git root)/openwrt/configs/x86_generic.config >> ./.config
+```
+
+Run `make menuconfig` and change the arch from x86 to target arch:
+
+```
+./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git root)/openwrt/configs/common.config
+```
+
+```
+comm -23 <(sort ./.diffconfig) <(sort $(git root)/openwrt/configs/common.config) > $(git root)/openwrt/configs/mt7622-generic.config
+```
+> Assuming mt7622 is our target arch
+
+Thats it now you should have a generic config and a arch specific config going forward. The majority of these steps are taken care of by the Makefile in the `openwrt` dir but in the cases where
+we need to start fresh this has been time consuming to recall.
