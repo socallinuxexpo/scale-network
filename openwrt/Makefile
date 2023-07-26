@@ -104,7 +104,7 @@ package:
 	mkdir -p $(BUILD_DIR)/artifacts
 	# TODO: Look into striping path to only be from targets/ onward
 	tar zcvf $(BUILD_DIR)/artifacts/$(TARGET)-$(SHORT_VER)-artifacts.tar.gz \
-	  -C $(BUILD_DIR)/$(IMAGEBUILDER)/bin/targets/*/generic ./
+	  -C $(BUILD_DIR)/$(IMAGEBUILDER)/bin/targets/* ./
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
