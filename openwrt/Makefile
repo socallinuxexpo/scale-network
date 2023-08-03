@@ -129,6 +129,10 @@ ifndef GOMPLATE
   $(error "gomplate is not available please install it")
 endif
 	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) -d keys_dir=$(KEYPATH) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
+# Check that TARGET specific dir exists
+ifneq ($(wildcard $(TMPL_SRC_DIR)-$(TARGET)/.),)
+	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) -d keys_dir=$(KEYPATH) --input-dir=$(TMPL_SRC_DIR)-$(TARGET) --output-dir=$(TMPL_OUT_DIR)
+endif
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/config-version.sh
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
