@@ -1,0 +1,108 @@
+config interface 'loopback'
+        option device 'lo'
+        option proto 'static'
+        option ipaddr '127.0.0.1'
+        option netmask '255.0.0.0'
+
+config device
+        option name 'br-lan'
+        option type 'bridge'
+        option stp '1'
+        list ports 'lan1'
+        list ports 'lan2'
+        list ports 'lan3'
+        list ports 'lan4'
+        list ports 'wan'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '100'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '500'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config device
+        option name 'scaleslow-br'
+        option type 'bridge'
+        option stp '1'
+        list ports 'br-lan.100'
+        list ports 'br-lan.500'
+
+config interface 'scaleslow'
+        option device 'scaleslow-br'
+        option proto 'none'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '101'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '501'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config device
+        option name 'scalefast-br'
+        option type 'bridge'
+        option stp '1'
+        list ports 'br-lan.101'
+        list ports 'br-lan.501'
+
+config interface 'scalefast'
+        option device 'scalefast-br'
+        option proto 'none'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '103'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config bridge-vlan
+        option device 'br-lan'
+        option vlan '503'
+        list ports 'lan1:t'
+        list ports 'lan2:t'
+        list ports 'lan3:t'
+        list ports 'lan4:t'
+        list ports 'wan:t'
+
+config device
+        option name 'mgmt-br'
+        option type 'bridge'
+        option stp '1'
+        list ports 'br-lan.103'
+        list ports 'br-lan.503'
+
+config interface 'mgmt'
+        option device 'mgmt-br'
+        option proto 'dhcp'
+        option reqopts '224 225 226'
+
+config interface 'mgmt6'
+        option device '@mgmt'
+        option proto 'dhcpv6'
+        option reqprefix 'no'
