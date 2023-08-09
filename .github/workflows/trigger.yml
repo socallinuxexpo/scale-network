@@ -2,23 +2,26 @@
 name: PR comments to trigger gitlab-ci jobs
 
 on:
+  pull_request_review_comment:
+    types:
+    - created
   issue_comment:
-    types: [created]
+    types:
+    - created
 
 jobs:
   verify:
     name: Verify Commenter
     runs-on: ubuntu-22.04
-    # Currently limiting this to robs user til stable
-    if: >
-      startsWith(github.event.comment.body, '/tux')
-      && github.event.issue.pull_request
-      && github.actor == 'sarcasticadmin'
     steps:
     - name: Standardize PR comment
       id: pr-standardize-comment
       uses: nebulaworks/action-standardize-pr-comment@v1.0
     - name: 'Collect event data'
+      # Currently limiting this to robs user til stable
+      if: >
+        startsWith(steps.pr-standardize-comment.outputs.comment, '/tux')
+        && github.actor == 'sarcasticadmin'
       id: job
       run: |
         set -eux
@@ -28,7 +31,7 @@ jobs:
         # "github.event.pull_request.head" will not work since this
         # is not a PR event
         REF=$(curl -sSf \
-          --url ${{ github.event.issue.pull_request.url }} \
+          --url ${{ steps.pr-standardize-comment.outputs.url }} \
           --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'Content-Type: application/json' | jq -r '.head.ref' \
         )
@@ -40,6 +43,7 @@ jobs:
       subcomm: ${{ steps.job.outputs.subcomm }}
       subargs: ${{ steps.job.outputs.subargs }}
       ref: ${{ steps.job.outputs.ref }}
+      issue_number: ${{ steps.pr-standardize-comment.outputs.issue_number }}
   flash:
     name: Flash netgear hardware
     runs-on: ubuntu-22.04
@@ -48,6 +52,8 @@ jobs:
       needs.verify.outputs.subcomm == 'openwrt'
       && startsWith(needs.verify.outputs.subargs, 'flash')
     steps:
+    # secret required is a gitlab trigger token
+    # ref: https://docs.gitlab.com/ee/ci/triggers/#create-a-trigger-token
     - name: 'call gitlab pipeline'
       id: flash
       run: |
@@ -62,23 +68,19 @@ jobs:
         echo ::set-output name=pipeline::$PIPELINE
     - name: Create status PR Comment
       if: ${{ success() }}
-      uses: jungwinter/comment@5acbb5699b76c111821fb2540534cb339e2b32ed  # SHA ref v1.0.2
+      uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b  # SHA ref: v3.0.1
       with:
-        type: create
+        issue-number: ${{ needs.verify.outputs.issue_number }}
         body: |
           [RUNNING] - Successfully triggered gitlab flash pipeline:
             - gitlab pipeline: ${{ steps.flash.outputs.pipeline }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        issue_number: ${{ github.event.issue.number }}
     - name: Create status PR comment failure
       if: ${{ failure() }}
-      uses: jungwinter/comment@5acbb5699b76c111821fb2540534cb339e2b32ed  # SHA ref v1.0.2
+      uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b  # SHA ref: v3.0.1
       with:
-        type: create
+        issue-number: ${{ needs.verify.outputs.issue_number }}
         body: |
           [FAIL] - Error triggering gitlab flash pipeline
-        token: ${{ secrets.GITHUB_TOKEN }}
-        issue_number: ${{ github.event.issue.number }}
     outputs:
       pipeline: ${{ steps.flash.outputs.pipeline }}
 
