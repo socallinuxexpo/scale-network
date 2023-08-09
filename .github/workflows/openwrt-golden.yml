@@ -19,8 +19,8 @@ jobs:
     name: gomplate_tests
     runs-on: ubuntu-latest
     container:
-      # gomplate v3.2.0-alpine
-      image: hairyhenderson/gomplate@sha256:7614155c5c6ce3fa8ac892e2e77643615bd8724d2b9c9817037540f324af2342
+      # gomplate v3.11.3-alpine
+      image: hairyhenderson/gomplate@sha256:7a8e23a4900cb11b92b1e19122b7e20c606fb21d3fc569c44c3d9e7fc9cab1ee
     steps:
       - name: checkout
         id: checkout
