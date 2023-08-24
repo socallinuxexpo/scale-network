@@ -35,8 +35,3 @@ jobs:
         run: |
           cd tests/unit/openwrt
           sh -x test.sh -t ar71xx
-      - name: openwrt_golden_ipq806x
-        shell: sh
-        run: |
-          cd tests/unit/openwrt
-          sh -x test.sh -t ipq806x

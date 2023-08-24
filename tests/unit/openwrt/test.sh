@@ -49,6 +49,9 @@ gen_templates(){
   export TARGET=$TARGET
   export KEYPATH=$KEYPATH
   gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files --output-dir="./${1}"
+  if [ -d ../../../openwrt/files-${TARGET} ]; then
+    gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files-${TARGET} --output-dir="./${1}"
+  fi
 }
 
 if [ ${UPDATE} -eq 1 ]; then

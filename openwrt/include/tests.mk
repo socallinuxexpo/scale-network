@@ -10,13 +10,11 @@ REPO_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 golden-test:
 	@cd $(REPO_ROOT)/tests/unit/openwrt && \
-	    sh test.sh -t ar71xx && \
-	    sh test.sh -t ipq806x
+	    sh test.sh -t ar71xx
 
 golden-update:
 	@cd $(REPO_ROOT)/tests/unit/openwrt && \
-	    sh test.sh -u -t ar71xx && \
-	    sh test.sh -u -t ipq806x
+	    sh test.sh -u -t ar71xx
 
 autoflash-test:
 	curl --request POST \

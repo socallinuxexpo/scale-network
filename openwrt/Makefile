@@ -8,6 +8,8 @@ include include/*.mk
 # Export all variables by default
 .EXPORT_ALL_VARIABLES:
 
+SHELL = /usr/bin/env bash
+
 # WNDR by default
 TARGET ?= ar71xx
 
@@ -76,10 +78,13 @@ diffconfig:
 	@cd $(BUILD_DIR)/$(IMAGEBUILDER) && ./scripts/diffconfig.sh > .diffconfig
 
 commonconfig: diffconfig
+	ifneq ($(TARGET), x86)
+	  $(error "common config can only be generated from x86")
+	endif
 	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep -v CONFIG_TARGET > ./configs/common.config
 
 targetconfig: diffconfig
-	cat ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig | grep CONFIG_TARGET > ./configs/$(TARGET)-generic.config
+	comm -23 <(sort ./$(BUILD_DIR)/$(IMAGEBUILDER)/.diffconfig) <(sort ./configs/common.config) > ./configs/$(TARGET)-generic.config
 
 config: $(BUILD_DIR)/$(IMAGEBUILDER)/.config
 
@@ -99,7 +104,7 @@ package:
 	mkdir -p $(BUILD_DIR)/artifacts
 	# TODO: Look into striping path to only be from targets/ onward
 	tar zcvf $(BUILD_DIR)/artifacts/$(TARGET)-$(SHORT_VER)-artifacts.tar.gz \
-	  -C $(BUILD_DIR)/$(IMAGEBUILDER)/bin/targets/*/generic ./
+	  -C $(BUILD_DIR)/$(IMAGEBUILDER)/bin/targets/* ./
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -124,6 +129,10 @@ ifndef GOMPLATE
   $(error "gomplate is not available please install it")
 endif
 	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) -d keys_dir=$(KEYPATH) --input-dir=$(TMPL_SRC_DIR) --output-dir=$(TMPL_OUT_DIR)
+# Check that TARGET specific dir exists
+ifneq ($(wildcard $(TMPL_SRC_DIR)-$(TARGET)/.),)
+	$(GOMPLATE) -d openwrt=$(BUILD_SECRETS) -d keys_dir=$(KEYPATH) --input-dir=$(TMPL_SRC_DIR)-$(TARGET) --output-dir=$(TMPL_OUT_DIR)
+endif
 	# TODO: should do this automatically for .sh file types
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/config-version.sh
 	chmod 750 $(TMPL_OUT_DIR)/root/bin/wifi-details.sh
