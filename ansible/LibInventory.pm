@@ -4,8 +4,9 @@
 #
 use strict;
 
-#use JSON;
+use JSON;
 use Data::Dumper;
+main();
 
 sub main
 {
@@ -24,6 +25,6 @@ sub main
 sub JSON_Parse
 {
   my $string = shift @_;
-#  return(decode_json($string));
+  return(decode_json($string));
 }
 
