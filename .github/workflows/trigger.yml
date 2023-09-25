@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Standardize PR comment
       id: pr-standardize-comment
-      uses: nebulaworks/action-standardize-pr-comment@v1.0
+      uses: sarcasticadmin/action-standardize-pr-comment@bc2d905e9d53bcdd31dc224e91a44362bd25ae8d
     - name: 'Collect event data'
       # Currently limiting this to robs user til stable
       if: >
