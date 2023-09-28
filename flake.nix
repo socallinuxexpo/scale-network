@@ -64,7 +64,7 @@
               common
               ./nix/machines/core/master.nix
             ];
-            specialArgs = {inherit self;};
+            specialArgs = { inherit self; };
           };
           coreSlave = nixpkgs.lib.nixosSystem {
             inherit system pkgs;
@@ -92,6 +92,23 @@
           {
             default = import ./shell.nix { inherit pkgs; };
           });
+
+      checks =
+        let
+          pkgs = nixpkgsFor.x86_64-linux;
+        in
+        {
+          # python tests for the data found in facts
+          # disabling persistence and cache for py utils to avoid warnings
+          # since caching is taken care of by nix
+          pytest-facts = pkgs.runCommand "pytest-facts" { } ''
+            cp -r ${pkgs.lib.cleanSource self}/* .
+            cd facts
+            ${pkgs.python3Packages.pylint}/bin/pylint --persistent n *.py
+            ${pkgs.python3Packages.pytest}/bin/pytest -vv -p no:cacheprovider
+            touch $out
+          '';
+        };
     };
 
   # Bold green prompt for `nix develop`
