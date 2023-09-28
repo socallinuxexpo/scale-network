@@ -1,13 +1,8 @@
 ---
-name: ansible-test
+name: validate-datafiles
 
 on:
   pull_request:
-    paths:
-      - '.github/**'
-      - 'facts/**'
-      - 'tests/**'
-      - 'switch-configuration/config/**'
   push:   # This is only run when PRs are merged into master
     branches:
       - master
@@ -17,16 +12,8 @@ jobs:
   validate_datafiles:
     name: validate_datafiles
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: facts/
-    container:
-      image: kylerisse/ansible-tester@sha256:f6a9507ec1d7a2dd0570cd88cb19746840c4f97e7618f53158616b9e1f5a3618
     steps:
-      - name: checkout
-        id: checkout
-        uses: actions/checkout@v2
-      - name: lint_python_files
-        run: pylint *.py
-      - name: datafile_unittest
-        run: pytest -vv
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - run: nix build -L .#checks.pytest-facts
