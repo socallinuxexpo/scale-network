@@ -135,9 +135,8 @@ def test_datafile(delimiter, meta):
                 corresponding column index.
     }
     '''
-    fha = open(meta["file"])
-    lines = fha.readlines()
-    fha.close()
+    with open(meta["file"], encoding='utf-8') as fha:
+        lines = fha.readlines()
     for linenum, line in enumerate(lines):
         # skip comments
         if line[0] == '/' and line[1] == '/':
