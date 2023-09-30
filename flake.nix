@@ -113,7 +113,7 @@
               buildInputs = [ pkgs.gnumake pkgs.perl ];
             } ''
             cp -r ${pkgs.lib.cleanSource self}/* .
-            cd switch-configurations
+            cd switch-configuration
             make .lint
             make .build-switch-configs 
             touch $out
