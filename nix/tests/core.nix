@@ -1,9 +1,13 @@
+{ inputs, ... }:
+
 {
   name = "core";
+
   nodes = {
     coreServer = { lib, ... }: {
+      _module.args = { inherit inputs; };
       imports = [ ../machines/core/master.nix ];
-    } // {
+
       virtualisation.vlans = [ 1 ];
       virtualisation.graphics = false;
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
@@ -19,7 +23,7 @@
       };
     };
 
-    client1 = { config, pkgs, ... }: {
+    client1 = { pkgs, ... }: {
       virtualisation.vlans = [ 1 ];
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       networking = {
@@ -36,20 +40,22 @@
     };
 
   };
-  testScript = let
-    coreServerIp = "10.0.3.5";
-    clientDefaultRoute = "10.0.3.1";
-  in ''
-    start_all()
-    coreServer.wait_for_unit("systemd-networkd-wait-online.service")
-    coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
-    client1.wait_for_unit("systemd-networkd-wait-online.service")
-    client1.wait_until_succeeds("ping -c 5 ${coreServerIp}")
-    client1.wait_until_succeeds("ip route show | grep default | grep -w ${clientDefaultRoute}")
-    # Have to wrap drill since retcode isnt necessarily 1 on query failure
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
-    client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coreServerIp})\"")
-  '';
+  testScript =
+    let
+      coreServerIp = "10.0.3.5";
+      clientDefaultRoute = "10.0.3.1";
+    in
+    ''
+      start_all()
+      coreServer.wait_for_unit("systemd-networkd-wait-online.service")
+      coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
+      client1.wait_for_unit("systemd-networkd-wait-online.service")
+      client1.wait_until_succeeds("ping -c 5 ${coreServerIp}")
+      client1.wait_until_succeeds("ip route show | grep default | grep -w ${clientDefaultRoute}")
+      # Have to wrap drill since retcode isnt necessarily 1 on query failure
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coreServerIp})\"")
+    '';
 }
