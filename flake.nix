@@ -108,6 +108,17 @@
             ${pkgs.python3Packages.pytest}/bin/pytest -vv -p no:cacheprovider
             touch $out
           '';
+          perl-switches = pkgs.runCommand "perl-switches"
+            {
+              buildInputs = [ pkgs.gnumake pkgs.perl ];
+            } ''
+            cp -r ${pkgs.lib.cleanSource self}/* .
+            cd switch-configuration
+            make .lint
+            make .build-switch-configs 
+            touch $out
+          '';
+
         };
     };
 
