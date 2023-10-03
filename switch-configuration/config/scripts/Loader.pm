@@ -12,25 +12,35 @@
 #       Net::Ping               -- Ping without system()
 #       Expect                  -- PERL Expect Library - simplifies communication with switches
 #       Term::ReadKey           -- Simlifies password requests and similar
-#       Net::SSH                -- ssh without system()
+##FIXME##       Net::SSH::Perl          -- ssh without system()
 #       Net::SFTP               -- sftp without system()
 #       Net::ARP                -- arp without system()
 #       Time::HiRes             -- Used for usleep (sleep for microseconds)
 
 # Pull in dependencies
+package Loader;
+
+require Exporter;
+@ISA = (Exporter);
+
+@Export = qw(
+      detect_switch,
+      override_switch,
+      wait_offline,
+    );
 use strict;
-require "./scripts/switch_template.pl";
+use lib "./scripts";
+use switch_template;   # Pull in configuration library
 use FileHandle;
 use IPC::Open2;
 use Net::Ping;
 use Expect;
 use Term::ReadKey;
-use Net::SSH;
+#use Net::SSH::Perl;
 use Net::SFTP;
 use Net::ARP;
 use Time::HiRes;
 
-package Loader;
 =pod
 
 =head1 Loader -- A set of routines desinged to help load configurations onto Juniper Switches
@@ -57,6 +67,8 @@ BEGIN
 {
         $Loader::VERSION = '1.0';
         $Loader::line_dely = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
+        $Loader::ping = new Net::Ping;
+        $Loader::SSH = "/usr/bin/ssh"; # Net::SSH::Perl will be hard to integrate, skipping for now.
 }
 
 =pod
@@ -91,12 +103,17 @@ sub new
         my ($class, @args) = @_;
 
         $class = ref($class) if ref($class); # Allows calling as $exp->new()
-
+        
         STDERR->autoflush(1);   # Turn on autoflush for STDERR
         get_switchtype("anonymous");
-        $Loader::ping = Net::Ping->new("icmp");
-        $Loader::DefaultIP = "192.168.255.76"; # Switch target management IP
-        $Loader::line_dely = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
+        my $self = {
+            ping       => Net::Ping->new("icmp"),
+            DefaultIP  => "192.168.255.76", # Switch target management IP
+            line_delay => 50 * 1000, # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
+        };
+
+        bless $self, $class;
+        return $self;
 }
 
 =pod
@@ -126,7 +143,9 @@ sub detect_switch
 {
   my $IP = shift @_; # Check for optional IP argument
   $IP = $Loader::DefaultIP unless $IP; # Default to Package Default IP if not specified
-  while (1) {
+
+  while (1)
+  {
     
     # delete ARP entry for 192.168.255.76 (Requires sudo for privileges)
     # Turns out to be unnecessary and annoying.
@@ -136,7 +155,7 @@ sub detect_switch
     my $success = 0;
     print "Looking for switch on line.\n";
     do {
-        my $result = $ping->ping($IP);
+        my $result = $Loader::ping->ping($IP);
         $success++ unless($result);
         sleep 1; # Retry every second until success.
     } until($success);
@@ -311,7 +330,7 @@ sub override_switch
         foreach my $c (<CONFIG>)
         {
             $JUNIPER->send($c);
-            usleep($line_delay);
+            usleep($Loader::line_delay);
         }
         $JUNIPER->send("\n\cD\n");
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
@@ -328,7 +347,7 @@ sub override_switch
         $sftp->put("$config_file", "/tmp/new_config.conf", &sftp_progress) ||
                 die("Failed to send config to $target ($Name)\n");;
         print STDERR "Activating...\n";
-        $JUNIPER->spawn($SSH, $target);
+        $JUNIPER->spawn($Loader::SSH, $target);
         Loader::Login($JUNIPER);    # Get to the CLI prompt
         Loader::Edit($JUNIPER);     # Transition from CLI to Edit Mode
         $JUNIPER->send("load override /tmp/new_config.conf\n");
@@ -341,7 +360,7 @@ sub override_switch
         );
         die("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
     }
-    # Here the direct device and SSH paths merge and $JUNIPER remains a filehandle to the switch
+    # Here the direct device and SSH paths merge and $JUNIPER remains an Expect object attached to the switch
     # being configured regardless of whether serial or SSH.
     
     $JUNIPER->send("show | compare\n");
@@ -450,7 +469,7 @@ sub login
       # Handle prompt for passphrase (for key) or password (host)
       elsif ($matched =~ /pass/)
       {
-          print "(More) authentication required:\n");
+          print "(More) authentication required:\n";
           print $before. $matched. $after;
           # Get password from STDIN
           ReadMode('noecho');
@@ -534,9 +553,9 @@ sub wait_offline
     my $IP = shift @_;
     $IP = $Loader::DefaultIP unless($IP);
     # Wait for the switch to go off line before trying to find next switch.
-    $success = 1;
+    my $success = 1;
     do {
-        my $result = $ping->ping($IP);
+        my $result = $Loader::ping->ping($IP);
         $success=0 if($result);
         sleep 1; # Retry every second until success.
     } while($success);
@@ -567,4 +586,6 @@ sub catch_pipe {
     my $signame = shift;
     print STDERR "Pipe signal caught ($signame) $! $?\n";
 }
+
+1;
 

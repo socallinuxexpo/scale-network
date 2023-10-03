@@ -31,10 +31,12 @@
 #   switch_config_loader [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>]
 #
 #       -b -- Run in bulk mode, loop forever trying to install on each switch
-#           attached. Implies -l.
+#           attached. Implies -l, incompatible with -k.
 #
 #       -c <filename> -- Use <filename> to configure every affected switch
 #
+#       -k -- Keep errors and display at the end of the run (incompatible with -b)
+#       
 #       -l -- Local Mode -- Use 192.168.255.76 to reach switch unless -t
 #           is specified.
 #
@@ -78,22 +80,34 @@
 #     switch_config_loader I W
 #
 use strict;
-require "./scripts/switch_template.pl" || die("Couldn't load switch_template Library\n");;
-use "./Loader.pm" || die("Couldn't load Loader library\n");
+use lib "./scripts";
+
+use Loader;
+use switch_template;
 
 use Getopt::Std;
 our $opt_b;
 our $opt_c;
+our $opt_k;
 our $opt_l;
 our $opt_n;
 our $opt_t;
-getopts('bc:lnt:');
+getopts('bc:klnt:');
+
+my $LOADER = new Loader();
+my @ERRORS = ();
 
 # Check for incompatible arguments.
 $opt_l = 1 if ($opt_b);
 $opt_l = 1 if ($opt_t);
 
+die "Error: -b and -k are incompatible.\n" if ($opt_b && $opt_k);
+
 my @list = @ARGV;
+
+my $switch;
+my $target;
+my $config;
 
 # We need to pretend there's exactly one switch_spec for later test, but it will be
 # ignored in the case of opt_c.
@@ -104,7 +118,7 @@ if ($opt_c && $opt_l && scalar(@list) == 0)
 
 if (scalar(@list) == 0)
 {
-  @list = @{get_switchlist()};
+  @list = @{Loader::get_switchlist()};
   print "Pulled ", scalar(@list), " switches from configuration list\n";
 }
 else
@@ -112,12 +126,12 @@ else
   print "Have ", scalar(@list), " Switch or group names from command line.\n";
 }
 
-@list = expand_switch_groups(@list);
+@list = Loader::expand_switch_groups(@list);
 
 print "LIst expandsion yielded ", scalar(@list), "Switch names.\n";
 
 
-if ($opt_l && (scalar(@list) != 1)
+if ($opt_l && (scalar(@list) != 1))
 {
   die("Use of -l option (or -b or -t) requires exactly one switch be specified.\n");
 }
@@ -139,15 +153,41 @@ unless($opt_b)
   foreach my $switch (@list)
   {
     $switch = undef if ($switch =~ /none_required/);
-    process_switch($switch, $opt_t, $opt_c);
+    my $result = process_switch($switch, $opt_t, $opt_c);
+    if ($result)
+    {
+      if ($opt_k)
+      {
+        push @ERRORS, "Bad return from process_switch for \"$switch\" (Target: $opt_t, Config: $opt_c)\n";
+      }
+      else
+      {
+        print STDERR "Bad return from process_switch for \"$switch\" (Target: $opt_t, Config: $opt_c)\n";
+      }
+    }
   }
   exit 0;
+  if ($opt_k && scalar(@ERRORS))
+  {
+    print STDERR "\n\n\n\n********************* ERRORS COLLECTED *********************\n\n";
+    print STDERR join("\n", @ERRORS);
+    print STDERR "\n\n\n\n********************* ERROR LIST ENDS  *********************\n\n";
+    exit 1;
+  }
 }
 
 while (1)
 {
   # Bulk mode
+  $switch = $LOADER->detect_switch($target);
+  # If $config is specified, then $switch doesn't matter and will generate a warning.
+  # If $config is undefined, then $switch is needed in order to push the correct configuration file.
+  my $result = process_switch($switch, $target, $config);
+  warn("process_switch() returend $result -- unexpected\n") if ($result);
+  # Wait for switch to go offline to be ready to detect next switch.
+  $LOADER->wait_offline($target);
 }
+
 
 sub process_switch
 {
@@ -156,5 +196,34 @@ sub process_switch
   my $target = shift @_;
   my $config = shift @_;
 
-  
+  # For a given switch ($switch), obtain the switch 
+  # If switch is undefined, then $target and $config must be provided
+  unless($switch || ($target && $config))
+  {
+    warn("WARNING: process_switch requires at least (switch) or (target and config) to be defined.\n");
+    return(-1);
+  }
+  if ($target && $config)
+  {
+    # If $target and $config are specified, then $switch is irrelevant.
+    if ($switch)
+    {
+      warn("Warning: Switch: \"$switch\" Ignored because Target ($target) and Config ($config) specified.\n");
+    }
+    # Send specified configuration to Target regardless.
+  }
+  my ($result, @MESSAGES) = $LOADER->override_switch($switch, $target, $opt_n, $config);
+  if ($result)
+  {
+    if ($opt_k)
+    {
+      push @ERRORS, @MESSAGES;
+    }
+    else
+    {
+      print STDERR "******************* ERRORS from switch \"$switch\" on target \"$target\" loading config \"$config\".\n";
+      print STDERR "\t", join("\n\t", @MESSAGES), "\n";
+    }
+    return($result);
+  }
 }
