@@ -37,13 +37,13 @@ package Loader;
 
 Implements an object oriented interface and provides a class to make it easy to maintain state.
 
-=over 1
+=over
 
-=item *
+=item
 
 my $OBJ = new Loader()
 
-=over 2
+=over
 
 Creates a new Loader object
 
@@ -61,11 +61,17 @@ BEGIN
 
 =pod
 
+=over
+
+=item
+
 version(required_ver)
 
-=over 1
+=over
 
-Compares Configured VERSION string to required_ver and calls warn() if VERSION<required_ver
+Compares Configured VERSION string to required_ver and calls warn() if (VERSION\<required_ver)
+
+=back
 
 =back
 
@@ -95,11 +101,13 @@ sub new
 
 =pod
 
+=over
+
+=item
+
 $OBJ->detect_switch([$target])
 
-=over 1
-
-=item *
+=over
 
 Detects the presence of a (pingable) switch. If $target is suppplied, must be an IP or hostname which can
 be pased to Net::Ping(). This method will block until the object becomes responsive to ICMP and then return.
@@ -107,6 +115,8 @@ This must be on a directly connected network and cannot require routing because 
 the MAC address of the device after pinging.  Once the object begins responding, the Mac address will be
 used to identify the object and return the Name of the attached switch. (This is useful for bulk loading
 many switches in rapid succession).
+
+=back
 
 =back
 
@@ -177,12 +187,18 @@ sub detect_switch
 
 =pod
 
+=over
+
+=item
+
 sftp_progress()
 
-=over 1
+=over
 
 This is primarily intended as an internal function. Used as a callback for Net::SFTP to provide a progress
 report on in-progress file transfers.
+
+=back
 
 =back
 
@@ -196,30 +212,32 @@ sub sftp_progress
 
 =pod
 
+=over
+
+=item
+
 override_switch($switch, $target, [$staged[, $config_file]])
 
-=over 1
-
-=item *
+=over
 
 This function does the bulk of the work. It requires a switch name and a reachable target for the $switch
 (IP address or [Serial] Device).
 
-=over 2
+=over
 
-=item *
+=item
 
 $switch contains the name of the switch (to be looked up to identify the default configuration and other things)
 
-=item *
+=item
 
 $target contains the IP address or /dev/<name> to use to connect to $switch
 
-=item *
+=item
 
 $staged if specified is a boolean value which, if true, will prevent the configuration from being committed on the switch
 
-=item *
+=item
 
 $config_file if specified is the name of a file which will be loaded on to the switch as a configuration.
 
@@ -229,6 +247,8 @@ A successful return from this function will have the required configuration load
 committed. If the switch is attached by serial, the configuration will load very slowly (one line every
 50 milliseconds or so). If by IP, then SCP will be used to copy the file to the switch and then SSH
 via Expect will be used to apply the configuration to the switch.
+
+=back
 
 =back
 
@@ -344,9 +364,13 @@ sub override_switch
 
 =pod
 
+=over
+
+=item
+
 Login($expect_object)
 
-=over 1
+=over
 
 Requires an Expect object as an argument. The Expect object must have been spawmned or initialized and the
 device must be at a point where it is prepared to accept authentication. The routine tries to be pretty
@@ -360,6 +384,8 @@ state will likely trigger it's error response, which will send a newline to the 
 something it understands.
 
 Will die() on most serious errors. Does not provide a return value.
+
+=back
 
 =back
 
@@ -441,15 +467,23 @@ sub login
 
 =pod
 
+=over
+
+=item
+
 Edit($expect_object)
 
-=over 1
+=over
 
 Requires an Expect object as an argument. Expect Object should be a logged in switch ready
 to accept CLI commands. In the correct entry state, at exit, the switch will be in edit
 mode. An incorrect entry state will likely produce a die() result.
 
 Does not return a value.
+
+=back
+
+=back
 
 =cut
 
@@ -465,15 +499,21 @@ sub Edit
 
 =pod
 
+=over
+
+=item
+
 wait_offline([$IP])
 
-=over 1
+=over
 
 Takes an optional IP address or host name ($IP) argument. If specified, pings that IP/Hostname.
 If not specified, the package DefaultIP is used ($Loader::DefaultIP). This is the target.
 
 Will ping the (specified|default) target every second until it stops responding. Will
 then return.
+
+=back
 
 =back
 
@@ -495,12 +535,18 @@ sub wait_offline
 
 =pod
 
+=over
+
+=item
+
 catch_pipe($signame)
 
-=over 1
+=over
 
 Minimal signal handler (intended to be package internal) used to prevent
 SIGPIPE from causing die() behavior.
+
+=back
 
 =back
 
