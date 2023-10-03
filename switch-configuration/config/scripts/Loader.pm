@@ -32,10 +32,13 @@ use Time::HiRes;
 
 package Loader;
 =pod
+
 =head1 Loader -- A set of routines desinged to help load configurations onto Juniper Switches
+
 Implements an object oriented interface and provides a class to make it easy to maintain state.
 
 =over 1
+
 =item *
 
 my $OBJ = new Loader()
@@ -45,6 +48,7 @@ my $OBJ = new Loader()
 Creates a new Loader object
 
 =back
+
 =back
 
 =cut
@@ -56,13 +60,17 @@ BEGIN
 }
 
 =pod
+
 version(required_ver)
+
 =over 1
 
 Compares Configured VERSION string to required_ver and calls warn() if VERSION<required_ver
 
 =back
+
 =cut
+
 sub version
 {
         my ($version) = @_;
@@ -86,8 +94,11 @@ sub new
 }
 
 =pod
+
 $OBJ->detect_switch([$target])
+
 =over 1
+
 =item *
 
 Detects the presence of a (pingable) switch. If $target is suppplied, must be an IP or hostname which can
@@ -100,6 +111,7 @@ many switches in rapid succession).
 =back
 
 =cut
+
 sub detect_switch
 {
   my $IP = shift @_; # Check for optional IP argument
@@ -164,13 +176,18 @@ sub detect_switch
 }
 
 =pod
+
 sftp_progress()
+
 =over 1
+
 This is primarily intended as an internal function. Used as a callback for Net::SFTP to provide a progress
 report on in-progress file transfers.
+
 =back
 
 =cut
+
 sub sftp_progress
 {
     my($sftp, $data, $offset, $size) = @_;
@@ -178,14 +195,18 @@ sub sftp_progress
 }
 
 =pod
+
 override_switch($switch, $target, [$staged[, $config_file]])
+
 =over 1
+
 =item *
 
 This function does the bulk of the work. It requires a switch name and a reachable target for the $switch
 (IP address or [Serial] Device).
 
 =over 2
+
 =item *
 
 $switch contains the name of the switch (to be looked up to identify the default configuration and other things)
@@ -203,12 +224,16 @@ $staged if specified is a boolean value which, if true, will prevent the configu
 $config_file if specified is the name of a file which will be loaded on to the switch as a configuration.
 
 =back
+
 A successful return from this function will have the required configuration loaded onto the switch and
 committed. If the switch is attached by serial, the configuration will load very slowly (one line every
 50 milliseconds or so). If by IP, then SCP will be used to copy the file to the switch and then SSH
 via Expect will be used to apply the configuration to the switch.
+
 =back
+
 =cut
+
 sub override_switch
 {
   my $switch = shift @_; # Required argument Switch Name
@@ -318,7 +343,9 @@ sub override_switch
 }
 
 =pod
+
 Login($expect_object)
+
 =over 1
 
 Requires an Expect object as an argument. The Expect object must have been spawmned or initialized and the
@@ -335,7 +362,9 @@ something it understands.
 Will die() on most serious errors. Does not provide a return value.
 
 =back
+
 =cut
+
 sub login
 {
     my $JUNIPER = shift @_;
@@ -411,7 +440,9 @@ sub login
 }
 
 =pod
+
 Edit($expect_object)
+
 =over 1
 
 Requires an Expect object as an argument. Expect Object should be a logged in switch ready
@@ -433,7 +464,9 @@ sub Edit
 }
 
 =pod
+
 wait_offline([$IP])
+
 =over 1
 
 Takes an optional IP address or host name ($IP) argument. If specified, pings that IP/Hostname.
@@ -445,6 +478,7 @@ then return.
 =back
 
 =cut
+
 sub wait_offline
 {
     my $IP = shift @_;
@@ -460,7 +494,9 @@ sub wait_offline
 }
 
 =pod
+
 catch_pipe($signame)
+
 =over 1
 
 Minimal signal handler (intended to be package internal) used to prevent
@@ -469,6 +505,7 @@ SIGPIPE from causing die() behavior.
 =back
 
 =cut
+
 # Minimal signal handler to prevent SIGPIPE from causing die() behavior
 sub catch_pipe {
     my $signame = shift;

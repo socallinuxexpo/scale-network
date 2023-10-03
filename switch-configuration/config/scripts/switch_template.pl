@@ -4,6 +4,10 @@
 # of the scripts directory where this script lives. All scripts are expected
 # to be run from this location for consistency and ease of use.
 
+##FIXME## Convert this to a proper PERL Package and update all scripts that
+##FIXME## depend on it accordingly
+
+##FIXME## Add POD for all (exportable) functions
 
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
@@ -17,6 +21,7 @@ use integer;
 use Scalar::Util qw/reftype/;
 use Data::Dumper;
 
+##FIXME## Convert these to package variables.
 our $VV_LOW;
 our $VV_HIGH;
 our $VV_COUNT;
@@ -25,6 +30,7 @@ our $VV_prefix4;
 our $VV_name_prefix;
 
 
+##FIXME## Convert this to package variables.
 my $DEBUGLEVEL = 9;
 
 my %Switchtypes;
