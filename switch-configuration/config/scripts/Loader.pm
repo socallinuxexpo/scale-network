@@ -274,16 +274,26 @@ sub override_switch
     $SIG{PIPE} = \&catch_pipe;
     
     my ($Name, $Num, $MgtVL, $IPv6Addr, $Type);
-    print "Looking up switch $switch\n";
-    ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
-    die("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
-    print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
+    if ($switch)
+    {
+      print "Looking up switch $switch\n" ;
+      ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
+      die("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
+      print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
+    }
+    else
+    {
+      unless($target && $config_file)
+      {
+        die("Error: Switch not defined, need both target ($target) and configuration file ($config_file).\n")
+      }
+    }
 
     # Phase 1: Copy configuration to device
     $config_file = "output/$Name.conf" unless $config_file;
     if (!-f "$config_file")
     {
-        die("Error: Couldn't read configuration file $config_file for $Name");
+        die("Error: Couldn't read configuration file $config_file for $Name ($switch)");
     }
     print STDERR "Sending configuration file to $Name\n";
     my $JUNIPER = new Expect;
