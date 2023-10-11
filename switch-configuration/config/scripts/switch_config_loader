@@ -28,7 +28,7 @@
 # New finctionality:
 #
 # command line usage:
-#   switch_config_loader [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>]
+#   switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
 #
 #       -b -- Run in bulk mode, loop forever trying to install on each switch
 #           attached. Implies -l, incompatible with -k.
@@ -247,7 +247,7 @@ sub usage
   # Display usage information
 
   print STDOUT <<EOF;
- switch_config_loader [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>]
+ switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
 
        -b -- Run in bulk mode, loop forever trying to install on each switch
            attached. Implies -l, incompatible with -k.
