@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   # If not present then warning and will be set to latest release during build
@@ -22,7 +22,7 @@
     ldns
     bind
     kea
-    scaleInventory
+    inputs.self.packages.${pkgs.system}.scaleInventory
     vim
     git
   ];
@@ -49,7 +49,7 @@
     kea = {
       dhcp4 = {
         enable = true;
-        configFile = "${pkgs.scaleInventory}/config/kea.json";
+        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/kea.json";
       };
     };
   };

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
   addtobr = pkgs.writeShellScriptBin "addtobr" ''
     [ -z "$1" ] && echo "Please pass in network device" && exit 1
@@ -112,7 +112,7 @@ in
       expect
       git
       kea
-      massflash
+      inputs.self.packages.${pkgs.system}.massflash
       unixtools.ping
       tmux
       vim
@@ -153,7 +153,7 @@ in
                 "hooks-libraries": [{
                           "library": "${pkgs.kea}/lib/kea/hooks/libdhcp_run_script.so",
                           "parameters": {
-                              "name": "${pkgs.massflash}/bin/massflash",
+                              "name": "${inputs.self.packages.${pkgs.system}.massflash}/bin/massflash",
                               "sync": false
                         }
                 }]

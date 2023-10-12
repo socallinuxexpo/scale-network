@@ -26,7 +26,7 @@ build-switch-configs: .build-switch-configs
 
 .build-switch-configs: .lint .secrets config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pl
 	cd config && \
-		./scripts/build_switch_configs.pl
+		perl scripts/build_switch_configs.pl
 	touch .build-switch-configs
 
 # Make the switch-maps-bundle which is a collection of all the switch port maps

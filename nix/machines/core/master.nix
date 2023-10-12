@@ -1,6 +1,6 @@
-{ config, lib, pkgs, self, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
-  zoneSerial = toString self.lastModified;
+  zoneSerial = toString inputs.self.lastModified;
 in
 {
 
@@ -18,7 +18,7 @@ in
     '';
   };
 
-  # Make sure that the makes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
+  # Make sure that the nix/machines/core/master.nixmakes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
   # Ref: https://github.com/systemd/systemd/issues/9227#issuecomment-395500679
   systemd.network = {
     enable = true;
@@ -56,7 +56,7 @@ in
                                 IN    NS      coreexpo.scale.lan.
                                 IN    NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${pkgs.scaleInventory}/config/db.scale.lan.records")
+              (builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/db.scale.lan.records")
             ]);
           };
           "10.in-addr.arpa." = {
@@ -76,7 +76,7 @@ in
                                 IN NS      coreexpo.scale.lan.
                                 IN NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${pkgs.scaleInventory}/config/db.ipv4.arpa.records")
+              (builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/db.ipv4.arpa.records")
             ]);
           };
           # 2001:470:f026::
@@ -97,7 +97,7 @@ in
                                 IN NS      coreexpo.scale.lan.
                                 IN NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${pkgs.scaleInventory}/config/db.ipv6.arpa.records")
+              (builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/db.ipv6.arpa.records")
             ]);
           };
         };

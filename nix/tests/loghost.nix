@@ -1,6 +1,8 @@
 {
   name = "loghost";
-  nodes.machine1 = { ... }: { imports = [ ../machines/loghost.nix ]; } // {
+
+  nodes.machine1 = {
+    imports = [ ../machines/loghost.nix ];
     virtualisation.graphics = false;
   };
 
