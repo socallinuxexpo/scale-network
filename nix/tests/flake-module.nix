@@ -29,6 +29,16 @@
         make .build-switch-configs 
         touch $out
       '');
+      openwrt-golden = pkgs.runCommand "openwrt-golden"
+        {
+          buildInputs = [ pkgs.diffutils pkgs.gomplate ];
+        } ''
+        cp -r --no-preserve=mode ${pkgs.lib.cleanSource inputs.self}/* .
+        cd tests/unit/openwrt
+        mkdir -p $out/tmp/ar71xx
+        ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
+      '';
+
     };
   };
 }
