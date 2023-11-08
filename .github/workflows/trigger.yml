@@ -35,9 +35,9 @@ jobs:
           --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'Content-Type: application/json' | jq -r '.head.ref' \
         )
-        echo ::set-output name=subcomm::$SUBCOMM
-        echo ::set-output name=subargs::$SUBARGS
-        echo ::set-output name=ref::$REF
+        echo "subcomm=$SUBCOMM" >> $GITHUB_OUTPUT
+        echo "subargs=$SUBARGS" >> $GITHUB_OUTPUT
+        echo "ref=$REF" >> $GITHUB_OUTPUT
       continue-on-error: true
     outputs:
       subcomm: ${{ steps.job.outputs.subcomm }}
@@ -65,7 +65,7 @@ jobs:
           --form "variables[OPENWRT_INTEG]=YES" \
           --form variables[WORMHOLE_CODE]=$WORMHOLE_CODE \
           https://gitlab.com/api/v4/projects/17362342/trigger/pipeline | jq -r .web_url)
-        echo ::set-output name=pipeline::$PIPELINE
+        echo "pipeline=$PIPELINE" >> $GITHUB_OUTPUT
     - name: Create status PR Comment
       if: ${{ success() }}
       uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b  # SHA ref: v3.0.1
@@ -83,4 +83,3 @@ jobs:
           [FAIL] - Error triggering gitlab flash pipeline
     outputs:
       pipeline: ${{ steps.flash.outputs.pipeline }}
-
