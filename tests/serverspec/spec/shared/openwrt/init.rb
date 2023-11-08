@@ -4,11 +4,11 @@ require 'serverspec' # If you want to use serverspec matchers, you will need thi
 RSpec.shared_examples "openwrt" do
 
   DEFAULT_BINS=["apinger", "awk", "bash", "logrotate",
-                "rsyslogd",  "zabbix_agentd", "tcpdump"]
+                "rsyslogd", "tcpdump"]
 
   REMOVED_BINS=["snmpd", "dropbear"]
 
-  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "zabbix", "lldpd"]
+  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "lldpd"]
 
   DEFAULT_BINS.each do |bin|
     describe command("which #{bin} 2> /dev/null") do
