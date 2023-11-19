@@ -1,7 +1,7 @@
 system {
     host-name minimal;
     root-authentication {
-        # Must supply a password during config install
+        encrypted-password "<$JROOT_PW>"; # This token must be replaced for configuration to succeed
     }
     syslog {
         host loghost {

@@ -154,9 +154,9 @@ if ($opt_t && (scalar(@list) != 1))
 }
 print STDERR "opt_t OK\n";
 
-if ($opt_c)
+if ($opt_c && ! -r "$opt_c")
 {
-  warn("Cannot read configuration file $opt_c specified on command line.\n") unless(-r "$opt_c");
+  warn("Cannot read configuration file $opt_c specified on command line.\n");
   usage();
   exit(1);
 }
