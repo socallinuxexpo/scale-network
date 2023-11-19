@@ -1,5 +1,10 @@
 FROM hairyhenderson/gomplate:v3.2.0-slim AS gomplate
-FROM ubuntu:18.04 as build
+FROM ubuntu:20.04 as build
+
+
+ENV TZ=ETC/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+
 
 RUN apt-get update &&\
     apt-get install -y sudo time git-core subversion build-essential gcc-multilib \
