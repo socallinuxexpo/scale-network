@@ -7,7 +7,7 @@ while(1)
   my ($rin, $win, $ein) = ('', '', '');
   vec($rin, fileno(FH), 1) = 1;
   vec($rin, fileno(STDIN), 1) = 1;
-  my $ein=$rin;
+  $ein=$rin;
   my $nfh = select(my $rout=$rin, my $wout=$win, my $eout=$ein, 1);
   if ($nfh)
   {
