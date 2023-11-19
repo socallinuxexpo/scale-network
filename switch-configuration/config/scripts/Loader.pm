@@ -15,6 +15,7 @@
 ##FIXME##       Net::SSH::Perl          -- ssh without system()
 #       Net::SFTP               -- sftp without system()
 #       Net::ARP                -- arp without system()
+#       Net::Interface          -- enumerate and identify interface data
 #       Time::HiRes             -- Used for usleep (sleep for microseconds)
 
 # Pull in dependencies
@@ -30,16 +31,20 @@ require Exporter;
     );
 use strict;
 use lib "./scripts";
+use IO::File;
 use switch_template;   # Pull in configuration library
 use FileHandle;
 use IPC::Open2;
 use Net::Ping;
 use Expect;
 use Term::ReadKey;
-#use Net::SSH::Perl;
+#use Net::SSH::Perl;	# Integration postponed
 use Net::SFTP;
 use Net::ARP;
+use Net::Interface;
 use Time::HiRes;
+
+my $JDEVICE;
 
 =pod
 
@@ -101,19 +106,82 @@ sub version
 sub new
 {
         my ($class, @args) = @_;
+	my $user;
+
+	$user = `whoami`;
+	chomp($user);
 
         $class = ref($class) if ref($class); # Allows calling as $exp->new()
         
         STDERR->autoflush(1);   # Turn on autoflush for STDERR
         get_switchtype("anonymous");
+	
         my $self = {
             ping       => Net::Ping->new("icmp"),
             DefaultIP  => "192.168.255.76", # Switch target management IP
             line_delay => 50 * 1000, # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
+	    Interfaces => [ Net::Interface->interfaces() ], # List of interfaces
+	    DefaultUser => $user,
         };
 
+	foreach my $if (@{$self->{"Interfaces"}})
+	{
+		print STDERR "Enumerated interface ", $if->name, ".\n";
+	}
         bless $self, $class;
         return $self;
+}
+
+=pod
+
+=over
+
+=item
+
+$OBJ->setUser(username)
+
+=over
+
+Sets the defaultUser parameter for use with SSH and SFTP
+
+=back
+
+=back
+
+=cut
+
+sub setUser
+{
+	my $self = shift(@_);
+	my $user = shift(@_);
+	$self->{'DefaultUser'} = $user;
+	return;
+}
+
+=pod
+
+=over
+
+=item
+
+$OBJ->setPasswd(password)
+
+=over
+
+Sets the defaultPassword parameter for use with SSH and SFTP
+
+=back
+
+=back
+
+=cut
+
+sub setPasswd
+{
+	my $self = shift(@_);
+	my $pass = shift(@_);
+	$self->{'DefaultPassword'} = $pass;
+	return;
 }
 
 =pod
@@ -141,44 +209,36 @@ many switches in rapid succession).
 
 sub detect_switch
 {
-  my $IP = shift @_; # Check for optional IP argument
-  $IP = $Loader::DefaultIP unless $IP; # Default to Package Default IP if not specified
-
+  my $self = shift @_;
+  my $IP = shift @_ if (@_); # Check for optional IP argument
+  print STDERR "Passed IP: ($IP)\n";
+  $IP = $self->{"DefaultIP"} unless $IP; # Default to Package Default IP if not specified
+  print STDERR "Possibly default IP: ($IP)\n";
   while (1)
   {
     
-    # delete ARP entry for 192.168.255.76 (Requires sudo for privileges)
-    # Turns out to be unnecessary and annoying.
-    # system("sudo", "arp","-d","$IP");
-    
     # ping $IP until success
     my $success = 0;
-    print "Looking for switch on line.\n";
+    print "Looking for switch ($IP) on line.\n";
     do {
-        my $result = $Loader::ping->ping($IP);
-        $success++ unless($result);
+        my $result = $Loader::ping->ping($IP,1);
+	print STDERR "\tPing result: $result\n";
+	$success++ if($result == 1);
         sleep 1; # Retry every second until success.
     } until($success);
     
     print "Switch detected, identifying.\n";
 
-#    my $arp = `arp -n $IP | grep $IP`;
-#    chomp($arp);
-#    $arp = lc($arp);
-#    # Harry regex to support differing arp outputs (BSD vs. Linux vs. MacOS)
-#    $arp =~ s@^.*(at|ether)\s+([0-9a-f:]+)\s+.*$@\2@m;
-#    if ($arp =~ /\n/)
-#    {
-#        warn("Multiple ARP table entries for address $IP:\n");
-#        foreach(split(/\n/, $arp))
-#        {
-#            warn("\t$_\n");
-#        }
-#        warn("Basing configuration load on first one.\n");
-#        $arp =~ s/\n.*//;
-#    }
-    my $arp = Net::ARP::arp_lookup(undef, $IP) || die("Couldn't arp $IP\n");;
-
+    my $arp;
+    foreach my $if (@{$self->{Interfaces}})
+    {
+      print STDERR "\tTrying interface (", $if->name,") for ARP of $IP\n";
+      $arp = Net::ARP::arp_lookup($if->name, $IP);
+      print STDERR "\tGot $arp MAC address for $IP on (", $if->name, ")\n";
+      next if ($arp eq "unknown");
+      last if $arp;
+    }
+    die("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
     
     print "Looking for MAC $arp in switchtypes table...";
     my @switchname = get_switch_by_mac($arp);
@@ -194,7 +254,7 @@ sub detect_switch
     {
         print STDERR "Error: $arp matches multiple switches (", join(", ", @switchname),").\n";
         sleep 10;
-    get_switchtype("anonymous");
+        get_switchtype("anonymous");
         continue; # Retry -- until file is corrected or a valid switch is provided
     }
     print "Found: $switchname[0].\n";
@@ -225,7 +285,9 @@ report on in-progress file transfers.
 
 sub sftp_progress
 {
+	#my $self = shift @_;
     my($sftp, $data, $offset, $size) = @_;
+    #print STDERR "\t\tsftp_progress got sftp=$sftp, data=$data, offset=$offset, size=$size\n";
     print "Config: $offset / $size bytes |". "#" x int(($offset*1.0/$size*1.0) * 100.0) ."|\r";
 }
 
@@ -275,6 +337,7 @@ via Expect will be used to apply the configuration to the switch.
 
 sub override_switch
 {
+  my $self = shift @_;
   my $switch = shift @_; # Required argument Switch Name
   my $target = shift @_; # SSH Reachable Target for configuration [1]
   my $staged = shift @_; # Optional argument -- True for -n staging/testing, False to actually scribble on switch
@@ -315,15 +378,18 @@ sub override_switch
         die("Error: Couldn't read configuration file $config_file for $Name ($switch)");
     }
     print STDERR "Sending configuration file to $Name\n";
-    my $JUNIPER = new Expect;
+    my $JUNIPER = Expect->new();
     my ($pos, $err, $matched, $before, $after);
     $JUNIPER->raw_pty(1);
     if ($target =~ /^\/dev\//)
     {
         # Send configuration via expect directly (skip $SWITCH_COMMANDS)
-        open JDEVICE, "+<$target" || die("Failed to open $target for $Name\n");
+	open JDEVICE, "+<$target" || die("Failed to open $target for $Name\n");
         open CONFIG, "<$config_file" || die("Couldn't open $config_file for $Name: $!\n");
-        $JUNIPER->exp_init(\*JDEVICE);
+	print STDERR "Initializing expect on $target FH\n";
+        $JUNIPER->init(\*JDEVICE);
+	print STDERR "Serial parameters are:\n";
+	print STDERR `stty -F $target -a`;
         Loader::Login($JUNIPER);
         Loader::Edit($JUNIPER);
         $JUNIPER->send("load override terminal\n");
@@ -343,11 +409,18 @@ sub override_switch
     {
         # Send cconfiguration file via SFTP, then use Expect to send $SWITCH_COMMANDS to activate
         my $result;
-        my $sftp = Net::SFTP->new($target) || die("Failed to initiate SFTP to $target ($Name)\n");
-        $sftp->put("$config_file", "/tmp/new_config.conf", &sftp_progress) ||
+        print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
+        my $sftp = Net::SFTP->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || die("Failed to initiate SFTP to $target ($Name)\n");
+	print STDERR "SFTP Put $config_file\n";
+        $sftp->put("$config_file", "/tmp/new_config.conf", \&sftp_progress) ||
                 die("Failed to send config to $target ($Name)\n");;
+        print "\n\n";
         print STDERR "Activating...\n";
-        $JUNIPER->spawn($Loader::SSH, $target);
+	print "Attempting to launch SSH to $target using $JUNIPER\n";
+	$JUNIPER->debug(3);
+	print "Attempting spawn ssh (-l) (".$self->{"DefaultUser"}.") ($target)\n";
+        $JUNIPER->spawn($Loader::SSH, "-l", $self->{"DefaultUser"}, $target);
+	print "Spawn resulted in $JUNIPER\n";
         Loader::Login($JUNIPER);    # Get to the CLI prompt
         Loader::Edit($JUNIPER);     # Transition from CLI to Edit Mode
         $JUNIPER->send("load override /tmp/new_config.conf\n");
@@ -355,7 +428,7 @@ sub override_switch
                 'load complete'
         );
         die("Did not receive \"load complete\" after loading config: $err for $Name\n") if ($err);
-        ($pos, $err, $matched, $before, $after) = $JUNIPER->expedt(30,
+        ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
                 '# '
         );
         die("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
@@ -420,77 +493,88 @@ Will die() on most serious errors. Does not provide a return value.
 
 =cut
 
-sub login
+sub Login
 {
     my $JUNIPER = shift @_;
+
+    print STDERR "Login called with ($JUNIPER)\n";
     my $logged_in = 0;
-    do
     {
-      # Initial connect will get us one of five possible situations:
-      my ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
-          'ogin:',
-          'WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!',
-          'Are you sure you want to continue connecting',
-          'Enter passphrase',
-          'password:',
-          '% ',
-          '> ');
-      if ($err)
-      {
-        # In case we get stuck and missed the prompt or haven't seen
-        # anything for some reason, warn and send a newline to the switch
-        warn("Error: $err looking for authentication prompt\n");
-        $JUNIPER->send("\n");
-        next;
-      }
-      # Remote Key Change
-      if ($matched =~ /ogin:/)
-      {
-        print "Remote Host requires username: ";
-        my $username = ReadLine(0);
-        chomp($username);
-        $JUNIPER->send($username."\n");
-      }
-      elsif ($matched =~ /REMOTE HOST IDENTIFICATION/)
-      {
-        die("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
-      }
-      # Handle prompt for host key not recognized
-      elsif ($matched =~ /continue connecting/)
-      {
-        warn("Host key changed, accepting new key.\n");
-        $JUNIPER->send("yes\n");
-        # Look for next response
-        ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
+      until ($logged_in)
+      {{
+        print STDERR "Authentication Loop Begin\n";
+           # Initial connect will get us one of five possible situations:
+        my ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(5,
+	    'ttyu0',
+            'WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!',
+            'Are you sure you want to continue connecting',
             'Enter passphrase',
             'password:',
-        '> ');
-      }
-      # Handle prompt for passphrase (for key) or password (host)
-      elsif ($matched =~ /pass/)
-      {
-          print "(More) authentication required:\n";
-          print $before. $matched. $after;
-          # Get password from STDIN
-          ReadMode('noecho');
-          my $pass = ReadLine(0);
-          ReadMode('normal');
-          chomp($pass);
-          print "\n";
-          $JUNIPER->send($pass,"\n");
-      }
-      elsif ($matched =~ /% /)
-      {
-        print "We are apparently logged into the switch as root. Starting CLI.\n";
-        print "Note: This is generally NOT recommended.\n";
-        $JUNIPER->send("clear ; cli\n");
-      }
-      else
-      {
-          $logged_in++;
-      }
-    } until ($logged_in);
+            '% ',
+            '> ');
+        print STDERR "Expect returned error: $err with match ($before) ($matched) ($after) at $pos\n";
+        if ($err)
+        {
+          # In case we get stuck and missed the prompt or haven't seen
+          # anything for some reason, warn and send a newline to the switch
+          warn("Error: $err looking for authentication prompt\n");
+            $JUNIPER->send("\r");
+	  print STDERR "Sent newline to try and recover prompt (logged_in=$logged_in)\n";
+          next;
+        }
+        print STDERR "Passed $err with match ($before) ($matched) ($after) at $pos\n";
+        # Remote Key Change
+        if ($matched =~ /ttyu0/)
+        {
+          print "Remote Host requires username: ";
+          my $username = ReadLine(0);
+          chomp($username);
+          $JUNIPER->send($username."\r");
+        }
+        elsif ($matched =~ /REMOTE HOST IDENTIFICATION/)
+        {
+          die("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
+        }
+        # Handle prompt for host key not recognized
+        elsif ($matched =~ /continue connecting/)
+        {
+          warn("Host key changed, accepting new key.\n");
+          $JUNIPER->send("yes\n");
+          # Look for next response
+          ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
+              'Enter passphrase',
+              'password:',
+          '> ');
+        }
+        # Handle prompt for passphrase (for key) or password (host)
+        elsif ($matched =~ /pass/)
+        {
+            print "(More) authentication required:\n";
+            print $before. $matched. $after;
+            # Get password from STDIN
+            ReadMode('noecho');
+            my $pass = ReadLine(0);
+            ReadMode('normal');
+            chomp($pass);
+            print "\r";
+            $JUNIPER->send($pass,"\n");
+        }
+        elsif ($matched =~ /% /)
+        {
+          print "We are apparently logged into the switch as root. Starting CLI.\n";
+          print "Note: This is generally NOT recommended.\n";
+          $JUNIPER->send("clear ; cli\n");
+        }
+        else
+        {
+            $logged_in++;
+        }
+      }}
+      print STDERR "Exited loop with logged_in=$logged_in\n";
+    }
+    print STDERR "Exited outer loop with logged_in=$logged_in\n";
     # Finally at the router prompt, logged in.
+    print STDERR "Apparently successful login, returning\n";
     return;
 }
 
@@ -522,7 +606,7 @@ sub Edit
     $JUNIPER->send("edit\n");
     my ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
         '# ');
-    die("Failed to enter edit mode: $err\n");
+    die("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
     return;
 }
 
@@ -550,15 +634,19 @@ then return.
 
 sub wait_offline
 {
+    my $self = shift @_;
     my $IP = shift @_;
     $IP = $Loader::DefaultIP unless($IP);
+    print STDERR "Waiting for switch ($IP) to go offline\n";
     # Wait for the switch to go off line before trying to find next switch.
     my $success = 1;
     do {
-        my $result = $Loader::ping->ping($IP);
-        $success=0 if($result);
+        my $result = $Loader::ping->ping($IP, 1);
+	print "\tPing result: $result\n";
+        $success=0 unless($result);
         sleep 1; # Retry every second until success.
     } while($success);
+    print STDERR "Switch is offline\n";
     return;
 }
 
