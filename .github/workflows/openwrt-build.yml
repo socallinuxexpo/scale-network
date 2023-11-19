@@ -15,7 +15,8 @@ jobs:
       matrix:
         target: ["ar71xx", "mt7622"]
     container:
-      image: sarcasticadmin/openwrt-build@sha256:8dc545cb1cbb2cb507f4e5c8df2f3632335abf7230f9574eb39080c2fc67cc3f
+      # Ubuntu 20.04
+      image: sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922
       # Since user is openwrt and gets 1001 from inside container
       options: --user 1001
     steps:
