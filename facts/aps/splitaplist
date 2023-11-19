@@ -17,6 +17,7 @@
 # with the mac changing automatically in the aplist.csv file
 # while keeping the rest of the per-location information being the same
 
-cut -f 1,2,4-7,9,10 -d , aplist.csv |sed -e s/10\.128\.3\.// -e s/10\.0\.3\.// >apuse.csv 
-cut -f 2-3 -d , aplist.csv >apmac.csv 
+cut -f 1,2,4-7,9,10 -d , aplist.csv >ap_locations.csv 
+#cut -f 1,2,4-7,9,10 -d , aplist.csv |sed -e s/10\.128\.3\.// -e s/10\.0\.3\.// >ap_locations.csv 
+cut -f 2-3 -d , aplist.csv |sed s/'$'/,/ >ap_physical.csv 
 

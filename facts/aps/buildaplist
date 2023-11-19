@@ -15,13 +15,18 @@
 #
 # This new approach lets us change what AP is where by editing the apuser.csv file
 # with the mac changing automatically in the aplist.csv file
+# while keeping the rest of the per-location information being the same
 
-while keeping the rest of the per-location information being the samecat apuse.csv  |sed s/,/' '/g |while read name serial ip ch2 ch5 config x y
+cat ap_locations.csv  |sed s/,/' '/g |while read name serial ip ch2 ch5 config xoff yoff
 do
-  export mac=`grep "$serial," apmac.csv |cut -f 2 -d , `
+  export mac=`grep "$serial," ap_physical.csv |cut -f 2 -d , `
   export prefix=`echo "$name" |cut -f 1 -d - `
-  grep "^$prefix," roommap.csv |sed s/,/' '/g |while read j ipprefix map
+  #grep "^$prefix," rooms_facts.csv |sed s/,/' '/g |while read j ipprefix map llx lly urx ury x y
+  grep "^$prefix," rooms_facts.csv |sed s/,/' '/g |while read j map llx lly urx ury x y
   do
-    echo "$name,$serial,$mac,$ipprefix.$ip,$ch2,$ch5,$config,$map,$x,$y"
+    export mapx=$((($upx-$llx)/$x*$xoff + $llx))
+    export mapy=$((($upy-$lly)/$y*$yoff + $lly))
+    echo "$name,$serial,$mac,$ip,$ch2,$ch5,$config,$map,$mapx,$mapy"
+    #echo "$name,$serial,$mac,$ipprefix.$ip,$ch2,$ch5,$config,$map,$mapx,$mapy"
   done
 done
