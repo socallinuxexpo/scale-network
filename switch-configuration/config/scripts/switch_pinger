@@ -8,7 +8,8 @@
 # I, J no network switch
 #
 
-require "./scripts/switch_template.pl";
+use lib "./scripts";
+use switch_template;
 use Data::Dumper qw/Dumper/;
 
 set_debug_level(0);

@@ -4,6 +4,7 @@ openwrt/*.img
 openwrt/aplist
 openwrt/.openwrt
 openwrt/.packages
+secrets
 *.swp
 
 # Ignore aplist MAC conversion output file

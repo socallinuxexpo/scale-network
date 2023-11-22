@@ -12,7 +12,8 @@ all: switch-maps-bundle
 lint:	.lint
 
 .lint: config/scripts/*.pl
-	find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
+	cd config && \
+		find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
 	touch .lint
 
 ../facts/secrets/jroot_pw:
@@ -24,7 +25,7 @@ lint:	.lint
 
 build-switch-configs: .build-switch-configs
 
-.build-switch-configs: .lint .secrets config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pl
+.build-switch-configs: .lint .secrets config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pm
 	cd config && \
 		perl scripts/build_switch_configs.pl
 	touch .build-switch-configs
@@ -44,3 +45,9 @@ config/switch-maps/refs.ps: .build-switch-configs .build-switch-configs
 config/switch-maps/stickers.ps: .build-switch-configs .build-switch-configs
 	cd config && \
 		perl scripts/generate_ps_stickers.pl > switch-maps/stickers.ps
+
+clean:
+	rm -f .build-switch-configs .lint .secrets
+	cd config && \
+		rm -rf output/* switch-maps/*
+

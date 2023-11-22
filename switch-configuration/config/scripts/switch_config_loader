@@ -1,0 +1,353 @@
+#!/usr/bin/env perl
+#
+# This script is intended as a replacement for former scripts:
+#        bulk_local_load_switches
+#        override_switches
+#        update_switches
+#
+# Basic functionality of those three scripts was very similar, and the intent here is to both
+# replace the antiquated and hacky originals with a version built on the Loader.pm library
+# which is built on expect and contains the reusable portions of all of those scripts that
+# can then be improved in one place providing benefit to all these functions.
+#
+# Original funciton/intent of the initial scripts:
+#
+# bulk_local_laod_switches
+#        Built on override_switches, but optimized for loading multiple switches
+#        at a work party or similar situation.
+#
+# override_switches
+#        Send out updated configurations to switches and apply them in situ
+#        using "load override" functionality.
+#
+# update_switches
+#        A predecessor to override switches rendered obsolete by the development
+#        of override switches, long overdue for retirement.
+#
+#
+# New finctionality:
+#
+# command line usage:
+#   switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
+#
+#       -b -- Run in bulk mode, loop forever trying to install on each switch
+#           attached. Implies -l, incompatible with -k.
+#
+#       -c <filename> -- Use <filename> to configure every affected switch
+#
+#       -h -- "Help" -- Print detailed usage information and exit. Supersedes
+#           any other flags present.
+#
+#       -k -- Keep errors and display at the end of the run (incompatible with -b)
+#       
+#       -l -- Local Mode -- Use 192.168.255.76 to reach switch unless -t
+#           is specified.
+#
+#       -n -- No-Apply -- Send out the configuration, do the show | compare,
+#           but do not apply the configuration, rollback instead.
+#
+#       -p Prompt for a password to be used with switches
+#
+#       -t <target> -- Specify the target. <target> can be a host name, an
+#           IP address, or a /dev/ name. If /dev/, then it is treated as a
+#           Serial Port. Otherwise, treated as a Host Name or IP Address
+#           and passed unchecked to library routines for connecting to the
+#           switch. Implies -l.
+#
+#       -u <username> -- username to provide to swtiches for authentication
+#
+#       <switch_spec> -- One or more switch names and/or groups
+#           Cannot be used with -l or any of the options that imply -l
+#             unless it resolves to a single switch.
+#           For more informoation on groups, see the "expand_switch_groups()"
+#           function in switch_template.pl (POD coming soon)
+#
+# Examples of common tasks:
+#
+# Work party -- Load miniconfig onto a bunch of switches via serial port
+#
+#   switch_config_loader -b -c miniconfig -t /dev/ttyUSBA
+#
+# Work party -- Load configs onto a bunch of switches via direct attached
+#   ethernet connection. (Note: local ethernet interface must have an
+#   address other than 192.168.255.76 on the 192.168.255.0/24 network)
+#
+#   switch_config_loader -b -l
+#
+# Testing -- Test loading a config onto a locally attached switch
+#
+#     switch_config_loader -l -n
+#
+#   or several switches:
+#
+#     switch_config_loader -b -l -n
+#
+# Conference -- Update the configuration on all switches in groups I, and W
+#
+#     switch_config_loader I W
+#
+use strict;
+use lib "./scripts";
+
+use Loader;
+use switch_template;
+
+use Term::ReadKey;
+use Getopt::Std;
+our $opt_b;
+our $opt_c;
+our $opt_h;
+our $opt_k;
+our $opt_l;
+our $opt_n;
+our $opt_p;
+our $opt_t;
+our $opt_u;
+getopts('bc:hklnpt:u:');
+
+# Check for implicit or incompatible arguments.
+if ($opt_h)
+{
+  usage();
+  exit(0);
+}
+$opt_l = 1 if ($opt_b);
+$opt_l = 1 if ($opt_t);
+
+die "Error: -b and -k are incompatible.\n" if ($opt_b && $opt_k);
+
+my @list = @ARGV;
+
+my $switch;
+my $target;
+my $config;
+
+my $LOADER = new Loader();
+my @ERRORS = ();
+# We need to pretend there's exactly one switch_spec for later test, but it will be
+# ignored in the case of opt_c.
+if ($opt_c && $opt_l && scalar(@list) == 0)
+{
+  @list = ("none_required");
+}
+
+if (scalar(@list) == 0)
+{
+  @list = @{Loader::get_switchlist()};
+  print "Pulled ", scalar(@list), " switches from configuration list\n";
+}
+else
+{
+  print "Have ", scalar(@list), " Switch or group names from command line.\n";
+}
+
+@list = Loader::expand_switch_groups(@list);
+
+print "List expansion yielded ", scalar(@list), " Switch names.\n";
+
+
+if ($opt_t && (scalar(@list) != 1))
+{
+  warn("Use of -t requires exactly one switch be specified.\n");
+  usage();
+  exit(1);
+}
+print STDERR "opt_t OK\n";
+
+if ($opt_c && ! -r "$opt_c")
+{
+  warn("Cannot read configuration file $opt_c specified on command line.\n");
+  usage();
+  exit(1);
+}
+print STDERR "opt_c OK\n";
+
+if ($opt_t =~ /^\/dev\//)
+{
+  unless(open(JUNIPER, "+<$opt_t"))
+  {
+    warn("Cannopt open (Serial) device $opt_t specified on command line.\n");
+    close JUNIPER;
+    usage();
+    exit(1);
+  }
+}
+print STDERR "dev OK\n";
+
+print STDERR "Got past opt_t\n";
+
+if ($opt_p)
+{
+  print "Enter switch Password: ";
+  ReadMode('noecho');
+  my $password = ReadLine(0);
+  ReadMode('restore');
+  $LOADER->setPass($password);
+}
+
+if ($opt_u)
+{
+  $LOADER->setUser($opt_u);
+}
+
+print STDERR "Got to check for opt_b\n";
+
+unless($opt_b)
+{
+  # Not bulk mode, so let's just process the list.
+  foreach my $switch (@list)
+  {
+    $switch = undef if ($switch =~ /none_required/);
+    my $result = process_switch($switch, $opt_t, $opt_c);
+    if ($result)
+    {
+      report_error("Bad return from process_switch for \"$switch\" (Target: $opt_t, Config: $opt_c)\n");
+    }
+  }
+  if ($opt_k && scalar(@ERRORS))
+  {
+    print STDERR "\n\n\n\n********************* ERRORS COLLECTED *********************\n\n";
+    print STDERR join("\n", @ERRORS);
+    print STDERR "\n\n\n\n********************* ERROR LIST ENDS  *********************\n\n";
+    exit 1;
+  }
+  elsif ($opt_k)
+  {
+    print STDERR "\n\n\n\n***** No Errors Reported ****\n\n";
+  }
+  exit 0;
+}
+
+while (1)
+{
+  # Bulk mode
+  unless($target)
+  {
+	  $target = $LOADER->{"DefaultIP"};
+  }
+  $switch = $LOADER->detect_switch($target);
+  print STDERR "detect_switch returned $switch\n";
+  # If $config is specified, then $switch doesn't matter and will generate a warning.
+  # If $config is undefined, then $switch is needed in order to push the correct configuration file.
+  print STDERR "Processing $switch as $target with $config\n";
+  my $result = process_switch($switch, $target, $config);
+  print STDERR "Returned from process_switch with $result.\n";
+  warn("process_switch() returend $result -- unexpected\n") if ($result);
+  # Wait for switch to go offline to be ready to detect next switch.
+  $LOADER->wait_offline($target);
+}
+
+
+sub process_switch
+{
+  # Process a given switch
+  my $switch = shift @_;
+  my $target = shift @_;
+  my $config = shift @_;
+
+  # For a given switch ($switch), obtain the switch 
+  # If switch is undefined, then $target and $config must be provided
+  unless($switch || ($target && $config))
+  {
+    warn("WARNING: process_switch requires at least (switch) or (target and config) to be defined.\n");
+    return(-1);
+  }
+  if ($target && $config)
+  {
+    # If $target and $config are specified, then $switch is irrelevant.
+    if ($switch)
+    {
+      warn("Warning: Switch: \"$switch\" Ignored because Target ($target) and Config ($config) specified.\n");
+    }
+    # Send specified configuration to Target regardless.
+  }
+  print STDERR "Calling (Loader) override_switch for $switch at $target ($opt_n) with $config\n";
+  my ($result, @MESSAGES) = $LOADER->override_switch($switch, $target, $opt_n, $config);
+  print STDERR "(Loader) override_swtich returned $result\n";
+  print STDERR "Got $#MESSAGES errors\n";
+  if ($#MESSAGES > 0)
+  {
+    report_error("******************* ERRORS from switch \"$switch\" on target \"$target\" loading config \"$config\".\n");
+    report_error("\t====", join("\n\t", @MESSAGES), "\t====\n");
+  }
+  else
+  {
+    report_error("+++ No errors from switch \"$switch\" on target \"$target\" loading config \"$config\".\n");
+  }
+  return($result);
+}
+
+sub report_error
+{
+  if ($opt_k)
+  {
+    push @ERRORS, @_;
+  }
+  else
+  {
+    print STDERR join("\n", @_), "\n";
+  }
+  return;
+}
+
+sub usage
+{
+  # Display usage information
+
+  print STDOUT <<EOF;
+ switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
+
+       -b -- Run in bulk mode, loop forever trying to install on each switch
+           attached. Implies -l, incompatible with -k.
+
+       -c <filename> -- Use <filename> to configure every affected switch
+
+       -h -- "Help" -- Print detailed usage information and exit. Supersedes
+           any other flags present.
+
+       -k -- Keep errors and display at the end of the run (incompatible with -b)
+
+       -l -- Local Mode -- Use 192.168.255.76 to reach switch unless -t
+           is specified.
+
+       -n -- No-Apply -- Send out the configuration, do the show | compare,
+           but do not apply the configuration, rollback instead.
+
+       -t <target> -- Specify the target. <target> can be a host name, an
+           IP address, or a /dev/ name. If /dev/, then it is treated as a
+           Serial Port. Otherwise, treated as a Host Name or IP Address
+           and passed unchecked to library routines for connecting to the
+           switch. Implies -l.
+
+       <switch_spec> -- One or more switch names and/or groups
+           Cannot be used with -l or any of the options that imply -l
+             unless it resolves to a single switch.
+           For more informoation on groups, see the "expand_switch_groups()"
+           function in switch_template.pl (POD coming soon)
+
+ Examples of common tasks:
+
+ Work party -- Load miniconfig onto a bunch of switches via serial port
+
+   switch_config_loader -b -c miniconfig -t /dev/ttyUSBA
+
+ Work party -- Load configs onto a bunch of switches via direct attached
+   ethernet connection. (Note: local ethernet interface must have an
+   address other than 192.168.255.76 on the 192.168.255.0/24 network)
+
+   switch_config_loader -b -l
+
+ Testing -- Test loading a config onto a locally attached switch
+
+     switch_config_loader -l -n
+
+   or several switches:
+
+     switch_config_loader -b -l -n
+
+ Conference -- Update the configuration on all switches in groups I, and W
+
+     switch_config_loader I W
+EOF
+  return;
+}

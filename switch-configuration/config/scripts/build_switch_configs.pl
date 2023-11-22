@@ -7,7 +7,15 @@
 # Switch configurations are stored in ./output/
 # Port map files are stored in ./switch-maps/
 #
-require "./scripts/switch_template.pl";   # Pull in configuration library
+
+##FIXME## Cleanup package separation for switch_template
+##FIXME## Get rid of "our" variables and convert to Package object
+##FIXME## There's a lot of cruft built up at this point, probably
+##FIXME## time to consider a complete clean reimplementation.
+
+use lib "./scripts";
+use switch_template;   # Pull in configuration library
+
 set_debug_level(9);
 my $switchlist = "";
 my $switch;
@@ -70,6 +78,7 @@ foreach(@{$VL_CONFIG})
   @TOKENS = split(/\t/, $_);
   next if ($TOKENS[0] ne "VVRNG");
   die "Error: Multiple VVRNG statements encountered!\n" if ($VV_name_prefix);
+  debug(8, "Processing VVRNG $_\n");
   $VV_name_prefix = $TOKENS[1];
   ($VV_LOW, $VV_HIGH) = split(/\s*-\s*/, $TOKENS[2]);
   $VV_prefix6 = $TOKENS[3];

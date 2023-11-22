@@ -4,6 +4,9 @@
 # of the scripts directory where this script lives. All scripts are expected
 # to be run from this location for consistency and ease of use.
 
+##FIXME## Clean up separation of package variables (our *), use package object instead
+
+##FIXME## Add POD for all (exportable) functions
 
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
@@ -12,28 +15,73 @@
 
 ##FIXME## Add a PS color block to PoE ports
 
+
+package switch_template;
+
 use strict;
 use integer;
 use Scalar::Util qw/reftype/;
 use Data::Dumper;
+use Exporter;
 
-our $VV_LOW;
-our $VV_HIGH;
-our $VV_COUNT;
-our $VV_prefix6;
-our $VV_prefix4;
-our $VV_name_prefix;
+our $VV_LOW           = "";
+our $VV_HIGH          = "";
+our $VV_COUNT         = "";
+our $VV_prefix6       = "";
+our $VV_prefix4       = "";
+our $VV_name_prefix   = "";
+our $DEBUGLEVEL       = 9;
+our %Switchtypes      = ();
+our %Switchgroups     = ();
+
+our @ISA = qw(Exporter);
+
+our @EXPORT = qw(
+    debug
+    set_debug_level
+    get_default_gw
+    read_config_file
+    get_switchlist
+    expand_switch_groups
+    get_switchtype
+    get_switch_by_mac
+    build_config_from_template
+    $VV_LOW
+    $VV_HIGH
+    $VV_COUNT
+    $VV_prefix6
+    $VV_prefix4
+    $VV_nme_prefix
+    %Switchtypes
+    %Switchgroups
+);
 
 
-my $DEBUGLEVEL = 9;
+sub BEGIN
+{
+  return;
+}
 
-my %Switchtypes;
-my %Switchgroups;
+sub new
+{
+  my ($class, @args) = @_;
+
+  $class = ref($class) if ref($class); # Allows calling as $exp->new()
+
+  my $self = ();
+
+  bless $self, $class;
+  return $self;
+}
+
+
+
 
 sub set_debug_level
 {
     $DEBUGLEVEL = shift(@_);
 }
+
 sub debug
 {
   my $lvl = shift(@_);
