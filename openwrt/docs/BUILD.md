@@ -30,7 +30,7 @@ To start building:
 
 ```
 # Make sure to mount the git root inside this container
-docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build@sha256:8dc545cb1cbb2cb507f4e5c8df2f3632335abf7230f9574eb39080c2fc67cc3f /bin/bash
+docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922  /bin/bash
 cd /home/openwrt/scale-network
 ```
 > There is no latest tag so make sure to specify the version (short commit hash)
@@ -153,8 +153,12 @@ Repeat this for `TARGET=ar71xx` and `TARGET=mt7622`
 
 ```
 TARGET=mt7622 make config menuconfig
-TARGET=mt7622 make commonconfig targetconfig
+TARGET=mt7622 make targetconfig
 ```
+> commonconfig is only generated on x86
+
+Commit the results that are generated. You can ensure that the config options are stable by repeating
+the process. You should not get a diff.
 
 ### Build Identity
 
