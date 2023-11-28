@@ -6,7 +6,7 @@ RSpec.shared_examples "openwrt" do
   DEFAULT_BINS=["apinger", "awk", "bash", "logrotate",
                 "rsyslogd", "tcpdump"]
 
-  REMOVED_BINS=["snmpd", "dropbear"]
+  REMOVED_BINS=["snmpd", "dropbear", "logd"]
 
   DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "lldpd"]
 
