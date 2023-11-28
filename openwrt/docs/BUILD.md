@@ -153,8 +153,12 @@ Repeat this for `TARGET=ar71xx` and `TARGET=mt7622`
 
 ```
 TARGET=mt7622 make config menuconfig
-TARGET=mt7622 make commonconfig targetconfig
+TARGET=mt7622 make targetconfig
 ```
+> commonconfig is only generated on x86
+
+Commit the results that are generated. You can ensure that the config options are stable by repeating
+the process. You should not get a diff.
 
 ### Build Identity
 
