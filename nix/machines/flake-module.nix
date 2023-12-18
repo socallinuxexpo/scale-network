@@ -26,6 +26,19 @@ in
         ];
         specialArgs = { inherit inputs; };
       };
+      nixosConfigurations.devServer = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./_common/users.nix
+          ./devServer.nix
+          # Include the microvm host module
+          microvm.nixosModules.host
+          # Add more modules here
+          {
+            networking.hostName = "devServer";
+          }
+        ];
+      };
       loghost = lib.nixosSystem {
         inherit system;
         modules = [
