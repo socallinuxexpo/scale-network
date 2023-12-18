@@ -30,10 +30,9 @@ in
         system = "x86_64-linux";
         modules = [
           ./_common/users.nix
-          ./devServer.nix
-          # Include the microvm host module
-          microvm.nixosModules.host
-          # Add more modules here
+          ./devServer
+          disko.nixosModules.disko
+          inputs.microvm.nixosModules.host
           {
             networking.hostName = "devServer";
           }

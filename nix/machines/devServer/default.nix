@@ -1,5 +1,11 @@
 { config, lib, pkgs, ... }:
-{
+{ 
+  imports =
+    [
+      ./hardware-configuration.nix
+      ./home.nix
+    ];
+
   # If not present then warning and will be set to latest release during build
   system.stateVersion = "23.05";
 
