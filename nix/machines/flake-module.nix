@@ -26,12 +26,12 @@ in
         ];
         specialArgs = { inherit inputs; };
       };
-      nixosConfigurations.devServer = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.devServer = lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./_common/users.nix
           ./devServer
-          disko.nixosModules.disko
+          inputs.disko.nixosModules.disko
           inputs.microvm.nixosModules.host
           {
             networking.hostName = "devServer";
