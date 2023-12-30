@@ -71,6 +71,7 @@
     wget
     git
     vim
+    efibootmgr
   ];
 
   services.openssh = {
