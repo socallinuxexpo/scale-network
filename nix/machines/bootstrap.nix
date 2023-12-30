@@ -10,10 +10,14 @@
   };
 
   networking = {
+    useNetworkd = true;
+    useDHCP = false;
     firewall.enable = true;
   };
 
+  # https://nixos.wiki/wiki/Systemd-networkd#Bonding
   systemd.network = {
+    enable = true;
     netdevs = {
       "10-bond0" = {
         netdevConfig = {
