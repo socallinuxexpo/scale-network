@@ -9,6 +9,11 @@
     ";
   };
 
+  # remove the annoying experimental warnings
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
   networking = {
     useNetworkd = true;
     useDHCP = false;
