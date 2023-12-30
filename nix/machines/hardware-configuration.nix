@@ -5,7 +5,7 @@
     [
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
-  
+
   boot.initrd.availableKernelModules = [ "ehci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
@@ -17,7 +17,7 @@
       fsType = "zfs";
     };
 
-  # Originally was by-uuid but changed to by-label to make agnostic 
+  # Originally was by-uuid but changed to by-label to make agnostic
   fileSystems."/boot" =
     {
       device = "/dev/disk/by-label/boot";
@@ -46,4 +46,11 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # ZFS uniq system ID
+  networking.hostId = "74405d06";
 }
