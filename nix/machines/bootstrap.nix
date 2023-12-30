@@ -23,6 +23,7 @@
         netdevConfig = {
           Kind = "bond";
           Name = "bond0";
+          MACAddress = "ca:cc:7f:ea:09:84";
         };
         bondConfig = {
           Mode = "802.3ad";
