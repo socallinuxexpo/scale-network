@@ -33,7 +33,7 @@ in
           ./bootstrap.nix
           ./hardware-configuration.nix
           #inputs.disko.nixosModules.disko
-          inputs.microvm.nixosModules.host
+          #inputs.microvm.nixosModules.host
         ];
       };
       loghost = lib.nixosSystem {
