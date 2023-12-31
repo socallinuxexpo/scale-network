@@ -16,14 +16,26 @@
       device = "zroot/local/root";
       fsType = "zfs";
     };
-
-  # Originally was by-uuid but changed to by-label to make agnostic
-  fileSystems."/boot" =
+  fileSystems."/boot1" =
     {
-      device = "/dev/disk/by-label/boot";
+      device = "/dev/disk/uuid/0001-B007";
       fsType = "vfat";
     };
-
+  fileSystems."/boot2" =
+    {
+      device = "/dev/disk/uuid/0002-B007";
+      fsType = "vfat";
+    };
+  fileSystems."/boot3" =
+    {
+      device = "/dev/disk/uuid/0003-B007";
+      fsType = "vfat";
+    };
+  fileSystems."/boot4" =
+    {
+      device = "/dev/disk/uuid/0004-B007";
+      fsType = "vfat";
+    };
   fileSystems."/nix" =
     {
       device = "zroot/local/nix";
