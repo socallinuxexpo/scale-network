@@ -86,9 +86,7 @@ export DISK_PART_BOOT="/dev/sda2"
 info "Formatting boot partition ..."
 mkfs.fat -F 32 -n boot "$DISK_PART_BOOT"
 
-info "Mounting '$DISK_PART_BOOT' to /mnt/boot ..."
-mkdir -p /mnt/boot
-mount -t vfat "$DISK_PART_BOOT" /mnt/boot
+
 
 info "Creating '$ZFS_POOL' ZFS pool for '$DISK_PART_ROOT' ..."
 zpool create -f "$ZFS_POOL" mirror /dev/sda1 /dev/sdb1 mirror /dev/sdc1 /dev/sdd1
@@ -111,6 +109,9 @@ zfs snapshot "$ZFS_BLANK_SNAPSHOT"
 info "Mounting '$ZFS_DS_ROOT' to /mnt ..."
 mount -t zfs "$ZFS_DS_ROOT" /mnt
 
+info "Mounting '$DISK_PART_BOOT' to /mnt/boot ..."
+mkdir -p /mnt/boot
+mount -t vfat "$DISK_PART_BOOT" /mnt/boot
 
 info "Creating '$ZFS_DS_NIX' ZFS dataset ..."
 zfs create -p -o mountpoint=legacy "$ZFS_DS_NIX"
