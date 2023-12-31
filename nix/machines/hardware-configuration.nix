@@ -48,8 +48,40 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.loader.grub = {
+    efiSupport = true;
+    device = "nodev";
+    mirroredBoots =
+      [
+        {
+          devices = [
+            "/dev/disk/by-uuid/0001-B007"
+          ];
+          path = "/boot1";
+        }
+        {
+          devices = [
+            "/dev/disk/by-uuid/0002-B007"
+          ];
+          path = "/boot2";
+        }
+        {
+          devices = [
+            "/dev/disk/by-uuid/0003-B007"
+          ];
+          path = "/boot3";
+        }
+        {
+          devices = [
+            "/dev/disk/by-uuid/0004-B007"
+          ];
+          path = "/boot4";
+        }
+      ];
+  };
 
   # ZFS uniq system ID
   networking.hostId = "74405d06";
