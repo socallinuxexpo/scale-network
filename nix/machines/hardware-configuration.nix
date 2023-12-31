@@ -13,44 +13,34 @@
 
   fileSystems."/" =
     {
-      device = "zroot/local/root";
+      device = "zroot/root";
       fsType = "zfs";
     };
-  fileSystems."/boot1" =
+  fileSystems."/boot" =
     {
-      device = "/dev/disk/uuid/0001-B007";
+      device = "/dev/disk/by-id/ata-C400-MTFDDAK128MAM_00000000121803393880-part1";
       fsType = "vfat";
     };
   fileSystems."/boot2" =
     {
-      device = "/dev/disk/uuid/0002-B007";
-      fsType = "vfat";
-    };
-  fileSystems."/boot3" =
-    {
-      device = "/dev/disk/uuid/0003-B007";
-      fsType = "vfat";
-    };
-  fileSystems."/boot4" =
-    {
-      device = "/dev/disk/uuid/0004-B007";
+      device = "/dev/disk/by-id/ata-WDC_WD10EADS-00L5B1_WD-WCAU47011840-part1";
       fsType = "vfat";
     };
   fileSystems."/nix" =
     {
-      device = "zroot/local/nix";
+      device = "zroot/nix";
       fsType = "zfs";
     };
 
   fileSystems."/home" =
     {
-      device = "zroot/safe/home";
+      device = "zroot/home";
       fsType = "zfs";
     };
 
   fileSystems."/persist" =
     {
-      device = "zroot/safe/persist";
+      device = "zroot/persist";
       fsType = "zfs";
     };
 
@@ -60,40 +50,16 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
-    device = "nodev";
-    mirroredBoots =
-      [
-        {
-          devices = [
-            "/dev/disk/by-uuid/0001-B007"
-          ];
-          path = "/boot1";
-        }
-        {
-          devices = [
-            "/dev/disk/by-uuid/0002-B007"
-          ];
-          path = "/boot2";
-        }
-        {
-          devices = [
-            "/dev/disk/by-uuid/0003-B007"
-          ];
-          path = "/boot3";
-        }
-        {
-          devices = [
-            "/dev/disk/by-uuid/0004-B007"
-          ];
-          path = "/boot4";
-        }
-      ];
+    efiInstallAsRemovable = true;
+    mirroredBoots = [
+        { devices = [ "nodev" ]; path = "/boot"; }
+        { devices = [ "nodev" ]; path = "/boot2"; }
+    ];
   };
 
   # ZFS uniq system ID
