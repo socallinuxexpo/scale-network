@@ -75,20 +75,18 @@ for DISK in ${DISKS[@]}; do
   fi
   info "Running the UEFI (GPT) partitioning $DISK_PATH and formatting directions from the NixOS manual ..."
   parted "$DISK_PATH" -- mklabel gpt
+  parted "$DISK_PATH" -- mkpart primary ESP fat32 1MiB 512MiB
   parted "$DISK_PATH" -- mkpart primary 512MiB 100%
-  parted "$DISK_PATH" -- mkpart ESP fat32 1MiB 512MiB
-  parted "$DISK_PATH" -- set 2 boot on
+  parted "$DISK_PATH" -- set 1 boot on
 done
 
-export DISK_PART_ROOT="${DISK_PATH}1"
-export DISK_PART_BOOT="/dev/sda2"
+export DISK_PART_BOOT="/dev/sda1"
 
 info "Formatting boot partition ..."
 mkfs.fat -F 32 -n boot "$DISK_PART_BOOT"
 
 
 
-info "Creating '$ZFS_POOL' ZFS pool for '$DISK_PART_ROOT' ..."
 zpool create -f "$ZFS_POOL" mirror /dev/sda1 /dev/sdb1 mirror /dev/sdc1 /dev/sdd1
 
 info "Enabling compression for '$ZFS_POOL' ZFS pool ..."
