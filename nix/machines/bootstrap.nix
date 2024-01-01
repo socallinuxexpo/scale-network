@@ -39,6 +39,7 @@
     git
     vim
     efibootmgr
+    gptfdisk
   ];
 
   services.openssh = {
