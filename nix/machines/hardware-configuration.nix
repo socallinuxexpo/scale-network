@@ -18,12 +18,12 @@
     };
   fileSystems."/boot" =
     {
-      device = "/dev/disk/by-id/ata-C400-MTFDDAK128MAM_00000000121803393880-part1";
+      device = "/dev/disk/by-uuid/063A-73D6";
       fsType = "vfat";
     };
   fileSystems."/boot2" =
     {
-      device = "/dev/disk/by-id/ata-WDC_WD10EADS-00L5B1_WD-WCAU47011840-part1";
+      device = "/dev/disk/by-uuid/0655-58C2";
       fsType = "vfat";
     };
   fileSystems."/nix" =
