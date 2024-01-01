@@ -9,7 +9,7 @@
     ";
   };
 
-  boot.supportedFilesystems = [ "zfs" ];
+  #boot.supportedFilesystems = [ "zfs" ];
 
   # remove the annoying experimental warnings
   nix.extraOptions = ''
