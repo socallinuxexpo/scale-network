@@ -9,6 +9,8 @@
     ";
   };
 
+  boot.supportedFilesystems = [ "zfs" ];
+
   # remove the annoying experimental warnings
   nix.extraOptions = ''
     experimental-features = nix-command flakes
