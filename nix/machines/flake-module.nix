@@ -46,6 +46,15 @@ in
           #inputs.microvm.nixosModules.host
         ];
       };
+      kvm2 = lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./_common/users.nix
+          ./bootstrap.nix
+          ./kvm2/hardware-configuration.nix
+        ];
+      };
+
       loghost = lib.nixosSystem {
         inherit system;
         modules = [
