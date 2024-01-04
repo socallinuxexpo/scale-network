@@ -1,14 +1,5 @@
 { config, pkgs, ... }:
 {
-  boot = {
-    kernelParams = [ "console=ttyS0,115200n8" ];
-    loader.grub.extraConfig = "
-    serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1
-    terminal_input serial
-    terminal_output serial
-    ";
-  };
-
   #boot.supportedFilesystems = [ "zfs" ];
 
   # remove the annoying experimental warnings
