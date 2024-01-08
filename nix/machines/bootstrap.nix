@@ -33,6 +33,7 @@
     vim
     efibootmgr
     gptfdisk
+    screen
   ];
 
   services.openssh = {
