@@ -22,7 +22,7 @@
         enable = true;
         networkConfig.DHCP = "yes";
         # this port is not always connected and not required to be online
-        linkConfig.RequiredForOnline = "no";
+        #linkConfig.RequiredForOnline = "no";
       };
     };
   };
