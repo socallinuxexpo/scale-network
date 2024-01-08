@@ -32,8 +32,8 @@ in
           ./_common/users.nix
           ./bootstrap.nix
           ./hardware-configuration.nix
+          inputs.microvm.nixosModules.host
           #inputs.disko.nixosModules.disko
-          #inputs.microvm.nixosModules.host
         ];
       };
       kvm1 = lib.nixosSystem {
