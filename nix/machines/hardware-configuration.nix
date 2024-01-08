@@ -20,11 +20,13 @@
     {
       device = "/dev/disk/by-uuid/063A-73D6";
       fsType = "vfat";
+      options = [ "nofail" ];
     };
   fileSystems."/boot2" =
     {
       device = "/dev/disk/by-uuid/0655-58C2";
       fsType = "vfat";
+      options = [ "nofail" ];
     };
   fileSystems."/nix" =
     {
