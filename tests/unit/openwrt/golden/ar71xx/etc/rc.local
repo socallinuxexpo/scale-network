@@ -4,6 +4,11 @@
 # TODO make this a true service
 /root/bin/wifi-details.sh >/dev/null 2>/dev/null </dev/null &
 
+# By default anything install in opkg that includes a service will start out
+# of the box. Easiest way to disable services that we depend
+# on but dont want to start
+/etc/init.d/uhttpd stop; /etc/init.d/uhttpd disabled
+
 # apinger initial template population
 # this needs to remain in the case where DHCP isnt working initially
 # there is also a race condition with the wifi interfaces coming online

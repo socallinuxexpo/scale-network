@@ -1,17 +1,16 @@
 config lldpd config
-	option enable_cdp 1
-	option enable_fdp 1
-	option enable_sonmp 1
-	option enable_edp 1
+       # LLDP frames are link-local frames, do not use any
+       # network interfaces other than the ones that achieve
+       # a link with its link partner, and the link partner
+       # being another networking device. Do not use bridge,
+       # VLAN, or DSA conduit interfaces.
+       #
+       # lldp unable to receive frames on mediatek due to bug
+       # ref: https://github.com/openwrt/openwrt/issues/13788
 
-	option lldp_class 4
-        # TODO make this mean something
-	option lldp_location "2:FR:6:Commercial Rd:3:Roseville:19:4"
+       # lldp will default to listening on all interfaces
 
-	# if empty, the distribution description is sent
-	option lldp_description "OpenWrt System"
-
-	# interfaces to listen on
-        # TODO: This should be dynamic and based on
-        # yaml config
-	list interface "eth1"
+       # Set class of device
+       option lldp_class 4
+       # if empty, the distribution description is sent
+       option lldp_description "OpenWrt System"
