@@ -8,7 +8,7 @@ OPTIONS:
   -h      Show this message
   -o      specify output for temporary generated templates
   -t      Target arch to build
-  -u      Update golden templates
+  -u      Update golden templates (no test)
 
 EXAMPLES:
   Run tests for all templates against existing golden files:
@@ -52,6 +52,7 @@ gen_templates(){
   # Export to support ENV datasource
   export TARGET=$TARGET
   export KEYPATH=$KEYPATH
+  rm -rf "${1}"
   gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files --output-dir="${1}"
   if [ -d ../../../openwrt/files-${TARGET} ]; then
     gomplate -d openwrt=../../../facts/secrets/${TARGET}-openwrt-example.yaml -d keys_dir=${KEYPATH} --input-dir=../../../openwrt/files-${TARGET} --output-dir="${1}"
@@ -59,10 +60,9 @@ gen_templates(){
 }
 
 if [ ${UPDATE} -eq 1 ]; then
-  rm -rf "golden/${TARGET}"
   gen_templates "golden/${TARGET}"
+else
+  gen_templates "$TMPLOC"
+  diff -u -r "golden/${TARGET}" $TMPLOC/
 fi
 
-gen_templates "$TMPLOC"
-
-diff -u -r "golden/${TARGET}" $TMPLOC/
