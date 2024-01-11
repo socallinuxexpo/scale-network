@@ -1,4 +1,14 @@
 {
+  bcrypt_pbkdf = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0ndamfaivnkhc6hy0yqyk2gkwr6f3bz6216lh74hsiiyk3axz445";
+      type = "gem";
+    };
+    version = "1.1.0";
+  };
   diff-lcs = {
     groups = ["default"];
     platforms = [];
@@ -8,6 +18,16 @@
       type = "gem";
     };
     version = "1.5.0";
+  };
+  ed25519 = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0zb2dr2ihb1qiknn5iaj1ha1w9p7lj9yq5waasndlfadz225ajji";
+      type = "gem";
+    };
+    version = "1.3.0";
   };
   multi_json = {
     groups = ["default"];
