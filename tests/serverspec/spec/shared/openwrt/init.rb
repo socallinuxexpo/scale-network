@@ -8,7 +8,8 @@ RSpec.shared_examples "openwrt" do
 
   REMOVED_BINS=["snmpd", "dropbear", "logd"]
 
-  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "lldpd"]
+  DEFAULT_SERVICES=["apinger", "crond", "rsyslogd", "lldpd",
+                    "ntpd" ]
 
   DEFAULT_BINS.each do |bin|
     describe command("which #{bin} 2> /dev/null") do
@@ -28,7 +29,23 @@ RSpec.shared_examples "openwrt" do
     end
   end
 
+  # make sure uhttpd is actually stopped
+  describe port(80) do
+      it { should_not be_listening }
+  end
+
+  # check for prometheus exporter
+  describe port(9100) do
+      it { should be_listening }
+  end
+
   describe command('rsyslogd -N1') do
+    its(:exit_status) { should eq 0 }
+  end
+
+  # make sure logger is actually working since we had
+  # an issue with busybox logger in the past
+  describe command('logger "serverspec test msg"') do
     its(:exit_status) { should eq 0 }
   end
 
