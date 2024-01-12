@@ -1,3 +1,5 @@
+{ inputs, ...}:
+
 {
   perSystem = { pkgs, ... }:
     let
@@ -31,6 +33,7 @@
         pkg-config
         gcc
         stdenv
+        inputs.self.packages.${pkgs.system}.serverspec
       ];
       network_sub = [ pkgs.perl ];
     in
