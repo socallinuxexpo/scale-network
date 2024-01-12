@@ -1,0 +1,3 @@
+//Name		Num	MgtVL	IPv6				Type			// Hierarchy	Switch Noiselevel
+Expo-Catwalk	16	103	2001:470:f325:103::200:16	Catwalk			//	W.1		Loud
+Rm209-210	17	503	2001:470:f325:503::200:17	cfRoom			//	I.9		Normal

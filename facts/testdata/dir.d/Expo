@@ -1,0 +1,11 @@
+// Expo Center -- VLANS 100-499
+VLAN	exSCALE-SLOW		100	2001:470:f325:100::/64	10.0.128.0/21	2.4G Wireless Network in Expo Center
+//106 not used
+VLAN	exAkamai			111	2001:470:f325:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
+//112 through 199 not used
+//200 through 499 Vendors
+//200-498 are dynamically generated from Booth information file as Vendor VLANs.
+//The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other
+//VLANs (vendor_vlan <-> internet only)
+VVRNG	vendor_vlan_		200-201	2001:470:f325:200::/54	10.2.0.0/15	Dynamically allocated and named booth VLANs
+//499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.
