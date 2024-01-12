@@ -1,3 +1,0 @@
-{% for item in groups["routers"] -%}
-{{ item }}  IN  AAAA    {{ hostvars[item].ipv6 }}
-{% endfor -%}

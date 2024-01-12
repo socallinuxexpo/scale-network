@@ -1,5 +1,0 @@
----
-
-scale_signs_root: /usr/local/scale-signs
-scale_signs_repo_url: https://github.com/socallinuxexpo/scale-signs.git
-scale_signs_repo_branch: master
