@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  mybootstrap = pkgs.writeShellScriptBin "mybootstrap" ./bootstrap.sh;
+in
 {
   #boot.supportedFilesystems = [ "zfs" ];
 
@@ -34,6 +37,7 @@
     efibootmgr
     gptfdisk
     screen
+    mybootstrap
   ];
 
   services.openssh = {
