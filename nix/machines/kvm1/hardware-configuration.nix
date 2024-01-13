@@ -18,13 +18,15 @@
     };
   fileSystems."/boot" =
     {
-      device = "/dev/disk/by-uuid/E851-A6EE";
+      device = "/dev/disk/by-uuid/F588-E97E";
       fsType = "vfat";
+      options = [ "nofail" ];
     };
   fileSystems."/boot2" =
     {
-      device = "/dev/disk/by-uuid/E852-2B14";
+      device = "/dev/disk/by-uuid/F589-8998";
       fsType = "vfat";
+      options = [ "nofail" ];
     };
   fileSystems."/nix" =
     {
