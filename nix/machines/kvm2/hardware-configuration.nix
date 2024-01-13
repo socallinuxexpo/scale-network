@@ -19,12 +19,12 @@
     };
   fileSystems."/boot" =
     {
-      device = "/dev/disk/by-uuid/C59D-3BB6";
+      device = "/dev/disk/by-uuid/FA18-0046";
       fsType = "vfat";
     };
   fileSystems."/boot2" =
     {
-      device = "/dev/disk/by-uuid/C59D-7616";
+      device = "/dev/disk/by-uuid/FA18-9B54";
       fsType = "vfat";
     };
   fileSystems."/nix" =
