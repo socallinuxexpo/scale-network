@@ -42,4 +42,4 @@ mount -t zfs zroot/home /mnt/home
 mount /dev/${DISK0}1 /mnt/boot
 mount /dev/${DISK1}1 /mnt/boot2
 
-echo "nixos-rebuild switch --flake github:socallinuxexpo/scale-network/rh/1702745959iso#devServer --refresh"
+echo "nixos-install --flake github:socallinuxexpo/scale-network/<branch>#<machine>"
