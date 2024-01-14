@@ -95,6 +95,8 @@ my $rootpw = <PASSWD> || die "Couldn't read root PW: $!\n";
 chomp $rootpw;
 close PASSWD;
 
+#die("Root Password Hash is \"$rootpw\"\n");
+
 # Iterate through list of switches and build each configuration file
 foreach $switch (@{$switchlist})
 {

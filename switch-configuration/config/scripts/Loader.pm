@@ -364,7 +364,7 @@ sub override_switch
     {
       print "Looking up switch $switch\n" ;
       ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
-      $error_count++;
+      $error_count++ unless $Name eq $switch;
       croak("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
       print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
     }
@@ -412,7 +412,7 @@ sub override_switch
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
 	print STDERR "Sent load override command, received: ($before) ($matched) ($after) Error: $err\n";
-	open ROOTPW, "<../../secrets/jroot_pw" || croak("Couldn't read encrypted PW from file\n");
+	open ROOTPW, "<../../facts/secrets/jroot_pw" || croak("Couldn't read encrypted PW from file\n");
 	my $JROOTPW = <ROOTPW>;
 	chomp($JROOTPW);
 	close ROOTPW;
@@ -441,7 +441,7 @@ sub override_switch
         );
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
-        $error_count++;
+        $error_count++ if ($err);
         croak("Did not get command pormpt back from $target after load override for $Name\n") if ($err);
 	print STDERR "Ending Config Load returend ($before) ($matched) ($after)\n";
 	push @messages, "Ending Config Load returend ($before) ($matched) ($after)\n";
@@ -454,7 +454,7 @@ sub override_switch
         my $result;
         print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         push @messages, "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
-        my $sftp = Net::SFTP->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
+        my $sftp = Net::SFTP->new($target, (debug => 1, user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
 	print STDERR "SFTP Put $config_file\n";
 	push @messages, "SFTP Put $config_file\n";
         $sftp->put("$config_file", "/tmp/new_config.conf", \&sftp_progress) ||
@@ -476,7 +476,7 @@ sub override_switch
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
 	my $xafter = $after;
-        $error_count++;
+        $error_count++ if ($err);
         croak("Did not receive \"load complete\" after loading config: $err for $Name\n") if ($err);
 	print STDERR "Received: ($before) ($matched) ($after)\n";
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
@@ -485,7 +485,7 @@ sub override_switch
 	$before = $xafter.$before;
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
-        $error_count++;
+        $error_count++ if ($err);
         croak("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
     }
     # Here the direct device and SSH paths merge and $JUNIPER remains an Expect object attached to the switch
@@ -494,7 +494,7 @@ sub override_switch
     print STDERR "Sending show | compare | no-more\n";
     print $JUNIPER "show | compare | no-more\n";
     ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
-            'compare]'
+            'compare'
     );
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
@@ -521,7 +521,7 @@ sub override_switch
     $before = $xafter.$before;
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
-    $error_count++;
+    $error_count++ if ($err);
     croak("Did not receive Prompt after \"show | compare\": $err for $Name\n") if ($err);
     print STDERR "Configuration Compares:\n";
     #    $before =~ s/[\r\n]+.*$//;
@@ -545,7 +545,7 @@ sub override_switch
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
     print STDERR "Received: ($before) ($matched) ($after)\n";
-    $error_count++;
+    $error_count++ if ($err);
     croak("Did not receive Prompt after finalizing: $err for $Name\n") if ($err);
     #$JUNIPER->send("quit\n");
     print $JUNIPER "quit\n";
@@ -556,13 +556,13 @@ sub override_switch
       );
       $before =~ s/\033/<Esc>/g;
       $after =~ s/\033/<Esc>/g;
-      $error_count++;
+      $error_count++ if ($err);
       croak("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
       print $JUNIPER "exit\n";
     }
     $JUNIPER->soft_close();
     print STDERR ($error_count ? "Uns" : "S") . "uccessful completion of configuration for $Name\n";
-    push @messages, ($error_count ? "Uns" : "S") . "Successful completion of configuration for $Name\n";
+    push @messages, ($error_count ? "Uns" : "S") . "uccessful completion of configuration for $Name\n";
     push @messages, "Encountered $error_count errors for $Name\n";
     return($error_count ? -1 : 0, @messages);
 }
@@ -619,7 +619,7 @@ sub Login
             '> ');
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
-        print STDERR "Expect returned error: $err with match ($before) ($matched) ($after) at $pos\n";
+        print STDERR "Expect returned " . ($err ? "error: $err with" : "") . " match ($before) ($matched) ($after) at $pos\n";
         if ($err)
         {
           # In case we get stuck and missed the prompt or haven't seen
@@ -632,6 +632,14 @@ sub Login
         }
         print STDERR "Passed $err with match ($before) ($matched) ($after) at $pos\n";
         # Remote Key Change
+	if ($before.$matched.$after =~ /Last login: /)
+	{
+	  print STDERR "Ignoring Last Login: line ($before)($matched)($after)\n";
+	  $matched = $before.$matched.$after;
+	  $before="";
+	  $after="";
+	  $matched =~ s/Last login: .*//;
+        }
         if ($matched =~ /ogin:/ || $matched =~ /name:/)
         {
           print "Remote Host requires username: ";
