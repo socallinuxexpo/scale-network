@@ -400,32 +400,39 @@ sub override_switch
 	#$JUNIPER->send("load override terminal\n");
         print $JUNIPER "load override terminal\n";
 	($pos, $err, $matched, $before, $after) = $JUNIPER->expect(5, 'input');
-	print STDERR "Sent load overridw command, received: ($before) ($matched) ($after) Error: $err\n";
+        $before =~ s/\033/<Esc>/g;
+        $after =~ s/\033/<Esc>/g;
+	print STDERR "Sent load override command, received: ($before) ($matched) ($after) Error: $err\n";
 	open ROOTPW, "<../../secrets/jroot_pw" || die("Couldn't read encrypted PW from file\n");
 	my $JROOTPW = <ROOTPW>;
 	chomp($JROOTPW);
 	close ROOTPW;
+	print STDERR "Prototype Root PW: \"$JROOTPW\"\n";
         foreach my $c (<CONFIG>)
         {
             ##FIXME## Horrible hack to insert root password into miniconfig
-            if ($c =~ /<\$JROOT_PW>.*token must be replaced/)
+            if ($c =~ /\$JROOT_PW.*token must be replaced/)
 	    {
-		    $c =~ s/<\$JROOT_PW>/$JROOTPW/;
+		    print STDERR "Found token, replacing Root PW\n";
+		    $c =~ s/"<?\$JROOT_PW>?"/"$JROOTPW"/;
 	    }
             #$JUNIPER->send($c);
             print $JUNIPER $c;
 	    ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(0, '-re', '\n');
+	    $err="" if ($err =~ /Timeout/); # Timeout errors don't apply here, even though they tend to be prolific
+            $before =~ s/\033/<Esc>/g;
+            $after =~ s/\033/<Esc>/g;
 	    print STDERR "Sent $c, got back ($before) ($matched) ($after) Error: $err\n";
             usleep($Loader::line_delay);
         }
+	exit 0;
 	#$JUNIPER->send("\n\cD\n");
         print $JUNIPER "\n\cD\n";
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
-            'load complete'
-        );
-        ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
             '# '
         );
+        $before =~ s/\033/<Esc>/g;
+        $after =~ s/\033/<Esc>/g;
         die("Did not get command pormpt back from $target after load override for $Name\n") if ($err);
 	print STDERR "Ending Config Load returend ($before) ($matched) ($after)\n";
         print STDERR "Activating...\n";
@@ -453,28 +460,53 @@ sub override_switch
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
                 'load complete'
         );
+        $before =~ s/\033/<Esc>/g;
+        $after =~ s/\033/<Esc>/g;
+	my $xafter = $after;
         die("Did not receive \"load complete\" after loading config: $err for $Name\n") if ($err);
 	print STDERR "Received: ($before) ($matched) ($after)\n";
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
                 '# '
         );
+	$before = $xafter.$before;
+        $before =~ s/\033/<Esc>/g;
+        $after =~ s/\033/<Esc>/g;
         die("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
     }
     # Here the direct device and SSH paths merge and $JUNIPER remains an Expect object attached to the switch
     # being configured regardless of whether serial or SSH.
     
-    #$JUNIPER->send("show | compare | no-more\n");
+    print STDERR "Sending show | compare | no-more\n";
     print $JUNIPER "show | compare | no-more\n";
+    ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
+            'compare]'
+    );
+    $before =~ s/\033/<Esc>/g;
+    $after =~ s/\033/<Esc>/g;
+    my $xafter = $after;
     ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
             'edit]'
     );
-    print STDERR "Comparison command error: $err -- Output: ($before) ($matched) ($after)\n";
+    $before =~ s/\033/<Esc>/g;
+    $after =~ s/\033/<Esc>/g;
+    $before = $xafter.$before;
+    if ($err)
+    {
+      print STDERR "Comparison command error: $err -- Output: ($before) ($matched) ($after)\n";
+    }
+    else
+    {
+      print STDERR "Comparison result: Output: ($before) ($matched) ($after)\n";
+    }
     ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
             '# '
     );
+    $before = $xafter.$before;
+    $before =~ s/\033/<Esc>/g;
+    $after =~ s/\033/<Esc>/g;
     die("Did not receive Prompt after \"show | compare\": $err for $Name\n") if ($err);
     print STDERR "Configuration Compares:\n";
-    $before =~ s/[\r\n]+.*$//;
+    #    $before =~ s/[\r\n]+.*$//;
     print STDERR $before."\n";
 
     if ($staged)
@@ -492,6 +524,9 @@ sub override_switch
     ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
             '> '
     );
+    $before =~ s/\033/<Esc>/g;
+    $after =~ s/\033/<Esc>/g;
+    print STDERR "Received: ($before) ($matched) ($after)\n";
     die("Did not receive Prompt after finalizing: $err for $Name\n") if ($err);
     #$JUNIPER->send("quit\n");
     print $JUNIPER "quit\n";
@@ -500,6 +535,8 @@ sub override_switch
       ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(10,
 	      '% ',
       );
+      $before =~ s/\033/<Esc>/g;
+      $after =~ s/\033/<Esc>/g;
       die("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
       print $JUNIPER "exit\n";
     }
@@ -557,6 +594,8 @@ sub Login
             'assword:',
             '% ',
             '> ');
+        $before =~ s/\033/<Esc>/g;
+        $after =~ s/\033/<Esc>/g;
         print STDERR "Expect returned error: $err with match ($before) ($matched) ($after) at $pos\n";
         if ($err)
         {
@@ -593,6 +632,8 @@ sub Login
               'Enter passphrase',
               'password:',
           '> ');
+          $before =~ s/\033/<Esc>/g;
+          $after =~ s/\033/<Esc>/g;
         }
         # Handle prompt for passphrase (for key) or password (host)
         elsif ($matched =~ /assword/)
@@ -658,6 +699,8 @@ sub Edit
     print $JUNIPER "edit\n";
     my ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
         '# ');
+    $before =~ s/\033/<Esc>/g;
+    $after =~ s/\033/<Esc>/g;
     die("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
     return;
 }
