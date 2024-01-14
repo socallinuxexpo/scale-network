@@ -12,7 +12,7 @@ case "$1" in
         bss_color = `echo $ip | cut -d'.' -f4 | expr \( $i % 62 \) + 1`
         uci_bss_color = `uci -q show wireless.radio1.he_bss_color`
 
-        if [ $bss_color != $uci_bss_color ] || [ $? == 0 ]; then
+        if [ $bss_color != $uci_bss_color ] || [ $? == 1 ]; then
             uci set 'wireless.radio1.he_bss_color'=$bss_color
             uci commit
             wifi reload
