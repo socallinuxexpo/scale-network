@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
   hostname = "monitoring.scale.lan";
 in
@@ -41,6 +41,10 @@ in
               labels = { instance = "localhost"; };
             }
           ];
+        }
+        {
+          job_name = "ap";
+          static_configs = builtins.fromJSON (builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/prom.json");
         }
       ];
     };
