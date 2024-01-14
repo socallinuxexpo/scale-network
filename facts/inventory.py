@@ -490,6 +490,19 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         f.write(json.dumps(kea_config, indent=2))
 
 
+def generatepromconfig(servers, aps, vlans, outputdir):
+    prom_config = [
+        {
+            "targets": [ap["ipv4"]],
+            "labels": {"ap": ap["name"]},
+        }
+        for ap in aps
+    ]
+
+    with open(f'{outputdir}/prom.json', 'w') as f:
+        f.write(json.dumps(prom_config, indent=2))
+
+
 def generatezones(switches,routers,pis,aps,servers, outputdir):
     content=''
     for batch in [switches, routers,pis,aps,servers]:
@@ -564,9 +577,12 @@ def main():
         generatekeaconfig(servers,aps,vlans,outputdir)
     elif subcomm == 'nsd':
         generatezones(switches,routers,pis,aps,servers,outputdir)
+    elif subcomm == 'prom':
+        generatepromconfig(servers,aps,vlans,outputdir)
     elif subcomm == 'all':
         generatekeaconfig(servers,aps,vlans,outputdir)
         generatezones(switches,routers,pis,aps,servers,outputdir)
+        generatepromconfig(servers,aps,vlans,outputdir)
 
 
 if __name__ == "__main__":
