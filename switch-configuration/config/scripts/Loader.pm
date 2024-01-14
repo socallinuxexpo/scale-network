@@ -43,6 +43,7 @@ use Net::SFTP;
 use Net::ARP;
 use Net::Interface;
 use Time::HiRes qw/usleep/;
+use Carp;
 
 my $JDEVICE;
 
@@ -343,6 +344,8 @@ sub override_switch
   my $target = shift @_; # SSH Reachable Target for configuration [1]
   my $staged = shift @_; # Optional argument -- True for -n staging/testing, False to actually scribble on switch
   my $config_file = shift @_; # Optional configuration file name
+  my $error_count = 0;
+  my @messages = ();
 
     # Assertions:
     #   output/$switch.conf (or $config_file) contains valid configuration files for this switch
@@ -361,14 +364,16 @@ sub override_switch
     {
       print "Looking up switch $switch\n" ;
       ($Name, $Num, $MgtVL, $IPv6Addr, $Type) = (get_switchtype($switch));
-      die("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
+      $error_count++;
+      croak("Error: Couldn't get type for $switch (got $Name)\n") unless $Name eq $switch; 
       print "Got Entry:  $Name, $Num, $MgtVL, $IPv6Addr, $Type for $switch\n";
     }
     else
     {
       unless($target && $config_file)
       {
-        die("Error: Switch not defined, need both target ($target) and configuration file ($config_file).\n")
+        $error_count++;
+        croak("Error: Switch not defined, need both target ($target) and configuration file ($config_file).\n")
       }
     }
 
@@ -377,9 +382,11 @@ sub override_switch
     $Name = "Unknown switch at $target" unless $Name;
     if (!-f "$config_file")
     {
-        die("Error: Couldn't read configuration file $config_file for $Name ($switch)");
+        $error_count++;
+        croak("Error: Couldn't read configuration file $config_file for $Name ($switch)");
     }
     print STDERR "Sending configuration file ($config_file) to $Name\n";
+    push @messages, "Sending configuration file ($config_file) to $Name\n";
     my $JUNIPER = Expect->new();
     my ($pos, $err, $matched, $before, $after);
     $JUNIPER->raw_pty(1);
@@ -387,11 +394,13 @@ sub override_switch
     {
 	my $JDEVICE;
         # Send configuration via expect directly (skip $SWITCH_COMMANDS)
-	open $JDEVICE, "+<$target" || die("Failed to open $target for $Name\n");
+	open $JDEVICE, "+<$target" || croak("Failed to open $target for $Name\n");
 	print STDERR "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
+	push @messages, "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
 	$JDEVICE->autoflush(1);
-        open CONFIG, "<$config_file" || die("Couldn't open $config_file for $Name: $!\n");
-	print STDERR "Initializing expect on $target FH\n";
+        open CONFIG, "<$config_file" || croak("Couldn't open $config_file for $Name: $!\n");
+	print STDERR "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
+	push @messages,  "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
 	$JUNIPER = Expect->init($JDEVICE);
 	print STDERR "Serial parameters are:\n";
 	print STDERR `stty -F $target -a`;
@@ -403,7 +412,7 @@ sub override_switch
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
 	print STDERR "Sent load override command, received: ($before) ($matched) ($after) Error: $err\n";
-	open ROOTPW, "<../../secrets/jroot_pw" || die("Couldn't read encrypted PW from file\n");
+	open ROOTPW, "<../../secrets/jroot_pw" || croak("Couldn't read encrypted PW from file\n");
 	my $JROOTPW = <ROOTPW>;
 	chomp($JROOTPW);
 	close ROOTPW;
@@ -419,10 +428,10 @@ sub override_switch
             #$JUNIPER->send($c);
             print $JUNIPER $c;
 	    ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(0, '-re', '\n');
-	    $err="" if ($err =~ /Timeout/); # Timeout errors don't apply here, even though they tend to be prolific
+	    $err="" if ($err =~ /timeout/i); # Timeout errors don't apply here, even though they tend to be prolific
             $before =~ s/\033/<Esc>/g;
             $after =~ s/\033/<Esc>/g;
-	    print STDERR "Sent $c, got back ($before) ($matched) ($after) Error: $err\n";
+	    print STDERR "Sent \"$c\", got back ($before) ($matched) ($after) ". ($err ? "Error: $err" : "") . "\n";
             usleep($Loader::line_delay);
         }
 	#$JUNIPER->send("\n\cD\n");
@@ -432,19 +441,24 @@ sub override_switch
         );
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
-        die("Did not get command pormpt back from $target after load override for $Name\n") if ($err);
+        $error_count++;
+        croak("Did not get command pormpt back from $target after load override for $Name\n") if ($err);
 	print STDERR "Ending Config Load returend ($before) ($matched) ($after)\n";
+	push @messages, "Ending Config Load returend ($before) ($matched) ($after)\n";
         print STDERR "Activating...\n";
+        push @messages, "Activating...\n";
     }
     else
     {
         # Send cconfiguration file via SFTP, then use Expect to send $SWITCH_COMMANDS to activate
         my $result;
         print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
-        my $sftp = Net::SFTP->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || die("Failed to initiate SFTP to $target ($Name)\n");
+        push @messages, "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
+        my $sftp = Net::SFTP->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
 	print STDERR "SFTP Put $config_file\n";
+	push @messages, "SFTP Put $config_file\n";
         $sftp->put("$config_file", "/tmp/new_config.conf", \&sftp_progress) ||
-                die("Failed to send config to $target ($Name)\n");;
+                croak("Failed to send config to $target ($Name)\n");;
         print "\n\n";
         print STDERR "Activating...\n";
 	print "Attempting to launch SSH to $target using $JUNIPER\n";
@@ -462,7 +476,8 @@ sub override_switch
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
 	my $xafter = $after;
-        die("Did not receive \"load complete\" after loading config: $err for $Name\n") if ($err);
+        $error_count++;
+        croak("Did not receive \"load complete\" after loading config: $err for $Name\n") if ($err);
 	print STDERR "Received: ($before) ($matched) ($after)\n";
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
                 '# '
@@ -470,7 +485,8 @@ sub override_switch
 	$before = $xafter.$before;
         $before =~ s/\033/<Esc>/g;
         $after =~ s/\033/<Esc>/g;
-        die("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
+        $error_count++;
+        croak("Did not receive Prompt after loading config: $err for $Name\n") if ($err);
     }
     # Here the direct device and SSH paths merge and $JUNIPER remains an Expect object attached to the switch
     # being configured regardless of whether serial or SSH.
@@ -492,10 +508,12 @@ sub override_switch
     if ($err)
     {
       print STDERR "Comparison command error: $err -- Output: ($before) ($matched) ($after)\n";
+      push @messages, "Comparison command error: $err -- Output: ($before) ($matched) ($after)\n";
     }
     else
     {
       print STDERR "Comparison result: Output: ($before) ($matched) ($after)\n";
+      push @messages, "Comparison result: Output: ($before) ($matched) ($after)\n";
     }
     ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
             '# '
@@ -503,7 +521,8 @@ sub override_switch
     $before = $xafter.$before;
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
-    die("Did not receive Prompt after \"show | compare\": $err for $Name\n") if ($err);
+    $error_count++;
+    croak("Did not receive Prompt after \"show | compare\": $err for $Name\n") if ($err);
     print STDERR "Configuration Compares:\n";
     #    $before =~ s/[\r\n]+.*$//;
     print STDERR $before."\n";
@@ -526,7 +545,8 @@ sub override_switch
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
     print STDERR "Received: ($before) ($matched) ($after)\n";
-    die("Did not receive Prompt after finalizing: $err for $Name\n") if ($err);
+    $error_count++;
+    croak("Did not receive Prompt after finalizing: $err for $Name\n") if ($err);
     #$JUNIPER->send("quit\n");
     print $JUNIPER "quit\n";
     if ($self->{'asroot'})
@@ -536,11 +556,15 @@ sub override_switch
       );
       $before =~ s/\033/<Esc>/g;
       $after =~ s/\033/<Esc>/g;
-      die("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
+      $error_count++;
+      croak("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
       print $JUNIPER "exit\n";
     }
     $JUNIPER->soft_close();
-    print STDERR "Successful completion of configuration for $Name\n";
+    print STDERR ($error_count ? "Uns" : "S") . "uccessful completion of configuration for $Name\n";
+    push @messages, ($error_count ? "Uns" : "S") . "Successful completion of configuration for $Name\n";
+    push @messages, "Encountered $error_count errors for $Name\n";
+    return($error_count ? -1 : 0, @messages);
 }
 
 =pod
