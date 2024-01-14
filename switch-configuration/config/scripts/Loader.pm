@@ -425,7 +425,6 @@ sub override_switch
 	    print STDERR "Sent $c, got back ($before) ($matched) ($after) Error: $err\n";
             usleep($Loader::line_delay);
         }
-	exit 0;
 	#$JUNIPER->send("\n\cD\n");
         print $JUNIPER "\n\cD\n";
         ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(30,
