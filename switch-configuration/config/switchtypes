@@ -19,7 +19,7 @@ Rm101-102	1	503	2001:470:f026:503::200:1	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5
 NW-IDF		2	103	2001:470:f026:103::200:2	exIDF		F.1		Loud		ex4200-48p	00:26:88:60:79:7f
 NE-IDF		3	103	2001:470:f026:103::200:3	exIDF		C.1		Loud		ex4200-48p	00:26:88:6e:ba:ff
 BallroomC	4	103	2001:470:f026:103::200:4	exRoom		C.9		Normal		ex4200-48p	00:26:88:7d:fb:7f
-#Deceased	5	-	-				Deceased	Z.9		-		ex4200-48p	00:26:88:6e:aa:ff
+//Deceased	5	-	-				Deceased	Z.9		-		ex4200-48p	00:26:88:6e:aa:ff
 ExpoIDF		6	103	2001:470:f026:103::200:6	exIDF		X.1		Loud		ex4200-48p	00:26:88:7d:d3:7f
 BallroomF	7	103	2001:470:f026:103::200:7	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b6:ff
 Rm103		8	503	2001:470:f026:503::200:8	cfRoom		I.9		Quiet		ex4200-48p	00:26:88:7d:dd:ff
