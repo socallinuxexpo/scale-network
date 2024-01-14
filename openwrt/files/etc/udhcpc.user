@@ -5,6 +5,20 @@ case "$1" in
   "renew"|"bound")
     # dump params to tmp so its easier to troubleshoot
     set > /tmp/dhcp.params
+
+    board = `cat /etc/board.json | jq '.model.id' -r | cut -d',' -f2`
+
+    if [ $1 == "bound" ] && [ $board == "e8450-ubi" ] ; then
+        bss_color = `echo $ip | cut -d'.' -f4 | expr \( $i % 62 \) + 1`
+        uci_bss_color = `uci -q show wireless.radio1.he_bss_color`
+
+        if [ $bss_color != $uci_bss_color ] || [ $? == 0 ]; then
+            uci set 'wireless.radio1.he_bss_color'=$bss_color
+            uci commit
+            wifi reload
+        fi
+    fi
+
     radio0=`uci show 'wireless.radio0.channel'|cut -f 2 -d "'"`
     radio1=`uci show 'wireless.radio1.channel'|cut -f 2 -d "'"`
     if [ ! -z "$opt224" ] || [ ! -z "$opt225" ]; then
