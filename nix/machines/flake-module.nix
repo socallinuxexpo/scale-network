@@ -21,6 +21,14 @@ in
         ];
         specialArgs = { inherit inputs; };
       };
+      monitor = lib.nixosSystem {
+        inherit system;
+        modules = [
+          common
+          ./monitor.nix
+        ];
+        specialArgs = { inherit inputs; };
+      };
       massflash = lib.nixosSystem {
         inherit system;
         modules = [
