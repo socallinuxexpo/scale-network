@@ -31,6 +31,7 @@ ssh_port="${ssh_port:-22}"
 
 flash_sha=$(cat "${state_dir}/flash_sha")
 
+
 # TODO: nc/ssh-keyscan until port 22 is up instead of sleeping
 sleep 20
 
@@ -53,9 +54,23 @@ scp -O -P $ssh_port \
   "$state_dir/$ap_type/flash.bin" $ssh_user@$host:/tmp/
 
 echo "scp good!"
+echo "${KEA_QUERY4_HWADDR}" > /var/run/kea/done.txt
+
+if [ "${ap_type}" == "e8450-ubi" ];then
+  ssh -i $state_dir/id_priv -p $ssh_port -t \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  $ssh_user@$host "ip l show dev wl0-ap | grep ether | awk '{print $2}';ip l show dev wl1-ap | grep ether | awk '{print $2}'" > /var/run/kea/done.txt
+else
+  ssh -i $state_dir/id_priv -p $ssh_port -t \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  $ssh_user@$host "ip l show dev phy0-ap0 | grep ether | awk '{print $2}';ip l show dev phy0-ap0 | grep ether | awk '{print $2}'" > /var/run/kea/done.txt
+fi
+
+echo -e "\n" > /var/run/kea/done.txt
 
 ssh -i $state_dir/id_priv -p $ssh_port -t \
   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
   $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
+
 
 echo "Done with $host"
