@@ -264,32 +264,44 @@ def populaterouters(routersfile):
     return routers
 
 
-def populateaps(apsfile):
-    """populate the AP list from an APs file"""
+def populateaps(apsfile, apusefile):
+    """populate the AP list from an APs files"""
+    apsdict = {}
+    for row in getfilelines(apsfile, header=True):
+        row = row.strip().split(",")
+        apsdict[row[0]] = row[1:]
+
+    apusedict = {}
+    for row in getfilelines(apusefile, header=True):
+        row = row.strip().split(",")
+        # serial must be our primary key
+        apusedict[row[1]] = [row[0]] + row[2:]
+
+    result = {}
+    for d in (apsdict, apusedict):
+        for key, value in d.items():
+            # merge two files based on serial primary key
+            result.setdefault(key, []).extend(value)
+
     aps = []
-    flines = getfilelines(apsfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # Lets bail if we have an invalid number of columns
-        if len(elems) < 10:
-            continue
-        ipaddr = elems[3]
+    # Example of values in result
+    # key: n8t-0054
+    # values: c4:04:15:ad:a3:93,unknown-2,10.128.3.249,6,36,0,0,50,50
+    for key, elems in result.items():
+        ipaddr = elems[2]
         # Lets bail if ip address is invalid
         if not isvalidip(ipaddr):
             continue
         aps.append(
             {
-                "name": elems[0].lower(),
-                "mac": elems[2],
+                "name": elems[1].lower(),
+                "mac": elems[0],
                 "ipv4": ipaddr,
                 "ipv4ptr": ip4toptr(ipaddr),
-                "wifi2": elems[4],
-                "wifi5": elems[5],
-                "configver": elems[6],
-                "fqdn": elems[0].lower() + ".scale.lan",
+                "wifi2": elems[3],
+                "wifi5": elems[4],
+                "configver": elems[5],
+                "fqdn": elems[1].lower() + ".scale.lan",
             }
         )
     return aps
@@ -580,7 +592,8 @@ def main():
     switchesfile = "../switch-configuration/config/switchtypes"
     serversfile = "../facts/servers/serverlist.csv"
     routersfile = "../facts/routers/routerlist.csv"
-    apsfile = "../facts/aps/aplist.csv"
+    apsfile = "../facts/aps/aps.csv"
+    apusefile = "../facts/aps/apuse.csv"
     pisfile = "../facts/pi/pilist.csv"
 
     # populate the device type lists
@@ -588,7 +601,7 @@ def main():
     switches = populateswitches(switchesfile)
     servers = populateservers(serversfile, vlans)
     routers = populaterouters(routersfile)
-    aps = populateaps(apsfile)
+    aps = populateaps(apsfile, apusefile)
     pis = populatepis(pisfile)
 
     subcomm = sys.argv[1]
