@@ -302,6 +302,7 @@ def populateaps(apsfile, apusefile):
                 "wifi5": elems[4],
                 "configver": elems[5],
                 "fqdn": elems[1].lower() + ".scale.lan",
+                "aliases": [key],
             }
         )
     return aps
