@@ -13,6 +13,18 @@ in
 {
   flake.nixosConfigurations =
     {
+      bootstrapImage = lib.nixosSystem {
+        inherit system;
+        modules = [
+          ({ modulesPath, ... }: {
+            imports = [
+              "${ toString modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
+            ];
+          })
+          ./_common/users.nix
+          ./bootstrap
+        ];
+      };
       loghost = lib.nixosSystem {
         inherit system;
         modules = [
