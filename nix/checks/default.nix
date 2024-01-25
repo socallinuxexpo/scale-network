@@ -57,6 +57,7 @@ genAttrs
     {
       core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs; });
       loghost = pkgs.testers.runNixOSTest ./loghost.nix;
+      monitor = pkgs.testers.runNixOSTest ./monitor.nix;
 
       pytest-facts =
         let
