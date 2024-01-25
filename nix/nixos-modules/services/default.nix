@@ -5,6 +5,7 @@
     ./bind-slave.nix
     ./gitlab.nix
     ./kea-master.nix
+    ./monitoring.nix
     ./ntp.nix
     ./prometheus.nix
     ./rsyslogd.nix

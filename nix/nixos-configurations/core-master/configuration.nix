@@ -14,6 +14,7 @@
   scale-network.services.ntp.enable = true;
   scale-network.services.rsyslogd.enable = true;
   scale-network.services.signs.enable = true;
+  scale-network.services.monitoring.enable = true;
 
   networking.hostName = "coremaster";
 

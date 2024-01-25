@@ -57,12 +57,12 @@ in
         }
       ];
 
-      grafana.enable = config.monitoring.grafanaEnable;
+      grafana.enable = true;
       grafana.settings = {
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = config.monitoring.grafanaDomain;
+          domain = cfg.grafanaDomain;
         };
         analytics.reporting_Enabled = false;
       };
