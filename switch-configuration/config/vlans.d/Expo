@@ -12,7 +12,8 @@ VLAN	exSigns				107	2001:470:f026:107::/64	0.0.0.0/0	Signs network (Expo Center)
 VLAN	exRegistration  	110	2001:470:f026:110::/64	10.0.10.0/24	Registration Network (Expo Center) IPv6 Only
 // Akamai cache is deprecated
 //VLAN	exAkamai			111	2001:470:f026:111::/64	0.0.0.0/0	Special public Akamai Cache Cluster network (has IPv4 from convention center)
-//112 through 199 not used
+VLAN exVmVendor             112 2001:470:f026:112::/64  10.0.144.0/20     Special network for VM Vending Machine
+//113 through 199 not used
 //200 through 499 Vendors
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.
 //The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other

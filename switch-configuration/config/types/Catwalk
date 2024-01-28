@@ -88,7 +88,7 @@ TRUNK	ge-0/0/28	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exSigns,HAM_BRIDGE 	-	// 
 TRUNK	ge-0/0/29	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
 			exAVLAN,vendor_backbone \
-			exSigns,HAM_BRIDGE 	-	// 
+			exSigns,exVmVendor,HAM_BRIDGE 	-	// 
 TRUNK	ge-0/0/30	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
 TRUNK	ge-0/0/31	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
 TRUNK	ge-0/0/32	exSCALE-SLOW,exSCALE-FAST,exInfra	POE	// AP for Game Night
