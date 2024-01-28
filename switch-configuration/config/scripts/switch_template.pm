@@ -813,22 +813,7 @@ sub VV_get_prefix6
     warn("Error: cannot support more than 9999 IPv6 VLANs (>16 bit variable BCD field) for VVRNG\n");
     return -1;
   }
-  $netbase = $quartets[3];
-  if ($quartets[3] !~ /^\d+$/)
-  {
-    # Have to extract BCD compatible portion to netbase and treat rest as fixed.
-    my @digits = split(//, $quartets[3]);
-    while ($digits[0] !~ /^\d$/ && $#digits)
-    {
-      $digitpfx .= shift @digits; # Save hex prefix for later use
-    }
-    $netbase = join("", @digits);
-    if ($netbase !~ /^\d+$/)
-    {
-      warn("Error: Supplied ipv6 not BCD compatible for VVRNG\n");
-      return -1;
-    }
-  }
+  $netbase = $VV_LOW;
   my $netmax;
   if ($n_bits % 4)
   {
