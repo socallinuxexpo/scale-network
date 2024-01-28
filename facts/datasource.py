@@ -157,11 +157,11 @@ def test_datafile(delimiter, meta):
             count = str(meta["count"])[:-1]
             if len(elems) < int(count):
                 return False, "insufficient col count: " + str(len(elems)) + \
-                  " wanted " + str(meta["count"]) + " at line " + str(linenum) \
+                  " wanted " + str(meta["count"]) + " at line " + str(linenum+1) \
                   + " of " + meta["file"]
         elif len(elems) != meta["count"]:
             return False, "invalid col count: " + str(len(elems)) + " wanted " + \
-                str(meta["count"]) + " at line " + str(linenum) + " of " + meta["file"]
+                str(meta["count"]) + " at line " + str(linenum+1) + " of " + meta["file"]
         # skip validators for header row
         if meta["header"] and linenum == 0:
             continue
@@ -169,5 +169,5 @@ def test_datafile(delimiter, meta):
         for i, val in enumerate(elems):
             if not meta["cols"][i](val.rstrip('\n')):
                 return False, "invalid field " + val + " failed " + meta["cols"][i].__name__ + \
-                " at line " + str(linenum) + " of " + meta["file"]
+                " at line " + str(linenum+1) + " of " + meta["file"]
     return True, ""
