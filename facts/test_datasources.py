@@ -2,6 +2,7 @@
 '''
 CSV data source tests
 '''
+import os
 import datasource as ds
 
 
@@ -96,3 +97,25 @@ def test_switchtypes_tsv():
     }
     result, err = ds.test_tsvfile(meta)
     assert result, err
+
+
+def test_vlansd_tsv():
+    """test vlans.d/"""
+
+    vlansddir = "../switch-configuration/config/vlans.d/"
+    for filename in os.listdir(vlansddir):
+        meta = {
+            "file": vlansddir + filename,
+            "header": False,
+            "count": "6+",
+            "cols": [
+                ds.isuntested,
+                ds.isuntested,
+                ds.isuntested,
+                ds.isvalidsubnet,
+                ds.isvalidsubnet,
+                ds.isuntested,
+            ],
+        }
+        result, err = ds.test_tsvfile(meta)
+        assert result, err
