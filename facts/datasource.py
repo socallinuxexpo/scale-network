@@ -44,6 +44,14 @@ def isvalidip(addr):
         return False
     return True
 
+def isvalidsubnet(subnet):
+    '''test for valid v4 or v6 subnet'''
+    try:
+        ipaddress.ip_network(subnet, strict=True)
+    except ValueError:
+        return False
+    return True
+
 
 def isvalidiporempty(val):
     '''test for valid ip or empty'''
