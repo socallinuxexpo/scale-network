@@ -50,6 +50,7 @@ system {
     }
     services {
         ssh {
+            no-passwords;
             protocol-version v2;
         }
         netconf {

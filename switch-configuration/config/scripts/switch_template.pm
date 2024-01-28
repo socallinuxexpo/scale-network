@@ -1547,6 +1547,7 @@ $USER_AUTHENTICATION
     }
     services {
         ssh {
+            no-passwords;
             protocol-version v2;
         }
         netconf {
