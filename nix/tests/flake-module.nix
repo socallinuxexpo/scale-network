@@ -11,11 +11,15 @@
       # python tests for the data found in facts
       # disabling persistence and cache for py utils to avoid warnings
       # since caching is taken care of by nix
-      pytest-facts = (pkgs.runCommand "pytest-facts" { } ''
+      pytest-facts = let
+         testPython = (pkgs.python3.withPackages
+         (pythonPackages: with pythonPackages; [ pylint pytest jinja2 ]));
+        in
+        (pkgs.runCommand "pytest-facts" { } ''
         cp -r --no-preserve=mode ${pkgs.lib.cleanSource inputs.self}/* .
         cd facts
-        ${pkgs.python3Packages.pylint}/bin/pylint --persistent n *.py
-        ${pkgs.python3Packages.pytest}/bin/pytest -vv -p no:cacheprovider
+        ${testPython}/bin/pylint --persistent n *.py
+        ${testPython}/bin/pytest -vv -p no:cacheprovider
         touch $out
       '');
 
