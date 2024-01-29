@@ -463,16 +463,22 @@ def test_populateswitches():
     cases = [
         ["./testdata/testswitchtypes", [
             {
-                "name": "Expo-Catwalk",
+                "name": "expo-catwalk",
+                "fqdn": "expo-catwalk.scale.lan",
                 "num": "16",
                 "ipv6": "2001:470:f325:103::200:16",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "6.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
                 "aliases": [],
             },
             {
-                "name": "Rm209-210",
+                "name": "rm209-210",
+                "fqdn": "rm209-210.scale.lan",
                 "num": "17",
                 "ipv6": "2001:470:f325:503::200:17",
-                "aliases": ["209", "210"],
+                # pylint: disable=line-too-long
+                "ipv6ptr": "7.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.5.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
+                "aliases": ["rm209", "rm210"],
             }
         ]]
     ]
