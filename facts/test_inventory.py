@@ -546,11 +546,16 @@ def test_populateservers():
     cases = [
         ["./testdata/testserverlist.csv", [
             {
+                "aliases": [],
+                "fqdn": "server1.scale.lan",
+                "ipv4ptr": "5.3.128.10.in-addr.arpa",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.0.5.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
                 "name": "server1",
                 "macaddress": "4c:72:b9:7c:41:17",
                 "ipv6": "2001:470:f325:503::5",
                 "ipv4": "10.128.3.5",
-                "ansiblerole": "core",
+                "role": "core",
                 "vlan": "cfInfra",
                 "building": "Conference",
             }
