@@ -491,8 +491,11 @@ def test_populaterouters():
     cases = [
         ["./testdata/testrouterlist.csv", [
             {
+                "name": "br-mdf-01",
+                "fqdn": "br-mdf-01.scale.lan",
                 "ipv6": "2001:470:f325:103::2",
-                "name": "br-mdf-01"
+                # pylint: disable=line-too-long
+                "ipv6ptr": "2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
             }
         ]]
     ]
