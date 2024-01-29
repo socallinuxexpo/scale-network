@@ -233,8 +233,8 @@ def test_genvlans():
 def test_ip4toptr():
     '''test cases for the ip4toptr() function'''
     cases = [
-        ["10.128.3.5", "3.128.10"],
-        ["10.0.3.200", "3.0.10"]
+        ["10.128.3.5", "5.3.128.10.in-addr.arpa"],
+        ["10.0.3.200", "200.3.0.10.in-addr.arpa"]
     ]
     for ipaddr, ptr in cases:
         assert inventory.ip4toptr(ipaddr) == ptr, ipaddr
