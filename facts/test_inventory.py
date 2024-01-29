@@ -526,7 +526,10 @@ def test_populatepis():
         ["./testdata/testpilist.csv", [
             {
                 "name": "pieb1d1c",
-                "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26"
+                "fqdn": "pieb1d1c.scale.lan",
+                "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "6.2.a.b.7.2.1.f.7.6.f.2.f.c.f.e.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa"
             }
         ]]
     ]
