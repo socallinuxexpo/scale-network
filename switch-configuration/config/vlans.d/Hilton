@@ -15,6 +15,6 @@ VLAN	hiInstall		111	2001:470:f026:111::/64	10.0.11.0/24	Install Fests and Worksh
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.
 //The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other
 //VLANs (vendor_vlan <-> internet only)
-VVRNG	vendor_vlan_		200-498	2001:470:f026:200::/54	10.2.0.0/15	Dynamically allocated and named booth VLANs
+VVRNG	vendor_vlan_		200-498	2001:470:f026::/48	10.2.0.0/15	Dynamically allocated and named booth VLANs
 //499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.
 VLAN	vendor_backbone		499	2001:470:f026:499::/64	10.1.0.0/24	Vendor Backbone
