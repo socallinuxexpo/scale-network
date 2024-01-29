@@ -147,8 +147,8 @@ def test_datafile(delimiter, meta):
     with open(meta["file"], encoding='utf-8') as fha:
         lines = fha.readlines()
     for linenum, line in enumerate(lines):
-        # skip comments
-        if line[0] == '/' and line[1] == '/':
+        # skip comments or empty lines
+        if (line[0] == '/' and line[1] == '/') or (line.startswith('\n')):
             continue
         elems = re.split(delimiter, line)
         # check for expected number of columns
