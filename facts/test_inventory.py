@@ -271,7 +271,7 @@ def test_isvalidip():
 def test_roomalias():
     '''test cases for the roomalias() function'''
     cases = [
-        ["Rm101-102", ["101", "102"]],
+        ["Rm101-102", ["rm101", "rm102"]],
         ["BallroomC", []]
     ]
     for name, aliases in cases:
