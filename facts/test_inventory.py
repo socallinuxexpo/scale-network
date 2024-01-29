@@ -500,16 +500,20 @@ def test_populateaps():
         ["./testdata/testaplist.csv", [
             {
                 "name": "104-ap3",
+                "fqdn": "104-ap3.scale.lan",
                 "mac": "c6:04:15:90:57:c5",
                 "ipv4": "10.128.3.20",
+                "ipv4ptr": "20.3.128.10.in-addr.arpa",
                 "wifi2": "6",
                 "wifi5": "40",
                 "configver": "0",
             },
             {
                 "name": "105-ap1",
+                "fqdn": "105-ap1.scale.lan",
                 "mac": "0a:bd:43:ac:5f:6c",
                 "ipv4": "10.128.3.21",
+                "ipv4ptr": "21.3.128.10.in-addr.arpa",
                 "wifi2": "11",
                 "wifi5": "44",
                 "configver": "0",
