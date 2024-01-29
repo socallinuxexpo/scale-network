@@ -1,5 +1,4 @@
 //	Conference	Center	--	VLANS	500-899
 VLAN	cfSCALE-SLOW		500	2001:470:f325:500::/64	10.128.128.0/21	2.4G Wireless Network in Conference Center
 VLAN	cfSigns			507	2001:470:f325:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only
-VLAN	cfHam_N6S		509	2001:470:f325:509::/64	10.128.9.0/24	HAM radio station in Conference Center
 //510-599 not used
