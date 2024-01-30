@@ -7,7 +7,6 @@
 let
   local_manifests = copyPathsToStore [
     ../../switch-configuration
-    ../../ansible
     ../../facts
   ];
 in
