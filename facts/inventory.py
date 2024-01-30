@@ -201,7 +201,7 @@ def dhcp4ranges(prefix, bitmask):
     topthird = int(int(ipsplit[2]) + (numocs - 1))
     return [
         ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
-        ipsplit[0] + "." + ipsplit[1] + "." + str(topthird - 1) + ".254",
+        ipsplit[0] + "." + ipsplit[1] + "." + str(topthird) + ".254",
         ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
     ]
 

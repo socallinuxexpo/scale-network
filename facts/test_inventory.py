@@ -50,14 +50,12 @@ def test_getfilelinesbldg():
             "//\tConference\tCenter\t--\tVLANS\t500-899\n",
             "VLAN\tcfSCALE-SLOW	\t500\t2001:470:f325:500::/64\t10.128.128.0/21\t2.4G Wireless Network in Conference Center\n",
             "VLAN\tcfSigns\t\t\t507\t2001:470:f325:507::/64	0.0.0.0/0\tSigns network (Conference Center) IPv6 Only\n",
-            "VLAN\tcfHam_N6S\t\t509\t2001:470:f325:509::/64\t10.128.9.0/24\tHAM radio station in Conference Center\n",
             "//510-599 not used\n"
         ]],
         ["Expo", [
             "// Expo Center -- VLANS 100-499\n",
             "VLAN\texSCALE-SLOW\t\t100\t2001:470:f325:100::/64\t10.0.128.0/21\t2.4G Wireless Network in Expo Center\n",
             "//106 not used\n",
-            "VLAN\texAkamai\t\t\t111\t2001:470:f325:111::/64\t0.0.0.0/0\tSpecial public Akamai Cache Cluster network (has IPv4 from convention center)\n",
             "//112 through 199 not used\n",
             "//200 through 499 Vendors\n",
             "//200-498 are dynamically generated from Booth information file as Vendor VLANs.\n",
@@ -78,14 +76,10 @@ def test_dhcp6ranges():
     cases = [
         [["2001:470:f325:504::", 64], [
             "2001:470:f325:504:1::1",
-            "2001:470:f325:504:1::400",
-            "2001:470:f325:504:2::1",
             "2001:470:f325:504:2::400",
         ]],
         [["2001:470:f325:111::", 64], [
             "2001:470:f325:111:1::1",
-            "2001:470:f325:111:1::400",
-            "2001:470:f325:111:2::1",
             "2001:470:f325:111:2::400"
         ]],
         [["::", 0], ["", "", "", ""]]
@@ -99,18 +93,14 @@ def test_dhcp4ranges():
     '''test cases for the dhcp4ranges() function'''
     cases = [
         [["10.0.136.0", 21], [
-            "10.0.136.80",
-            "10.0.139.255",
-            "10.0.140.1",
-            "10.0.143.254",
-            "10.0.136.1"
+            "10.0.136.80",  #dhcp range start
+            "10.0.143.254", #dhcp range end
+            "10.0.136.1",   #default route
         ]],
         [["10.0.2.0", 24], [
-            "10.0.2.80",
-            "10.0.2.165",
-            "10.0.2.166",
-            "10.0.2.254",
-            "10.0.2.1"
+            "10.0.2.80",    #dhcp range start
+            "10.0.2.254",   #dhcp range end
+            "10.0.2.1"      #default route
         ]],
         [["0.0.0.0", 0], ["", "", "", "", ""]],
         [["38.98.46.128", 25], ["", "", "", "", ""]],
@@ -132,14 +122,10 @@ def test_makevlan():
             "ipv4bitmask": "24",
             "building": "Conference",
             "description": "Capture the Flag",
-            "ipv6dhcp1a": "2001:470:f325:504:1::1",
-            "ipv6dhcp1b": "2001:470:f325:504:1::400",
-            "ipv6dhcp2a": "2001:470:f325:504:2::1",
-            "ipv6dhcp2b": "2001:470:f325:504:2::400",
-            "ipv4dhcp1a": "10.128.4.80",
-            "ipv4dhcp1b": "10.128.4.165",
-            "ipv4dhcp2a": "10.128.4.166",
-            "ipv4dhcp2b": "10.128.4.254",
+            "ipv6dhcpStart": "2001:470:f325:504:1::1",
+            "ipv6dhcpEnd": "2001:470:f325:504:2::400",
+            "ipv4dhcpStart": "10.128.4.80",
+            "ipv4dhcpEnd": "10.128.4.254",
             "ipv4router": "10.128.4.1",
             "ipv4netmask": "255.255.255.0",
             "ipv6dns1": "",
@@ -184,14 +170,10 @@ def test_genvlans():
                 "ipv4bitmask": 24,
                 "building": "Expo",
                 "description": "Dyanmic vlan 200",
-                "ipv6dhcp1a": "2001:470:f325:200:1::1",
-                "ipv6dhcp1b": "2001:470:f325:200:1::400",
-                "ipv6dhcp2a": "2001:470:f325:200:2::1",
-                "ipv6dhcp2b": "2001:470:f325:200:2::400",
-                "ipv4dhcp1a": "10.2.0.80",
-                "ipv4dhcp1b": "10.2.0.165",
-                "ipv4dhcp2a": "10.2.0.166",
-                "ipv4dhcp2b": "10.2.0.254",
+                "ipv6dhcpStart": "2001:470:f325:200:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:200:2::400",
+                "ipv4dhcpStart": "10.2.0.80",
+                "ipv4dhcpEnd": "10.2.0.254",
                 "ipv4router": "10.2.0.1",
                 "ipv4netmask": "255.255.255.0",
                 "ipv6dns1": "",
@@ -208,14 +190,10 @@ def test_genvlans():
                 "ipv4bitmask": 24,
                 "building": "Expo",
                 "description": "Dyanmic vlan 201",
-                "ipv6dhcp1a": "2001:470:f325:201:1::1",
-                "ipv6dhcp1b": "2001:470:f325:201:1::400",
-                "ipv6dhcp2a": "2001:470:f325:201:2::1",
-                "ipv6dhcp2b": "2001:470:f325:201:2::400",
-                "ipv4dhcp1a": "10.2.1.80",
-                "ipv4dhcp1b": "10.2.1.165",
-                "ipv4dhcp2a": "10.2.1.166",
-                "ipv4dhcp2b": "10.2.1.254",
+                "ipv6dhcpStart": "2001:470:f325:201:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:201:2::400",
+                "ipv4dhcpStart": "10.2.1.80",
+                "ipv4dhcpEnd": "10.2.1.254",
                 "ipv4router": "10.2.1.1",
                 "ipv4netmask": "255.255.255.0",
                 "ipv6dns1": "",
@@ -233,8 +211,8 @@ def test_genvlans():
 def test_ip4toptr():
     '''test cases for the ip4toptr() function'''
     cases = [
-        ["10.128.3.5", "3.128.10"],
-        ["10.0.3.200", "3.0.10"]
+        ["10.128.3.5", "5.3.128.10.in-addr.arpa"],
+        ["10.0.3.200", "200.3.0.10.in-addr.arpa"]
     ]
     for ipaddr, ptr in cases:
         assert inventory.ip4toptr(ipaddr) == ptr, ipaddr
@@ -244,9 +222,9 @@ def test_ip6toptr():
     '''test cases for the ip6toptr() function'''
     cases = [
         ["2001:470:f325:103::200:4",
-         "4.0.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2"],
+         "4.0.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa"],
         ["2001:470:f325:107:ad84:2d06:1dfe:7f67",
-         "7.6.f.7.e.f.d.1.6.0.d.2.4.8.d.a.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2"],
+         "7.6.f.7.e.f.d.1.6.0.d.2.4.8.d.a.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa"],
     ]
     for ipaddr, ptr in cases:
         assert inventory.ip6toptr(ipaddr) == ptr, ipaddr
@@ -271,7 +249,7 @@ def test_isvalidip():
 def test_roomalias():
     '''test cases for the roomalias() function'''
     cases = [
-        ["Rm101-102", ["101", "102"]],
+        ["Rm101-102", ["rm101", "rm102"]],
         ["BallroomC", []]
     ]
     for name, aliases in cases:
@@ -292,40 +270,12 @@ def test_populatevlans():
                 "ipv4bitmask": "21",
                 "building": "Expo",
                 "description": "2.4G Wireless Network in Expo Center",
-                "ipv6dhcp1a": "2001:470:f325:100:1::1",
-                "ipv6dhcp1b": "2001:470:f325:100:1::400",
-                "ipv6dhcp2a": "2001:470:f325:100:2::1",
-                "ipv6dhcp2b": "2001:470:f325:100:2::400",
-                "ipv4dhcp1a": "10.0.128.80",
-                "ipv4dhcp1b": "10.0.131.255",
-                "ipv4dhcp2a": "10.0.132.1",
-                "ipv4dhcp2b": "10.0.135.254",
+                "ipv6dhcpStart": "2001:470:f325:100:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:100:2::400",
+                "ipv4dhcpStart": "10.0.128.80",
+                "ipv4dhcpEnd": "10.0.135.254",
                 "ipv4router": "10.0.128.1",
                 "ipv4netmask": "255.255.248.0",
-                "ipv6dns1": "",
-                "ipv6dns2": "",
-                "ipv4dns1": "",
-                "ipv4dns2": ""
-            },
-            {
-                "name": "exAkamai",
-                "id": "111",
-                "ipv6prefix": "2001:470:f325:111::",
-                "ipv6bitmask": "64",
-                "ipv4prefix": "0.0.0.0",
-                "ipv4bitmask": "0",
-                "building": "Expo",
-                "description": "Special public Akamai Cache Cluster network (has IPv4 from convention center)",
-                "ipv6dhcp1a": "2001:470:f325:111:1::1",
-                "ipv6dhcp1b": "2001:470:f325:111:1::400",
-                "ipv6dhcp2a": "2001:470:f325:111:2::1",
-                "ipv6dhcp2b": "2001:470:f325:111:2::400",
-                "ipv4dhcp1a": "",
-                "ipv4dhcp1b": "",
-                "ipv4dhcp2a": "",
-                "ipv4dhcp2b": "",
-                "ipv4router": "",
-                "ipv4netmask": None,
                 "ipv6dns1": "",
                 "ipv6dns2": "",
                 "ipv4dns1": "",
@@ -340,14 +290,10 @@ def test_populatevlans():
                 "ipv4bitmask": 24,
                 "building": "Expo",
                 "description": "Dyanmic vlan 200",
-                "ipv6dhcp1a": "2001:470:f325:200:1::1",
-                "ipv6dhcp1b": "2001:470:f325:200:1::400",
-                "ipv6dhcp2a": "2001:470:f325:200:2::1",
-                "ipv6dhcp2b": "2001:470:f325:200:2::400",
-                "ipv4dhcp1a": "10.2.0.80",
-                "ipv4dhcp1b": "10.2.0.165",
-                "ipv4dhcp2a": "10.2.0.166",
-                "ipv4dhcp2b": "10.2.0.254",
+                "ipv6dhcpStart": "2001:470:f325:200:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:200:2::400",
+                "ipv4dhcpStart": "10.2.0.80",
+                "ipv4dhcpEnd": "10.2.0.254",
                 "ipv4router": "10.2.0.1",
                 "ipv4netmask": "255.255.255.0",
                 "ipv6dns1": "",
@@ -364,14 +310,10 @@ def test_populatevlans():
                 "ipv4bitmask": 24,
                 "building": "Expo",
                 "description": "Dyanmic vlan 201",
-                "ipv6dhcp1a": "2001:470:f325:201:1::1",
-                "ipv6dhcp1b": "2001:470:f325:201:1::400",
-                "ipv6dhcp2a": "2001:470:f325:201:2::1",
-                "ipv6dhcp2b": "2001:470:f325:201:2::400",
-                "ipv4dhcp1a": "10.2.1.80",
-                "ipv4dhcp1b": "10.2.1.165",
-                "ipv4dhcp2a": "10.2.1.166",
-                "ipv4dhcp2b": "10.2.1.254",
+                "ipv6dhcpStart": "2001:470:f325:201:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:201:2::400",
+                "ipv4dhcpStart": "10.2.1.80",
+                "ipv4dhcpEnd": "10.2.1.254",
                 "ipv4router": "10.2.1.1",
                 "ipv4netmask": "255.255.255.0",
                 "ipv6dns1": "",
@@ -388,14 +330,10 @@ def test_populatevlans():
                 "ipv4bitmask": "21",
                 "building": "Conference",
                 "description": "2.4G Wireless Network in Conference Center",
-                "ipv6dhcp1a": "2001:470:f325:500:1::1",
-                "ipv6dhcp1b": "2001:470:f325:500:1::400",
-                "ipv6dhcp2a": "2001:470:f325:500:2::1",
-                "ipv6dhcp2b": "2001:470:f325:500:2::400",
-                "ipv4dhcp1a": "10.128.128.80",
-                "ipv4dhcp1b": "10.128.131.255",
-                "ipv4dhcp2a": "10.128.132.1",
-                "ipv4dhcp2b": "10.128.135.254",
+                "ipv6dhcpStart": "2001:470:f325:500:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:500:2::400",
+                "ipv4dhcpStart": "10.128.128.80",
+                "ipv4dhcpEnd": "10.128.135.254",
                 "ipv4router": "10.128.128.1",
                 "ipv4netmask": "255.255.248.0",
                 "ipv6dns1": "",
@@ -412,40 +350,12 @@ def test_populatevlans():
                 "ipv4bitmask": "0",
                 "building": "Conference",
                 "description": "Signs network (Conference Center) IPv6 Only",
-                "ipv6dhcp1a": "2001:470:f325:507:1::1",
-                "ipv6dhcp1b": "2001:470:f325:507:1::400",
-                "ipv6dhcp2a": "2001:470:f325:507:2::1",
-                "ipv6dhcp2b": "2001:470:f325:507:2::400",
-                "ipv4dhcp1a": "",
-                "ipv4dhcp1b": "",
-                "ipv4dhcp2a": "",
-                "ipv4dhcp2b": "",
+                "ipv6dhcpStart": "2001:470:f325:507:1::1",
+                "ipv6dhcpEnd": "2001:470:f325:507:2::400",
+                "ipv4dhcpStart": "",
+                "ipv4dhcpEnd": "",
                 "ipv4router": "",
                 "ipv4netmask": None,
-                "ipv6dns1": "",
-                "ipv6dns2": "",
-                "ipv4dns1": "",
-                "ipv4dns2": ""
-            },
-            {
-                "name": "cfHam_N6S",
-                "id": "509",
-                "ipv6prefix": "2001:470:f325:509::",
-                "ipv6bitmask": "64",
-                "ipv4prefix": "10.128.9.0",
-                "ipv4bitmask": "24",
-                "building": "Conference",
-                "description": "HAM radio station in Conference Center",
-                "ipv6dhcp1a": "2001:470:f325:509:1::1",
-                "ipv6dhcp1b": "2001:470:f325:509:1::400",
-                "ipv6dhcp2a": "2001:470:f325:509:2::1",
-                "ipv6dhcp2b": "2001:470:f325:509:2::400",
-                "ipv4dhcp1a": "10.128.9.80",
-                "ipv4dhcp1b": "10.128.9.165",
-                "ipv4dhcp2a": "10.128.9.166",
-                "ipv4dhcp2b": "10.128.9.254",
-                "ipv4router": "10.128.9.1",
-                "ipv4netmask": "255.255.255.0",
                 "ipv6dns1": "",
                 "ipv6dns2": "",
                 "ipv4dns1": "",
@@ -463,16 +373,22 @@ def test_populateswitches():
     cases = [
         ["./testdata/testswitchtypes", [
             {
-                "name": "Expo-Catwalk",
+                "name": "expo-catwalk",
+                "fqdn": "expo-catwalk.scale.lan",
                 "num": "16",
                 "ipv6": "2001:470:f325:103::200:16",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "6.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
                 "aliases": [],
             },
             {
-                "name": "Rm209-210",
+                "name": "rm209-210",
+                "fqdn": "rm209-210.scale.lan",
                 "num": "17",
                 "ipv6": "2001:470:f325:503::200:17",
-                "aliases": ["209", "210"],
+                # pylint: disable=line-too-long
+                "ipv6ptr": "7.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.5.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
+                "aliases": ["rm209", "rm210"],
             }
         ]]
     ]
@@ -485,8 +401,11 @@ def test_populaterouters():
     cases = [
         ["./testdata/testrouterlist.csv", [
             {
+                "name": "br-mdf-01",
+                "fqdn": "br-mdf-01.scale.lan",
                 "ipv6": "2001:470:f325:103::2",
-                "name": "br-mdf-01"
+                # pylint: disable=line-too-long
+                "ipv6ptr": "2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
             }
         ]]
     ]
@@ -500,16 +419,20 @@ def test_populateaps():
         ["./testdata/testaplist.csv", [
             {
                 "name": "104-ap3",
+                "fqdn": "104-ap3.scale.lan",
                 "mac": "c6:04:15:90:57:c5",
                 "ipv4": "10.128.3.20",
+                "ipv4ptr": "20.3.128.10.in-addr.arpa",
                 "wifi2": "6",
                 "wifi5": "40",
                 "configver": "0",
             },
             {
                 "name": "105-ap1",
+                "fqdn": "105-ap1.scale.lan",
                 "mac": "0a:bd:43:ac:5f:6c",
                 "ipv4": "10.128.3.21",
+                "ipv4ptr": "21.3.128.10.in-addr.arpa",
                 "wifi2": "11",
                 "wifi5": "44",
                 "configver": "0",
@@ -526,7 +449,10 @@ def test_populatepis():
         ["./testdata/testpilist.csv", [
             {
                 "name": "pieb1d1c",
-                "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26"
+                "fqdn": "pieb1d1c.scale.lan",
+                "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "6.2.a.b.7.2.1.f.7.6.f.2.f.c.f.e.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa"
             }
         ]]
     ]
@@ -546,11 +472,16 @@ def test_populateservers():
     cases = [
         ["./testdata/testserverlist.csv", [
             {
+                "aliases": [],
+                "fqdn": "server1.scale.lan",
+                "ipv4ptr": "5.3.128.10.in-addr.arpa",
+                # pylint: disable=line-too-long
+                "ipv6ptr": "5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.0.5.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
                 "name": "server1",
                 "macaddress": "4c:72:b9:7c:41:17",
                 "ipv6": "2001:470:f325:503::5",
                 "ipv4": "10.128.3.5",
-                "ansiblerole": "core",
+                "role": "core",
                 "vlan": "cfInfra",
                 "building": "Conference",
             }

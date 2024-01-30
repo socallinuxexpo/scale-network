@@ -16,10 +16,6 @@
         glibcLocales
         (pkgs.python3.withPackages (p: with p ; [ pytest pylint ipdb ]))
       ];
-      ansible_sub = [
-        pkgs.ansible
-        pkgs.ansible-lint
-      ];
       openwrt_sub = with pkgs; [
         expect
         gomplate
@@ -40,7 +36,6 @@
     {
       devShells.default = pkgs.mkShell {
         packages = global
-          ++ ansible_sub
           ++ openwrt_sub
           ++ network_sub;
       };

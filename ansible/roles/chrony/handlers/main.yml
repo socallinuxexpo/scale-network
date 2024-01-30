@@ -1,8 +1,0 @@
----
-
-- name: restart chrony
-  systemd:
-    name: chrony
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
