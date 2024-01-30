@@ -13,7 +13,7 @@
     useDHCP = false;
     useNetworkd = true;
     firewall.allowedTCPPorts = [ 53 67 68 ];
-    firewall.allowedUDPPorts = [ 53 67 68 ];
+    firewall.allowedUDPPorts = [ 53 67 68 123 ];
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -51,6 +51,14 @@
         enable = true;
         configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/kea.json";
       };
+    };
+    ntp = {
+      enable = true;
+      extraConfig = ''
+        # Hosts on the local network(s) are not permitted because of the "restrict default"
+        restrict 10.0.0.0/8 kod nomodify notrap nopeer
+        restrict 2001:470:f026::/48 kod nomodify notrap nopeer
+      '';
     };
   };
 }
