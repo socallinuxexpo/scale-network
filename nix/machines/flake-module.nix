@@ -25,6 +25,15 @@ in
           ./bootstrap
         ];
       };
+      devServer = lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./_common/users.nix
+          ./devServer/default.nix
+          ./devServer/hardware-configuration.nix
+          inputs.microvm.nixosModules.host
+        ];
+      };
       loghost = lib.nixosSystem {
         inherit system;
         modules = [
