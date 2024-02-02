@@ -21,6 +21,7 @@ in
               "${ toString modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
             ];
           })
+          ./_common/base.nix
           ./_common/users.nix
           ./bootstrap
         ];
@@ -28,6 +29,7 @@ in
       devServer = lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          ./_common/base.nix
           ./_common/users.nix
           ./devServer/default.nix
           ./devServer/hardware-configuration.nix
