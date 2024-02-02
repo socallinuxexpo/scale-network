@@ -6,7 +6,7 @@ let
   common = {
     imports = [
       inputs.self.nixosModules.bhyve-image
-      ./_common/users.nix
+      ./_common
     ];
   };
 in
