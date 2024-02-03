@@ -1,9 +1,6 @@
 { config, lib, pkgs, inputs, ... }:
 
 {
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "22.11";
-
   boot.kernelParams = [ "console=ttyS0" ];
 
   # disable legacy networking bits as recommended by:

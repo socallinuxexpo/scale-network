@@ -1,8 +1,5 @@
 { config, lib, pkgs, ... }:
 {
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "22.11";
-
   boot.kernelParams = [ "console=ttyS0" ];
 
   # TODO: How to handle sudo esculation
