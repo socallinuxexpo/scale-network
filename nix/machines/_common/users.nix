@@ -5,6 +5,7 @@
   security.sudo = {
     extraConfig = ''
       Defaults rootpw
+      Defaults lecture="never"
     '';
   };
 
