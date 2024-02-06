@@ -25,8 +25,14 @@ zfs create -o mountpoint=legacy zroot/nix  # For /nix
 zfs create -o mountpoint=legacy zroot/persist  # For /persist
 
 # Create ESP partiions
-mkfs.vfat /dev/${DISK0}1
-mkfs.vfat /dev/${DISK1}1
+# FAT32 suggested as the most compat and portable
+mkfs.fat -F32 /dev/${DISK0}1
+mkfs.fat -F32 /dev/${DISK1}1
+
+# Give use labels so we dont have to lookup
+# uuids or something annoying for our configs
+mlabel -i /dev/${DISK0}1 ::"BOOT"
+mlabel -i /dev/${DISK1}1 ::"BOOT2"
 
 # Mount new ZFS pool
 mount -t zfs zroot/root /mnt
@@ -39,7 +45,7 @@ mount -t zfs zroot/nix /mnt/nix
 mount -t zfs zroot/home /mnt/home
 
 # Mount both of the ESP's
-mount /dev/${DISK0}1 /mnt/boot
-mount /dev/${DISK1}1 /mnt/boot2
+mount /dev/disk/by-label/BOOT /mnt/boot
+mount /dev/disk/by-label/BOOT2 /mnt/boot2
 
 echo "nixos-install --flake github:socallinuxexpo/scale-network/<branch>#<machine>"
