@@ -6,7 +6,7 @@ let
   common = {
     imports = [
       inputs.self.nixosModules.bhyve-image
-      ./_common/users.nix
+      ./_common
     ];
   };
 in
@@ -21,8 +21,19 @@ in
               "${ toString modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
             ];
           })
+          ./_common/base.nix
           ./_common/users.nix
           ./bootstrap
+        ];
+      };
+      devServer = lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./_common/base.nix
+          ./_common/users.nix
+          ./devServer/default.nix
+          ./devServer/hardware-configuration.nix
+          inputs.microvm.nixosModules.host
         ];
       };
       loghost = lib.nixosSystem {
