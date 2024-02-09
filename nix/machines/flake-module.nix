@@ -5,7 +5,7 @@ let
   system = "x86_64-linux";
   common = {
     imports = [
-      inputs.self.nixosModules.bhyve-image
+      inputs.microvm.nixosModules.microvm
       ./_common
     ];
   };
