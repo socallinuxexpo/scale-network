@@ -68,6 +68,7 @@ in
         inherit system;
         modules = [
           common
+          ./core/microvm-config.nix
           ./core/master.nix
         ];
         specialArgs = { inherit inputs; };
@@ -76,6 +77,7 @@ in
         inherit system;
         modules = [
           common
+          ./core/microvm-config.nix
           ./core/slave.nix
         ];
         specialArgs = { inherit inputs; };
