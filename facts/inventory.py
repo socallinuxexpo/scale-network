@@ -450,7 +450,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                     "encapsulate": "",
                 },
             ],
-            "reservation-mode": "global",
+            # All of our reservations are global
+            # https://kea.readthedocs.io/en/kea-2.2.0/arm/dhcp4-srv.html#fine-tuning-dhcpv4-host-reservation
+            "reservations-global": True,
+            "reservations-in-subnet": True,
             "reservations": [],
             # Finally, we list the subnets from which we will be leasing addresses.
             "subnet4": []
