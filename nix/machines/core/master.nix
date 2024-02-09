@@ -24,7 +24,8 @@ in
     enable = true;
     networks = {
       "10-lan" = {
-        name = "enp0*";
+        # to match enp0 or eth0
+        name = "e*0*";
         enable = true;
         address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
         gateway = [ "10.0.3.1" ];
