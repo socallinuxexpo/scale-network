@@ -406,7 +406,11 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "renew-timer": 1000,
             "rebind-timer": 2000,
             # Next we set up the interfaces to be used by the server.
-            "interfaces-config": {"interfaces": ["*"]},
+            "interfaces-config": {
+                "interfaces": ["*"],
+                "service-sockets-max-retries": 5,
+                "service-sockets-retry-wait-time": 5000
+            },
             # And we specify the type of lease database
             "lease-database": {
                 "type": "memfile",
