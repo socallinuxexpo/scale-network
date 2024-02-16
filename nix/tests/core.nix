@@ -4,7 +4,8 @@
   name = "core";
 
   nodes = {
-    coreServer = { lib, ... }: {
+    # node must match hostname for testScript to find it below
+    coremaster = { lib, ... }: {
       _module.args = { inherit inputs; };
       imports = [ ../machines/core/master.nix ];
 
@@ -47,9 +48,9 @@
     in
     ''
       start_all()
-      coreServer.wait_for_unit("systemd-networkd-wait-online.service")
-      coreServer.wait_for_unit("ntpd.service")
-      coreServer.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
+      coremaster.wait_for_unit("systemd-networkd-wait-online.service")
+      coremaster.wait_for_unit("ntpd.service")
+      coremaster.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
       client1.wait_for_unit("systemd-networkd-wait-online.service")
       client1.wait_until_succeeds("ping -c 5 ${coreServerIp}")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${clientDefaultRoute}")
