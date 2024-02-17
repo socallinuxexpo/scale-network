@@ -321,15 +321,25 @@ def populatepis(pisfile):
         )
     return pis
 
-def loghostalias(name):
-    """generate aliases for loghost"""
+def serveralias(name):
+    """generate aliases for servers"""
     payload = []
-    if name.lower() == "monitoring1":
-        payload = [
-            "loghost",
-            "monitoring",
-            "zabbix",
-        ]
+    match name.lower():
+        case "monitoring1":
+            payload = [
+                "loghost",
+                "monitoring",
+            ]
+        case "coreexpo":
+            payload = [
+                "coremaster",
+                "ntpexpo",
+            ]
+        case "coreconf":
+            payload = [
+                "coreslave",
+                "ntpconf",
+            ]
     return payload
 
 
@@ -383,7 +393,7 @@ def populateservers(serversfile, vlans):
                 "vlan": vlan,
                 "fqdn": elems[0] + ".scale.lan",
                 "building": building,
-                "aliases": loghostalias(elems[0]),
+                "aliases": serveralias(elems[0]),
             }
         )
     return servers
