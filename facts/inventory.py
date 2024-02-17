@@ -427,10 +427,16 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "persist": True,
                 "name": "/var/lib/kea/dhcp4.leases",
             },
-            "option-data": [{
+            "option-data": [
+            {
              "name": "domain-name-servers",
              "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
-            }],
+            },
+            {
+             "name": "ntp-servers",
+             "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
+            }
+            ],
             "option-def": [
                 {
                     "name": "radio24-channel",
@@ -498,7 +504,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         }
         for vlan in vlans
         if vlan["ipv4bitmask"]
-        != "0"  # Make sure we dont populate vlans that have no ranges
+        != "0"  # Make sure to skip vlans that have no ranges
     ]
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
