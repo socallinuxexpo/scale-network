@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
 
 
@@ -48,6 +48,8 @@
       };
     };
   };
+
+  systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
     tio
