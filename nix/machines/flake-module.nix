@@ -7,6 +7,7 @@ let
     imports = [
       inputs.microvm.nixosModules.microvm
       ./_common
+      ./_common/time.nix
     ];
   };
 in
