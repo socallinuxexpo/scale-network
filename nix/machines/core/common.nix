@@ -10,7 +10,7 @@
     useDHCP = false;
     useNetworkd = true;
     firewall.allowedTCPPorts = [ 53 67 68 ];
-    firewall.allowedUDPPorts = [ 53 67 68 123 ];
+    firewall.allowedUDPPorts = [ 53 67 68 123 547 ];
   };
 
   security.sudo.wheelNeedsPassword = false;

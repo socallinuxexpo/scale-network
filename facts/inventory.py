@@ -73,7 +73,7 @@ def genvlans(line, building):
     elems = re.split(r"\t+", line)
     rangeb, rangee = elems[2].split("-")
     for i in range(int(rangeb), int(rangee) + 1):
-        ipv6prefix = elems[3].split("/")[0].split(rangeb + "::")[0] + str(i) + "::"
+        ipv6prefix = elems[3].split("/")[0][:-1] + str(i) + "::"
         ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
         ocs = elems[4].split(".")
         ocs[1] = str(int(ocs[1]) + math.floor((i - int(rangeb)) / 256))
@@ -166,13 +166,13 @@ def ip6toptr(ip_address):
 
 
 def dhcp6ranges(prefix, bitmask):
-    """generates start and end IPv6 addresses for 2x DHCP ranges"""
+    """generates start and end IPv6 addresses for DHCP ranges"""
     if bitmask == 0:
         return ["", "", "", ""]
     prefsplit = re.split(r"\:\:", prefix)[0]
     return [
-        prefsplit + ":1::1",
-        prefsplit + ":2::400",
+        prefsplit + ":d8c::1",
+        prefsplit + ":d8c::800", # 2048 addresses
     ]
 
 
@@ -401,7 +401,7 @@ def populateservers(serversfile, vlans):
 def populatedhcpnameservers(servers, vlans):
     coreservers = [x for x in servers if x['role'] == 'core']
     for i, _ in enumerate(vlans):
-        vlans[i]["ipv6dns1"] = coreservers[0]['ipv4']
+        vlans[i]["ipv6dns1"] = coreservers[0]['ipv6']
         vlans[i]["ipv4dns1"] = coreservers[0]['ipv4']
         if len(coreservers) > 1:
             vlans[i]["ipv6dns2"] = coreservers[1]['ipv6']
@@ -475,6 +475,40 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "subnet4": []
             # DHCPv4 configuration ends with the next line
         }
+      }
+    keav6_config = {
+        "Dhcp6": {
+            # First we set up global values
+            "valid-lifetime": 4000,
+            "renew-timer": 1000,
+            "rebind-timer": 2000,
+            # Next we set up the interfaces to be used by the server.
+            "interfaces-config": {
+                "interfaces": ["*"],
+                "service-sockets-max-retries": 5,
+                "service-sockets-retry-wait-time": 5000
+            },
+            # And we specify the type of lease database
+            "lease-database": {
+                "type": "memfile",
+                "persist": True,
+                "name": "/var/lib/kea/dhcp6.leases",
+            },
+            "option-data": [
+            {
+             # This option is different from dhcpv4
+             # ref: https://kb.isc.org/docs/kea-configuration-for-small-office-or-home-use
+             "name": "dns-servers",
+             "data": ','.join([x['ipv6'] for x in servers if x['role'] == 'core'])
+            },
+            ],
+            "option-def": [],
+            "reservations-global": True,
+            "reservations-in-subnet": False,
+            "reservations": [],
+            # Finally, we list the subnets from which we will be leasing addresses.
+            "subnet6": []
+        }
     }
 
     reservations_dict = [
@@ -509,8 +543,31 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
     kea_config["Dhcp4"]["reservations"] = reservations_dict
+
     with open(f'{outputdir}/kea.json', 'w') as f:
         f.write(json.dumps(kea_config, indent=2))
+
+    subnets6_dict = [
+        {
+            "subnet": vlan["ipv6prefix"] + "/" + str(vlan["ipv6bitmask"]),
+            # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
+            # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
+            # subnet ids must be greater than zero and less than 4294967295
+            #
+            # for ipv6 well take the last 8 hex digits to make sure the id is small enough but uniq
+            "id": int(vlan["ipv6prefix"].replace(':', '')[-8:], 16),
+            "user-context": { "vlan": vlan["name"] },
+            "pools": [{"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}],
+        }
+        for vlan in vlans
+        if vlan["ipv6bitmask"]
+        != "0"  # Make sure to skip vlans that have no ranges
+    ]
+
+    keav6_config["Dhcp6"]["subnet6"] = subnets6_dict
+
+    with open(f'{outputdir}/dhcp6-server.conf', 'w') as f:
+        f.write(json.dumps(keav6_config, indent=2))
 
 
 def generatepromconfig(servers, aps, vlans, outputdir):
