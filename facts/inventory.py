@@ -168,7 +168,7 @@ def ip6toptr(ip_address):
 def dhcp6ranges(prefix, bitmask):
     """generates start and end IPv6 addresses for DHCP ranges"""
     if bitmask == 0:
-        return ["", "", "", ""]
+        return ["", ""]
     prefsplit = re.split(r"\:\:", prefix)[0]
     return [
         prefsplit + ":d8c::1",
