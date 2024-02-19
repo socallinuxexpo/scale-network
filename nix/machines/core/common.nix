@@ -1,9 +1,6 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, options, ... }:
 
 {
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "22.11";
-
   boot.kernelParams = [ "console=ttyS0" ];
 
   # disable legacy networking bits as recommended by:
@@ -54,6 +51,8 @@
     };
     ntp = {
       enable = true;
+      # Default to time servers that are not Scales since we have to get time from somewhere
+      servers = options.networking.timeServers.default;
       extraConfig = ''
         # Hosts on the local network(s) are not permitted because of the "restrict default"
         restrict 10.0.0.0/8 kod nomodify notrap nopeer

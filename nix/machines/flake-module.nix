@@ -5,8 +5,9 @@ let
   system = "x86_64-linux";
   common = {
     imports = [
-      inputs.self.nixosModules.bhyve-image
+      inputs.microvm.nixosModules.microvm
       ./_common
+      ./_common/time.nix
     ];
   };
 in
@@ -68,6 +69,7 @@ in
         inherit system;
         modules = [
           common
+          ./core/microvm-config.nix
           ./core/master.nix
         ];
         specialArgs = { inherit inputs; };
@@ -76,7 +78,18 @@ in
         inherit system;
         modules = [
           common
+          ./core/microvm-config.nix
           ./core/slave.nix
+        ];
+        specialArgs = { inherit inputs; };
+      };
+      hypervisor2 = lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./_common
+          inputs.microvm.nixosModules.host
+          ./hypervisor/hypervisor2.nix
+          ./hypervisor/hardware-configuration.nix
         ];
         specialArgs = { inherit inputs; };
       };

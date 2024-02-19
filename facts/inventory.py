@@ -321,15 +321,25 @@ def populatepis(pisfile):
         )
     return pis
 
-def loghostalias(name):
-    """generate aliases for loghost"""
+def serveralias(name):
+    """generate aliases for servers"""
     payload = []
-    if name.lower() == "monitoring1":
-        payload = [
-            "loghost",
-            "monitoring",
-            "zabbix",
-        ]
+    match name.lower():
+        case "monitoring1":
+            payload = [
+                "loghost",
+                "monitoring",
+            ]
+        case "coreexpo":
+            payload = [
+                "coremaster",
+                "ntpexpo",
+            ]
+        case "coreconf":
+            payload = [
+                "coreslave",
+                "ntpconf",
+            ]
     return payload
 
 
@@ -383,7 +393,7 @@ def populateservers(serversfile, vlans):
                 "vlan": vlan,
                 "fqdn": elems[0] + ".scale.lan",
                 "building": building,
-                "aliases": loghostalias(elems[0]),
+                "aliases": serveralias(elems[0]),
             }
         )
     return servers
@@ -406,17 +416,27 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "renew-timer": 1000,
             "rebind-timer": 2000,
             # Next we set up the interfaces to be used by the server.
-            "interfaces-config": {"interfaces": ["*"]},
+            "interfaces-config": {
+                "interfaces": ["*"],
+                "service-sockets-max-retries": 5,
+                "service-sockets-retry-wait-time": 5000
+            },
             # And we specify the type of lease database
             "lease-database": {
                 "type": "memfile",
                 "persist": True,
                 "name": "/var/lib/kea/dhcp4.leases",
             },
-            "option-data": [{
+            "option-data": [
+            {
              "name": "domain-name-servers",
              "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
-            }],
+            },
+            {
+             "name": "ntp-servers",
+             "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
+            }
+            ],
             "option-def": [
                 {
                     "name": "radio24-channel",
@@ -446,7 +466,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                     "encapsulate": "",
                 },
             ],
-            "reservation-mode": "global",
+            # All of our reservations are global
+            # https://kea.readthedocs.io/en/kea-2.2.0/arm/dhcp4-srv.html#fine-tuning-dhcpv4-host-reservation
+            "reservations-global": True,
+            "reservations-in-subnet": True,
             "reservations": [],
             # Finally, we list the subnets from which we will be leasing addresses.
             "subnet4": []
@@ -481,7 +504,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         }
         for vlan in vlans
         if vlan["ipv4bitmask"]
-        != "0"  # Make sure we dont populate vlans that have no ranges
+        != "0"  # Make sure to skip vlans that have no ranges
     ]
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict

@@ -47,15 +47,16 @@
         "spectrum": []
       },
       "locked": {
-        "lastModified": 1706214321,
-        "narHash": "sha256-42FZWeJQNYgz0ZkclMzShuvjT9TvJNRN78Iu3SEyD4M=",
-        "owner": "astro",
+        "lastModified": 1707111432,
+        "narHash": "sha256-zkBH/k6YEimyyecSRQsV2VlNGsRdS0hygci+cI3xXRU=",
+        "owner": "sarcasticadmin",
         "repo": "microvm.nix",
-        "rev": "186b8bf6dbacc1ab55fe8ac8d5a2bbf76a1a70e1",
+        "rev": "37a09d245d2aa401da575e344978cf981005fc3a",
         "type": "github"
       },
       "original": {
-        "owner": "astro",
+        "owner": "sarcasticadmin",
+        "ref": "rh/1707108673virtio",
         "repo": "microvm.nix",
         "type": "github"
       }

@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts = { url = "github:hercules-ci/flake-parts"; inputs.nixpkgs-lib.follows = "nixpkgs"; };
-    microvm = { url = "github:astro/microvm.nix"; inputs.nixpkgs.follows = "nixpkgs"; inputs.spectrum.follows = ""; };
+    microvm = { url = "github:sarcasticadmin/microvm.nix/rh/1707108673virtio"; inputs.nixpkgs.follows = "nixpkgs"; inputs.spectrum.follows = ""; }; # Currently using this fork since the upstream seems to be causing an issue
   };
 
 

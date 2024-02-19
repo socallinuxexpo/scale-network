@@ -1,9 +1,11 @@
 { config, lib, pkgs, ... }:
 {
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "22.11";
 
   boot.kernelParams = [ "console=ttyS0" ];
+
+  networking = {
+    firewall.allowedTCPPorts = [ 514 ];
+  };
 
   # TODO: How to handle sudo esculation
   security.sudo.wheelNeedsPassword = false;

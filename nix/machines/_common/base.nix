@@ -1,5 +1,13 @@
 { config, pkgs, ... }:
 {
+  # default to stateVersion for current lock
+  system.stateVersion = config.system.nixos.version;
+
+  # remove the annoying experimental warnings
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
   environment.systemPackages = with pkgs; [
     bc
     binutils

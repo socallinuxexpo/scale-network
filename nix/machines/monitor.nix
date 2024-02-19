@@ -8,9 +8,6 @@ in
       ./_common/prometheus.nix
     ];
 
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "23.05";
-
   boot.kernelParams = [ "console=ttyS0" "boot.shell_on_fail" ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];

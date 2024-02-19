@@ -6,9 +6,11 @@
       ./common.nix
     ];
 
+  networking.hostName = "coreslave";
+
   networking = {
     extraHosts = ''
-      10.128.3.5 coreexpo.scale.lan
+      10.128.3.5 coreconf.scale.lan
     '';
   };
 
