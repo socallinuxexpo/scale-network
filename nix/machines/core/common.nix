@@ -46,7 +46,7 @@
     kea = {
       dhcp4 = {
         enable = true;
-        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/kea.json";
+        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp4-server.conf";
       };
       dhcp6 = {
         enable = true;

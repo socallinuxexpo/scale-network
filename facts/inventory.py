@@ -544,7 +544,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
     kea_config["Dhcp4"]["reservations"] = reservations_dict
 
-    with open(f'{outputdir}/kea.json', 'w') as f:
+    with open(f'{outputdir}/dhcp4-server.conf', 'w') as f:
         f.write(json.dumps(kea_config, indent=2))
 
     subnets6_dict = [
