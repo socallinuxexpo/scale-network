@@ -1,5 +1,5 @@
 ---
-name: validate-datafiles
+name: ci
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   validate_datafiles:
-    name: validate_datafiles
+    name: ci_core
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

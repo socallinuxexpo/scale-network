@@ -1,6 +1,7 @@
 
 <p align="center"><img src="http://sarcasticadmin.com/scale/imgs/tux-scale-tech-2018.png" width="360"></p>
 <p align="center">
+  <a href="https://github.com/socallinuxexpo/scale-network/actions/workflows/ci.yml"><img src="https://github.com/socallinuxexpo/scale-network/actions/workflows/ci.yml/badge.svg?branch=master" alt="CI Status"></img></a>
   <a href="https://github.com/socallinuxexpo/scale-network/actions/workflows/openwrt-build.yml"><img src="https://github.com/socallinuxexpo/scale-network/actions/workflows/openwrt-build.yml/badge.svg?branch=master" alt="Openwrt Build Status"></img></a>
 </p>
 
