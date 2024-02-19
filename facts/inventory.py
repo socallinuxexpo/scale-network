@@ -170,6 +170,14 @@ def dhcp6ranges(prefix, bitmask):
     if bitmask == 0:
         return ["", ""]
     prefsplit = re.split(r"\:\:", prefix)[0]
+    # TODO: Infer this going forward
+    # Conditional for the exVmVendor vlan, matching the ipv4 /20
+    if prefix == "2001:470:f026:112::":
+        return [
+            prefsplit + ":d8c::1",
+            prefsplit + ":d8c::1000", # 4096 addresses
+        ]
+
     return [
         prefsplit + ":d8c::1",
         prefsplit + ":d8c::800", # 2048 addresses
