@@ -11,6 +11,21 @@ in
 
   boot.kernelParams = [ "console=ttyS0" "boot.shell_on_fail" ];
 
+  systemd.network = {
+    enable = true;
+    networks = {
+      "10-lan" = {
+        # to match enp0 or eth0
+        name = "e*0*";
+        enable = true;
+        address = [ "10.128.3.6/24" "2001:470:f026:503::6" ];
+        routes = [
+          { routeConfig.Gateway = "10.128.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:503::1"; }
+        ];
+      };
+    };
+  };
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # TODO: How to handle sudo esculation
