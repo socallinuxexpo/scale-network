@@ -50,6 +50,7 @@ in
         modules = [
           common
           ./monitor.nix
+          ./microvm-config.nix
         ];
         specialArgs = { inherit inputs; };
       };
