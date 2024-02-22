@@ -1,12 +1,12 @@
 { config, lib, pkgs, inputs, ... }:
 let
   hostname = "monitoring.scale.lan";
-  dashboard = pkgs.copyPathToStore ../../monitoring/openwrt_dashboard.json;
+  dashboard = pkgs.copyPathToStore ../../../monitoring/openwrt_dashboard.json;
 in
 {
   imports =
     [
-      ./_common/prometheus.nix
+      ../_common/prometheus.nix
     ];
 
   boot.kernelParams = [ "console=ttyS0" "boot.shell_on_fail" ];
