@@ -516,7 +516,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 def generatepromconfig(servers, aps, vlans, outputdir):
     prom_config = [
         {
-            "targets": [ap["ipv4"]],
+            "targets": [ap["ipv4"] + ":9100"],
             "labels": {"ap": ap["name"]},
         }
         for ap in aps

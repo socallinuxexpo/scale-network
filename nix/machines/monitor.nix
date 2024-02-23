@@ -1,6 +1,7 @@
 { config, lib, pkgs, inputs, ... }:
 let
   hostname = "monitoring.scale.lan";
+  dashboard = pkgs.copyPathToStore ../../monitoring/openwrt_dashboard.json;
 in
 {
   imports =
@@ -62,9 +63,16 @@ in
         datasources.settings.datasources = [
           {
             name = "prometheus";
+            uid  = "P1809F7CD0C75ACF3";
             type = "prometheus";
             access = "proxy";
             url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+          }
+        ];
+        dashboards.settings.providers = [
+          {
+            name = "openwrt";
+            options.path = dashboard;
           }
         ];
       };
