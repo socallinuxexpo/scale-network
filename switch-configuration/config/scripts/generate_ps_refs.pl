@@ -34,6 +34,8 @@ my $map_pos = 0;		# Current position on page (0-3)
 
 my @maps = <switch-maps/*.eps>;
 
+@maps=reverse(@maps);
+
 show_preamble();
 
 foreach(@maps)

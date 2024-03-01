@@ -7,7 +7,7 @@ ifndef PERL
   $(error "perl is not available please install it")
 endif
 
-all: switch-maps-bundle
+all: switch-maps-outputs
 
 lint:	.lint
 
@@ -32,15 +32,21 @@ build-switch-configs: .build-switch-configs
 
 # Make the switch-maps-bundle which is a collection of all the switch port maps
 # this is a for printing for the cable team
-switch-maps-bundle: config/switch-maps/bundle.ps config/switch-maps/refs.ps config/switch-maps/stickers.ps config/switch-maps/stickers.pdf
+switch-maps-outputs: config/switch-maps/refs.ps config/switch-maps/refs.pdf config/switch-maps/stickers.ps config/switch-maps/stickers.pdf
 
-config/switch-maps/bundle.ps: .build-switch-configs .build-switch-configs
-	cd config && \
-		perl scripts/generate_ps_maps.pl > switch-maps/bundle.ps
+# Bundle is technically obsolete at this point and doesn't work properly any more
+#config/switch-maps/bundle.ps: .build-switch-configs .build-switch-configs
+#	cd config && \
+#		perl scripts/generate_ps_maps.pl > switch-maps/bundle.ps
 
 config/switch-maps/refs.ps: .build-switch-configs .build-switch-configs
 	cd config && \
 		perl scripts/generate_ps_refs.pl > switch-maps/refs.ps
+
+
+config/switch-maps/refs.pdf: config/switch-maps/refs.ps
+	cd config && \
+		gs -sDEVICE=pdfwrite -sOutputFile=switch-maps/refs.pdf <switch-maps/refs.ps > /dev/null
 
 config/switch-maps/stickers.ps: .build-switch-configs .build-switch-configs
 	cd config && \
