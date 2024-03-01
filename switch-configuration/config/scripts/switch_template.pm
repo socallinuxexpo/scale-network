@@ -60,21 +60,26 @@ our @EXPORT = qw(
 my %colormap = (
 	"AP" => {
 		'red'	=> 0,
-		'green'	=> 0.5,
-		'blue'  => 0.5,
+		'green'	=> 0.75,
+		'blue'  => 0.75,
 		},
 	"Uplink" => {
 		'red'	=> 0,
-		'green'	=> 0.5,
+		'green'	=> 0.75,
 		'blue'	=> 0,
 		},
 	"Downlink" => {
-		'red'	=> 0.5,
-		'green'	=> 0.5,
+		'red'	=> 0.75,
+		'green'	=> 0.75,
 		'blue'	=> 0,
 		},
+	"MassFlash" => {
+		'red'	=> 0.75,
+		'green'	=> 0,
+		'blue'	=> 0.75,
+		},
 	"Unknown" => {
-		'red'	=> 0,
+		'red'	=> 1,
 		'green'	=> 0,
 		'blue'	=> 0,
 		},
@@ -615,9 +620,10 @@ EOF
       my $vlans = shift(@tokens);
       my $poe = shift(@tokens);
       my $trunktype = shift(@tokens);
-      if ($trunktype ne "AP" && $trunktype ne "Uplink" && $trunktype ne "Downlink")
+      $trunktype =~ s/^\s*(\S+)\s*/$1/;
+      if (!exists($colormap{$trunktype}))
       {
-	      warn("TRUNK $_ invalid trunktype: $trunktype -- setting to Unknown\n");
+	      warn("TRUNK $_ invalid trunktype: \"$trunktype\" -- setting to Unknown\n");
 	      $trunktype="Unknown";
       }
       debug(9, "\t$cmd\t$iface ($vlans)\n");
