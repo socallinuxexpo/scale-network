@@ -37,7 +37,7 @@ TRUNK	ge-0/0/32	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
 TRUNK	ge-0/0/33	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
 TRUNK	ge-0/0/34	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
 TRUNK	ge-0/0/35	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-VLAN	cfCTF		6								-	/ ge-0/0/{36-45}
+VLAN	cfCTF		10								-	/ ge-0/0/{36-45}
 VLAN	cfInfra		1								-	// ge-0/0/46 -- Conference Center Bhyve Server
 VLAN	cfAVLAN		1								-	// ge-0/0/47 -- Conference Center AV Server
 

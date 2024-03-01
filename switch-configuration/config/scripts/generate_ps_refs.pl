@@ -1,9 +1,11 @@
 #!/usr/bin/env perl
 #
 # Collect EPS files in switch-maps directory and generate a single PS file that will print
-# them 5 to a page.
+# them 9 to a page.
 #
 # Currently output is to STDOUT. Might convert to sending to a file later.
+#
+# Intended for handheld reference, prints on US/Letter size paper
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe

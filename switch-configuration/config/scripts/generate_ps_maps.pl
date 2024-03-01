@@ -4,6 +4,8 @@
 # them 5 to a page.
 #
 # Currently output is to STDOUT. Might convert to sending to a file later.
+#
+# Obsolete and needs proper page sizing changes to display properly -- Precursor to stickers
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe
