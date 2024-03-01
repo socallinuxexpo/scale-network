@@ -17,6 +17,6 @@ TRUNK	ge-0/0/14	cfInfra,cfSCALE-SLOW,cfSCALE-FAST						POE	// AP
 TRUNK	ge-0/0/15	cfInfra,cfSCALE-SLOW,cfSCALE-FAST						POE	// AP
 TRUNK	ge-0/0/16	cfInfra,cfSCALE-SLOW,cfSCALE-FAST						POE	// AP
 TRUNK	ge-0/0/17	cfInfra,cfSCALE-SLOW,cfSCALE-FAST						POE	// AP
-VLAN	cfSigns		6										-	// ge-0/0/{18-23}
+VLAN	cfSigns		6										POE	// ge-0/0/{18-23}
 VLAN	cfNOC		12										-	// ge-0/0/{24-35}
 VLAN	cfInfra		12										-	// ge-0/0/{36-47}

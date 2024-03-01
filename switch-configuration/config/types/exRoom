@@ -12,7 +12,7 @@ TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST					POE	// AP
 TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST					POE	// AP
 TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST					POE	// AP
 TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST					POE	// AP
-VLAN	exSigns		4									-	// ge-0/0/{18-21}
+VLAN	exSigns		4									POE	// ge-0/0/{18-21}
 VLAN	exAVLAN		6									POE	// ge-0/0/{22-27}
 VLAN	exSpeaker	2									-	// ge-0/0/{28,29}
 RSRVD	18

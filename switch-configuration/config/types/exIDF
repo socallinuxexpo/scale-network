@@ -1,16 +1,16 @@
-// Expo Center IDF Switch Configuration
+// Expo Center IDF(s) Switch Configuration Template
 TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Link to EX Router
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Uplink
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomF
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
 TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomG
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
 TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomH
+			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
 TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
 			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
@@ -83,8 +83,8 @@ TRUNK	ge-0/0/32	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
 TRUNK	ge-0/0/33	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
 TRUNK	ge-0/0/34	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
 TRUNK	ge-0/0/35	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-VLAN	exSigns		4							-	// ge-0/0/{36-39}
+VLAN	exSigns		4							POE	// ge-0/0/{36-39}
 RSRVD	8										// ge-0/0/{40-47}
 FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             			exAVLAN, \
-			        exSigns,HAM_BRIDGE,exRegistration // Uplink to ExMDF Switch
+			        exSigns,HAM_BRIDGE,exRegistration // Uplink
