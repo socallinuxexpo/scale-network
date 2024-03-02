@@ -61,6 +61,8 @@ in
               "${ toString modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
             ];
           })
+          ./_common/base.nix
+          ./_common/users.nix
           ./massflash.nix
         ];
         specialArgs = { inherit inputs; };

@@ -8,9 +8,6 @@ let
     '';
 in
 {
-  # If not present then warning and will be set to latest release during build
-  system.stateVersion = "22.11";
-
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
@@ -92,17 +89,10 @@ in
   };
 
   # root user doesnt need credentials for massflash liveCD
-  users.extraUsers.root.password = "";
+  users.extraUsers.root.password = lib.mkForce "";
 
-  # TODO: Consume users from facts/keys instead of single key
-  users.users = {
-    rherna = {
-      isNormalUser = true;
-      uid = 2005;
-      extraGroups = [ "wheel" ];
-      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq" ];
-    };
-  };
+  # we set the hashedPassword in _common so just ensure that this is actually null
+  users.extraUsers.root.hashedPassword = lib.mkForce null;
 
   security.sudo.wheelNeedsPassword = false;
 
