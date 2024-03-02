@@ -48,6 +48,10 @@
         enable = true;
         configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/kea.json";
       };
+      dhcp6 = {
+        enable = true;
+        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf";
+      };
     };
     ntp = {
       enable = true;
