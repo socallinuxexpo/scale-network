@@ -135,9 +135,9 @@ Configuration elements include:
 RSRVD	<number_of_ports>
 VLAN	<vlan_name> <number_of_ports>
 VVLAN	<number_of_ports>
-TRUNK	<port> <vlan_name>[,<vlan_name>...]
+TRUNK	<port> <vlan_name>[,<vlan_name>...] <trunktype>
 JUNOS	<junos_version>
-FIBER   <port> <vlan_name>[,<vlan_name>...]
+FIBER   <port> <vlan_name>[,<vlan_name>...] <trunktype>
 ```
 
 ## config/routers/{backups,to_push}/<name>

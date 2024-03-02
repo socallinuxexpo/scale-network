@@ -69,7 +69,7 @@ my $map_pos = 0;		# Current position on page (0-3)
 
 show_preamble();
 
-foreach(sort(@maps))
+foreach(reverse(sort(@maps)))
 {
   setorigin($map_pos) if ($map_number);	# Don't move the origin for the first map.
   embed($_);

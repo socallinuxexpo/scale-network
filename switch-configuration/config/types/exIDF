@@ -1,90 +1,90 @@
-// Expo Center IDF Switch Configuration
+// Expo Center IDF(s) Switch Configuration Template
 TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Link to EX Router
+			exSigns,HAM_BRIDGE,exRegistration 			-	Uplink
 TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomF
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/2	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomG
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/3	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink to BallroomH
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/4	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/5	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/6	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/7	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/8	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/9	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/10	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/11	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/12	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/13	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/14	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/15	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/16	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/17	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/18	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/19	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/20	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/21	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/22	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
 TRUNK	ge-0/0/23	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             		exAVLAN, \
-			exSigns,HAM_BRIDGE,exRegistration 			-	// Downlink
-TRUNK	ge-0/0/24	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/25	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/26	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/27	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/28	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/29	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/30	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/31	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/32	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/33	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/34	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-TRUNK	ge-0/0/35	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	// AP
-VLAN	exSigns		4							-	// ge-0/0/{36-39}
+			exSigns,HAM_BRIDGE,exRegistration 			-	Downlink
+TRUNK	ge-0/0/24	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/25	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/26	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/27	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/28	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/29	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/30	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/31	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/32	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/33	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/34	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+TRUNK	ge-0/0/35	exSCALE-SLOW,exSCALE-FAST,exInfra 			POE	AP
+VLAN	exSigns		4							POE	// ge-0/0/{36-39}
 RSRVD	8										// ge-0/0/{40-47}
 FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             			exAVLAN, \
-			        exSigns,HAM_BRIDGE,exRegistration // Uplink to ExMDF Switch
+			        exSigns,HAM_BRIDGE,exRegistration Uplink

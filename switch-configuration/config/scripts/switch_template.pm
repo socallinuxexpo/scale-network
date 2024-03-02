@@ -57,6 +57,33 @@ our @EXPORT = qw(
 );
 
 
+my %colormap = (
+	"AP" => {
+		'red'	=> 0,
+		'green'	=> 0.75,
+		'blue'  => 0.75,
+		},
+	"Uplink" => {
+		'red'	=> 0,
+		'green'	=> 0.75,
+		'blue'	=> 0,
+		},
+	"Downlink" => {
+		'red'	=> 0.75,
+		'green'	=> 0.75,
+		'blue'	=> 0,
+		},
+	"MassFlash" => {
+		'red'	=> 0.75,
+		'green'	=> 0,
+		'blue'	=> 0.75,
+		},
+	"Unknown" => {
+		'red'	=> 1,
+		'green'	=> 0,
+		'blue'	=> 0,
+		},
+);
 sub BEGIN
 {
   return;
@@ -591,6 +618,14 @@ EOF
       ##FIXME## Build interface ranges
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
+      my $poe = shift(@tokens);
+      my $trunktype = shift(@tokens);
+      $trunktype =~ s/^\s*(\S+)\s*/$1/;
+      if (!exists($colormap{$trunktype}))
+      {
+	      warn("TRUNK $_ invalid trunktype: \"$trunktype\" -- setting to Unknown\n");
+	      $trunktype="Unknown";
+      }
       debug(9, "\t$cmd\t$iface ($vlans)\n");
       $vlans =~ s/\s*,\s*/ /g;
       my $portnum = $iface;
@@ -623,9 +658,9 @@ EOF
       if ($cmd eq "TRUNK")
       {
         # Handle non-fiber trunk port
-        debug(9, "$cmd output standard box for port $portnum ($iface)\n");
+        debug(9, "$cmd output standard box for port $portnum ($iface) ($trunktype) -- (".${colormap{$trunktype}}{'red'}.",".${colormap{$trunktype}}{'green'}.",".${colormap{$trunktype}}{'blue'}.")\n");
         $portmap_PS .= <<EOF;
-(TRUNK) 1 0.75 0.75 $portnum DrawPort
+($trunktype) $colormap{$trunktype}{'red'} $colormap{$trunktype}{'green'} $colormap{$trunktype}{'blue'} $portnum DrawPort
 EOF
       }
 

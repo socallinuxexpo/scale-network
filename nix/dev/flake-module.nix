@@ -31,7 +31,7 @@
         stdenv
         inputs.self.packages.${pkgs.system}.serverspec
       ];
-      network_sub = [ pkgs.perl ];
+      network_sub = with pkgs; [ perl ghostscript ];
     in
     {
       devShells.default = pkgs.mkShell {
