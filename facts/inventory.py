@@ -420,9 +420,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         # DHCPv4 configuration starts on the next line
         "Dhcp4": {
             # First we set up global values
-            "valid-lifetime": 4000,
-            "renew-timer": 1000,
-            "rebind-timer": 2000,
+            # Set lifetime of lease to always be the same
+            "valid-lifetime": 1440,
+            "min-valid-lifetime": 1440,
+            "max-valid-lifetime": 1440,
             # Next we set up the interfaces to be used by the server.
             "interfaces-config": {
                 "interfaces": ["*"],
@@ -487,9 +488,9 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     keav6_config = {
         "Dhcp6": {
             # First we set up global values
-            "valid-lifetime": 4000,
-            "renew-timer": 1000,
-            "rebind-timer": 2000,
+            "valid-lifetime": 1440,
+            "min-valid-lifetime": 1440,
+            "max-valid-lifetime": 1440,
             # Next we set up the interfaces to be used by the server.
             "interfaces-config": {
                 "interfaces": ["*"],
