@@ -534,21 +534,29 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         for ap in aps
     ]
 
-    subnets_dict = [
-        {
-            "subnet": vlan["ipv4prefix"] + "/" + str(vlan["ipv4bitmask"]),
-            # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
-            # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
-            # subnet ids must be greater than zero and less than 4294967295
-            "id": int(vlan["ipv4prefix"].replace('.', '')),
-            "user-context": { "vlan": vlan["name"] },
-            "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
-            "option-data": [{ "name": "routers", "data": str(vlan["ipv4router"]) }],
-        }
-        for vlan in vlans
-        if vlan["ipv4bitmask"]
-        != "0"  # Make sure to skip vlans that have no ranges
-    ]
+    subnets_dict = []
+    for vlan in vlans:
+        # Make sure to skip vlans that have no ranges
+        if vlan["ipv4bitmask"] == "0":
+            continue
+        else:
+            subnet = {
+                "subnet": vlan["ipv4prefix"] + "/" + str(vlan["ipv4bitmask"]),
+                # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
+                # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
+                # subnet ids must be greater than zero and less than 4294967295
+                "id": int(vlan["ipv4prefix"].replace('.', '')),
+                "user-context": { "vlan": vlan["name"] },
+                "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
+                "option-data": [{ "name": "routers", "data": str(vlan["ipv4router"]) }],
+            }
+            # lower lease times for the APs
+            if vlan["name"] in [ "cfInfra", "exInfra"]:
+                # Set lifetime of lease to always be 300 seconds
+                subnet["valid-lifetime"] = 300
+                subnet["min-valid-lifetime"] = 300
+                subnet["max-valid-lifetime"] = 300
+            subnets_dict.append(subnet)
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
     kea_config["Dhcp4"]["reservations"] = reservations_dict
@@ -556,22 +564,30 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     with open(f'{outputdir}/dhcp4-server.conf', 'w') as f:
         f.write(json.dumps(kea_config, indent=2))
 
-    subnets6_dict = [
-        {
-            "subnet": vlan["ipv6prefix"] + "/" + str(vlan["ipv6bitmask"]),
-            # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
-            # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
-            # subnet ids must be greater than zero and less than 4294967295
-            #
-            # for ipv6 well take the last 8 hex digits to make sure the id is small enough but uniq
-            "id": int(vlan["ipv6prefix"].replace(':', '')[-8:], 16),
-            "user-context": { "vlan": vlan["name"] },
-            "pools": [{"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}],
-        }
-        for vlan in vlans
-        if vlan["ipv6bitmask"]
-        != "0"  # Make sure to skip vlans that have no ranges
-    ]
+    subnets6_dict = []
+    for vlan in vlans:
+        # Make sure to skip vlans that have no ranges
+        if vlan["ipv6bitmask"] == "0":
+            continue
+        else:
+            subnet = {
+                "subnet": vlan["ipv6prefix"] + "/" + str(vlan["ipv6bitmask"]),
+                # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
+                # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
+                # subnet ids must be greater than zero and less than 4294967295
+                #
+                # for ipv6 well take the last 4 hex digits to make sure the id is small enough but uniq
+                "id": int(vlan["ipv6prefix"].replace(':', '')[-4:], 16),
+                "user-context": { "vlan": vlan["name"] },
+                "pools": [{"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}],
+            }
+            # lower lease times for the APs
+            if vlan["name"] in ["cfInfra", "exInfra"]:
+                # Set lifetime of lease to always be 300 seconds
+                subnet["valid-lifetime"] = 300
+                subnet["min-valid-lifetime"] = 300
+                subnet["max-valid-lifetime"] = 300
+            subnets6_dict.append(subnet)
 
     keav6_config["Dhcp6"]["subnet6"] = subnets6_dict
 
