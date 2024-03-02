@@ -6,16 +6,15 @@ import os
 import datasource as ds
 
 
-def test_aplist_csv():
-    '''test aplist.csv'''
+def test_apuse_csv():
+    '''test apuse.csv'''
     meta = {
-        "file": "./aps/aplist.csv",
+        "file": "./aps/apuse.csv",
         "header": True,
-        "count": 10,
+        "count": 9,
         "cols": [
             ds.isvalidhostname,
             ds.isuntested,
-            ds.isvalidmac,
             ds.isvalidip,
             ds.isvalidwifi24chan,
             ds.isvalidwifi5chan,
@@ -23,6 +22,20 @@ def test_aplist_csv():
             ds.isintorempty,
             ds.isintorempty,
             ds.isintorempty
+        ]
+    }
+    result, err = ds.test_csvfile(meta)
+    assert result, err
+
+def test_aps_csv():
+    '''test aps.csv'''
+    meta = {
+        "file": "./aps/aps.csv",
+        "header": True,
+        "count": 2,
+        "cols": [
+            ds.isuntested,
+            ds.isvalidmac,
         ]
     }
     result, err = ds.test_csvfile(meta)

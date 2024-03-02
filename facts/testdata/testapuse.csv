@@ -1,0 +1,3 @@
+name,serial,ipv4,2.4Ghz_chan,5Ghz_chan,config_ver,map_id,map_x,map_y
+101-a,n7a-0093,10.128.3.150,6,36,0,0,50,50
+101-b,n8c-0002,10.128.3.151,1,165,0,0,50,50
