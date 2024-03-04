@@ -27,9 +27,9 @@ Setup wifi:
 
 Add wireless config directly to `/var/run/wpa_supplicant/wpa_supplicant.conf`
 ```
-network = {
+network={
   ssid="<name>"
-  psk="<password">
+  psk="<password>"
 }
 ```
 
@@ -66,8 +66,6 @@ wndr3800ch/flash.bin
 arg: lease4_renew
 env: QUERY4_TYPE, LEASE4_ADDRESS, LEASE4_HWADDR
 ```
-
-- Hardcoded paths. These will get cleaned up in followups to the repo. Right now they will be left in for as references.
 
 ## Running oneoff
 

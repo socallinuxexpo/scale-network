@@ -61,7 +61,6 @@ in
 
         [Network]
         Address=192.168.252.1/22
-        Gateway=192.168.252.1
       '';
       flash1.extraConfig = ''
         [Match]
