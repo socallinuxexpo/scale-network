@@ -10,7 +10,7 @@
     useDHCP = false;
     useNetworkd = true;
     firewall.allowedTCPPorts = [ 53 67 68 ];
-    firewall.allowedUDPPorts = [ 53 67 68 123 ];
+    firewall.allowedUDPPorts = [ 53 67 68 123 547 ];
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -46,7 +46,11 @@
     kea = {
       dhcp4 = {
         enable = true;
-        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/kea.json";
+        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp4-server.conf";
+      };
+      dhcp6 = {
+        enable = true;
+        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf";
       };
     };
     ntp = {

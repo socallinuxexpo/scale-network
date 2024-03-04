@@ -42,4 +42,8 @@
 
   # Purge nano from being the default
   environment.variables = { EDITOR = "vim"; };
+
+  # Force noXlibs per recommendation in microVMs
+  # ref: https://github.com/astro/microvm.nix/issues/167
+  environment.noXlibs = false;
 }
