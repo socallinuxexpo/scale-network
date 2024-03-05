@@ -2,9 +2,6 @@
 {
   boot.kernelParams = [ "console=ttyS0" ];
 
-  # TODO: How to handle sudo esculation
-  security.sudo.wheelNeedsPassword = false;
-
   networking.firewall.allowedTCPPorts = [ 80 ];
 
   virtualisation.oci-containers = {
