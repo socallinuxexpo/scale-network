@@ -5,11 +5,6 @@
   # TODO: How to handle sudo esculation
   security.sudo.wheelNeedsPassword = false;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-  ];
-
   networking.firewall.allowedTCPPorts = [ 80 ];
 
   virtualisation.oci-containers = {
