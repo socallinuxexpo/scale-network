@@ -60,23 +60,23 @@ our @EXPORT = qw(
 my %colormap = (
 	"AP" => {
 		'red'	=> 0,
-		'green'	=> 0.75,
-		'blue'  => 0.75,
+		'green'	=> 0.85,
+		'blue'  => 0.85,
 		},
 	"Uplink" => {
 		'red'	=> 0,
-		'green'	=> 0.75,
+		'green'	=> 0.85,
 		'blue'	=> 0,
 		},
 	"Downlink" => {
-		'red'	=> 0.75,
-		'green'	=> 0.75,
+		'red'	=> 0.85,
+		'green'	=> 0.85,
 		'blue'	=> 0,
 		},
 	"MassFlash" => {
-		'red'	=> 0.75,
+		'red'	=> 0.85,
 		'green'	=> 0,
-		'blue'	=> 0.75,
+		'blue'	=> 0.85,
 		},
 	"Unknown" => {
 		'red'	=> 1,
