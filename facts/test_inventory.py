@@ -8,9 +8,13 @@ import inventory
 def test_getfilelineshdr():
     '''test cases for getfilelines() with header no building'''
     cases = [
-        ["testdata/testaplist.csv", [
-            "104-ap3,ncc-1701,c6:04:15:90:57:c5,10.128.3.20,6,40,0,,,\n",
-            "105-ap1,bat-man1,0a:bd:43:ac:5f:6c,10.128.3.21,11,44,0,4,1450,128\n"
+        ["testdata/testaps.csv", [
+            "n7a-0093,e0:46:9a:5a:c0:36\n",
+            "n8c-0002,2c:b0:5d:7f:63:72\n"
+        ]],
+        ["testdata/testapuse.csv", [
+            "101-a,n7a-0093,10.128.3.150,6,36,0,0,50,50\n",
+            "101-b,n8c-0002,10.128.3.151,1,165,0,0,50,50\n"
         ]],
         ["testdata/testpilist.csv", [
             "pieb1d1c,2001:470:f325:107:efcf:2f67:f127:ba26\n"
@@ -416,31 +420,35 @@ def test_populaterouters():
 def test_populateaps():
     '''test cases for the populateaps() function'''
     cases = [
-        ["./testdata/testaplist.csv", [
+        ["./testdata/testaps.csv",
+         "./testdata/testapuse.csv",
+         [
             {
-                "name": "104-ap3",
-                "fqdn": "104-ap3.scale.lan",
-                "mac": "c6:04:15:90:57:c5",
-                "ipv4": "10.128.3.20",
-                "ipv4ptr": "20.3.128.10.in-addr.arpa",
+                "name": "101-a",
+                "fqdn": "101-a.scale.lan",
+                "mac": "e0:46:9a:5a:c0:36",
+                "ipv4": "10.128.3.150",
+                "ipv4ptr": "150.3.128.10.in-addr.arpa",
                 "wifi2": "6",
-                "wifi5": "40",
+                "wifi5": "36",
                 "configver": "0",
+                "aliases": ["n7a-0093"],
             },
             {
-                "name": "105-ap1",
-                "fqdn": "105-ap1.scale.lan",
-                "mac": "0a:bd:43:ac:5f:6c",
-                "ipv4": "10.128.3.21",
-                "ipv4ptr": "21.3.128.10.in-addr.arpa",
-                "wifi2": "11",
-                "wifi5": "44",
+                "name": "101-b",
+                "fqdn": "101-b.scale.lan",
+                "mac": "2c:b0:5d:7f:63:72",
+                "ipv4": "10.128.3.151",
+                "ipv4ptr": "151.3.128.10.in-addr.arpa",
+                "wifi2": "1",
+                "wifi5": "165",
                 "configver": "0",
+                "aliases": ["n8c-0002"],
             },
         ]]
     ]
-    for filename, aps in cases:
-        assert inventory.populateaps(filename) == aps
+    for aps, apuse, apsmerged in cases:
+        assert inventory.populateaps(aps, apuse) == apsmerged
 
 
 def test_populatepis():
