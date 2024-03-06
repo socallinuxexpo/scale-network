@@ -98,7 +98,7 @@ in
         modules = [
           common
           ./signs/microvm-config.nix
-          ./signs.nix
+          ./signs/signs.nix
         ];
         specialArgs = { inherit inputs; };
       };
