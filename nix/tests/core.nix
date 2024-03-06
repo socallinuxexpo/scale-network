@@ -155,4 +155,27 @@ in
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
     '';
+
+  interactive.nodes =
+    let
+      interactiveDefaults = hostPort:
+        {
+          services.openssh.enable = true;
+          services.openssh.settings.PermitRootLogin = "yes";
+          users.extraUsers.root.initialPassword = "";
+          systemd.network.networks."01-eth0" = {
+            name = "eth0";
+            enable = true;
+            networkConfig.DHCP = "yes";
+          };
+          virtualisation.forwardPorts = [
+            { from = "host"; host.port = hostPort; guest.port = 22; }
+          ];
+        };
+    in
+    {
+      router = interactiveDefaults 2222;
+      coremaster = interactiveDefaults 2223;
+      client1 = interactiveDefaults 2224;
+    };
 }
