@@ -2,20 +2,12 @@
 {
   boot.kernelParams = [ "console=ttyS0" ];
 
-  # TODO: How to handle sudo esculation
-  security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-  ];
-
   networking.firewall.allowedTCPPorts = [ 80 ];
 
   virtualisation.oci-containers = {
     containers.scale-signs = {
-      environmentFiles = [ /run/secrets/scale-sign-secrets.env ];
-      image = "sarcasticadmin/scale-signs:a74021a";
+      environmentFiles = [ /var/lib/secrets/scale-sign-secrets.env ];
+      image = "sarcasticadmin/scale-signs:1fc4dc5";
       ports = [ "80:80" ];
       extraOptions = [
         "--network=host"
@@ -27,19 +19,15 @@
     enable = true;
     networks = {
       "10-lan" = {
-        name = "enp0*";
+        name = "e*0*";
         enable = true;
         address = [ "10.128.3.11/24" "2001:470:f026:503::11/64" ];
         gateway = [ "10.128.3.1" ];
-        # TODO: Causes double entry of [Network] in .network file
-        # Need to look into unifying into one block
-        extraConfig = ''
-          [Network]
-          IPv6Token=static:::11
-          LLDP=true
-          EmitLLDP=true;
-          IPv6PrivacyExtensions=false
-        '';
+        networkConfig = {
+          LLDP = true;
+          EmitLLDP = true;
+          IPv6PrivacyExtensions = false;
+        };
       };
     };
   };
