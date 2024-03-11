@@ -30,7 +30,10 @@ in
         name = "e*0*";
         enable = true;
         address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
-        gateway = [ "10.128.3.1" ];
+        routes = [
+          { routeConfig.Gateway = "10.128.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:503::1"; }
+        ];
       };
     };
   };

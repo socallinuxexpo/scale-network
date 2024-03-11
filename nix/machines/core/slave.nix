@@ -23,16 +23,10 @@
         name = "enp0*";
         enable = true;
         address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
-        gateway = [ "10.0.3.1" ];
-        # TODO: Causes double entry of [Network] in .network file
-        # Need to look into unifying into one block
-        extraConfig = ''
-          [Network]
-          IPv6Token=static:::5
-          LLDP=true
-          EmitLLDP=true;
-          IPv6PrivacyExtensions=false
-        '';
+        routes = [
+          { routeConfig.Gateway = "10.0.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:103::1"; }
+        ];
       };
     };
   };
