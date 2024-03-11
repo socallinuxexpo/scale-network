@@ -60,6 +60,10 @@
   environment.systemPackages = with pkgs; [
     tio
   ];
+  
+  microvm.autostart = [
+    "coreSlave"
+  ];
 
   services.openssh = {
     enable = true;
