@@ -86,6 +86,16 @@ in
         ];
         specialArgs = { inherit inputs; };
       };
+      hypervisor1 = lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./_common
+          inputs.microvm.nixosModules.host
+          ./hypervisor/hypervisor1.nix
+          ./hypervisor/hardware-configuration.nix
+        ];
+        specialArgs = { inherit inputs; };
+      };
       hypervisor2 = lib.nixosSystem {
         inherit system;
         modules = [
