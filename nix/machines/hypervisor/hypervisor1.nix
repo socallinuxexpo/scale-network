@@ -58,6 +58,7 @@
 
   microvm.autostart = [
     "coreMaster"
+    "monitor"
   ];
 
   services.openssh = {
