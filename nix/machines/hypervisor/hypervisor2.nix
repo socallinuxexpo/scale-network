@@ -24,13 +24,11 @@
       "1-virbr0" = {
         matchConfig.Name = "virbr0";
         enable = true;
-        #networkConfig.DHCP = "yes";
         address = [ "10.0.3.20/24" "2001:470:f026:103::20/64" ];
-        gateway = [ "10.0.3.20" ];
-        #[Route]
-        #Gateway=192.168.0.10
-        #Destination=10.0.0.0/8
-        #GatewayOnlink=yes
+        routes = [
+          { routeConfig.Gateway = "10.0.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:103::1"; }
+        ];
       };
       "20-microvm-eth0" = {
         matchConfig.Name = "vm-*";
@@ -38,6 +36,10 @@
       };
       "10-lan-eno2" = {
         matchConfig.Name = "eno2";
+        networkConfig.Bridge = "virbr0";
+      };
+      "10-lan-eno3" = {
+        matchConfig.Name = "eno3";
         networkConfig.Bridge = "virbr0";
       };
       # Keep this for troubleshooting
