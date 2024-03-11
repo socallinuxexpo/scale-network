@@ -24,8 +24,6 @@
         address = [ "10.128.3.11/24" "2001:470:f026:503::11/64" ];
         gateway = [ "10.128.3.1" ];
         networkConfig = {
-          LLDP = true;
-          EmitLLDP = true;
           IPv6PrivacyExtensions = false;
         };
       };
