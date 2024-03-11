@@ -37,6 +37,10 @@
       "10-lan-eno2" = {
         matchConfig.Name = "eno2";
         networkConfig.Bridge = "virbr0";
+        networkConfig = {
+          LLDP = true;
+          EmitLLDP = true;
+        };
       };
       "10-lan-eno3" = {
         matchConfig.Name = "eno3";
