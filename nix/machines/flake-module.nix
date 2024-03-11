@@ -8,6 +8,7 @@ let
       inputs.microvm.nixosModules.microvm
       ./_common
       ./_common/time.nix
+      ./_common/ssh/vm.nix
     ];
   };
 in

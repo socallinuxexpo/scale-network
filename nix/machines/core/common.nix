@@ -40,9 +40,6 @@
 
   services = {
     resolved.enable = false;
-    openssh = {
-      enable = true;
-    };
     kea = {
       dhcp4 = {
         enable = true;
