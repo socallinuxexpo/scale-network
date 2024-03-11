@@ -56,6 +56,10 @@
     tio
   ];
 
+  microvm.autostart = [
+    "coreMaster"
+  ];
+
   services.openssh = {
     enable = true;
     openFirewall = true;
