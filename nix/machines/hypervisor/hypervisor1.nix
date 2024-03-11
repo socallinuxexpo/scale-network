@@ -37,6 +37,10 @@
         matchConfig.Name = "eno2";
         networkConfig.Bridge = "virbr0";
       };
+      "10-lan-eno3" = {
+        matchConfig.Name = "eno3";
+        networkConfig.Bridge = "virbr0";
+      };
       # Keep this for troubleshooting
       "10-lan" = {
         matchConfig.Name = "eno1";
