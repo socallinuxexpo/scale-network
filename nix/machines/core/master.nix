@@ -16,7 +16,7 @@ in
   #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
   networking = {
     extraHosts = ''
-      10.0.3.5 coreexpo.scale.lan
+      10.128.3.5 coreconf.scale.lan
     '';
   };
 
@@ -29,8 +29,8 @@ in
         # to match enp0 or eth0
         name = "e*0*";
         enable = true;
-        address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
-        gateway = [ "10.0.3.1" ];
+        address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
+        gateway = [ "10.128.3.1" ];
       };
     };
   };

@@ -10,7 +10,7 @@
 
   networking = {
     extraHosts = ''
-      10.128.3.5 coreconf.scale.lan
+      10.0.3.5 coreexpo.scale.lan
     '';
   };
 
@@ -22,8 +22,8 @@
       "10-lan" = {
         name = "enp0*";
         enable = true;
-        address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
-        gateway = [ "10.128.3.1" ];
+        address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
+        gateway = [ "10.0.3.1" ];
         # TODO: Causes double entry of [Network] in .network file
         # Need to look into unifying into one block
         extraConfig = ''
@@ -46,18 +46,18 @@
         {
           "scale.lan." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-scale.lan";
           };
           "10.in-addr.arpa." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-10.rev";
           };
           # 2001:470:f026::
           "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-2001.470.f026-48.rev";
           };
         };
