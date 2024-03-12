@@ -68,5 +68,5 @@ BallroomDE	50	103	2001:470:f026:103::200:50	exRoom		F.9		??		ex4200-48p	84:18:88
 SpareD		51	103	2001:470:f026:103::200:51	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:91:46:3f
 SpareE		52	103	2001:470:f026:103::200:52	cfRoom		Z.9		??		ex4200-24t	28:c0:da:31:71:ff
 SpareF		53	103	2001:470:f026:103::200:53	cfRoom		Z.9		??		ex4200-24t	2c:6b:f5:83:5c:ff
-#ConfIDF		54	503	2001:470:f026:503::200:54	cfIDF		I.9		Loud		ex4200-48px	ec:3e:f7:50:58:ff
+//ConfIDF		54	503	2001:470:f026:503::200:54	cfIDF		I.9		Loud		ex4200-48px	ec:3e:f7:50:58:ff
 RegDesk		55	103	2001:470:f026:103::200:55	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:7f
