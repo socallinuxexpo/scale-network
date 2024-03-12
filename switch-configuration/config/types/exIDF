@@ -87,4 +87,4 @@ VLAN	exSigns		4							POE	// ge-0/0/{36-39}
 RSRVD	8										// ge-0/0/{40-47}
 FIBER	ge-0/1/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra, \
             			exAVLAN, \
-			        exSigns,HAM_BRIDGE,exRegistration Uplink
+			        exSigns,HAM_BRIDGE,exRegistration	Uplink

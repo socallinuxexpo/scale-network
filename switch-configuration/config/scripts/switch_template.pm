@@ -618,7 +618,7 @@ EOF
       ##FIXME## Build interface ranges
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
-      my $poe = shift(@tokens);
+      my $poe = shift(@tokens) if ($cmd eq "TRUNK"); # No PoE on Fiber
       my $trunktype = shift(@tokens);
       $trunktype =~ s/^\s*(\S+)\s*/$1/;
       if (!exists($colormap{$trunktype}))
