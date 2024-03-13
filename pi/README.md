@@ -1,15 +1,19 @@
-# Pi gold image instructions
+# Pi
+
+Currently the pi image is being built in a separate repo: https://github.com/socallinuxexpo/scale-kiosk
+
+## gold image instructions
 
 Instructions heavily influenced by https://youtu.be/T9AtKld8USU
 
-# Create bootable SDCARD:
+### Create bootable SDCARD:
 
 1. Download the current specified Raspbian image from https://www.raspberrypi.org/downloads/raspbian/
    a. As of 2020-02-24 the specified image is `2019-09-26-raspbian-buster-lite.img`
 
 2. Write to an SD Card using [Etcher](https://www.balena.io/etcher/)
 
-# Boot and setup system:
+#### Boot and setup system:
 
 1. Boot up
 
