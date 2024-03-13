@@ -49,7 +49,8 @@ in
         inherit system;
         modules = [
           common
-          ./monitor.nix
+          ./monitor/monitor.nix
+          ./monitor/microvm-config.nix
         ];
         specialArgs = { inherit inputs; };
       };
