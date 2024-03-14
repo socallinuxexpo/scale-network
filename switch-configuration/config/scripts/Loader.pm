@@ -5,18 +5,27 @@
 # Provides a number of (POD documented) functions to aid
 # in the loading of configurations onto switches.
 #
-# Dependencies:
+# External Dependencies to install PERL dependencies
+# 	openssl
+# 	openssl-dev or libssl-dev (depending on distro)
+#
+# PERL Dependencies:
+# 	-- In Repo --
 #       switch_template.pl      -- Switch Configuration Library
+#       
+#       -- PERL Built-in --
 #       FileHnadle              -- Allows use of scalar variables for Files
 #       IPC::Open2              -- Allows simplification of Pipe opens
+#       -- CPAN (or Debian packages) --
 #       Net::Ping               -- Ping without system()
 #       Expect                  -- PERL Expect Library - simplifies communication with switches
 #       Term::ReadKey           -- Simlifies password requests and similar
 ##FIXME##       Net::SSH::Perl          -- ssh without system()
-#       Net::SFTP               -- sftp without system()
 #       Net::ARP                -- arp without system()
 #       Net::Interface          -- enumerate and identify interface data
 #       Time::HiRes             -- Used for usleep (sleep for microseconds)
+#       -- CPAN Only --
+#       Net::SFTP               -- sftp without system()
 
 # Pull in dependencies
 package Loader;
