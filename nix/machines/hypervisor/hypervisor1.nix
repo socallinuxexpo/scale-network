@@ -1,5 +1,8 @@
 { config, pkgs, lib, ... }:
 {
+  imports = [
+    ./libvirt.nix
+  ];
 
   # ZFS uniq system ID
   # to generate: head -c4 /dev/urandom | od -A none -t x4
