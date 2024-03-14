@@ -87,6 +87,7 @@ foreach(@{$VL_CONFIG})
 		"$VV_prefix6 and $VV_prefix4.\n");
 }
 
+
  
 # Pull in private configuration objects (not stored in repo)
 open(PASSWD, "< ../../facts/secrets/jroot_pw") ||
@@ -101,7 +102,7 @@ close PASSWD;
 foreach $switch (@{$switchlist})
 {
     debug(2, "Building $switch\n");
-    my ($cf, $portmap)  = build_config_from_template($switch,$rootpw);
+    my ($cf, $portmap)  = build_config_from_template($switch,$rootpw,$VV_name_prefix);
     if ( ! -d "output" )
     {
         mkdir "output";
