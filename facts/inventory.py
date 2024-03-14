@@ -296,7 +296,11 @@ def populateaps(apsfile, apusefile):
     # key: n8t-0054
     # values: c4:04:15:ad:a3:93,unknown-2,10.128.3.249,6,36,0,0,50,50
     for key, elems in result.items():
-        ipaddr = elems[2]
+        try:
+            ipaddr = elems[2]
+        except IndexError:
+            ipaddr = None
+
         # Lets bail if ip address is invalid
         if not isvalidip(ipaddr):
             continue
