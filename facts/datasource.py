@@ -68,7 +68,7 @@ def isvalidmac(macaddr):
 
 def isvalidwifi24chan(chan):
     '''test for valid 2.4Ghz WiFi channel'''
-    return int(chan) >= 1 and int(chan) <= 11
+    return isint(chan) and int(chan) in { 1, 6, 11 }
 
 
 def isvalidwifi5chan(chan):
@@ -76,8 +76,12 @@ def isvalidwifi5chan(chan):
     test for valid 5Ghz WiFi channel
     allows DFS channels
     '''
-    return ((int(chan) >= 36 and int(chan) <= 144) and int(chan) %2 == 0) or \
-        ((int(chan) >= 149 and int(chan) <= 165) and int(chan) %2 == 1)
+    return isint(chan) and int(chan) in {
+        32, 36, 40, 44, 48, 52, 56, 60, 64, 68,
+        96, 100, 104, 108, 112, 116,
+        132, 136, 140, 144,
+        149, 153, 157, 161, 165, 169, 173, 177
+    }
 
 
 def isint(val):
