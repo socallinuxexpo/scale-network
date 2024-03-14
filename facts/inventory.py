@@ -506,7 +506,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "max-valid-lifetime": 1440,
             # Next we set up the interfaces to be used by the server.
             "interfaces-config": {
-                "interfaces": ["*"],
+                # TODO: Better definition of for populating this
+                "interfaces": ["@@INTERFACE@@", "@@INTERFACE@@/@@SERVERADDRESS@@"],
                 "service-sockets-max-retries": 5,
                 "service-sockets-retry-wait-time": 5000
             },
@@ -609,7 +610,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 # TODO: we should figure out a better way of dynamically allocating this config of the
                 # interface so is not hardcoded
                 # https://kea.readthedocs.io/en/kea-2.2.0/arm/dhcp6-srv.html#ipv6-subnet-selection
-                subnet["interface"] = "eth0"
+                subnet["interface"] = "@@INTERFACE@@"
             subnets6_dict.append(subnet)
 
     keav6_config["Dhcp6"]["subnet6"] = subnets6_dict

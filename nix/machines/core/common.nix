@@ -40,18 +40,27 @@
 
   services = {
     resolved.enable = false;
-    openssh = {
-      enable = true;
-    };
     kea = {
       dhcp4 = {
         enable = true;
         configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp4-server.conf";
       };
-      dhcp6 = {
-        enable = true;
-        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf";
-      };
+      dhcp6 =
+        let
+          dhcp6PopulateConfig = pkgs.runCommand "replace" {} ''
+            mkdir $out
+            cp ${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf $TMP/dhcp6-server.conf
+            substituteInPlace "$TMP/dhcp6-server.conf" \
+              --replace '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.facts.ipv6)}' \
+              --replace '@@INTERFACE@@' '${config.facts.eth}'
+            cp $TMP/dhcp6-server.conf $out
+          '';
+
+        in
+        {
+          enable = true;
+          configFile = "${dhcp6PopulateConfig}/dhcp6-server.conf";
+        };
     };
     ntp = {
       enable = true;

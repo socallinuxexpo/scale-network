@@ -11,14 +11,6 @@ let
     ipv4 = "10.0.3.5";
   };
 
-  dhcp6TestConfig = pkgs.runCommand "replace"
-    {
-      buildInputs = [ pkgs.gnused ];
-    }
-    ''
-      mkdir $out
-      sed 's/eth0/eth1/g' ${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf > $out/dhcp6-server.conf
-    '';
 in
 {
   name = "core";
@@ -75,13 +67,20 @@ in
     # node must match hostname for testScript to find it below
     coremaster = { lib, ... }: {
       _module.args = { inherit inputs; };
-      imports = [ ../machines/core/master.nix ];
+      imports = [
+        ../machines/core/master.nix
+        ../modules/facts.nix
+      ];
+
+      facts = lib.mkForce {
+        ipv4 = "${coremasterAddr.ipv4}/24";
+        ipv6 = "${coremasterAddr.ipv6}/64";
+        eth = "eth1";
+      };
 
       virtualisation.vlans = [ 1 ];
       virtualisation.graphics = false;
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
-      # substitute this dhcpv6 config since we need to respond on eth1 for these tests
-      services.kea.dhcp6.configFile = lib.mkForce "${dhcp6TestConfig}/dhcp6-server.conf";
       systemd.network = {
         networks = lib.mkForce {
           "01-eth1" = {

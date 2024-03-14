@@ -38,10 +38,6 @@ in
   ];
 
   services = {
-    openssh = {
-      enable = true;
-    };
-
     prometheus = {
       enable = true;
       enableReload = true;

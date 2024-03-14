@@ -5,12 +5,17 @@
     [
       ./common.nix
     ];
+  facts = {
+    ipv4 = "10.0.3.5/24";
+    ipv6 = "2001:470:f026:103::5/64";
+    eth = "eth0";
+  };
 
   networking.hostName = "coreslave";
 
   networking = {
     extraHosts = ''
-      10.128.3.5 coreconf.scale.lan
+      10.0.3.5 coreexpo.scale.lan
     '';
   };
 
@@ -20,19 +25,13 @@
     enable = true;
     networks = {
       "10-lan" = {
-        name = "enp0*";
+        name = "e*0";
         enable = true;
-        address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
-        gateway = [ "10.128.3.1" ];
-        # TODO: Causes double entry of [Network] in .network file
-        # Need to look into unifying into one block
-        extraConfig = ''
-          [Network]
-          IPv6Token=static:::5
-          LLDP=true
-          EmitLLDP=true;
-          IPv6PrivacyExtensions=false
-        '';
+        address = [ config.facts.ipv4 config.facts.ipv6 ];
+        routes = [
+          { routeConfig.Gateway = "10.0.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:103::1"; }
+        ];
       };
     };
   };
@@ -42,22 +41,25 @@
       enable = true;
       cacheNetworks = [ "::1/128" "127.0.0.0/8" "2001:470:f026::/48" "10.0.0.0/8" ];
       forwarders = [ "8.8.8.8" "8.8.4.4" ];
+      extraOptions = ''
+         transfer-source-v6 ${builtins.head (lib.splitString "/" config.facts.ipv6)};
+      '';
       zones =
         {
           "scale.lan." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-scale.lan";
           };
           "10.in-addr.arpa." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-10.rev";
           };
           # 2001:470:f026::
           "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = false;
-            masters = [ "2001:470:f026:103::5" ];
+            masters = [ "2001:470:f026:503::5" ];
             file = "/var/run/named/sec-2001.470.f026-48.rev";
           };
         };

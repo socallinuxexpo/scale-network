@@ -6,8 +6,10 @@ let
   common = {
     imports = [
       inputs.microvm.nixosModules.microvm
+      inputs.self.nixosModules.facts
       ./_common
       ./_common/time.nix
+      ./_common/ssh/vm.nix
     ];
   };
 in
@@ -83,6 +85,16 @@ in
           common
           ./core/microvm-config.nix
           ./core/slave.nix
+        ];
+        specialArgs = { inherit inputs; };
+      };
+      hypervisor1 = lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./_common
+          inputs.microvm.nixosModules.host
+          ./hypervisor/hypervisor1.nix
+          ./hypervisor/hardware-configuration.nix
         ];
         specialArgs = { inherit inputs; };
       };
