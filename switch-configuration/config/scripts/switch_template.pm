@@ -1530,6 +1530,7 @@ sub build_config_from_template
   # Add input variables here:
   my $hostname = shift @_;
   my $root_auth = shift @_;
+  $VV_name_prefix = shift @_;
   
   # Add configuration file fetches here:
   my $USER_AUTHENTICATION = build_users_from_auth();
