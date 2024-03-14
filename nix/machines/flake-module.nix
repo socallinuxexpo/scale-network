@@ -117,6 +117,16 @@ in
         ];
         specialArgs = { inherit inputs; };
       };
+      cache = lib.nixosSystem {
+        inherit system;
+        modules = [
+          common
+          ./cache/microvm-config.nix
+          ./cache/cache.nix
+        ];
+        specialArgs = { inherit inputs; };
+      };
+
     };
 
 
