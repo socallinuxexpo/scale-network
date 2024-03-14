@@ -94,7 +94,7 @@ in
           # 2001:470:f026::
           "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
             master = true;
-            slaves = [ "2001:470:f026:503::5" ];
+            slaves = [ "2001:470:f026:103::5" ];
             file = pkgs.writeText "named-2001.470.f026-48.rev" (lib.strings.concatStrings [
               ''
                 $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.

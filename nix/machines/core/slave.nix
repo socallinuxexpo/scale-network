@@ -41,6 +41,9 @@
       enable = true;
       cacheNetworks = [ "::1/128" "127.0.0.0/8" "2001:470:f026::/48" "10.0.0.0/8" ];
       forwarders = [ "8.8.8.8" "8.8.4.4" ];
+      extraOptions = ''
+         transfer-source-v6 ${builtins.head (lib.splitString "/" config.facts.ipv6)};
+      '';
       zones =
         {
           "scale.lan." = {
