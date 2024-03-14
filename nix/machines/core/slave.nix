@@ -5,6 +5,11 @@
     [
       ./common.nix
     ];
+  facts = {
+    ipv4 = "10.0.3.5/24";
+    ipv6 = "2001:470:f026:103::5/64";
+    eth = "eth0";
+  };
 
   networking.hostName = "coreslave";
 
@@ -22,7 +27,7 @@
       "10-lan" = {
         name = "e*0";
         enable = true;
-        address = [ "10.0.3.5/24" "2001:470:f026:103::5/64" ];
+        address = [ config.facts.ipv4 config.facts.ipv6 ];
         routes = [
           { routeConfig.Gateway = "10.0.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:103::1"; }

@@ -9,6 +9,12 @@ in
       ./common.nix
     ];
 
+  facts = {
+    ipv4 = "10.128.3.5/24";
+    ipv6 = "2001:470:f026:503::5/64";
+    eth  = "eth0";
+  };
+
   networking.hostName = "coremaster";
 
   # disable legacy networking bits as recommended by:
@@ -29,7 +35,7 @@ in
         # to match enp0 or eth0
         name = "e*0*";
         enable = true;
-        address = [ "10.128.3.5/24" "2001:470:f026:503::5/64" ];
+        address = [ config.facts.ipv4 config.facts.ipv6 ];
         routes = [
           { routeConfig.Gateway = "10.128.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:503::1"; }
@@ -47,7 +53,7 @@ in
         {
           "scale.lan." = {
             master = true;
-            slaves = [ "2001:470:f026:503::5" ];
+            slaves = [ "2001:470:f026:103::5" ];
             file = pkgs.writeText "named.scale.lan" (lib.strings.concatStrings [
               ''
                 $ORIGIN scale.lan.
@@ -67,7 +73,7 @@ in
           };
           "10.in-addr.arpa." = {
             master = true;
-            slaves = [ "2001:470:f026:503::5" ];
+            slaves = [ "2001:470:f026:103::5" ];
             file = pkgs.writeText "named-10.rev" (lib.strings.concatStrings [
               ''
                 $ORIGIN 10.in-addr.arpa.

@@ -6,6 +6,7 @@ let
   common = {
     imports = [
       inputs.microvm.nixosModules.microvm
+      inputs.self.nixosModules.facts
       ./_common
       ./_common/time.nix
       ./_common/ssh/vm.nix
