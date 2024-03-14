@@ -20,6 +20,7 @@
 * [KERMIT](./.kermit/README.md)
 * [RELEASE](./RELEASE.md)
 * [PI](./pi/README.md)
+* [PRE CONF CHECKLIST](./docs/checklists/PRECONF-CHECKLIST.md)
 
  
 ## Contributing
