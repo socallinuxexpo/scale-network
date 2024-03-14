@@ -24,8 +24,8 @@
 #       Net::ARP                -- arp without system()
 #       Net::Interface          -- enumerate and identify interface data
 #       Time::HiRes             -- Used for usleep (sleep for microseconds)
+#       Net::SFTP::Foreign               -- sftp without system()
 #       -- CPAN Only --
-#       Net::SFTP               -- sftp without system()
 
 # Pull in dependencies
 package Loader;
@@ -48,7 +48,7 @@ use Net::Ping;
 use Expect;
 use Term::ReadKey;
 #use Net::SSH::Perl;	# Integration postponed
-use Net::SFTP;
+use Net::SFTP::Foreign;
 use Net::ARP;
 use Net::Interface;
 use Time::HiRes qw/usleep/;
@@ -461,12 +461,13 @@ sub override_switch
     {
         # Send cconfiguration file via SFTP, then use Expect to send $SWITCH_COMMANDS to activate
         my $result;
+	my $target = lc($Name).'.scale.lan';
         print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         push @messages, "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
-        my $sftp = Net::SFTP->new($target, (debug => 1, user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
+        my $sftp = Net::SFTP::Foreign->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
 	print STDERR "SFTP Put $config_file\n";
 	push @messages, "SFTP Put $config_file\n";
-        $sftp->put("$config_file", "/tmp/new_config.conf", \&sftp_progress) ||
+        $sftp->put("$config_file", "/tmp/new_config.conf") ||
                 croak("Failed to send config to $target ($Name)\n");;
         print "\n\n";
         print STDERR "Activating...\n";
