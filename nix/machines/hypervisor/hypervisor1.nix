@@ -65,7 +65,6 @@
 
   microvm.autostart = [
     "coreMaster"
-    "monitor"
     "signs"
   ];
 
