@@ -31,7 +31,6 @@
         fish test_duplicates.fish
         touch $out
       '');
-          buildInputs = [ pkgs.fish ];
       perl-switches = (pkgs.runCommand "perl-switches"
         {
           buildInputs = [ pkgs.gnumake pkgs.perl ];
