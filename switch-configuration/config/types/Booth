@@ -14,7 +14,7 @@ TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
 TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
 TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
 TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-RSRVD	6
-VVLAN	16			// Dynamically assigned Vendor VLAN ports
-RSRVD	8
+RSRVD	6			// 18-23
+VVLAN	16			// Dynamically assigned Vendor VLAN ports 24-39
+VlAN	ExVmVendor	1	// 40
 VVBB
