@@ -29,7 +29,7 @@ BallroomH	11	103	2001:470:f026:103::200:11	exRoom		F.9		Normal		ex4200-48p	00:26
 BallroomA	12	103	2001:470:f026:103::200:12	exRoom		C.9		Normal		ex4200-48p	b0:c6:9a:dc:4d:ff
 BallroomB	13	103	2001:470:f026:103::200:13	exRoom		C.9		Normal		ex4200-48p	00:26:88:7a:8f:ff
 AVSwitch	14	503	2001:470:f026:503::200:14	cfAV		I.9		Normal		ex4200-48p	00:26:88:7d:e5:ff
-Party		15	103	2001:470:f026:103::200:15	Party		X.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
+SpareI		15	103	2001:470:f026:103::200:15	Party		Z.9		??		ex4200-48p	b0:c6:9a:db:b5:7f
 Expo-Catwalk	16	103	2001:470:f026:103::200:16	Catwalk		W.1		??		ex4200-48p	00:26:88:7e:3e:7f
 Rm209-210	17	503	2001:470:f026:503::200:17	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:a6:ff
 ExpoA1		18	103	2001:470:f026:103::200:18	Booth		W.9		Loud		ex4200-48p	78:fe:3d:d2:85:7f
@@ -55,7 +55,7 @@ Rm214		37	503	2001:470:f026:503::200:37	cfRoom		I.9		Quiet		ex4200-48p	2c:6b:f5:
 ExpoD1		38	103	2001:470:f026:103::200:38	Booth		W.9		Normal		ex4200-48p	00:26:88:7e:1b:ff
 ExpoD2		39	103	2001:470:f026:103::200:39	Booth		W.9		Normal		ex4200-48p	00:26:88:70:d6:7f
 Rm105		40	503	2001:470:f026:503::200:40	cfRoom		I.9		Quiet		ex4200-48p	b0:c6:9a:64:85:ff
-ExpoC4		41	103	2001:470:f026:103::200:41	Booth		W.9		Normal		ex4200-48p	00:26:88:70:bb:7f
+SpareJ		41	103	2001:470:f026:103::200:41	Booth		Z.9		Normal		ex4200-48p	00:26:88:70:bb:7f
 ExpoA5		42	103	2001:470:f026:103::200:42	Booth		Z.9		Normal		ex4200-48p	00:26:88:60:40:7f
 ExpoB5		43	103	2001:470:f026:103::200:43	Booth		Z.9		Normal		ex4200-48p	00:26:88:7d:1b:ff
 ExpoC5		44	103	2001:470:f026:103::200:44	Booth		Z.9		Loud		ex4200-48p	00:26:88:7c:41:7f
