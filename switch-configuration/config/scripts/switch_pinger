@@ -11,6 +11,16 @@
 use lib "./scripts";
 use switch_template;
 use Data::Dumper qw/Dumper/;
+use Getopt::Std;
+
+our $opt_d;
+
+getopts('d:');
+
+if ($opt_d && ($opt_d < 1 || $opt_d > 120))
+{
+    die "Error: delay must be between 1 and 120 seconds, inclusive.\n";
+}
 
 set_debug_level(0);
 
@@ -56,53 +66,66 @@ close(TYPES);
 # Display Hierarchy and ping status
 my %status = ();
 
-foreach(sort(keys(%Hierarchy)))
+while (1)
 {
-    next if ($_ eq "Z"); # Skip hierarchy Z
-    my $last_status = 0;
-    my $last_status_level = 0;
-    print "Group $_\n";
-    for (my $i = 0; $i < 10; $i++)
-    {
-        foreach my $sw (@{$Hierarchy{$_}{$i}})
-        {
-            # Temporarily just print the Name and IPv6 Address
-            debug(9, "Got ".Dumper(@{$sw}));
-            print " " x (10+(4*$i)), $i, " -> ";
-            printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
-            debug(9, "Pinging ${$sw}[1]\n");
-	    my $r;
-            if ($last_status && $last_status_level < $i) {
-                print "\t..SKIPPED..\n";
-                next;
-            }
-            if ($^O eq "darwin")
-            {
-	        print "D->";
-                $r = system('ping6 -c 1 -n -q '.${$sw}[1].' >&/dev/null');
-            }
-            else
-            {
-                $r = system('ping -c 1 -W 1 -n -q '.${$sw}[1].' >&/dev/null');
-            }
-            if ($r == -1)
-            {
-                print "\tNOSTART: $!";
-            }
-            elsif ($r & 127)
-            {
-                print "\tSIGNAL: ", ($r & 127), ($r & 128) ? " with " : " without ",
-                    "coredump";
-            }
-            else
-            {
-                my $rc = $r >> 8;
-                print (($rc) ? "..down..($rc)" : "...OK...");
-                $status{$_}{$i} = $rc;
-                $last_status = $rc;
-                $last_status_level = $i;
-            }
-            print "\n";
-        }
-    }
+  system("clear") if ($opt_d);
+  foreach(sort(keys(%Hierarchy)))
+  {
+      next if ($_ eq "Z"); # Skip hierarchy Z
+      my $last_status = 0;
+      my $last_status_level = 0;
+      print "Group $_\n";
+      for (my $i = 0; $i < 10; $i++)
+      {
+          foreach my $sw (@{$Hierarchy{$_}{$i}})
+          {
+              # Temporarily just print the Name and IPv6 Address
+              debug(9, "Got ".Dumper(@{$sw}));
+              print " " x (10+(4*$i)), $i, " -> ";
+              printf "Name: %-20s Addr: %-40s", ${$sw}[0], ${$sw}[1];
+              debug(9, "Pinging ${$sw}[1]\n");
+  	    my $r;
+              if ($last_status && $last_status_level < $i) {
+                  print "\t..SKIPPED..\n";
+                  next;
+              }
+              if ($^O eq "darwin")
+              {
+  	        print "D->";
+                  $r = system('ping6 -c 1 -n -q '.${$sw}[1].' >&/dev/null');
+              }
+              else
+              {
+		  #print STDERR "\nexecuting 'ping -c 1 -W 1 -n -q '.${$sw}[1].' >/dev/null 2>&1'\n";
+                  $r = system('ping -c 1 -W 1 -n -q '.${$sw}[1].' >/dev/null 2>&1');
+              }
+              if ($r == -1)
+              {
+                  print "\tNOSTART: $!";
+              }
+              elsif ($r & 127)
+              {
+                  print "\tSIGNAL: ", ($r & 127), ($r & 128) ? " with " : " without ",
+                      "coredump";
+              }
+              else
+              {
+                  my $rc = $r >> 8;
+                  print (($rc) ? "..down..($rc)" : "...OK...");
+                  $status{$_}{$i} = $rc;
+                  $last_status = $rc;
+                  $last_status_level = $i;
+              }
+              print "\n";
+          }
+      }
+  }
+  if ($opt_d)
+  {
+      sleep($opt_d);
+  }
+  else
+  {
+      exit(0);
+  }
 }
