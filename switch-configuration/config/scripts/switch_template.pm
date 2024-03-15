@@ -60,26 +60,26 @@ our @EXPORT = qw(
 my %colormap = (
 	"AP" => {
 		'red'	=> 0,
-		'green'	=> 0.85,
-		'blue'  => 0.85,
+		'green'	=> 0.25,
+		'blue'  => 0.25,
 		},
 	"Uplink" => {
 		'red'	=> 0,
-		'green'	=> 0.85,
+		'green'	=> 0.25,
 		'blue'	=> 0,
 		},
 	"Downlink" => {
-		'red'	=> 0.85,
-		'green'	=> 0.85,
+		'red'	=> 0.25,
+		'green'	=> 0.25,
 		'blue'	=> 0,
 		},
 	"MassFlash" => {
-		'red'	=> 0.85,
+		'red'	=> 0.25,
 		'green'	=> 0,
-		'blue'	=> 0.85,
+		'blue'	=> 0.25,
 		},
 	"Unknown" => {
-		'red'	=> 1,
+		'red'	=> 0.25,
 		'green'	=> 0,
 		'blue'	=> 0,
 		},
@@ -1053,12 +1053,23 @@ sub VV_init_firewall
                     accept;
                 }
           }
+	  term ipv6_icmp_basics {
+              from {
+                  destination-address {
+                        2001:470:f026::/48
+                  }
+                  icmp-type [ neighbor-solicit neighbor-advertise router-solicit packet-too-big time-exceeded ];
+              }
+              then {
+                  accept;
+              }
+          }
           term ping {
               from {
                   destination-address {
                         2001:470:f026::/48
                   }
-                  icmp-type [ echo-reply echo-request packet-too-big time-exceeded ];
+                  icmp-type [ echo-reply echo-request ];
               }
               then {
                   accept;
@@ -1099,6 +1110,17 @@ sub VV_init_firewall
             }
         }
         filter only_from_internet6 {
+	  term ipv6_icmp_basics {
+              from {
+                  destination-address {
+                        2001:470:f026::/48
+                  }
+                  icmp-type [ neighbor-solicit neighbor-advertise router-advertise packet-too-big time-exceeded ];
+              }
+              then {
+                  accept;
+              }
+          }
           term dns {
                 from {
                     source-address {
@@ -1389,6 +1411,9 @@ EOF
                 Expo {
                     2001:470:f026:103::5;
                 }
+                Vendors {
+                    2001:470:f026:103::5;
+                }
                 Hilton {
                     2001:470:f026:103::5;
                 }
@@ -1403,6 +1428,9 @@ EOF
                 10.128.3.5;
             }
             Expo {
+                10.0.3.5;
+            }
+            Vendors {
                 10.0.3.5;
             }
             Hilton {
