@@ -18,14 +18,15 @@ in
         # to match enp0 or eth0
         name = "e*0*";
         enable = true;
-        address = [ "10.128.3.6/24" "2001:470:f026:503::6" ];
+        address = [ "10.0.3.6/24" "2001:470:f026:103::6" ];
         routes = [
-          { routeConfig.Gateway = "10.128.3.1"; }
-          { routeConfig.Gateway = "2001:470:f026:503::1"; }
+          { routeConfig.Gateway = "10.0.3.1"; }
+          { routeConfig.Gateway = "2001:470:f026:103::1"; }
         ];
       };
     };
   };
+  networking.hostName = "monitor";
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   # TODO: How to handle sudo esculation
@@ -90,7 +91,7 @@ in
     };
 
     nginx = {
-      enable = true;
+      enable = false;
       # TODO: TLS enabled
       # Good example enable TLS, but would like to keep it out of the /nix/store
       # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
