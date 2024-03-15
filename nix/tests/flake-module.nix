@@ -22,7 +22,16 @@
         ${testPython}/bin/pytest -vv -p no:cacheprovider
         touch $out
       '');
-
+      duplicates-facts = (pkgs.runCommand "facts-duplicates"
+        {
+          buildInputs = [pkgs.fish ];
+        } ''
+        cp -r --no-preserve=mode ${pkgs.lib.cleanSource inputs.self}/* .
+        cd facts
+        fish test_duplicates.fish
+        touch $out
+      '');
+          buildInputs = [ pkgs.fish ];
       perl-switches = (pkgs.runCommand "perl-switches"
         {
           buildInputs = [ pkgs.gnumake pkgs.perl ];
@@ -30,7 +39,7 @@
         cp -r --no-preserve=mode ${lib.cleanSource inputs.self}/* .
         cd switch-configuration
         make .lint
-        make .build-switch-configs 
+        make .build-switch-configs
         touch $out
       '');
       openwrt-golden = pkgs.runCommand "openwrt-golden"
@@ -42,7 +51,6 @@
         mkdir -p $out/tmp/ar71xx
         ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
       '';
-
     };
   };
 }
