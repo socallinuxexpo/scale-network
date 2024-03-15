@@ -37,7 +37,11 @@
       extraGroups = [ "wheel" ];
       openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMlEPbMnefiPfCTKb9lOzPzfnOVAohO08myWWMm9EJxZ" ];
     };
-
+    berkhan = {
+      isNormalUser = true;
+      uid = 2010;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH6UhZ/oPqiFzCOxoZWeUqeGZCVLLNQbHH3uuIa6PCTz" ]; 
   };
 
 }
