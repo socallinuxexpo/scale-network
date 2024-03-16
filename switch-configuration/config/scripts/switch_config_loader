@@ -148,8 +148,6 @@ else
 
 print "List expansion yielded ", scalar(@list), " Switch names.\n";
 
-exit 0;
-
 if ($opt_t && (scalar(@list) != 1))
 {
   warn("Use of -t requires exactly one switch be specified.\n");
