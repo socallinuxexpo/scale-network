@@ -195,7 +195,7 @@ sub get_switchlist
   my @list=();
   foreach(sort(keys(%Switchtypes)))
   {
-    if ($include_z || $switchtyps{$_}[4] -ne "Z")
+    if ($include_Z || $switchtyps{$_}[4] -ne "Z")
     {
       push @list, $_;
       debug(9, "Adding $_ to list with group $switchtypes{$_}[4]\n");
