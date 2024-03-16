@@ -195,14 +195,14 @@ sub get_switchlist
   my @list=();
   foreach(sort(keys(%Switchtypes)))
   {
-    if ($include_Z || $switchtyps{$_}[4] -ne "Z")
+    if ($include_Z || $Switchtypes{$_}[4] ne "Z")
     {
       push @list, $_;
-      debug(9, "Adding $_ to list with group $switchtypes{$_}[4]\n");
+      debug(9, "Adding $_ to list with group $Switchtypes{$_}[4]\n");
     }
     else
     {
-      debug(9, "Skipping $_ with group $switchtypes{$_}[4]\n");
+      debug(9, "Skipping $_ with group $Switchtypes{$_}[4]\n");
     }
   }
   debug(5, "get_switchlist called\n");
