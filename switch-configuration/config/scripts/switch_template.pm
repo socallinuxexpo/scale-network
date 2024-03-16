@@ -1112,9 +1112,6 @@ sub VV_init_firewall
         filter only_from_internet6 {
 	  term ipv6_icmp_basics {
               from {
-                  destination-address {
-                        2001:470:f026::/48
-                  }
                   icmp-type [ neighbor-solicit neighbor-advertise router-advertise packet-too-big time-exceeded ];
               }
               then {
