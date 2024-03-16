@@ -22,7 +22,7 @@
         ${testPython}/bin/pytest -vv -p no:cacheprovider
         touch $out
       '');
-      duplicates-facts = (pkgs.runCommand "facts-duplicates"
+      duplicates-facts = (pkgs.runCommand "duplicates-facts"
         {
           buildInputs = [pkgs.fish ];
         } ''
