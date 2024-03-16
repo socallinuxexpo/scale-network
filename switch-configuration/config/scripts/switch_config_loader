@@ -56,6 +56,8 @@
 #
 #       -u <username> -- username to provide to swtiches for authentication
 #
+#       -z -- Go ahead and process switches in the Z (unused) hierarchy
+#
 #       <switch_spec> -- One or more switch names and/or groups
 #           Cannot be used with -l or any of the options that imply -l
 #             unless it resolves to a single switch.
@@ -103,7 +105,8 @@ our $opt_n;
 our $opt_p;
 our $opt_t;
 our $opt_u;
-getopts('bc:hklnpt:u:');
+our $opt_z;
+getopts('bc:hklnpt:u:z');
 
 # Check for implicit or incompatible arguments.
 if ($opt_h)
@@ -133,7 +136,7 @@ if ($opt_c && $opt_l && scalar(@list) == 0)
 
 if (scalar(@list) == 0)
 {
-  @list = @{Loader::get_switchlist()};
+  @list = @{Loader::get_switchlist($opt_z)};
   print "Pulled ", scalar(@list), " switches from configuration list\n";
 }
 else
@@ -145,6 +148,7 @@ else
 
 print "List expansion yielded ", scalar(@list), " Switch names.\n";
 
+exit 0;
 
 if ($opt_t && (scalar(@list) != 1))
 {

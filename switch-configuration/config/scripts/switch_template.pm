@@ -191,7 +191,20 @@ sub read_config_file
 
 sub get_switchlist
 {
-  my @list = sort(keys(%Switchtypes));
+  my $include_Z = shift(@_);
+  my @list=();
+  foreach(sort(keys(%Switchtypes)))
+  {
+    if ($include_z || $switchtyps{$_}[4] -ne "Z")
+    {
+      push @list, $_;
+      debug(9, "Adding $_ to list with group $switchtypes{$_}[4]\n");
+    }
+    else
+    {
+      debug(9, "Skipping $_ with group $switchtypes{$_}[4]\n");
+    }
+  }
   debug(5, "get_switchlist called\n");
   if (scalar(@list))
   {
@@ -1058,7 +1071,7 @@ sub VV_init_firewall
                   destination-address {
                         2001:470:f026::/48
                   }
-                  icmp-type [ neighbor-solicit neighbor-advertise router-solicit packet-too-big time-exceeded ];
+                  icmp-type [ neighbor-solicit neighbor-advertisement router-solicit packet-too-big time-exceeded ];
               }
               then {
                   accept;
@@ -1112,7 +1125,7 @@ sub VV_init_firewall
         filter only_from_internet6 {
 	  term ipv6_icmp_basics {
               from {
-                  icmp-type [ neighbor-solicit neighbor-advertise router-advertise packet-too-big time-exceeded ];
+                  icmp-type [ neighbor-solicit neighbor-advertisement router-advertisement packet-too-big time-exceeded ];
               }
               then {
                   accept;
