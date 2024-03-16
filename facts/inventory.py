@@ -555,7 +555,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     subnets_dict = []
     for vlan in vlans:
         # Make sure to skip vlans that have no ranges
-        if vlan["ipv4bitmask"] == "0":
+        # TODO: filtering out vlan 112 for the soda machine
+        if vlan["ipv4bitmask"] == "0" or vlan["id"] == "112":
             continue
         else:
             subnet = {
@@ -585,7 +586,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     subnets6_dict = []
     for vlan in vlans:
         # Make sure to skip vlans that have no ranges
-        if vlan["ipv6bitmask"] == "0":
+        # TODO: filtering out vlan 112 for the soda machine
+        if vlan["ipv6bitmask"] == "0" or vlan["id"] == "112":
             continue
         else:
             subnet = {
