@@ -26,7 +26,7 @@ if(scalar(@ARGV)) # One or more switch names specified
 }
 else
 {
-    $switchlist = get_switchlist();
+    $switchlist = get_switchlist(1);
 }
 my @outputs = ();
 my @maps = ();
