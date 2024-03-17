@@ -3,17 +3,29 @@ require 'serverspec' # If you want to use serverspec matchers, you will need thi
 
 RSpec.shared_examples "resolvable" do
 
+  DNSSERVERS = [
+    "10.0.3.5",
+    "10.128.3.5",
+    "2001:470:f026:103::5",
+    "2001:470:f026:503::5"
+  ]
+
   RESOLVABLE=[
     "ntp.scale.lan",
     "loghost.scale.lan",
-    "zabbix.scale.lan",
+    "lobste.rs",
     "google.com"
   ]
 
 
   RESOLVABLE.each do |host|
-    describe command("dig +short #{host} | grep -v -e '^$'") do
-      its(:exit_status) { should eq 0 }
+    DNSSERVERS.each do |dnsserver|
+      describe command("dig @#{dnsserver} +short #{host} A | grep -v -e '^$'") do
+        its(:exit_status) { should eq 0 }
+      end
+      describe command("dig @#{dnsserver} +short #{host} AAAA | grep -v -e '^$'") do
+        its(:exit_status) { should eq 0 }
+      end
     end
   end
 end
