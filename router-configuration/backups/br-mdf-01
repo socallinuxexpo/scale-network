@@ -1,12 +1,9 @@
-## Last changed: 2019-10-27 02:59:16 UTC
-version 15.1X49-D70.3;
+## Last changed: 2024-03-12 19:58:57 UTC
+version 22.4R3.25;
 system {
     host-name br-mdf-01;
     root-authentication {
-    }
-    name-server {
-        8.8.8.8;
-        8.8.4.4;
+        encrypted-password "$6$SqiCb9s1$HZ2cP5mI13JyVzL6ak9BkYd29D8H59E0qdxtnNMQrKrUUhy3pjxngpOpBJr6oPO5AWnqq7cP1fsiMBheNToir0";
     }
     login {
         user dlang {
@@ -42,10 +39,15 @@ system {
     services {
         ssh {
             protocol-version v2;
+            sftp-server;
         }
         netconf {
             ssh;
         }
+    }
+    name-server {
+        8.8.8.8;
+        8.8.4.4;
     }
     syslog {
         archive size 100k files 3;
@@ -55,12 +57,12 @@ system {
         host loghost {
             any any;
         }
+        file interactive-commands {
+            interactive-commands any;
+        }
         file messages {
             any notice;
             authorization info;
-        }
-        file interactive-commands {
-            interactive-commands any;
         }
     }
     max-configurations-on-flash 5;
@@ -186,12 +188,13 @@ interfaces {
             description "HE IPv6 Tunnel Broker";
             point-to-point;
             tunnel {
-                source 38.98.46.150;
+                source 12.157.195.99;
                 destination 66.220.18.42;
                 path-mtu-discovery;
             }
             family inet6 {
-                address 2001:470:c:1049::2/64;
+                mtu 1420;
+                address 2001:470:c:3d::2/64;
             }
         }
     }
@@ -211,7 +214,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode access;
                 vlan {
-                    members COGENT;
+                    members ATT;
                 }
             }
         }
@@ -234,7 +237,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode access;
                 vlan {
-                    members COGENT;
+                    members ATT;
                 }
             }
         }
@@ -261,7 +264,7 @@ interfaces {
                 address 10.0.3.2/24;
             }
             family inet6 {
-                address 2001:470:f325:103::2/64;
+                address 2001:470:f026:103::2/64;
             }
         }
         unit 104 {
@@ -269,11 +272,11 @@ interfaces {
                 address 10.0.4.1/24;
             }
             family inet6 {
-                address 2001:470:f325:104::1/64 {
+                address 2001:470:f026:104::1/64 {
                     primary;
                     preferred;
                 }
-                address 2001:470:f325:104::/64 {
+                address 2001:470:f026:104::/64 {
                     eui-64;
                 }
             }
@@ -284,13 +287,13 @@ interfaces {
                 address 172.20.0.1/24;
             }
             family inet6 {
-                address 2001:470:f325:8000::1/64;
+                address 2001:470:f026:8000::1/64;
             }
         }
         unit 999 {
-            description "Internet Link to PSAV / Cogent";
+            description "Linternet Link to PCOC/Encore/AT&T";
             family inet {
-                address 38.98.46.150/25;
+                address 12.157.195.99/28;
             }
         }
     }
@@ -299,46 +302,10 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-            2001:470:f325:103::/64;
-            2001:470:f325:503::/64;
+            2001:470:f026:103::/64;
+            2001:470:f026:503::/64;
         }
     }
-}
-routing-options {
-    rib inet6.0 {
-        static {
-            route ::/0 next-hop 2001:470:c:1049::1;
-        }
-    }
-    static {
-        route 0.0.0.0/0 next-hop 38.98.46.129;
-    }
-}
-protocols {
-    ospf {
-        export DEFAULT-ORIGINATE-v4;
-        area 0.0.0.0 {
-            interface irb.104;
-            interface irb.900;
-            interface irb.103;
-        }
-    }
-    ospf3 {
-        export DEFAULT-ORIGINATE-v6;
-        area 0.0.0.0 {
-            interface irb.104;
-            interface irb.900;
-            interface irb.103;
-        }
-    }
-    l2-learning {
-        global-mode switching;
-    }
-    lldp {
-        enable;
-        interface all;
-    }
-    lldp-med;
 }
 policy-options {
     policy-statement DEFAULT-ORIGINATE-v4 {
@@ -356,7 +323,7 @@ policy-options {
     }
 }
 vlans {
-    COGENT {
+    ATT {
         description "Internet link to Cogent (PSAV)";
         vlan-id 999;
         l3-interface irb.999;
@@ -379,5 +346,41 @@ vlans {
         description "IP Layer 3 Link between Border Router and Expo MDF Router";
         vlan-id 104;
         l3-interface irb.104;
+    }
+}
+protocols {
+    ospf {
+        area 0.0.0.0 {
+            interface irb.104;
+            interface irb.900;
+            interface irb.103;
+        }
+        export DEFAULT-ORIGINATE-v4;
+    }
+    ospf3 {
+        area 0.0.0.0 {
+            interface irb.104;
+            interface irb.900;
+            interface irb.103;
+        }
+        export DEFAULT-ORIGINATE-v6;
+    }
+    l2-learning {
+        global-mode switching;
+    }
+    lldp {
+        enable;
+        interface all;
+    }
+    lldp-med;
+}
+routing-options {
+    rib inet6.0 {
+        static {
+            route ::/0 next-hop 2001:470:c:3d::1;
+        }
+    }
+    static {
+        route 0.0.0.0/0 next-hop 12.157.195.97;
     }
 }
