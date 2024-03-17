@@ -47,7 +47,7 @@ in
   services = {
     bind = {
       enable = true;
-      cacheNetworks = [ "::1/128" "127.0.0.0/8" "2001:470:f0fb::/48" "10.0.0.0/8" ];
+      cacheNetworks = [ "::1/128" "127.0.0.0/8" "2001:470:f026::/48" "10.0.0.0/8" ];
       forwarders = [ "8.8.8.8" "8.8.4.4" ];
       zones =
         {
