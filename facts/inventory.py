@@ -504,6 +504,70 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
       }
     keav6_config = {
         "Dhcp6": {
+            "option-def": [
+                  {
+                    "name": "PXEDiscoveryControl",
+                    "code": 6,
+                    "space": "vendor-40712",
+                    "type": "uint8",
+                    "array": False
+                  },
+                  {
+                    "name": "PXEMenuPrompt",
+                    "code": 10,
+                    "space": "vendor-40712",
+                    "type": "record",
+                    "array": False,
+                    "record-types": "uint8,string"
+                  },
+                  {
+                    "name": "PXEBootMenu",
+                    "code": 9,
+                    "space": "vendor-40712",
+                    "type": "record",
+                    "array": False,
+                    "record-types": "uint16,uint8,string"
+                  }
+            ],
+            "client-classes": [
+                  {
+                    "name": "rpi-pxe",
+                    "test": "option[client-arch-type].hex == 0x0029",
+                    "option-data":
+                    [
+                      {
+                        "name": "bootfile-url",
+                        "always-send": True,
+                        "data": "tftp://2001:470:f026:503::10/start4.elf"
+                      },
+                      {
+                        "name": "vendor-opts",
+                            "always-send": True,
+                            "data": "40712"
+                          },
+                      {
+                        "name": "PXEBootMenu",
+                        "always-send": True,
+                        "csv-format": True,
+                        "data": "0,17,Raspberry Pi Boot",
+                        "space": "vendor-40712"
+                      },
+                      {
+                        "name": "PXEDiscoveryControl",
+                        "always-send": True,
+                        "data": "3",
+                        "space": "vendor-40712"
+                      },
+                      {
+                        "name": "PXEMenuPrompt",
+                        "always-send": True,
+                        "csv-format": True,
+                        "data": "0,pxe",
+                        "space": "vendor-40712"
+                      }
+                    ]
+                }
+            ],
             # First we set up global values
             "valid-lifetime": 1440,
             "min-valid-lifetime": 1440,
@@ -529,7 +593,6 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
              "data": ','.join([x['ipv6'] for x in servers if x['role'] == 'core'])
             },
             ],
-            "option-def": [],
             "reservations-global": True,
             "reservations-in-subnet": False,
             "reservations": [],
