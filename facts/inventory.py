@@ -528,8 +528,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                     "array": False,
                     "record-types": "uint16,uint8,string"
                   }
-                ],
-                "client-classes": [
+            ],
+            "client-classes": [
                   {
                     "name": "rpi-pxe",
                     "test": "option[client-arch-type].hex == 0x0029",
@@ -593,7 +593,6 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
              "data": ','.join([x['ipv6'] for x in servers if x['role'] == 'core'])
             },
             ],
-            "option-def": [],
             "reservations-global": True,
             "reservations-in-subnet": False,
             "reservations": [],
