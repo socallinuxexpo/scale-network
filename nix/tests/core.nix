@@ -145,14 +145,37 @@ in
       coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
       client1.wait_for_unit("systemd-networkd-wait-online.service")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
-      #client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
+      client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${routerAddr.ipv4}")
       # ensure that we got the correct prefix and suffix on dhcpv6
-      #client1.wait_until_succeeds("ip addr show dev eth1 | grep inet6 | grep ${chomp}:d8c")
+      client1.wait_until_succeeds("ip addr show dev eth1 | grep inet6 | grep ${chomp}:d8c")
       # Have to wrap drill since retcode isnt necessarily 1 on query failure
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
     '';
+
+  interactive.nodes =
+    let
+      interactiveDefaults = hostPort:
+        {
+          services.openssh.enable = true;
+          services.openssh.settings.PermitRootLogin = "yes";
+          users.extraUsers.root.initialPassword = "";
+          systemd.network.networks."01-eth0" = {
+            name = "eth0";
+            enable = true;
+            networkConfig.DHCP = "yes";
+          };
+          virtualisation.forwardPorts = [
+            { from = "host"; host.port = hostPort; guest.port = 22; }
+          ];
+        };
+    in
+    {
+      router = interactiveDefaults 2222;
+      coremaster = interactiveDefaults 2223;
+      client1 = interactiveDefaults 2224;
+    };
 }
