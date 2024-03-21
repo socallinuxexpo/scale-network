@@ -1,12 +1,9 @@
-## Last changed: 2019-03-08 23:59:58 UTC
-version 15.1X49-D70.3;
+## Last changed: 2024-03-17 20:32:47 UTC
+version 22.4R3.25;
 system {
     host-name ex-mdf-01;
     root-authentication {
-    }
-    name-server {
-        8.8.8.8;
-        8.8.4.4;
+        encrypted-password "$5$ZWKDX7so$FUcBBq69dZ3tFs9JLAOHGhY9GL8nD.r4ITsymtKGv59";
     }
     login {
         user dlang {
@@ -42,10 +39,15 @@ system {
     services {
         ssh {
             protocol-version v2;
+            sftp-server;
         }
         netconf {
             ssh;
         }
+    }
+    name-server {
+        8.8.8.8;
+        8.8.4.4;
     }
     syslog {
         archive size 100k files 3;
@@ -55,12 +57,12 @@ system {
         host loghost {
             any any;
         }
+        file interactive-commands {
+            interactive-commands any;
+        }
         file messages {
             any notice;
             authorization info;
-        }
-        file interactive-commands {
-            interactive-commands any;
         }
     }
     max-configurations-on-flash 5;
@@ -124,7 +126,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode trunk;
                 vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone ];
+                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
                 }
             }
         }
@@ -135,7 +137,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode trunk;
                 vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone ];
+                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
                 }
             }
         }
@@ -143,11 +145,7 @@ interfaces {
     ge-0/0/3 {
         description "Akamai Cache IPv6 interface";
         unit 0 {
-            family ethernet-switching {
-                vlan {
-                    members exAkamai;
-                }
-            }
+            family ethernet-switching;
         }
     }
     ge-0/0/4 {
@@ -161,6 +159,7 @@ interfaces {
         }
     }
     ge-0/0/5 {
+        description "Infra VLAN Access -- Main Server";
         unit 0 {
             family ethernet-switching {
                 interface-mode access;
@@ -176,7 +175,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode trunk;
                 vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone ];
+                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
                 }
             }
         }
@@ -187,7 +186,7 @@ interfaces {
             family ethernet-switching {
                 interface-mode trunk;
                 vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone ];
+                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
                 }
             }
         }
@@ -199,8 +198,8 @@ interfaces {
                 address 10.0.128.1/21;
             }
             family inet6 {
-                address 2001:470:f325:100::1/64;
-                address 2001:470:f325:100::/64 {
+                address 2001:470:f026:100::1/64;
+                address 2001:470:f026:100::/64 {
                     eui-64;
                 }
             }
@@ -211,8 +210,8 @@ interfaces {
                 address 10.0.136.1/21;
             }
             family inet6 {
-                address 2001:470:f325:101::1/64;
-                address 2001:470:f325:101::/64 {
+                address 2001:470:f026:101::1/64;
+                address 2001:470:f026:101::/64 {
                     eui-64;
                 }
             }
@@ -223,8 +222,8 @@ interfaces {
                 address 10.0.2.1/24;
             }
             family inet6 {
-                address 2001:470:f325:102::1/64;
-                address 2001:470:f325:102::/64 {
+                address 2001:470:f026:102::1/64;
+                address 2001:470:f026:102::/64 {
                     eui-64;
                 }
             }
@@ -235,10 +234,10 @@ interfaces {
                 address 10.0.3.1/24;
             }
             family inet6 {
-                address 2001:470:f325:103::/64 {
+                address 2001:470:f026:103::/64 {
                     eui-64;
                 }
-                address 2001:470:f325:103::1/64;
+                address 2001:470:f026:103::1/64;
             }
         }
         unit 104 {
@@ -247,7 +246,7 @@ interfaces {
                 address 10.0.4.2/24;
             }
             family inet6 {
-                address 2001:470:f325:104::2/64;
+                address 2001:470:f026:104::2/64;
             }
         }
         unit 105 {
@@ -256,8 +255,8 @@ interfaces {
                 address 10.0.5.1/24;
             }
             family inet6 {
-                address 2001:470:f325:105::1/64;
-                address 2001:470:f325:105::/64 {
+                address 2001:470:f026:105::1/64;
+                address 2001:470:f026:105::/64 {
                     eui-64;
                 }
             }
@@ -265,8 +264,8 @@ interfaces {
         unit 107 {
             description exSigns;
             family inet6 {
-                address 2001:470:f325:107::1/64;
-                address 2001:470:f325:107::/64 {
+                address 2001:470:f026:107::1/64;
+                address 2001:470:f026:107::/64 {
                     eui-64;
                 }
             }
@@ -277,8 +276,8 @@ interfaces {
                 address 10.0.8.1/24;
             }
             family inet6 {
-                address 2001:470:f325:108::1/64;
-                address 2001:470:f325:108::/64 {
+                address 2001:470:f026:108::1/64;
+                address 2001:470:f026:108::/64 {
                     eui-64;
                 }
             }
@@ -289,8 +288,8 @@ interfaces {
                 address 10.0.10.1/24;
             }
             family inet6 {
-                address 2001:470:f325:110::1/64;
-                address 2001:470:f325:110::/64 {
+                address 2001:470:f026:110::1/64;
+                address 2001:470:f026:110::/64 {
                     eui-64;
                 }
             }
@@ -298,8 +297,20 @@ interfaces {
         unit 111 {
             description exAkamai;
             family inet6 {
-                address 2001:470:f325:111::1/64;
-                address 2001:470:f325:111::/64 {
+                address 2001:470:f026:111::1/64;
+                address 2001:470:f026:111::/64 {
+                    eui-64;
+                }
+            }
+        }
+        unit 112 {
+            description "exVmVendor (SODA)";
+            family inet {
+                address 10.0.112.1/24;
+            }
+            family inet6 {
+                address 2001:470:f026:112::1/64;
+                address 2001:470:f026:112::/64 {
                     eui-64;
                 }
             }
@@ -319,14 +330,18 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-            2001:470:f325:103::/64;
-            2001:470:f325:503::/64;
+            2001:470:f026:103::/64;
+            2001:470:f026:503::/64;
         }
     }
 }
 forwarding-options {
     dhcp-relay {
         dhcpv6 {
+            group AV {
+                active-server-group AV;
+                interface irb.105;
+            }
             group all {
                 interface irb.100;
                 interface irb.101;
@@ -336,38 +351,39 @@ forwarding-options {
                 interface irb.107;
                 interface irb.108;
                 interface irb.110;
+                interface irb.112;
                 interface irb.200;
                 interface irb.300;
             }
-            group AV {
-                active-server-group AV;
-                interface irb.105;
-            }
             server-group {
+                AV {
+                    2001:470:f026:105::10;
+                }
                 Conference {
-                    2001:470:f325:503::5;
+                    2001:470:f026:503::5;
                 }
                 Expo {
-                    2001:470:f325:103::5;
-                }
-                AV {
-                    2001:470:f325:105::10;
+                    2001:470:f026:103::5;
                 }
             }
             active-server-group Expo;
         }
         server-group {
+            AV {
+                10.0.5.10;
+            }
             Conference {
                 10.128.3.5;
             }
             Expo {
                 10.0.3.5;
             }
-            AV {
-                10.0.5.10;
-            }
         }
         active-server-group Expo;
+        group AV {
+            active-server-group AV;
+            interface irb.105;
+        }
         group all {
             interface irb.100;
             interface irb.101;
@@ -377,191 +393,19 @@ forwarding-options {
             interface irb.107;
             interface irb.108;
             interface irb.110;
+            interface irb.112;
             interface irb.200;
             interface irb.300;
         }
-        group AV {
-            active-server-group AV;
-            interface irb.105;
-        }
     }
 }
-protocols {
-    router-advertisement {
-        interface irb.100 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:100::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.101 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:101::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.102 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:102::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.103 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:103::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.104 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:104::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.105 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:105::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.107 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:107::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.108 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:108::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.110 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:110::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.111 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:111::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.200 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:200::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.300 {
-            other-stateful-configuration;
-            solicit-router-advertisement-unicast;
-            dns-server-address 2001:470:f325:103::5;
-            dns-server-address 2001:470:f325:503::5;
-            prefix 2001:470:f325:300::/64 {
-                on-link;
-                autonomous;
-            }
+policy-options {
+    policy-statement ospf-export-policy {
+        term static-to-ospf {
+            from protocol static;
+            then accept;
         }
     }
-    ospf {
-        area 0.0.0.0 {
-            interface irb.103;
-            interface irb.104;
-            interface irb.100 {
-                passive;
-            }
-            interface irb.101 {
-                passive;
-            }
-            interface irb.102 {
-                passive;
-            }
-            interface irb.105 {
-                passive;
-            }
-            interface irb.107 {
-                passive;
-            }
-            interface irb.108 {
-                passive;
-            }
-            interface irb.110 {
-                passive;
-            }
-            interface irb.499;
-        }
-    }
-    ospf3 {
-        area 0.0.0.0 {
-            interface irb.100 {
-                passive;
-            }
-            interface irb.101 {
-                passive;
-            }
-            interface irb.102 {
-                passive;
-            }
-            interface irb.103;
-            interface irb.104;
-            interface irb.105 {
-                passive;
-            }
-            interface irb.107 {
-                passive;
-            }
-            interface irb.108 {
-                passive;
-            }
-            interface irb.110 {
-                passive;
-            }
-            interface irb.499;
-        }
-    }
-    l2-learning {
-        global-mode switching;
-    }
-    lldp {
-        enable;
-        interface all;
-    }
-    lldp-med;
 }
 vlans {
     exAVLAN {
@@ -614,9 +458,209 @@ vlans {
         vlan-id 108;
         l3-interface irb.108;
     }
+    exVmVendor {
+        description "exVmVendor (SODA Machine)";
+        vlan-id 112;
+        l3-interface irb.112;
+    }
     vendor_backbone {
         description "Vendor Backbone VLAN";
         vlan-id 499;
         l3-interface irb.499;
+    }
+}
+protocols {
+    router-advertisement {
+        interface irb.100 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:100::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.101 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:101::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.102 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:102::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.103 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:103::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.104 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:104::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.105 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:105::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.107 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:107::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.108 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:108::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.110 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:110::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.111 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:111::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.200 {
+            other-stateful-configuration;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:200::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+        interface irb.300 {
+            other-stateful-configuration;
+            solicit-router-advertisement-unicast;
+            dns-server-address 2001:470:f026:103::5;
+            dns-server-address 2001:470:f026:503::5;
+            prefix 2001:470:f026:300::/64 {
+                on-link;
+                autonomous;
+            }
+        }
+    }
+    ospf {
+        area 0.0.0.0 {
+            interface irb.103;
+            interface irb.104;
+            interface irb.100 {
+                passive;
+            }
+            interface irb.101 {
+                passive;
+            }
+            interface irb.102 {
+                passive;
+            }
+            interface irb.105 {
+                passive;
+            }
+            interface irb.107 {
+                passive;
+            }
+            interface irb.108 {
+                passive;
+            }
+            interface irb.110 {
+                passive;
+            }
+            interface irb.499;
+            interface irb.112 {
+                passive;
+            }
+        }
+        export ospf-export-policy;
+    }
+    ospf3 {
+        area 0.0.0.0 {
+            interface irb.100 {
+                passive;
+            }
+            interface irb.101 {
+                passive;
+            }
+            interface irb.102 {
+                passive;
+            }
+            interface irb.103;
+            interface irb.104;
+            interface irb.105 {
+                passive;
+            }
+            interface irb.107 {
+                passive;
+            }
+            interface irb.108 {
+                passive;
+            }
+            interface irb.110 {
+                passive;
+            }
+            interface irb.499;
+            interface irb.112 {
+                passive;
+            }
+        }
+        export ospf-export-policy;
+    }
+    l2-learning {
+        global-mode switching;
+    }
+    lldp {
+        enable;
+        interface all;
+    }
+    lldp-med;
+}
+routing-options {
+    rib inet6.0 {
+        static {
+            route 2001:470:f026:50da::/64 next-hop 2001:470:f026:112::2;
+        }
+    }
+    static {
+        route 10.0.144.0/20 next-hop 10.0.112.2;
     }
 }
