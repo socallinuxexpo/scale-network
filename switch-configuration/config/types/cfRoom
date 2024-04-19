@@ -16,6 +16,6 @@ VLAN	cfSigns		4									POE	// ge-0/0/{18-21}
 VLAN	cfAVLAN		6									POE	// ge-0/0/{22-27}
 VLAN	cfSpeaker	2									-	// ge-0/0/{28,29}
 VLAN	cfCTF		1									-	// ge-0/0/30
-VLAN	HAM_BRIDGE	1									-	// ge-0/0/31	// HAM Link N6S to Expo
+RSRVD	1												// ge-0/0/31
 VLAN	cfInstall	8									-	// ge-0/0/{32-39}
 VLAN	cfSCALE-FAST	8									-	// ge-0/0/{40-47}

@@ -1,13 +1,13 @@
 //	Conference	Center	--	VLANS	500-899
-VLAN	cfSCALE-SLOW		500	2001:470:f026:500::/64	10.128.128.0/21	2.4G Wireless Network in Conference Center
-VLAN	cfSCALE-FAST		501	2001:470:f026:501::/64	10.128.136.0/21	5G Wireless Network in Conference Center
-VLAN	cfSpeaker		502	2001:470:f026:502::/64	10.128.2.0/24	Speaker Network
-VLAN	cfInfra			503	2001:470:f026:503::/64	10.128.3.0/24	SCALE Network Infrastructure and Servers (Conference Center)
-VLAN	cfCTF			504	2001:470:f026:504::/64	10.128.4.0/24	Capture the Flag
-VLAN	cfAVLAN			505	2001:470:f026:505::/64	10.128.5.0/24	Audio Visual Network (DHCP Helper to AV server)
-VLAN	cfNOC			506	2001:470:f026:506::/64	10.128.6.0/24	Wired network in NOC
-VLAN	cfSigns			507	2001:470:f026:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only
-//VLAN	cfStaff			508	2001:470:f026:508::/64	10.128.8.0/24	Staff Wifi Network
-VLAN	cfHam_N6S		509	2001:470:f026:509::/64	10.128.9.0/24	HAM radio station in Conference Center
-VLAN	cfInstall		510	2001:470:f026:510::/64	10.128.10.0/24	Install Fests and Workshops
+VLAN	cfSCALE-SLOW		500	<v6_prefix>:500::/64	10.128.128.0/21	000000w	2.4G Wireless Network in Conference Center
+VLAN	cfSCALE-FAST		501	<v6_prefix>:501::/64	10.128.136.0/21	000000w	5G Wireless Network in Conference Center
+VLAN	cfSpeaker		502	<v6_prefix>:502::/64	10.128.2.0/24	0000ffw	Speaker Network
+VLAN	cfInfra			503	<v6_prefix>:503::/64	10.128.3.0/24	0040ffb	SCALE Network Infrastructure and Servers (Conference Center)
+VLAN	cfCTF			504	<v6_prefix>:504::/64	10.128.4.0/24	ffff80b	Capture the Flag
+VLAN	cfAVLAN			505	<v6_prefix>:505::/64	10.128.5.0/24	e0e000w	Audio Visual Network (DHCP Helper to AV server)
+VLAN	cfNOC			506	<v6_prefix>:506::/64	10.128.6.0/24	00c0c0b	Wired network in NOC
+VLAN	cfSigns			507	<v6_prefix>:507::/64	0.0.0.0/0	ff00ffw	Signs network (Conference Center) IPv6 Only
+//VLAN	cfStaff			508	<v6_prefix>:508::/64	10.128.8.0/24	000000w	Staff Wifi Network
+//VLAN	cfHam_N6S		509	<v6_prefix>:509::/64	10.128.9.0/24	000000w	HAM radio station in Conference Center
+VLAN	cfInstall		510	<v6_prefix>:510::/64	10.128.10.0/24	00c0c0w	Install Fests and Workshops
 //510-599 not used

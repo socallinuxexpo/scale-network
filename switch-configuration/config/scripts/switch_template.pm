@@ -11,8 +11,6 @@
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
 
-##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
-
 ##FIXME## Add a PS color block to PoE ports
 
 
@@ -33,6 +31,8 @@ our $VV_name_prefix   = "";
 our $DEBUGLEVEL       = 9;
 our %Switchtypes      = ();
 our %Switchgroups     = ();
+our $IPv6_prefix      = "2001:db8";
+our $IPv6_mask        = "16";
 
 our @ISA = qw(Exporter);
 
@@ -60,30 +60,33 @@ our @EXPORT = qw(
 my %colormap = (
 	"AP" => {
 		'red'	=> 0,
-		'green'	=> 0.25,
-		'blue'  => 0.25,
+		'green'	=> 0.75,
+		'blue'  => 0.75,
 		},
 	"Uplink" => {
 		'red'	=> 0,
-		'green'	=> 0.25,
+		'green'	=> 0.75,
 		'blue'	=> 0,
 		},
 	"Downlink" => {
-		'red'	=> 0.25,
-		'green'	=> 0.25,
+		'red'	=> 0.75,
+		'green'	=> 0.75,
 		'blue'	=> 0,
 		},
 	"MassFlash" => {
-		'red'	=> 0.25,
+		'red'	=> 0.75,
 		'green'	=> 0,
-		'blue'	=> 0.25,
+		'blue'	=> 0.75,
 		},
 	"Unknown" => {
-		'red'	=> 0.25,
+		'red'	=> 0.75,
 		'green'	=> 0,
 		'blue'	=> 0,
 		},
 );
+
+my %vlancolor = ();
+
 sub BEGIN
 {
   return;
@@ -95,9 +98,11 @@ sub new
 
   $class = ref($class) if ref($class); # Allows calling as $exp->new()
 
-  my $self = ();
+  my $self = [];
+  ($IPv6_prefix, $IPv6_mask) = get_v6_prefix();
 
-  bless $self, $class;
+  bless $self;
+  bless $class if ref($class);
   return $self;
 }
 
@@ -257,6 +262,8 @@ sub get_switchtype
     foreach(@{$switchtypes})
     {
       my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel, $model, $mgmtMAC) = split(/\t+/, $_);
+      $IPv6Addr =~ s/<v6_prefix>/$IPv6_prefix/;
+      debug(5, "Set IPv6 Prefix for $_ to $IPv6_prefix yielding $IPv6Addr\n");
       my ($group, $level) = split(/\./, $hierarchy);
       debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type, $group, $level)\n");
       $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level, $noiselevel, $model, $mgmtMAC ];
@@ -297,16 +304,18 @@ sub get_switchtype
 
 sub get_switch_by_mac
 {
-  ## FIXME ## Assertion -- Switchtypes hash has been preloaded
   my $macaddr = shift(@_);
   my @switches = ();
+  ## FIXME ## Assertion -- Switchtypes hash has been preloaded
+  my $count = keys(%Switchtypes);
+  get_switchtye("anonymous") unless $count;
   foreach(keys(%Switchtypes))
   {
-    ## FIXME ## Stupid stringwise comparison may not accurately find MAC addresses
-    ## FIXME ## Currently assume switchtypes file has fully 0 filled MAC addresses
     my @octets = split(/:/, $macaddr);
     my $macaddr = sprintf("%02s:%02s:%02s:%02s:%02s:%02s", @octets);
-    if (lc($macaddr) eq lc($Switchtypes{$_}[8]))
+    @octets = split(/:/, $Switchtypes{$_}[8]);
+    my $sacaddr = sprintf("%02s:%02s:%02s:%02s:%02s:%02s", @octets);
+    if (lc($macaddr) eq lc($sacaddr))
     {
       push(@switches, $_);
     }
@@ -398,7 +407,8 @@ sub build_interfaces_from_config
   ##FIXME## that all interaces are ge-0/0/*
   ##FIXME## There are special excpetions coded for FIBER ports at ge-0/1/[0-3] to partially compensate
   ##FIXME## This is adequate for our current switch inventory which does not include any multi-U switches or chassis.
-  ##FIXME## Fiber_Left_Edge (Position of Fiber Port List) is currently above 4th port grouping. Should be to right, but involves expanding sticker size to accommodate
+  ##FIXME## Fiber_Left_Edge (Position of Fiber Port List) is currently above 4th port grouping. Should be to right,
+  ##FIXME## but involves expanding sticker size to accommodate
   ##FIXME## Draw boxes around all ports, not just the configured ones
   my $hostname = shift @_;
   # Retrieve Switch Type Information
@@ -468,18 +478,20 @@ SwitchMapDict begin
   closepath % Draw line from boxLeft BoxTop to boxLeft boxBottom
  } bind def
 
- % DrawPort [ Text r g b Number ] -> [ ]
+ % DrawPort [ Text r g b R G B Number ] -> [ ]
+ % r g b = color for box
+ % R G B = color for text
 /DrawPort {
   % Convert Number to X and Y position
     % Identify the ligature line and bottom of box
-    % [ Text r g b Number ] -> [ Text r g b Number ]
+    % [ Text r g b R G B Number ] -> [ Text r g b Number ]
     % Save Port Number
   dup /PortNum exch def
     % Determine bottom edge of box
   dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
   /Ligature Bottom 0.35 Inch add def
     % Identify left and bottom edge of Port Box on Map (consumes Number)
-    % [ Text r g b Number ] -> [ Text r g b ]
+    % [ Text r g b R G B Number ] -> [ Text r g b R G B ]
   2 div                     % Get horizontal port position
   dup cvi 6 idiv            % Get number of preceding port groups
   Port_Group_Gap mul        % Convert to width
@@ -487,6 +499,10 @@ SwitchMapDict begin
   cvi Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
   Left_Port_Edge add        % Add offset for left port edge
   /Left exch def            % Save as Left
+  % Collect color for text [ Text r g b R G B ] -> [ Text r g b ]
+  /B exch def
+  /G exch def
+  /R exch def
   % Set color for fill [ Text r g b ] -> [ Text ]
   setrgbcolor
   % Build Box path
@@ -502,12 +518,34 @@ SwitchMapDict begin
   BoxFont
   dup stringwidth pop 2 div /W exch def
   Left Port_Width 2 div add W sub Ligature moveto
+  R G B setrgbcolor
   show
   /P PortNum s cvs def
   P stringwidth pop 2 div /W exch def
   Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
 } bind def
 
+% DrawPOE -- Draw a small green box in upper right corner to indicate Power Available
+% DrawPOE [ Number ] -> [ ]
+/DrawPOE {
+    % Save Port Number
+  dup /PortNum exch def
+    % Determine bottom edge of box
+  dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
+  2 div 						% Get horizontal port position
+  dup cvi 6 idiv 					% Get number of preceding port groups
+  Port_Group_Gap mul					% Convert to width
+  exch							% Swap port groupw width with Port Horizontal Position
+  cvi Port_Width mul add				% Convert Port Horizontal Position to Width and add to Group offset
+  Left_Port_Edge add					% Add off set for left port edge
+  /Left exch def					% Save as Left
+  0 1 0 setrgbcolor					% Green box
+  /BL Left Port_Width add Port_Width 8 div sub def	% Determine left edge of mini-box and leave on stack
+  /BB Bottom Box_Height add Box_Height 8 div sub def	% Determine bottom edge of mini-box and leave on stack
+  BL BB Port_Width 8 div Box_Height 8 div Box		% Build minibox path
+  fill
+} bind def
+  
  % DrawFiberPort [ Text r g b Number ] -> [ ]
 /DrawFiberPort {
   % Convert Number to X and Y position
@@ -616,7 +654,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-(UNUSED) 0.75 0.75 0.75 $port DrawPort
+(UNUSED) 0.75 0.75 0.75 0 0 0 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -673,7 +711,10 @@ EOF
         # Handle non-fiber trunk port
         debug(9, "$cmd output standard box for port $portnum ($iface) ($trunktype) -- (".${colormap{$trunktype}}{'red'}.",".${colormap{$trunktype}}{'green'}.",".${colormap{$trunktype}}{'blue'}.")\n");
         $portmap_PS .= <<EOF;
-($trunktype) $colormap{$trunktype}{'red'} $colormap{$trunktype}{'green'} $colormap{$trunktype}{'blue'} $portnum DrawPort
+($trunktype) $colormap{$trunktype}{'red'} $colormap{$trunktype}{'green'} $colormap{$trunktype}{'blue'} 0 0 0 $portnum DrawPort
+EOF
+        $portmap_PS .= <<EOF if ($POEFLAG);
+$portnum DrawPOE
 EOF
       }
 
@@ -709,7 +750,10 @@ EOF
           $MEMBERS.= "        member ge-0/0/$port;\n";
           push @POEPORTS, "ge-0/0/$port" if ($POEFLAG);
           $portmap_PS .= <<EOF;
-($vlan) 0.75 0.75 1 $port DrawPort
+($vlan) $vlancolor{$vlan}{'red'} $vlancolor{$vlan}{'green'} $vlancolor{$vlan}{'blue'} $vlancolor{$vlan}{'text'} $port DrawPort
+EOF
+        $portmap_PS .= <<EOF if ($POEFLAG);
+$port DrawPOE
 EOF
           $count--;
           $port++;
@@ -758,6 +802,23 @@ EOF
   return($OUTPUT, $gw);
 }
 
+sub get_v6_prefix
+{
+  open PFX, "<./v6_prefix" || return undef;
+  $_ = <PFX>;
+  chomp();
+  debug(9, "Got $_ from PFx file\n");
+  my ($pfx, $len) = split('/');
+  debug(9, "get_v6_prefix: $pfx -- $len (raw)\n");
+  $pfx =~ s/:*$//;
+  my @quartets = split(/:/, $pfx);
+  push @quartets, "0" while $#quartets < 2; # We use only a /48 even if we have a shorter prefix
+  return undef if ($#quartets > 2); # We also need at least a /48
+  $pfx = join(":", @quartets);
+  debug(9, "get_v6_prefix: $pfx -- $len (cooked)\n");
+  return($pfx, $len);
+}
+
 sub build_vlans_from_config
 {
   my $hostname = shift @_;
@@ -765,6 +826,7 @@ sub build_vlans_from_config
   # MgtVL is treated special because it has a layer 3 interface spec
   # to interface vlan.$MgtVL.
 
+  die("Could not read valid IPv6 Prefix Information from v6_prefix file.\n") unless $IPv6_prefix;
   my $VL_CONFIG = read_config_file("vlans");
   # Convert configuration data to hash with VLAN ID as key
   my %VLANS;         # Hash containing VLAN data structure as follows:
@@ -788,25 +850,48 @@ sub build_vlans_from_config
               #   checks). Not used in config generation for switches..
   my $IPv4;   # IPv4 Prefix (For reference and possible future consistency
               #   checks). Not used in config generation for switches..
+  my $color;  # Color designated for VLAN
   my $desc;   # Description
   my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
   debug(9, "Got ", $#{$VL_CONFIG}, " Lines of VLAN configuraton\n");
   foreach(@{$VL_CONFIG})
   {
+    no integer;
     my @TOKENS;
+    my $tc;
     @TOKENS = split(/\t/, $_);
     $prim = 0;
-    $name = $TOKENS[1];
     if ($TOKENS[0] eq "VLAN") # Standard VLAN
     {
       $type = $TOKENS[0]; # VLAN
+      $name = $TOKENS[1];
       $vlid = $TOKENS[2];
-      $desc = $TOKENS[5];
       $IPv6 = $TOKENS[3];
       $IPv4 = $TOKENS[4];
+      my $rgb = lc($TOKENS[5]);
+      $desc = $TOKENS[6];
+      ##FIXME## -- Validate that color map assignment works
+      $rgb =~ /^([\da-f][\da-f])([\da-f][\da-f])([\da-f][\da-f])([bw])$/;
+      $tc = ($4 eq "b") ? "0 0 0" : "1 1 1";
+      die("Invalid color specified at $_ in VLAN configuration files.\n") unless($4);
+      my $red = hex($1);
+      my $green = hex($2);
+      my $blue = hex($3);
+      $red /= 255;
+      $green /= 255;
+      $blue /= 255;
+      $color = {
+        'red'		=> $red,
+        'green'		=> $green,
+        'blue'		=> $blue,
+	'text'		=> $tc,
+      };
+      debug(9, "RGB = $1 -> ",$red, " $2 -> ", $green, " $3 -> ", $blue, "text -> ", $tc, "\n");
+      $IPv6 =~ s/<v6_prefix>/$IPv6_prefix/;
       $VLANS_byname{$name} = $vlid;
-      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
+      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc,
                         ($prim ? $prim : undef) ];
+      $vlancolor{$name} = $color;
       debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     }
     elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
@@ -1057,8 +1142,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     destination-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $IPv6_prefix:103::/64;
+                        $IPv6_prefix:503::/64;
                     }
                     destination-port domain;
                 }
@@ -1069,7 +1154,7 @@ sub VV_init_firewall
 	  term ipv6_icmp_basics {
               from {
                   destination-address {
-                        2001:470:f026::/48
+                        $IPv6_prefix::/$IPv6_mask
                   }
                   icmp-type [ neighbor-solicit neighbor-advertisement router-solicit packet-too-big time-exceeded ];
               }
@@ -1080,7 +1165,7 @@ sub VV_init_firewall
           term ping {
               from {
                   destination-address {
-                        2001:470:f026::/48
+                        $IPv6_prefix::/$IPv6_mask
                   }
                   icmp-type [ echo-reply echo-request ];
               }
@@ -1091,8 +1176,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     destination-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $IPv6_prefix:103::/64;
+                        $IPv6_prefix:503::/64;
                     }
                     destination-port [ bootps dhcp ];
                 }
@@ -1103,7 +1188,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     destination-address {
-                        2001:470:f026::/48;
+                        $IPv6_prefix::/$IPv6_mask;
                         fc00::/7;
                     }
                 }
@@ -1134,8 +1219,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     source-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $IPv6_prefix:103::/64;
+                        $IPv6_prefix:503::/64;
                     }
                     source-port domain;
                 }
@@ -1146,8 +1231,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     source-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $IPv6_prefix:103::/64;
+                        $IPv6_prefix:503::/64;
                     }
                     source-port [ bootps dhcp ];
                 }
@@ -1158,7 +1243,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     source-address {
-                        2001:470:f026::/48;
+                        $IPv6_prefix::/$IPv6_mask;
                         fc00::/7;
                     }
                 }
@@ -1272,7 +1357,7 @@ sub build_vendor_from_config
       my $v4_nexthop = ($MgtVL < 500) ? "10.2.0.1" : "10.130.0.1";
       debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
       ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
-      ##FIXME## It means that 10.1.0.0/24 needs to be remembered and avoided which is a major timebomb in the code.
+      ##FIXME## It means that 10.2.0.0/24 needs to be remembered and avoided which is a major timebomb in the code.
       $VV_defgw_ipv4 = <<EOF;
     static {
         route 0.0.0.0/0 next-hop $v4_nexthop;
@@ -1317,7 +1402,7 @@ EOF
     }
 EOF
         $VV_portmap .= <<EOF;
-(Vend_$VLID) 0.75 1 0.75 $intnum DrawPort
+(Vend_$VLID) 0.75 1 0.75 0 0 0 $intnum DrawPort
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }
@@ -1416,19 +1501,19 @@ EOF
             }
             server-group {
                 Conference {
-                    2001:470:f026:503::5;
+                    $IPv6_prefix:503::5;
                 }
                 Expo {
-                    2001:470:f026:103::5;
+                    $IPv6_prefix:103::5;
                 }
                 Vendors {
-                    2001:470:f026:103::5;
+                    $IPv6_prefix:103::5;
                 }
                 Hilton {
-                    2001:470:f026:103::5;
+                    $IPv6_prefix:103::5;
                 }
                 AV {
-                    2001:470:f026:105::10;
+                    $IPv6_prefix:105::10;
                 }
             }
             active-server-group $active_srv_grp;
@@ -1481,8 +1566,8 @@ EOF
     $VV_protocols .= <<EOF;
         interface $_ {
             other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:103::15;
+            dns-server-address $IPv6_prefix:103::5;
+            dns-server-address $IPv6_prefix:103::15;
             prefix $pfx {
                 on-link;
                 autonomous;
@@ -1644,8 +1729,8 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-        2001:470:f026:103::/64;
-        2001:470:f026:503::/64;
+        $IPv6_prefix:103::/64;
+        $IPv6_prefix:503::/64;
         }
     }
 }

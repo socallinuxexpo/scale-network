@@ -12,9 +12,12 @@
 ##FIXME## Get rid of "our" variables and convert to Package object
 ##FIXME## There's a lot of cruft built up at this point, probably
 ##FIXME## time to consider a complete clean reimplementation.
+##TODO## Add color definitions to VLANs
 
 use lib "./scripts";
 use switch_template;   # Pull in configuration library
+
+my $st = new switch_template;
 
 set_debug_level(9);
 my $switchlist = "";

@@ -25,7 +25,7 @@ lint:	.lint
 
 build-switch-configs: .build-switch-configs
 
-.build-switch-configs: .lint .secrets config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pm
+.build-switch-configs: .lint .secrets config/v6_prefix config/switchtypes config/types/* config/vlans config/vlans.d/* config/scripts/build_switch_configs.pl config/scripts/switch_template.pm
 	cd config && \
 		perl scripts/build_switch_configs.pl
 	touch .build-switch-configs
