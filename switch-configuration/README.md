@@ -279,7 +279,7 @@ scripts/update_switches BallroomG Room126
 ```
 
 ## How to set up a switch initially
-##FIXME## This section needs updating and some reqork
+##FIXME## This section needs updating and some rework
 1.	Restore switch to factory defaults
     ```
     https://www.juniper.net/documentation/en_US/release-independent/junos/topics/task/configuration/ex-series-switch-default-factory-configuration-reverting.html#jd0e60
