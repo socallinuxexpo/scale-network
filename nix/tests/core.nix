@@ -19,7 +19,6 @@ in
     # temporary router since we do not have the junipers for ipv6 router advertisement
     router = { ... }: {
       virtualisation.vlans = [ 1 ];
-      virtualisation.graphics = false;
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       # since this is a router we need to set enable ipv6 forwarding or radvd will complain
       boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = true;
@@ -79,7 +78,6 @@ in
       };
 
       virtualisation.vlans = [ 1 ];
-      virtualisation.graphics = false;
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       systemd.network = {
         networks = lib.mkForce {
