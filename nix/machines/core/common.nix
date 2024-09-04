@@ -58,8 +58,7 @@
 
         in
         {
-          # TODO: Reenable after bumping to new nix release
-          enable = false;
+          enable = true;
           configFile = "${dhcp6PopulateConfig}/dhcp6-server.conf";
         };
     };
