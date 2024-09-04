@@ -80,8 +80,9 @@ in
       virtualisation.vlans = [ 1 ];
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
       systemd.network = {
-        networks = lib.mkForce {
-          "01-eth1" = {
+        networks = {
+          # Override the phyiscal interface config
+          "10-lan" = lib.mkForce {
             name = "eth1";
             enable = true;
             address = [ "${coremasterAddr.ipv6}/64" "${coremasterAddr.ipv4}/24" ];
