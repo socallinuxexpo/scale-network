@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   boot.kernelParams = [ "console=ttyS0" ];
 
@@ -21,7 +26,10 @@
       "10-lan" = {
         name = "e*0*";
         enable = true;
-        address = [ "10.128.3.11/24" "2001:470:f026:503::11/64" ];
+        address = [
+          "10.128.3.11/24"
+          "2001:470:f026:503::11/64"
+        ];
         gateway = [ "10.128.3.1" ];
         networkConfig = {
           IPv6PrivacyExtensions = false;
@@ -32,7 +40,12 @@
 
   networking = {
     dhcpcd.enable = false;
-    nameservers = [ "10.128.3.5" "10.0.3.5" "2001:470:f026:103::5/64" "2001:470:f026:503::5/64" ];
+    nameservers = [
+      "10.128.3.5"
+      "10.0.3.5"
+      "2001:470:f026:103::5/64"
+      "2001:470:f026:503::5/64"
+    ];
   };
 
   services = {

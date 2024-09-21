@@ -1,4 +1,4 @@
-{ config,  ... }:
+{ config, ... }:
 {
   security.polkit.enable = true;
 
@@ -13,5 +13,7 @@
   };
 
   # Add any users in the 'wheel' group to the 'libvirt' group.
-  users.groups.libvirt.members = builtins.filter (x: builtins.elem "wheel" config.users.users."${x}".extraGroups) (builtins.attrNames config.users.users);
+  users.groups.libvirt.members = builtins.filter (
+    x: builtins.elem "wheel" config.users.users."${x}".extraGroups
+  ) (builtins.attrNames config.users.users);
 }

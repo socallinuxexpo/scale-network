@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 # Minimal configuration for building NixOS bhyve images
 # Inspiration based on hyperv-image.nix: https://github.com/NixOS/nixpkgs/blob/dd3ce3ebcc5de070edb64038fc9135c92f44a670/nixos/modules/virtualisation/hyperv-image.nix

@@ -1,6 +1,6 @@
 { bundlerEnv }:
 
 bundlerEnv {
-    name = "serverspec";
-    gemdir = ./.;
+  name = "serverspec";
+  gemdir = ./.;
 }

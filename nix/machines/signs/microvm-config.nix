@@ -3,7 +3,8 @@
 {
   microvm.qemu.serialConsole = false;
   microvm.qemu.extraArgs = [
-    "-serial" "pty"
+    "-serial"
+    "pty"
   ];
 
   microvm.vcpu = 2;
@@ -16,5 +17,11 @@
     }
   ];
 
-  microvm.volumes = [ { image = "/persist/microvm/${config.networking.hostName}.img"; mountPoint = "/var"; size = 40000; }];
+  microvm.volumes = [
+    {
+      image = "/persist/microvm/${config.networking.hostName}.img";
+      mountPoint = "/var";
+      size = 40000;
+    }
+  ];
 }

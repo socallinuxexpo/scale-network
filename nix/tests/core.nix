@@ -17,38 +17,42 @@ in
 
   nodes = {
     # temporary router since we do not have the junipers for ipv6 router advertisement
-    router = { ... }: {
-      virtualisation.vlans = [ 1 ];
-      systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
-      # since this is a router we need to set enable ipv6 forwarding or radvd will complain
-      boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = true;
-      networking = {
-        useDHCP = false;
-        useNetworkd = true;
-      };
-      systemd.network = {
-        enable = true;
-        networks = {
-          "01-eth1" = {
-            name = "eth1";
-            enable = true;
-            networkConfig = {
-              DHCP = "no";
-              IPv6AcceptRA = false;
-              IPv6PrivacyExtensions = false;
-            };
-            address = [ "${routerAddr.ipv6}/64" "${routerAddr.ipv4}/24" ];
-            ipv6AcceptRAConfig = {
-              UseAutonomousPrefix = true;
-              #DHCPv6Client = "always";
-              #UseDNS = true;
+    router =
+      { ... }:
+      {
+        virtualisation.vlans = [ 1 ];
+        systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
+        # since this is a router we need to set enable ipv6 forwarding or radvd will complain
+        boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = true;
+        networking = {
+          useDHCP = false;
+          useNetworkd = true;
+        };
+        systemd.network = {
+          enable = true;
+          networks = {
+            "01-eth1" = {
+              name = "eth1";
+              enable = true;
+              networkConfig = {
+                DHCP = "no";
+                IPv6AcceptRA = false;
+                IPv6PrivacyExtensions = false;
+              };
+              address = [
+                "${routerAddr.ipv6}/64"
+                "${routerAddr.ipv4}/24"
+              ];
+              ipv6AcceptRAConfig = {
+                UseAutonomousPrefix = true;
+                #DHCPv6Client = "always";
+                #UseDNS = true;
+              };
             };
           };
         };
-      };
-      services.radvd.enable = true;
-      services.radvd.config =
-        ''
+        services.radvd.enable = true;
+        services.radvd.config = ''
           interface eth1 {
             AdvSendAdvert on;
             # M Flag
@@ -61,74 +65,83 @@ in
             };
           };
         '';
-    };
+      };
 
     # node must match hostname for testScript to find it below
-    coremaster = { lib, ... }: {
-      _module.args = { inherit inputs; };
-      imports = [
-        ../machines/core/master.nix
-        ../modules/facts.nix
-      ];
-
-      facts = lib.mkForce {
-        ipv4 = "${coremasterAddr.ipv4}/24";
-        ipv6 = "${coremasterAddr.ipv6}/64";
-        eth = "eth1";
-      };
-
-      virtualisation.vlans = [ 1 ];
-      systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
-      systemd.network = {
-        networks = {
-          # Override the phyiscal interface config
-          "10-lan" = lib.mkForce {
-            name = "eth1";
-            enable = true;
-            address = [ "${coremasterAddr.ipv6}/64" "${coremasterAddr.ipv4}/24" ];
-            gateway = [ "${routerAddr.ipv4}" ];
-          };
+    coremaster =
+      { lib, ... }:
+      {
+        _module.args = {
+          inherit inputs;
         };
-      };
-    };
-
-    client1 = { pkgs, ... }: {
-      virtualisation.vlans = [ 1 ];
-      systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
-      networking = {
-        useNetworkd = true;
-        useDHCP = false;
-        firewall.enable = false;
-      };
-      systemd.network = {
-        enable = true;
-        networks = {
-          "01-eth1" = {
-            name = "eth1";
-            enable = true;
-            networkConfig = {
-              DHCP = "yes";
-              IPv6AcceptRA = true;
-              IPv6PrivacyExtensions = false;
-            };
-            ipv6AcceptRAConfig = {
-              UseAutonomousPrefix = false;
-              #DHCPv6Client = "always";
-              #UseDNS = true;
-            };
-          };
-        };
-      };
-      environment = {
-        systemPackages = with pkgs; [
-          ldns
+        imports = [
+          ../machines/core/master.nix
+          ../modules/facts.nix
         ];
+
+        facts = lib.mkForce {
+          ipv4 = "${coremasterAddr.ipv4}/24";
+          ipv6 = "${coremasterAddr.ipv6}/64";
+          eth = "eth1";
+        };
+
+        virtualisation.vlans = [ 1 ];
+        systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
+        systemd.network = {
+          networks = {
+            # Override the phyiscal interface config
+            "10-lan" = lib.mkForce {
+              name = "eth1";
+              enable = true;
+              address = [
+                "${coremasterAddr.ipv6}/64"
+                "${coremasterAddr.ipv4}/24"
+              ];
+              gateway = [ "${routerAddr.ipv4}" ];
+            };
+          };
+        };
       };
-    };
+
+    client1 =
+      { pkgs, ... }:
+      {
+        virtualisation.vlans = [ 1 ];
+        systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
+        networking = {
+          useNetworkd = true;
+          useDHCP = false;
+          firewall.enable = false;
+        };
+        systemd.network = {
+          enable = true;
+          networks = {
+            "01-eth1" = {
+              name = "eth1";
+              enable = true;
+              networkConfig = {
+                DHCP = "yes";
+                IPv6AcceptRA = true;
+                IPv6PrivacyExtensions = false;
+              };
+              ipv6AcceptRAConfig = {
+                UseAutonomousPrefix = false;
+                #DHCPv6Client = "always";
+                #UseDNS = true;
+              };
+            };
+          };
+        };
+        environment = {
+          systemPackages = with pkgs; [
+            ldns
+          ];
+        };
+      };
   };
 
-
-  testScript = { nodes, ... }:
+  testScript =
+    { nodes, ... }:
     let
       # TODO: do this for all zones
       scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
@@ -157,20 +170,23 @@ in
 
   interactive.nodes =
     let
-      interactiveDefaults = hostPort:
-        {
-          services.openssh.enable = true;
-          services.openssh.settings.PermitRootLogin = "yes";
-          users.extraUsers.root.initialPassword = "";
-          systemd.network.networks."01-eth0" = {
-            name = "eth0";
-            enable = true;
-            networkConfig.DHCP = "yes";
-          };
-          virtualisation.forwardPorts = [
-            { from = "host"; host.port = hostPort; guest.port = 22; }
-          ];
+      interactiveDefaults = hostPort: {
+        services.openssh.enable = true;
+        services.openssh.settings.PermitRootLogin = "yes";
+        users.extraUsers.root.initialPassword = "";
+        systemd.network.networks."01-eth0" = {
+          name = "eth0";
+          enable = true;
+          networkConfig.DHCP = "yes";
         };
+        virtualisation.forwardPorts = [
+          {
+            from = "host";
+            host.port = hostPort;
+            guest.port = 22;
+          }
+        ];
+      };
     in
     {
       router = interactiveDefaults 2222;

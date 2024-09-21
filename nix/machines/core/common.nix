@@ -1,4 +1,11 @@
-{ config, lib, pkgs, inputs, options, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  options,
+  ...
+}:
 
 {
   boot.kernelParams = [ "console=ttyS0" ];
@@ -9,8 +16,18 @@
   networking = {
     useDHCP = false;
     useNetworkd = true;
-    firewall.allowedTCPPorts = [ 53 67 68 ];
-    firewall.allowedUDPPorts = [ 53 67 68 123 547 ];
+    firewall.allowedTCPPorts = [
+      53
+      67
+      68
+    ];
+    firewall.allowedUDPPorts = [
+      53
+      67
+      68
+      123
+      547
+    ];
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -47,9 +64,11 @@
       };
       dhcp6 =
         let
-          dhcp6PopulateConfig = pkgs.runCommand "replace" {} ''
+          dhcp6PopulateConfig = pkgs.runCommand "replace" { } ''
             mkdir $out
-            cp ${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp6-server.conf $TMP/dhcp6-server.conf
+            cp ${
+              inputs.self.packages.${pkgs.system}.scaleInventory
+            }/config/dhcp6-server.conf $TMP/dhcp6-server.conf
             substituteInPlace "$TMP/dhcp6-server.conf" \
               --replace '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.facts.ipv6)}' \
               --replace '@@INTERFACE@@' '${config.facts.eth}'
