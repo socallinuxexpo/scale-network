@@ -1,14 +1,11 @@
----
 #shallow clones to speed up build
 variables:
-    GIT_DEPTH: 10
-
+  GIT_DEPTH: 10
 # Keep all jobs within these 3 stages
 stages:
   - test
   - build
   - integ
-
 # This build takes a long time and should be done
 # outside of initial PR CI testing
 openwrt-ar71xx-build:
@@ -28,7 +25,6 @@ openwrt-ar71xx-build:
       - openwrt/build.log
       - openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/
     expire_in: 1 week
-
 openwrt-3800ch-integ:
   variables:
     CI_DEBUG_TRACE: "false"

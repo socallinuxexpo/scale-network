@@ -1,13 +1,10 @@
----
 name: ci
-
 on:
   pull_request:
-  push:   # This is only run when PRs are merged into master
+  push: # This is only run when PRs are merged into master
     branches:
       - master
   workflow_dispatch:
-
 jobs:
   validate_datafiles:
     name: ci_core
