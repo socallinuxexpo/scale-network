@@ -4,6 +4,7 @@
 Dynamic inventory script used to slurp in various
 SCaLE specific text files to produce a sane inventory to ansible
 """
+
 import ipaddress
 import json
 import math
@@ -11,6 +12,7 @@ import os
 import re
 import sys
 import jinja2
+
 
 def getfilelines(filename, header=False, directory="./", building=None):
     """returns the contents of a file as lines
@@ -175,12 +177,12 @@ def dhcp6ranges(prefix, bitmask):
     if prefix == "2001:470:f026:112::":
         return [
             prefsplit + ":d8c::1",
-            prefsplit + ":d8c::1000", # 4096 addresses
+            prefsplit + ":d8c::1000",  # 4096 addresses
         ]
 
     return [
         prefsplit + ":d8c::1",
-        prefsplit + ":d8c::800", # 2048 addresses
+        prefsplit + ":d8c::800",  # 2048 addresses
     ]
 
 
@@ -205,7 +207,6 @@ def dhcp4ranges(prefix, bitmask):
                 ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
             ]
     numocs = 2 ** (24 - bitmask)
-    midthird = int(int(ipsplit[2]) + (numocs / 2))
     topthird = int(int(ipsplit[2]) + (numocs - 1))
     return [
         ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
@@ -346,6 +347,7 @@ def populatepis(pisfile):
         )
     return pis
 
+
 def serveralias(name):
     """generate aliases for servers"""
     payload = []
@@ -377,7 +379,7 @@ def roomalias(name):
         comrooms = comrooms.replace("\n", "")
         rooms = re.split("-", comrooms)
         for room in rooms:
-            payload.append(f'rm{room}')
+            payload.append(f"rm{room}")
     return payload
 
 
@@ -423,14 +425,16 @@ def populateservers(serversfile, vlans):
         )
     return servers
 
+
 def populatedhcpnameservers(servers, vlans):
-    coreservers = [x for x in servers if x['role'] == 'core']
+    coreservers = [x for x in servers if x["role"] == "core"]
     for i, _ in enumerate(vlans):
-        vlans[i]["ipv6dns1"] = coreservers[0]['ipv6']
-        vlans[i]["ipv4dns1"] = coreservers[0]['ipv4']
+        vlans[i]["ipv6dns1"] = coreservers[0]["ipv6"]
+        vlans[i]["ipv4dns1"] = coreservers[0]["ipv4"]
         if len(coreservers) > 1:
-            vlans[i]["ipv6dns2"] = coreservers[1]['ipv6']
-            vlans[i]["ipv4dns2"] = coreservers[1]['ipv4']
+            vlans[i]["ipv6dns2"] = coreservers[1]["ipv6"]
+            vlans[i]["ipv4dns2"] = coreservers[1]["ipv4"]
+
 
 def generatekeaconfig(servers, aps, vlans, outputdir):
     kea_config = {
@@ -445,7 +449,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "interfaces-config": {
                 "interfaces": ["*"],
                 "service-sockets-max-retries": 5,
-                "service-sockets-retry-wait-time": 5000
+                "service-sockets-retry-wait-time": 5000,
             },
             # And we specify the type of lease database
             "lease-database": {
@@ -454,14 +458,18 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "name": "/var/lib/kea/dhcp4.leases",
             },
             "option-data": [
-            {
-             "name": "domain-name-servers",
-             "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
-            },
-            {
-             "name": "ntp-servers",
-             "data": ','.join([x['ipv4'] for x in servers if x['role'] == 'core'])
-            }
+                {
+                    "name": "domain-name-servers",
+                    "data": ",".join(
+                        [x["ipv4"] for x in servers if x["role"] == "core"]
+                    ),
+                },
+                {
+                    "name": "ntp-servers",
+                    "data": ",".join(
+                        [x["ipv4"] for x in servers if x["role"] == "core"]
+                    ),
+                },
             ],
             "option-def": [
                 {
@@ -498,10 +506,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "reservations-in-subnet": True,
             "reservations": [],
             # Finally, we list the subnets from which we will be leasing addresses.
-            "subnet4": []
+            "subnet4": [],
             # DHCPv4 configuration ends with the next line
         }
-      }
+    }
     keav6_config = {
         "Dhcp6": {
             # First we set up global values
@@ -513,7 +521,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 # TODO: Better definition of for populating this
                 "interfaces": ["@@INTERFACE@@", "@@INTERFACE@@/@@SERVERADDRESS@@"],
                 "service-sockets-max-retries": 5,
-                "service-sockets-retry-wait-time": 5000
+                "service-sockets-retry-wait-time": 5000,
             },
             # And we specify the type of lease database
             "lease-database": {
@@ -522,19 +530,21 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "name": "/var/lib/kea/dhcp6.leases",
             },
             "option-data": [
-            {
-             # This option is different from dhcpv4
-             # ref: https://kb.isc.org/docs/kea-configuration-for-small-office-or-home-use
-             "name": "dns-servers",
-             "data": ','.join([x['ipv6'] for x in servers if x['role'] == 'core'])
-            },
+                {
+                    # This option is different from dhcpv4
+                    # ref: https://kb.isc.org/docs/kea-configuration-for-small-office-or-home-use
+                    "name": "dns-servers",
+                    "data": ",".join(
+                        [x["ipv6"] for x in servers if x["role"] == "core"]
+                    ),
+                },
             ],
             "option-def": [],
             "reservations-global": True,
             "reservations-in-subnet": False,
             "reservations": [],
             # Finally, we list the subnets from which we will be leasing addresses.
-            "subnet6": []
+            "subnet6": [],
         }
     }
 
@@ -564,13 +574,15 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 # generating uniq id (prefix with dots) for each subnet block to ensure autoids dont effect reordering
                 # called out in: https://kea.readthedocs.io/en/latest/arm/dhcp4-srv.html#ipv4-subnet-identifier
                 # subnet ids must be greater than zero and less than 4294967295
-                "id": int(vlan["ipv4prefix"].replace('.', '')),
-                "user-context": { "vlan": vlan["name"] },
-                "pools": [{"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}],
-                "option-data": [{ "name": "routers", "data": str(vlan["ipv4router"]) }],
+                "id": int(vlan["ipv4prefix"].replace(".", "")),
+                "user-context": {"vlan": vlan["name"]},
+                "pools": [
+                    {"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}
+                ],
+                "option-data": [{"name": "routers", "data": str(vlan["ipv4router"])}],
             }
             # lower lease times for the APs
-            if vlan["name"] in [ "cfInfra", "exInfra"]:
+            if vlan["name"] in ["cfInfra", "exInfra"]:
                 # Set lifetime of lease to always be 300 seconds
                 subnet["valid-lifetime"] = 300
                 subnet["min-valid-lifetime"] = 300
@@ -580,7 +592,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
     kea_config["Dhcp4"]["reservations"] = reservations_dict
 
-    with open(f'{outputdir}/dhcp4-server.conf', 'w') as f:
+    with open(f"{outputdir}/dhcp4-server.conf", "w") as f:
         f.write(json.dumps(kea_config, indent=2))
 
     subnets6_dict = []
@@ -597,9 +609,11 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 # subnet ids must be greater than zero and less than 4294967295
                 #
                 # for ipv6 well take the last 4 hex digits to make sure the id is small enough but uniq
-                "id": int(vlan["ipv6prefix"].replace(':', '')[-4:], 16),
-                "user-context": { "vlan": vlan["name"] },
-                "pools": [{"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}],
+                "id": int(vlan["ipv6prefix"].replace(":", "")[-4:], 16),
+                "user-context": {"vlan": vlan["name"]},
+                "pools": [
+                    {"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}
+                ],
             }
             # lower lease times for the APs
             if vlan["name"] in ["cfInfra", "exInfra"]:
@@ -621,7 +635,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 
     keav6_config["Dhcp6"]["subnet6"] = subnets6_dict
 
-    with open(f'{outputdir}/dhcp6-server.conf', 'w') as f:
+    with open(f"{outputdir}/dhcp6-server.conf", "w") as f:
         f.write(json.dumps(keav6_config, indent=2))
 
 
@@ -634,14 +648,14 @@ def generatepromconfig(servers, aps, vlans, outputdir):
         for ap in aps
     ]
 
-    with open(f'{outputdir}/prom.json', 'w') as f:
+    with open(f"{outputdir}/prom.json", "w") as f:
         f.write(json.dumps(prom_config, indent=2))
 
 
-def generatezones(switches,routers,pis,aps,servers, outputdir):
-    content=''
-    for batch in [switches, routers,pis,aps,servers]:
-        zonetemplate = jinja2.Template('''
+def generatezones(switches, routers, pis, aps, servers, outputdir):
+    content = ""
+    for batch in [switches, routers, pis, aps, servers]:
+        zonetemplate = jinja2.Template("""
 {% for item in batch -%}
 {% if item['ipv6'] -%}
 {{ item['name'] }}  IN  AAAA    {{ item['ipv6'] }}
@@ -656,32 +670,28 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
 {{ alias }} IN    CNAME   {{ item['fqdn'] }}.
 {% endfor -%}
 {% endfor -%}
-''')
-        content += zonetemplate.render(
-            batch=batch
-        )
-    with open(f'{outputdir}/db.scale.lan.records', "w") as f:
+""")
+        content += zonetemplate.render(batch=batch)
+    with open(f"{outputdir}/db.scale.lan.records", "w") as f:
         f.write(content)
     # ipv4 and ipv6 ptr zones need to be in different zone files
-    for ip in ['ipv4','ipv6']:
-        content = ''
-        for batch in [switches, routers,pis,aps,servers]:
-            zonetemplate = jinja2.Template('''
+    for ip in ["ipv4", "ipv6"]:
+        content = ""
+        for batch in [switches, routers, pis, aps, servers]:
+            zonetemplate = jinja2.Template("""
 {% for item in batch -%}
 {%- set ptr = ip + 'ptr' -%}
 {% if item[ptr] -%}
 {{ item[ptr] }}.  IN  PTR    {{ item['fqdn'] }}.
 {% endif -%}
 {% endfor -%}
-''')
-            content += zonetemplate.render(
-                batch=batch,
-                ip=ip
-            )
-        with open(f'{outputdir}/db.{ip}.arpa.records', 'w') as f:
+""")
+            content += zonetemplate.render(batch=batch, ip=ip)
+        with open(f"{outputdir}/db.{ip}.arpa.records", "w") as f:
             f.write(content)
 
     return True
+
 
 def main():
     """command entry point"""
@@ -709,16 +719,16 @@ def main():
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
-    if subcomm == 'kea':
-        generatekeaconfig(servers,aps,vlans,outputdir)
-    elif subcomm == 'nsd':
-        generatezones(switches,routers,pis,aps,servers,outputdir)
-    elif subcomm == 'prom':
-        generatepromconfig(servers,aps,vlans,outputdir)
-    elif subcomm == 'all':
-        generatekeaconfig(servers,aps,vlans,outputdir)
-        generatezones(switches,routers,pis,aps,servers,outputdir)
-        generatepromconfig(servers,aps,vlans,outputdir)
+    if subcomm == "kea":
+        generatekeaconfig(servers, aps, vlans, outputdir)
+    elif subcomm == "nsd":
+        generatezones(switches, routers, pis, aps, servers, outputdir)
+    elif subcomm == "prom":
+        generatepromconfig(servers, aps, vlans, outputdir)
+    elif subcomm == "all":
+        generatekeaconfig(servers, aps, vlans, outputdir)
+        generatezones(switches, routers, pis, aps, servers, outputdir)
+        generatepromconfig(servers, aps, vlans, outputdir)
 
 
 if __name__ == "__main__":
