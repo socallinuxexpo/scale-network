@@ -26,3 +26,6 @@
 
 # treewide: format all nix files
 9ce7e6984dd0974b24d1b2eec44442b402cb7313
+
+# treewide: format/check all python files
+22b1b79289baaf7b41aa5ada55037f9efe56f39f
