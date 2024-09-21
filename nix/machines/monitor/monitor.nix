@@ -1,22 +1,32 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   hostname = "monitoring.scale.lan";
   dashboard = pkgs.copyPathToStore ../../../monitoring/openwrt_dashboard.json;
 in
 {
-  imports =
-    [
-      ../_common/prometheus.nix
-    ];
+  imports = [
+    ../_common/prometheus.nix
+  ];
 
-  boot.kernelParams = [ "console=ttyS0" "boot.shell_on_fail" ];
+  boot.kernelParams = [
+    "console=ttyS0"
+    "boot.shell_on_fail"
+  ];
 
   users.users = {
     berkhan = {
       isNormalUser = true;
       uid = 2100;
       extraGroups = [ "wheel" ];
-      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH6UhZ/oPqiFzCOxoZWeUqeGZCVLLNQbHH3uuIa6PCTz" ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH6UhZ/oPqiFzCOxoZWeUqeGZCVLLNQbHH3uuIa6PCTz"
+      ];
     };
   };
 
@@ -27,7 +37,10 @@ in
         # to match enp0 or eth0
         name = "e*0*";
         enable = true;
-        address = [ "10.0.3.6/24" "2001:470:f026:103::6" ];
+        address = [
+          "10.0.3.6/24"
+          "2001:470:f026:103::6"
+        ];
         routes = [
           { routeConfig.Gateway = "10.0.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:103::1"; }
@@ -36,7 +49,10 @@ in
     };
   };
   networking.hostName = "monitor";
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 
   # TODO: How to handle sudo esculation
   security.sudo.wheelNeedsPassword = false;
@@ -57,13 +73,17 @@ in
           static_configs = [
             {
               targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ];
-              labels = { instance = "localhost"; };
+              labels = {
+                instance = "localhost";
+              };
             }
           ];
         }
         {
           job_name = "ap";
-          static_configs = builtins.fromJSON (builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/prom.json");
+          static_configs = builtins.fromJSON (
+            builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/prom.json"
+          );
         }
       ];
     };
@@ -84,7 +104,7 @@ in
         datasources.settings.datasources = [
           {
             name = "prometheus";
-            uid  = "P1809F7CD0C75ACF3";
+            uid = "P1809F7CD0C75ACF3";
             type = "prometheus";
             access = "proxy";
             url = "http://127.0.0.1:${toString config.services.prometheus.port}";

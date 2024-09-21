@@ -1,8 +1,9 @@
-{ stdenvNoCC
-, copyPathsToStore
-, lib
-, python3
-, python310Packages
+{
+  stdenvNoCC,
+  copyPathsToStore,
+  lib,
+  python3,
+  python310Packages,
 }:
 let
   local_manifests = copyPathsToStore [
@@ -14,7 +15,10 @@ stdenvNoCC.mkDerivation {
 
   name = "scaleInventory";
 
-  propagatedBuildInputs = [ python3 python310Packages.jinja2 ];
+  propagatedBuildInputs = [
+    python3
+    python310Packages.jinja2
+  ];
 
   buildCommand = ''
     mkdir $out

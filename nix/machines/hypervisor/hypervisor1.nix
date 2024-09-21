@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./libvirt.nix
@@ -26,7 +31,10 @@
       "1-virbr0" = {
         matchConfig.Name = "virbr0";
         enable = true;
-        address = [ "10.128.3.20/24" "2001:470:f026:503::20/64" ];
+        address = [
+          "10.128.3.20/24"
+          "2001:470:f026:503::20/64"
+        ];
         routes = [
           { routeConfig.Gateway = "10.128.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:503::1"; }
