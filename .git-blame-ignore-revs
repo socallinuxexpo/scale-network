@@ -32,3 +32,6 @@
 
 # treewide: format all markdown files
 737a295d83a6ac780304d806194be538a11a9e9b
+
+# treewide: format all yaml files
+ac60f2e8803b529497071b841f1b698b3c196476
