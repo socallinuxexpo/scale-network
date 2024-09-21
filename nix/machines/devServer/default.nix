@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./libvirt.nix
+  ];
   # remove the annoying experimental warnings
   nix.extraOptions = ''
     experimental-features = nix-command flakes
