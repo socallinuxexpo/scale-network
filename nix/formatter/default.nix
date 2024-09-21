@@ -16,5 +16,6 @@ inputs.nixpkgs-unstable.lib.genAttrs
       programs.nixfmt.enable = true;
       programs.ruff-format.enable = true;
       programs.ruff-check.enable = true;
+      programs.mdformat.enable = true;
     }).config.build.wrapper
   )
