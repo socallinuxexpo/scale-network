@@ -18,6 +18,7 @@ Dedicated static IP access on AP is possible via WAN(yellow) port and setting a 
 ~$ ip addr add 192.168.255.1/24 dev enp5s0.3517
 ~$ ip link set enp5s0.3517 up
 ```
+
 > Assumes interface is enp5s0
 
 ## Confirming AP OS version

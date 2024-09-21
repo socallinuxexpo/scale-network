@@ -16,3 +16,4 @@ $ bundix
 
 `bundle update` does not seem to work due to native gems wanting to build themselves during the update process. Why this
 would be the case Im not sure.
+```

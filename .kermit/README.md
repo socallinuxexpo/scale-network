@@ -15,12 +15,12 @@ kermit <type>.kermit
 ```
 
 Where <type> is one of the files in this directory depending on the type of
-  device you are connecting to.
+device you are connecting to.
 
 ## Controls
 
 To get back to your own system, you must type the "escape character", which is
-Control-Backslash (^\) unless you have changed it with the SET ESCAPE command,
+Control-Backslash (^) unless you have changed it with the SET ESCAPE command,
 followed by a single-character command, such as C for "close connection".
 Single-character commands may be entered in upper or lower case.  They include:
 
