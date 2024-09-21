@@ -12,12 +12,18 @@
     };
   };
 
-
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" "aarch64-linux" ];
+  outputs =
+    inputs:
+    (inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       imports = [
         ./nix/flake-module.nix
       ];
+    })
+    // {
+      formatter = import ./nix/formatter inputs;
     };
 }
