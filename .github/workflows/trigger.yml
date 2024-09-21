@@ -1,44 +1,41 @@
----
 name: PR comments to trigger gitlab-ci jobs
-
 on:
   pull_request_review_comment:
     types:
-    - created
+      - created
   issue_comment:
     types:
-    - created
-
+      - created
 jobs:
   verify:
     name: Verify Commenter
     runs-on: ubuntu-22.04
     steps:
-    - name: Standardize PR comment
-      id: pr-standardize-comment
-      uses: sarcasticadmin/action-standardize-pr-comment@bc2d905e9d53bcdd31dc224e91a44362bd25ae8d
-    - name: 'Collect event data'
-      # Currently limiting this to robs user til stable
-      if: >
-        startsWith(steps.pr-standardize-comment.outputs.comment, '/tux')
-        && github.actor == 'sarcasticadmin'
-      id: job
-      run: |
-        set -eux
-        SUBCOMM=$(cut -d ' ' -f 2 <<< "${{ steps.pr-standardize-comment.outputs.comment }}")
-        SUBARGS="$(cut -d ' ' -f 3- <<< "${{ steps.pr-standardize-comment.outputs.comment }}")"
-        # Have to do this to get git commit ref for comments in PRs
-        # "github.event.pull_request.head" will not work since this
-        # is not a PR event
-        REF=$(curl -sSf \
-          --url ${{ steps.pr-standardize-comment.outputs.url }} \
-          --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          --header 'Content-Type: application/json' | jq -r '.head.ref' \
-        )
-        echo "subcomm=$SUBCOMM" >> $GITHUB_OUTPUT
-        echo "subargs=$SUBARGS" >> $GITHUB_OUTPUT
-        echo "ref=$REF" >> $GITHUB_OUTPUT
-      continue-on-error: true
+      - name: Standardize PR comment
+        id: pr-standardize-comment
+        uses: sarcasticadmin/action-standardize-pr-comment@bc2d905e9d53bcdd31dc224e91a44362bd25ae8d
+      - name: 'Collect event data'
+        # Currently limiting this to robs user til stable
+        if: >
+          startsWith(steps.pr-standardize-comment.outputs.comment, '/tux') && github.actor == 'sarcasticadmin'
+
+        id: job
+        run: |
+          set -eux
+          SUBCOMM=$(cut -d ' ' -f 2 <<< "${{ steps.pr-standardize-comment.outputs.comment }}")
+          SUBARGS="$(cut -d ' ' -f 3- <<< "${{ steps.pr-standardize-comment.outputs.comment }}")"
+          # Have to do this to get git commit ref for comments in PRs
+          # "github.event.pull_request.head" will not work since this
+          # is not a PR event
+          REF=$(curl -sSf \
+            --url ${{ steps.pr-standardize-comment.outputs.url }} \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'Content-Type: application/json' | jq -r '.head.ref' \
+          )
+          echo "subcomm=$SUBCOMM" >> $GITHUB_OUTPUT
+          echo "subargs=$SUBARGS" >> $GITHUB_OUTPUT
+          echo "ref=$REF" >> $GITHUB_OUTPUT
+        continue-on-error: true
     outputs:
       subcomm: ${{ steps.job.outputs.subcomm }}
       subargs: ${{ steps.job.outputs.subargs }}
@@ -49,37 +46,37 @@ jobs:
     runs-on: ubuntu-22.04
     needs: verify
     if: >
-      needs.verify.outputs.subcomm == 'openwrt'
-      && startsWith(needs.verify.outputs.subargs, 'flash')
+      needs.verify.outputs.subcomm == 'openwrt' && startsWith(needs.verify.outputs.subargs, 'flash')
+
     steps:
-    # secret required is a gitlab trigger token
-    # ref: https://docs.gitlab.com/ee/ci/triggers/#create-a-trigger-token
-    - name: 'call gitlab pipeline'
-      id: flash
-      run: |
-        set -euo pipefail
-        WORMHOLE_CODE=$(cut -d ' ' -f 2 <<< "${{ needs.verify.outputs.subargs }}")
-        PIPELINE=$(curl -f --request POST \
-          --form token=${{ secrets.GITLAB_TOKEN }}  \
-          --form "ref=${{ needs.verify.outputs.ref }}" \
-          --form "variables[OPENWRT_INTEG]=YES" \
-          --form variables[WORMHOLE_CODE]=$WORMHOLE_CODE \
-          https://gitlab.com/api/v4/projects/17362342/trigger/pipeline | jq -r .web_url)
-        echo "pipeline=$PIPELINE" >> $GITHUB_OUTPUT
-    - name: Create status PR Comment
-      if: ${{ success() }}
-      uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b  # SHA ref: v3.0.1
-      with:
-        issue-number: ${{ needs.verify.outputs.issue_number }}
-        body: |
-          [RUNNING] - Successfully triggered gitlab flash pipeline:
-            - gitlab pipeline: ${{ steps.flash.outputs.pipeline }}
-    - name: Create status PR comment failure
-      if: ${{ failure() }}
-      uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b  # SHA ref: v3.0.1
-      with:
-        issue-number: ${{ needs.verify.outputs.issue_number }}
-        body: |
-          [FAIL] - Error triggering gitlab flash pipeline
+      # secret required is a gitlab trigger token
+      # ref: https://docs.gitlab.com/ee/ci/triggers/#create-a-trigger-token
+      - name: 'call gitlab pipeline'
+        id: flash
+        run: |
+          set -euo pipefail
+          WORMHOLE_CODE=$(cut -d ' ' -f 2 <<< "${{ needs.verify.outputs.subargs }}")
+          PIPELINE=$(curl -f --request POST \
+            --form token=${{ secrets.GITLAB_TOKEN }}  \
+            --form "ref=${{ needs.verify.outputs.ref }}" \
+            --form "variables[OPENWRT_INTEG]=YES" \
+            --form variables[WORMHOLE_CODE]=$WORMHOLE_CODE \
+            https://gitlab.com/api/v4/projects/17362342/trigger/pipeline | jq -r .web_url)
+          echo "pipeline=$PIPELINE" >> $GITHUB_OUTPUT
+      - name: Create status PR Comment
+        if: ${{ success() }}
+        uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b # SHA ref: v3.0.1
+        with:
+          issue-number: ${{ needs.verify.outputs.issue_number }}
+          body: |
+            [RUNNING] - Successfully triggered gitlab flash pipeline:
+              - gitlab pipeline: ${{ steps.flash.outputs.pipeline }}
+      - name: Create status PR comment failure
+        if: ${{ failure() }}
+        uses: peter-evans/create-or-update-comment@ca08ebd5dc95aa0cd97021e9708fcd6b87138c9b # SHA ref: v3.0.1
+        with:
+          issue-number: ${{ needs.verify.outputs.issue_number }}
+          body: |
+            [FAIL] - Error triggering gitlab flash pipeline
     outputs:
       pipeline: ${{ steps.flash.outputs.pipeline }}
