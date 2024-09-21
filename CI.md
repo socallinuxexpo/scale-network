@@ -8,7 +8,7 @@ See actions defined: https://github.com/socallinuxexpo/scale-network/tree/master
 
 `/tux` is our keyword in a PR comment. This structure is setup like a CLI command:
 
-``` 
+```
 /tux openwrt flash <WORMHOLE-STRING>
  |     |       |           |
  |     |       |           --- Arg needed for flashing
@@ -23,7 +23,8 @@ This is an outline for `/tux` and how to trigger a build on a PR thats in `scale
 
 1. Have write access to the repo and push branch directly to the repo. This is needed since we have gitlab mirroring our
    repo.
-2. Generate a wormhole string using wormhole and the image to be flashed:                                                                             
+1. Generate a wormhole string using wormhole and the image to be flashed:
+
 ```
 ~$ wormhole send /openwrt-ath79-generic-netgear_wndr3800ch-squashfs-factory.img
 Wormhole code is: 8-amusement-drumbeat
@@ -43,4 +44,3 @@ See the pipelines defined: https://github.com/socallinuxexpo/scale-network/blob/
 
 Our [autoflash process](./openwrt/docs/AUTOFLASH.md) leverages `gitlab-runners` to be able to interact with real hardware so that
 we can automate the flashing process to test our openwrt images.
-

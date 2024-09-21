@@ -5,15 +5,17 @@
 Make sure you have the prereq pkgs for the [Openwrt Image Builder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
 To use this part of the git repo you will need the following pkgs:
-  - git >= 1.8.2
-  - git-lfs
-  - gomplate >= 3.11.0
-  - Docker (Optional)
-  - Nixpkgs (Optional)
+
+- git >= 1.8.2
+- git-lfs
+- gomplate >= 3.11.0
+- Docker (Optional)
+- Nixpkgs (Optional)
 
 ### Gomplate
 
 Installation of `gomplate` is a little bit tricky since it doesnt come in a `.deb`:
+
 ```bash
 sudo -i
 cd /usr/local/bin/
@@ -33,6 +35,7 @@ To start building:
 docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922  /bin/bash
 cd /home/openwrt/scale-network
 ```
+
 > There is no latest tag so make sure to specify the version (short commit hash)
 > The docker mount only works in linux, on OSX you'll get: "Build dependency: OpenWrt can only be built on a case-sensitive filesystem"
 
@@ -48,6 +51,7 @@ Build are done per arch with `TARGET` environment variable (defaults to `TARGET=
 cd ./openwrt
 make build-img
 ```
+
 > This requires an internet connection since it downloads the Openwrt src
 > github.com and uses some openwrt mirrors.
 
@@ -60,26 +64,32 @@ To get the configuration thats used at scale the templates need to be baked into
 the image.
 
 Copy over the default secrets:
+
 ```bash
 cp ./facts/secrets/openwrt-example.yaml ./facts/secrets/openwrt.yaml
 ```
+
 > If needed update the defaults in `openwrt.yaml` to represent actual values
 
 Generate and update the root password hash in `openwrt.yaml`:
+
 ```bash
 openssl passwd -1 secretpassword
 ```
 
 Compile the templates:
+
 ```bash
 cd ./openwrt/
 make templates
 ```
+
 > This will populate the templates with the necessary values and
 > prep them in the build dir. To validate the templates check:
 > ./openwrt/build/source-<commit>/files/
 
 Now build the image:
+
 ```
 make build-img
 ```
@@ -98,6 +108,7 @@ Leverage the existing `diffconfig` via the `Makefile`:
 ```
 TARGET=x86 make config menuconfig
 ```
+
 > This assumes the additional packages are common to all architectures if not change TARGET
 > to specific board arch
 
@@ -139,6 +150,7 @@ still generated cleanly (no diff)
 ```
 TARGET=x86 make config menuconfig
 ```
+
 > Ensure the selections in menuconfig are what your expecting
 
 If it looks good save them back to `config/` using:
@@ -146,6 +158,7 @@ If it looks good save them back to `config/` using:
 ```
 TARGET=x86 make commonconfig targetconfig
 ```
+
 > This generates the diff of the base config, then we split it out
 > into the common components and last its arch target configs
 
@@ -155,6 +168,7 @@ Repeat this for `TARGET=ar71xx` and `TARGET=mt7622`
 TARGET=mt7622 make config menuconfig
 TARGET=mt7622 make targetconfig
 ```
+
 > commonconfig is only generated on x86
 
 Commit the results that are generated. You can ensure that the config options are stable by repeating
@@ -164,6 +178,7 @@ the process. You should not get a diff.
 
 Depending on the SCaLE conference number, the WPS LED will be ON for even years and OFF
 for odd years.
+
 > NOTE: This depends on the SCaLE conference number from `facts.yaml` not the year since the build
 > would drift based on when it was built.
 
@@ -172,14 +187,14 @@ for odd years.
 ### Issues
 
 1. When iterating on new packages there have been times were the existing config is stale
-and needs to be completely blown away and regenerated off of `master` then reconfigured
-with `menuconfig`. This is just something to be aware of since its come up during the development
-of this image.
+   and needs to be completely blown away and regenerated off of `master` then reconfigured
+   with `menuconfig`. This is just something to be aware of since its come up during the development
+   of this image.
 
 ### SSH
 
 1. `/root` - Must be permissions `755` (or less perm) or ssh-key auth wont work
-2. openssh needs to have both `/etc/passwd` and `/etc/hosts` to allow ssh login
+1. openssh needs to have both `/etc/passwd` and `/etc/hosts` to allow ssh login
 
 ### Useful commands
 
@@ -197,10 +212,10 @@ wifi status
 
 ### Make
 
-* http://makefiletutorial.com/
-* https://bost.ocks.org/mike/make/
-* http://mrbook.org/blog/tutorials/make/
-* ftp://ftp.gnu.org/old-gnu/Manuals/make-3.79.1/html_chapter/make_2.html
+- http://makefiletutorial.com/
+- https://bost.ocks.org/mike/make/
+- http://mrbook.org/blog/tutorials/make/
+- ftp://ftp.gnu.org/old-gnu/Manuals/make-3.79.1/html_chapter/make_2.html
 
 ## Troubleshooting
 
@@ -222,6 +237,7 @@ $ file ./staging_dir/host/bin/mkhash
 ./staging_dir/host/bin/mkhash: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /nix/store/9bh3986bpragfjmr32gay8p95k91q4gy-glibc-2.33-47/lib/ld-linux-x86-64.so.2, for GNU/Linu
 x 2.6.32, with debug_info, not stripped
 ```
+
 > Note: `mkhash` will exist but be unable to run and fail with the following `No such file or directory`
 
 `make clean-all` and rerun inside the local environment should fix it
@@ -247,6 +263,7 @@ Or create a new one:
 ```
 make defconfig
 ```
+
 > Set target to `x86/generic`
 
 Install only packages which are utilities and non arch specific things. We dont want the hardware packages to pollute the common.config. When youve got all of it selected you can then create
@@ -277,6 +294,7 @@ Run `make menuconfig` and change the arch from x86 to target arch:
 ```
 comm -23 <(sort ./.diffconfig) <(sort $(git root)/openwrt/configs/common.config) > $(git root)/openwrt/configs/mt7622-generic.config
 ```
+
 > Assuming mt7622 is our target arch
 
 Thats it now you should have a generic config and a arch specific config going forward. The majority of these steps are taken care of by the Makefile in the `openwrt` dir but in the cases where
