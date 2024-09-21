@@ -14,5 +14,7 @@ inputs.nixpkgs-unstable.lib.genAttrs
     (inputs.treefmt-nix.lib.evalModule pkgs {
       projectRootFile = "flake.nix";
       programs.nixfmt.enable = true;
+      programs.ruff-format.enable = true;
+      programs.ruff-check.enable = true;
     }).config.build.wrapper
   )
