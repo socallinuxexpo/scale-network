@@ -61,8 +61,14 @@
     efiSupport = true;
     efiInstallAsRemovable = true;
     mirroredBoots = [
-      { devices = [ "nodev" ]; path = "/boot"; }
-      { devices = [ "nodev" ]; path = "/boot2"; }
+      {
+        devices = [ "nodev" ];
+        path = "/boot";
+      }
+      {
+        devices = [ "nodev" ];
+        path = "/boot2";
+      }
     ];
   };
 
