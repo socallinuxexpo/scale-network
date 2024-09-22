@@ -37,7 +37,7 @@
     options = [ "nofail" ];
   };
   fileSystems."/nix" = {
-    device = "zroot/nix";
+    device = "zspace/nix";
     fsType = "zfs";
   };
 
