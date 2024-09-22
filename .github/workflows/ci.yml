@@ -17,4 +17,5 @@ jobs:
       - run: nix build -L .#checks.x86_64-linux.duplicates-facts
       - run: nix build -L .#checks.x86_64-linux.perl-switches
       - run: nix build -L .#checks.x86_64-linux.openwrt-golden
+      - run: nix build -L .#checks.x86_64-linux.formatting
       - run: nix build -L .#scaleInventory
