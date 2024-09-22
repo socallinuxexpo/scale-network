@@ -99,7 +99,7 @@ def test_switchtypes_tsv():
             ds.isvalidip,
             ds.isvalidtype,
             ds.isvalidhierarchy,
-            ds.isvalidnoiselevel,
+            ds.isuntested,
             ds.isvalidmodel,
             ds.isvalidmac,
         ],
