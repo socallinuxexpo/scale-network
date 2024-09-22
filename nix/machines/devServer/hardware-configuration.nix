@@ -22,6 +22,8 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  boot.zfs.extraPools = [ "zspace" ];
+
   fileSystems."/" = {
     device = "zroot/root";
     fsType = "zfs";
