@@ -1,6 +1,10 @@
-{ config, pkgs, lib, ... }:
 {
-
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
 
   # ZFS uniq system ID
   # to generate: head -c4 /dev/urandom | od -A none -t x4
@@ -24,7 +28,10 @@
       "1-virbr0" = {
         matchConfig.Name = "virbr0";
         enable = true;
-        address = [ "10.0.3.20/24" "2001:470:f026:103::20/64" ];
+        address = [
+          "10.0.3.20/24"
+          "2001:470:f026:103::20/64"
+        ];
         routes = [
           { routeConfig.Gateway = "10.0.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:103::1"; }

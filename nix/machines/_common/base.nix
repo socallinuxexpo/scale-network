@@ -19,7 +19,7 @@
     file
     git
     git-lfs
-    gptfdisk #sgdisk, sfdisk, etc.
+    gptfdisk # sgdisk, sfdisk, etc.
     inetutils # telnet,ftp,etc
     iproute2
     jq
@@ -41,7 +41,9 @@
   ];
 
   # Purge nano from being the default
-  environment.variables = { EDITOR = "vim"; };
+  environment.variables = {
+    EDITOR = "vim";
+  };
 
   # Force noXlibs per recommendation in microVMs
   # ref: https://github.com/astro/microvm.nix/issues/167

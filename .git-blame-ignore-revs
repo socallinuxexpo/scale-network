@@ -1,0 +1,40 @@
+# This file contains a list of commits that are not likely what you
+# are looking for in a blame, such as mass reformatting or renaming.
+# You can set this file as a default ignore file for blame by running
+# the following command.
+#
+# $ git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# To temporarily not use this file add
+# --ignore-revs-file=""
+# to your blame command.
+#
+# The ignoreRevsFile can't be set globally due to blame failing if the file isn't present.
+# To not have to set the option in every repository it is needed in,
+# save the following script in your path with the name "git-bblame"
+# now you can run
+# $ git bblame $FILE
+# to use the .git-blame-ignore-revs file if it is present.
+#
+# #!/usr/bin/env bash
+# repo_root=$(git rev-parse --show-toplevel)
+# if [[ -e $repo_root/.git-blame-ignore-revs ]]; then
+#     git blame --ignore-revs-file="$repo_root/.git-blame-ignore-revs" $@
+# else
+#     git blame $@
+# fi
+
+# treewide: format all nix files
+9ce7e6984dd0974b24d1b2eec44442b402cb7313
+
+# treewide: format/check all python files
+22b1b79289baaf7b41aa5ada55037f9efe56f39f
+
+# treewide: format all markdown files
+737a295d83a6ac780304d806194be538a11a9e9b
+
+# treewide: format all yaml files
+ac60f2e8803b529497071b841f1b698b3c196476
+
+# treewide: format all files
+46d5946519fa77e4a04571c3a5fc81f76aa4f6c8

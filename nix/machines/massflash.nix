@@ -1,11 +1,17 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   addtobr = pkgs.writeShellScriptBin "addtobr" ''
     [ -z "$1" ] && echo "Please pass in network device" && exit 1
     ip link set $1 master br0
     bridge vlan add dev $1 vid 503
     ip link set $1 up
-    '';
+  '';
 in
 {
   fileSystems."/" = {
@@ -22,20 +28,33 @@ in
     enable = true;
     netdevs = {
       br0 = {
-        netdevConfig = { Kind = "bridge"; Name = "br0"; };
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+        };
         extraConfig = ''
-        [Bridge]
-        VLANFiltering=1
+          [Bridge]
+          VLANFiltering=1
         '';
       };
 
       flash = {
-        netdevConfig = { Kind = "veth"; Name = "flash0"; };
-        peerConfig = { Name = "flash1"; };
+        netdevConfig = {
+          Kind = "veth";
+          Name = "flash0";
+        };
+        peerConfig = {
+          Name = "flash1";
+        };
       };
       flash503 = {
-        vlanConfig = { Id = 503; };
-        netdevConfig = { Kind = "vlan"; Name = "flash0.503"; };
+        vlanConfig = {
+          Id = 503;
+        };
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "flash0.503";
+        };
       };
     };
     # Nice example: https://github.com/NixOS/nixpkgs/issues/16230#issuecomment-272331072
@@ -97,15 +116,18 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   environment = {
-    systemPackages = with pkgs; [
-      expect
-      git
-      kea
-      inputs.self.packages.${pkgs.system}.massflash
-      unixtools.ping
-      tmux
-      vim
-    ] ++ [ addtobr ];
+    systemPackages =
+      with pkgs;
+      [
+        expect
+        git
+        kea
+        inputs.self.packages.${pkgs.system}.massflash
+        unixtools.ping
+        tmux
+        vim
+      ]
+      ++ [ addtobr ];
 
     etc."massflash.conf" = {
       text = ''
@@ -154,4 +176,3 @@ in
   };
 
 }
-

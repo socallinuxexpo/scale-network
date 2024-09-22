@@ -1,4 +1,5 @@
 # TPLINK C2600
+
 > **NOTE:** Currently broken on the latest upstream Openwrt reference: 87b14bc6c289e7e80052b344c0f0c35e95ced267
 > Will be fixing as soon as possible but not in time for SCaLE 18x
 
@@ -10,14 +11,14 @@ Currently the default configuration for `network` and `wireless` need to be appl
 
 The following is needed to flash the `c2600`:
 
-* TFTP server
-* Static IP address `192.168.0.66`
+- TFTP server
+- Static IP address `192.168.0.66`
 
 ## Linux
 
 > Assuming you are on raspbian
 
-Setup the interface for the expected IP (`eth0 in this case):
+Setup the interface for the expected IP (\`eth0 in this case):
 
 ```
 auto eth0
@@ -90,6 +91,7 @@ Add the necessary files to `/tftpboot/`:
 cp <image>-squashfs-factory.bin /tftpboot/
 ln -s <image>-squashfs-factory.bin ArcherC2600_1.0_tp_recovery.bin
 ```
+
 > *NOTE*: This has to be called `ArcherC2600_1.0_tp_recovery.bin` since tftp
 > client from AP only looks for that name
 
@@ -98,14 +100,15 @@ Setup `tcpdump` to watch for traffic on the interface being connected to AP:
 ```
 tcpdump -i ue0 -n udp port 69 -X 
 ```
+
 > *NOTE*: Keep this running in a separate window as you'll see the image be pulled
 > on a successful flash
 
 On the AP:
 
-* Connect ethernet to any LAN port on AP
-* While holding down reset, power on device and keep reset pressed for 15 sec
-* Check tcpdump for activity, a successful flash take about 5 min to apply. Top
+- Connect ethernet to any LAN port on AP
+- While holding down reset, power on device and keep reset pressed for 15 sec
+- Check tcpdump for activity, a successful flash take about 5 min to apply. Top
   power symbol light will flash signalling successful apply
 
 After a successful flash, reconfigure the interface for `dhcp` or `static` depending

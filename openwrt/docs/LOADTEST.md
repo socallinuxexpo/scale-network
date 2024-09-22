@@ -11,6 +11,7 @@ Start the server on the openwrt AP:
 ```
 iperf3 -s
 ```
+
 > Note: If you want to run multiple clients you need to have them on separate ports
 
 ## Client
@@ -21,4 +22,5 @@ and the port number if need be:
 ```
 bash openwrt/scripts/local/net_loadtest.sh
 ```
+
 > NOTE: it will run continously and log to results-<DATE>.log

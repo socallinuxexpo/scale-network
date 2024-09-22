@@ -15,7 +15,7 @@ This is an outline for how to trigger a build on a PR thats in scale-network:
 
 1. Have write access to the repo and push branch directly to the repo. This is needed since we have gitlab mirroring our
    repo.
-2. Generate a wormhole string using wormhole and the image to be flashed:
+1. Generate a wormhole string using wormhole and the image to be flashed:
 
 ```
 ~$ wormhole send /openwrt-ath79-generic-netgear_wndr3800ch-squashfs-factory.img
@@ -38,10 +38,10 @@ or similar hardware and the appropriate OS img.
 Parts list:
 
 1. Tek Republic TUN-300 - Works well with FreeBSD but any USB interface using the ue driver should work
-2. Raspberry Pi - Any model should do just make sure the image being flashed matches the architecture
-3. Raspberry Pi Power Adapter - Will need to modify
-4. Relay - Currently using [these from Amazon](https://www.amazon.com/gp/product/B07PNB86R7)
-5. AP Board - Currently only have this working for WNDR-3700v2 and WNDR-3800[CH]
+1. Raspberry Pi - Any model should do just make sure the image being flashed matches the architecture
+1. Raspberry Pi Power Adapter - Will need to modify
+1. Relay - Currently using [these from Amazon](https://www.amazon.com/gp/product/B07PNB86R7)
+1. AP Board - Currently only have this working for WNDR-3700v2 and WNDR-3800\[CH\]
 
 Wiring:
 
@@ -75,12 +75,14 @@ GND -> Pi pin 14
 TX  -> Pi pin 10
 RX  -> Pi pin 8
 ```
+
 > Note: TX/RX are flipped from the AP TX/RX
 > No need to VCC since serial chipsets already have power from each board
 
 5. Connect USB ethernet interface to LAN port 1 (closest to the barrel plug) on the AP
 
 References:
+
 - Pi header (pins) diagram: https://www.raspberrypi.org/documentation/usage/gpio/
 
 ## Software Prereqs
@@ -90,6 +92,7 @@ Using `FreeBSD pi4` image:
 ```
 SHA512 (FreeBSD-13.0-STABLE-arm64-aarch64-RPI-20211230-3684bb89d52-248759.img.xz) = bd3ac2e7a7190afeb4763d7aacc4e5587d675f49c04b5cab59c40220e1d6c16655aa168f26a0531591d946d98343df5eb3b134b71bd5521e93a1bd3d3ac38fa1
 ```
+
 > Using STABLE since RELEASE was too old and had firmware problems reading for SD card slot
 > See: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=255080
 > If using 13.0-RELEASE USB -> SD card adapter did work
@@ -135,6 +138,7 @@ Register the gitlab-runner (one time operation). [More notes here](https://docs.
 ```
 $ sudo -u gitlab-runner -H /usr/local/bin/gitlab-runner register
 ```
+
 > Reach out to Rob for registration token for the gitlab-runner
 
 ```
@@ -154,6 +158,7 @@ ntpdate_hosts="in.pool.ntp.org"
 ifconfig_ue0_name="flash0"
 EOF
 ```
+
 > Set the `flash0` interface to `ue0` but your interface might be different
 > Ensure that dhclient isnt defaulting to all interfaces, just genet0
 
@@ -168,18 +173,18 @@ Set `gitlab-runner` users default shell to bash:
 ```
 pw usermod gitlab-runner -s /usr/local/bin/bash
 ```
+
 > This might just need to be fixed upstream since its set to nologin by default
 
 Thats it! And you should be able to confirm your runner is up and running by looking at
 [Gitlab settings](https://gitlab.com/socallinuxexpo/scale-network/-/settings/ci_cd#js-runners-settings)
 
 Additionally considerations:
+
 - Make sure USB interface connected to Pi is set to interface `ue1`
 - `serverspec` needs to be passed `LOGIN_PASSWORD` environment var to match default pass for image (current set in gitlab
   CI env var at runtime)
 - Double check [hardware prereqs](#hardware-preqs)
-
-
 
 ## Troubleshooting
 
@@ -197,8 +202,8 @@ tcpdump -vvv -n -i <IF> udp port 67 or udp port 68
 
 1. If you choose to run on the Pi2 (armv6) youll need to manually build the gitlab-runner from source:
 
-  - Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
-  - Copy gitlab-runner binary to pi2
+- Build gitlab-runner from source and instructions here: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/6694#note_307517264 (go 1.13 required)
+- Copy gitlab-runner binary to pi2
 
 2. Pi4 might have issue booting due to text being sent from the serial interface of the AP and boot loader treating it as
    input. Red LED indicator will remain on if this is happening. In these cases power off the AP when rebooting or

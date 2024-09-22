@@ -26,6 +26,7 @@ Setup wifi:
 ```
 
 Add wireless config directly to `/var/run/wpa_supplicant/wpa_supplicant.conf`
+
 ```
 network={
   ssid="<name>"
@@ -70,6 +71,7 @@ env: QUERY4_TYPE, LEASE4_ADDRESS, LEASE4_HWADDR
 ## Running oneoff
 
 One off to run the `massflash`:
+
 ```
 export QUERY4_TYPE=DHCPREQUEST
 export LEASE4_ADDRESS=<IP>

@@ -1,12 +1,9 @@
----
 name: openwrt-build
-
 on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '15 3 * * 0'
-
+    - cron: '15 3 * * 0'
 jobs:
   build:
     name: Building openwrt img
@@ -33,7 +30,7 @@ jobs:
       - name: 'Upload openwrt build artifact tarball'
         uses: actions/upload-artifact@v3.1.1
         with:
-          name:  ${{ matrix.target }}-openwrt-build-artifacts
+          name: ${{ matrix.target }}-openwrt-build-artifacts
           # Cant use relative pathing .. or . for artifacts action
           # Also dont bother with '${{ github.workspace }}'
           path: |
@@ -42,7 +39,7 @@ jobs:
       - name: 'Upload openwrt build log'
         uses: actions/upload-artifact@v3.1.1
         with:
-          name:  ${{ matrix.target }}-openwrt-buildlog
+          name: ${{ matrix.target }}-openwrt-buildlog
           path: |
             openwrt/*build.log
           retention-days: 30

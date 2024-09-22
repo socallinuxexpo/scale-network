@@ -1,4 +1,11 @@
-{ stdenvNoCC, copyPathsToStore, lib, expect, openssh, bash}:
+{
+  stdenvNoCC,
+  copyPathsToStore,
+  lib,
+  expect,
+  openssh,
+  bash,
+}:
 let
   local_manifests = copyPathsToStore [
     ../../openwrt/scripts/massflash/massflash

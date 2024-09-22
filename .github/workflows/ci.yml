@@ -1,13 +1,10 @@
----
 name: ci
-
 on:
   pull_request:
-  push:   # This is only run when PRs are merged into master
+  push: # This is only run when PRs are merged into master
     branches:
       - master
   workflow_dispatch:
-
 jobs:
   validate_datafiles:
     name: ci_core
@@ -20,4 +17,5 @@ jobs:
       - run: nix build -L .#checks.x86_64-linux.duplicates-facts
       - run: nix build -L .#checks.x86_64-linux.perl-switches
       - run: nix build -L .#checks.x86_64-linux.openwrt-golden
+      - run: nix build -L .#checks.x86_64-linux.formatting
       - run: nix build -L .#scaleInventory

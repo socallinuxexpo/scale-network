@@ -76,6 +76,7 @@ vm_enable="YES"
 vm_dir="zfs:zroot/vm"
 vm_list="core"
 ```
+
 > NOTE: Set static IP interface for ipv4 to appropriate value
 
 Set repo list to `latest`:
@@ -109,7 +110,8 @@ pkg install -y beadm \
             # vm-bhyve # leaving until 1.5.0 is in ports
 
 ```
-> >= vm-bhyve-1.5.0.p1.txz for cloudinit in that version for the vms
+
+> > = vm-bhyve-1.5.0.p1.txz for cloudinit in that version for the vms
 
 For the right version of vm-bhyve we need to build it ourselves:
 
@@ -168,12 +170,14 @@ cd ~/imgs
 ```
 
 Lets get 20.04:
+
 ```
 fetch http://cloud-images.ubuntu.com/focal/20220721/focal-server-cloudimg-amd64.img
 fetch http://cloud-images.ubuntu.com/focal/20220721/SHA256SUMS
 shasum -a 256 -c SHA256SUMS --ignore-missing
 qemu-img convert -f qcow2 -O raw focal-server-cloudimg-amd64.img focal-server-cloudimg-amd64.raw
 ```
+
 > NOTE: At the time of doing this the SHA256SUM for this img was
 > 969ccacd3ab8a227e5ac26fe12d59f608d93230a444b126887c18f145f5027e0
 
@@ -188,6 +192,7 @@ Add the default vm templates and mix in some of the ones from this repo:
 ```
 cp ~/scale-network/utilities/bhyve/templates/*.conf /zroot/vm/.templates/
 ```
+
 > Example templates can be found in: /usr/local/share/examples/vm-bhyve/
 
 Adding all ssh keys for the tech team to authorized_keys:
@@ -203,6 +208,7 @@ Add `admin` key to for vm default ssh key:
 ```
 cat ~/scale-network/facts/keys/admin_id_ed25519.pub > ~/authorized_key_bootstrap
 ```
+
 > NOTE: Theres currently a limitation on cloudinit can only use a single ssh-key
 
 ## Launch vms
@@ -215,6 +221,7 @@ vm create -i ~/imgs/bionic-server-cloudimg-amd64.raw -t scale-monitoring -C -n "
 vm create -i ~/imgs/bionic-server-cloudimg-amd64.raw -t scale-automation -C -n "ip=10.128.3.7/24;gateway=10.128.3.1;nameservers=8.8.8.8,8.8.4.4" -k ~/authorized_key_bootstrap automation
 vm create -i ~/imgs/bionic-server-cloudimg-amd64.raw -t scale-signs -C -n "ip=10.128.3.8/24;gateway=10.128.3.1;nameservers=8.8.8.8,8.8.4.4" -k ~/authorized_key_bootstrap signs
 ```
+
 > Configuration will vary for the expo side
 
 Snapshot them all before we start:
@@ -237,7 +244,7 @@ vm start signs
 
 ## References
 
-* churchers-vm controller: https://github.com/churchers/vm-bhyve
+- churchers-vm controller: https://github.com/churchers/vm-bhyve
 
 ## Troubleshooting
 
