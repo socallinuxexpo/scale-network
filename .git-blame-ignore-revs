@@ -25,16 +25,16 @@
 # fi
 
 # treewide: format all nix files
-9ce7e6984dd0974b24d1b2eec44442b402cb7313
+fb2d2eb0d43c929476618294d0bc2aad48053f3c
 
 # treewide: format/check all python files
-22b1b79289baaf7b41aa5ada55037f9efe56f39f
+a6f89f96d63f41ff9288101fc0ff7bfb41f69840
 
 # treewide: format all markdown files
-737a295d83a6ac780304d806194be538a11a9e9b
+db1511b8ea56d20cad7d4b64ef496bca0880055f
 
 # treewide: format all yaml files
-ac60f2e8803b529497071b841f1b698b3c196476
+8a46b1bc92473f5d8aed5963b0693831cad29d5f
 
 # treewide: format all files
 46d5946519fa77e4a04571c3a5fc81f76aa4f6c8
