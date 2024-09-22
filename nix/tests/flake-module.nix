@@ -15,7 +15,12 @@
   );
 
   perSystem =
-    { pkgs, lib, ... }:
+    {
+      pkgs,
+      lib,
+      system,
+      ...
+    }:
     {
       checks = {
         # python tests for the data found in facts
@@ -41,16 +46,12 @@
             touch $out
           '');
         duplicates-facts = (
-          pkgs.runCommand "duplicates-facts"
-            {
-              buildInputs = [ pkgs.fish ];
-            }
-            ''
-              cp -r --no-preserve=mode ${pkgs.lib.cleanSource inputs.self}/* .
-              cd facts
-              fish test_duplicates.fish
-              touch $out
-            ''
+          pkgs.runCommand "duplicates-facts" { buildInputs = [ pkgs.fish ]; } ''
+            cp -r --no-preserve=mode ${pkgs.lib.cleanSource inputs.self}/* .
+            cd facts
+            fish test_duplicates.fish
+            touch $out
+          ''
         );
         perl-switches = (
           pkgs.runCommand "perl-switches"
@@ -82,6 +83,9 @@
               mkdir -p $out/tmp/ar71xx
               ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
             '';
+
+        formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
+
       };
     };
 }

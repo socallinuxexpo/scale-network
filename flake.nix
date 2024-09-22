@@ -26,11 +26,10 @@
         "x86_64-linux"
         "aarch64-linux"
       ];
-      imports = [
-        ./nix/flake-module.nix
-      ];
+      imports = [ ./nix/flake-module.nix ];
     })
     // {
       formatter = import ./nix/formatter inputs;
+      formatterModule = import ./nix/formatterModule inputs;
     };
 }
