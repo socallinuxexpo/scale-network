@@ -68,6 +68,14 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVZ7n1EOezedsbphq5atGtHm11xeGpLZBzEbgV7eZdb"
       ];
     };
+    jsh = {
+      isNormalUser = true;
+      uid = 2011;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINfK7f1WvpQRhhB6UFeTOY5cB5uCzHFgP1DZZMwf75WZ"
+      ];
+    };
   };
 
 }
