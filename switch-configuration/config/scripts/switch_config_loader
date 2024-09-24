@@ -12,7 +12,7 @@
 #
 # Original funciton/intent of the initial scripts:
 #
-# bulk_local_laod_switches
+# bulk_local_load_switches
 #        Built on override_switches, but optimized for loading multiple switches
 #        at a work party or similar situation.
 #
