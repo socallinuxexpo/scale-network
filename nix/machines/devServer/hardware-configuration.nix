@@ -17,6 +17,7 @@
     "usbhid"
     "usb_storage"
     "sd_mod"
+    "megaraid_sas"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
