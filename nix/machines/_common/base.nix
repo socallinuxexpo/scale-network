@@ -36,13 +36,33 @@
     tmux
     usbutils
     unixtools.nettools
-    vim
     wget
+    ((vim_configurable.override { }).customize {
+      name = "vim";
+      # Install plugins for syntax highlighting of nix files
+      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
+        start = [
+          vim-nix
+        ];
+        opt = [ ];
+      };
+      vimrcConfig.customRC = ''
+        " Turn on syntax highlighting by default
+        syntax on
+        " Disable mouse
+        set mouse-=a
+      '';
+    })
   ];
 
   # Purge nano from being the default
   environment.variables = {
     EDITOR = "vim";
+  };
+
+  # set 24h military time
+  i18n.extraLocaleSettings = {
+    LC_TIME = "C.UTF-8";
   };
 
   # Force noXlibs per recommendation in microVMs
