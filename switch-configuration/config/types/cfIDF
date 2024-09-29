@@ -1,8 +1,6 @@
 // Conference Center IDF Switch Configuration
-TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
+TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
+TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
 TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
 TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
 TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
