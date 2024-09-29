@@ -121,7 +121,7 @@ def test_switchconfigs_tsv():
                 ds.isuntested,
                 ds.isuntested,
                 ds.isuntested,
-                ds.isuntested,
+                ds.isvalidlink,
                 ds.isuntested,
             ],
         }
