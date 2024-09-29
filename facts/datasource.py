@@ -217,6 +217,8 @@ def test_datafile(delimiter, meta):
             continue
         # run the validators for each column
         for i, val in enumerate(elems):
+            if val.startswith("//"):
+                continue
             if not meta["cols"][i](val.rstrip("\n")):
                 return False, "invalid field " + val + " failed " + meta["cols"][
                     i
