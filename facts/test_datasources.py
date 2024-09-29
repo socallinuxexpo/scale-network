@@ -107,6 +107,26 @@ def test_switchtypes_tsv():
     result, err = ds.test_tsvfile(meta)
     assert result, err
 
+def test_switchconfigs_tsv():
+    """test switchconfigs"""
+
+    directory = "../switch-configuration/config/types/"
+    for filename in os.listdir(directory):
+        meta = {
+            "file": directory + filename,
+            "header": False,
+            "count": "1+",
+            "cols": [
+                ds.isvalidport,
+                ds.isuntested,
+                ds.isuntested,
+                ds.isuntested,
+                ds.isuntested,
+                ds.isuntested,
+            ],
+        }
+        result, err = ds.test_tsvfile(meta)
+        assert result, err
 
 def test_vlansd_tsv():
     """test vlans.d/"""
