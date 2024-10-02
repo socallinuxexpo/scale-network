@@ -107,6 +107,7 @@ def test_switchtypes_tsv():
     result, err = ds.test_tsvfile(meta)
     assert result, err
 
+
 def test_switchconfigs_tsv():
     """test switchconfigs"""
 
@@ -127,6 +128,7 @@ def test_switchconfigs_tsv():
         }
         result, err = ds.test_tsvfile(meta)
         assert result, err
+
 
 def test_vlansd_tsv():
     """test vlans.d/"""
