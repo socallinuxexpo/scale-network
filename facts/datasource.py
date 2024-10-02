@@ -162,6 +162,16 @@ def isvalidtype(val):
     return False
 
 
+def isvalidport(val):
+    """test for valid port config [FIBER, RSRVD, TRUNK, VLAN, VVBB, VVLAN]"""
+    return val in ["FIBER", "RSRVD", "TRUNK", "VLAN", "VVBB", "VVLAN"]
+
+
+def isvalidlink(val):
+    """test for valid link type [Uplink, Downlink, AP, MassFlash]"""
+    return val in ["Uplink", "Downlink", "AP", "MassFlash", "-"]
+
+
 def test_csvfile(meta):
     """csv wrapper for test_datafile"""
     return test_datafile(r",", meta)
@@ -210,6 +220,8 @@ def test_datafile(delimiter, meta):
             continue
         # run the validators for each column
         for i, val in enumerate(elems):
+            if val.startswith("//"):
+                continue
             if not meta["cols"][i](val.rstrip("\n")):
                 return False, "invalid field " + val + " failed " + meta["cols"][
                     i
