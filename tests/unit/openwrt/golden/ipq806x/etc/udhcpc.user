@@ -21,17 +21,18 @@ case "$1" in
       /root/bin/apinger-pop.sh "$router"
     fi
 
-    if [ ! -z "$hostname" ]; then
+    if [ ! -z "$hostname" ] && [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
+      # set new hostname
       uci set 'system.@system[0].hostname'="$hostname"
       uci commit
-      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
-        # reload/restart whatever needs the hostname updated
-        /etc/init.d/system reload
-        service zabbix_agentd restart
-        service rsyslog restart
-        service lldpd restart
-      fi
+
+      # reload/restart whatever needs the hostname updated
+      /etc/init.d/system reload
+      service zabbix_agentd restart
+      service rsyslog restart
+      service lldpd restart
     fi
+
     if [ ! -z "$opt226" ]; then
       /root/bin/config-version.sh -c $(printf %d "0x$opt226")
     fi
