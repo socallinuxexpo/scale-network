@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   services.gitlab-runner = {
     enable = true;
@@ -11,4 +11,7 @@
       };
     };
   };
+
+  # include for gl-runner cli
+  environment.systemPackages = [ pkgs.gitlab-runner ];
 }
