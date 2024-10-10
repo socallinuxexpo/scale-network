@@ -1,9 +1,9 @@
-{ config, ...}:
+{ config, ... }:
 {
   services.gitlab-runner = {
     enable = true;
     gracefulTermination = true;
-    services = 
+    services = {
       shell = {
         authenticationTokenConfigFile = /persist/etc/gitlab/shellAuthenticationToken.env;
         executor = "shell";
