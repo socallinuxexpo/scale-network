@@ -34,6 +34,8 @@ in
     devServer = lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
+        inputs.disko.nixosModules.disko
+        ./devServer/disko.nix
         ./_common/base.nix
         ./_common/users.nix
         ./devServer/default.nix
