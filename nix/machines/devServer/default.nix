@@ -3,6 +3,7 @@
 {
   imports = [
     ./libvirt.nix
+    ./gitlab.nix
   ];
   # remove the annoying experimental warnings
   nix.extraOptions = ''
