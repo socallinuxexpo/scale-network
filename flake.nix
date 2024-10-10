@@ -11,7 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.spectrum.follows = "";
     }; # Currently using this fork since the upstream seems to be causing an issue
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
