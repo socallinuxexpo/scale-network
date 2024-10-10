@@ -5,7 +5,7 @@
     gracefulTermination = true;
     services = {
       shell = {
-        authenticationTokenConfigFile = /persist/etc/gitlab/shellAuthenticationToken.env;
+        authenticationTokenConfigFile = /persist/etc/gitlab/shellAuthToken.env;
         executor = "shell";
         tagList = [ "shell" ];
       };
