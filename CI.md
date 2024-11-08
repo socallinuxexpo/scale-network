@@ -37,10 +37,3 @@ Wormhole code is: 8-amusement-drumbeat
 ```
 
 4. This will kickoff the flash and reply with a gitlab pipeline URL.
-
-## Gitlab CI
-
-See the pipelines defined: https://github.com/socallinuxexpo/scale-network/blob/master/.gitlab-ci.yml
-
-Our [autoflash process](./openwrt/docs/AUTOFLASH.md) leverages `gitlab-runners` to be able to interact with real hardware so that
-we can automate the flashing process to test our openwrt images.
