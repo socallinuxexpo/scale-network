@@ -11,7 +11,8 @@
 ## Table of Contents
 
 - [CONTRIBUTING](./CONTRIBUTING.md)
-- [CI](./CI.md)
+- [GitHub Actions CI](./CI.md)
+- [Gitlab CI](./docs/gitlab-ci.md)
 - [MAPS](./MAPS.md)
 - [SWITCH CONFIG](./switch-configuration/README.md)
 - [OPENWRT](./openwrt/README.md)

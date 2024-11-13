@@ -40,7 +40,6 @@ in
         ./_common/users.nix
         ./devServer/default.nix
         ./devServer/hardware-configuration.nix
-        inputs.microvm.nixosModules.host
       ];
     };
     loghost = lib.nixosSystem {
