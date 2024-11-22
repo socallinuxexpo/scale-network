@@ -10,7 +10,13 @@
     };
     onBoot = "ignore";
     onShutdown = "shutdown";
+
+    hooks.network = {
+      dynamic-ssh = ./dynamic-ssh.sh;
+    };
   };
+
+
 
   # Add any users in the 'wheel' group to the 'libvirt' group.
   users.groups.libvirt.members = builtins.filter (
