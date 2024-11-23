@@ -28,6 +28,18 @@ system {
                 ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
             }
         }
+        user kn6vkn {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICaGiudLAi/5/Or+aLcrkb2zjhFh2YtSX2vkqYcFpTXZ bwadef51@gmail.com";
+            }
+        }
+        user danny {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/mloyevy5Qdvl4ngNRZ4xIwL2GGvg10XEF/oKrx6VE";
+            }
+        }
         user rhamel {
             class super-user;
             authentication {
