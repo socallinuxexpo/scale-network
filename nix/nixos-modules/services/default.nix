@@ -1,7 +1,7 @@
+{ ... }:
 {
   imports = [
-    ./base.nix
-    ./users.nix
+    ./gitlab.nix
     ./prometheus.nix
   ];
 }

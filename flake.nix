@@ -35,5 +35,6 @@
     // {
       formatter = import ./nix/formatter inputs;
       formatterModule = import ./nix/formatterModule inputs;
+      nixosModules = import ./nix/nixos-modules inputs;
     };
 }
