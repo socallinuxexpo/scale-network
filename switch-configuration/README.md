@@ -5,6 +5,14 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 # Prereqs
 
 PERL 5
+Ubuntu instructions
+
+```
+apt-get install libexpect-perl
+apt-get install net-sftp
+apt-get install libnet-arp-perl
+apt-get install libnet-interface-perl
+```
 
 # Firmware
 
