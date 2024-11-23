@@ -61,13 +61,13 @@ system {
         user kylerisse {
             class super-user;
             authentication {
-                ssh-rsa "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMlEPbMnefiPfCTKb9lOzPzfnOVAohO08myWWMm9EJxZ";
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMlEPbMnefiPfCTKb9lOzPzfnOVAohO08myWWMm9EJxZ";
             }
         }
 	user jjung {
             class super-user;
             authentication {
-                ssh-rsa "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIUUXkExX9jkNOz+3LsT6Lbd50g1Ge3mEKFky1Ug4cs Jeff Jung - SCaLE";
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIUUXkExX9jkNOz+3LsT6Lbd50g1Ge3mEKFky1Ug4cs Jeff Jung - SCaLE";
             }
         }
     }
