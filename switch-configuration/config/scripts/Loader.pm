@@ -18,6 +18,9 @@
 #       IPC::Open2              -- Allows simplification of Pipe opens
 #       -- CPAN (or Debian packages) --
 #       Net::Ping               -- Ping without system()
+#		NOTE: Ping.pm either requires root privilege or a patch for Linux
+#			to work without it.
+#
 #       Expect                  -- PERL Expect Library - simplifies communication with switches
 #       Term::ReadKey           -- Simlifies password requests and similar
 ##FIXME##       Net::SSH::Perl          -- ssh without system()
@@ -26,6 +29,44 @@
 #       Time::HiRes             -- Used for usleep (sleep for microseconds)
 #       Net::SFTP::Foreign               -- sftp without system()
 #       -- CPAN Only --
+
+#
+# Patch for Ping.pm to work without root privilege on linux:
+#230c230
+#<     croak("icmp ping requires root privilege") if !_isroot();
+#---
+#>     croak("icmp ping requires root privilege") if !_isroot() && ($^O ne "linux");
+#235,236c235,244
+#<     socket($self->{fh}, PF_INET, SOCK_RAW, $self->{proto_num}) ||
+#<       croak("icmp socket error - $!");
+#---
+#>     if ($^O eq "linux")
+#>     {
+#> 	    socket($self->{fh}, PF_INET, SOCK_DGRAM, $self->{proto_num}) ||
+#> 	      croak("icmp socket error - $!");
+#>     }
+#>     else
+#>     {
+#> 	    socket($self->{fh}, PF_INET, SOCK_RAW, $self->{proto_num}) ||
+#> 	      croak("icmp socket error - $!");
+#>     }
+#253,254c261,270
+#<     socket($self->{fh}, $AF_INET6, SOCK_RAW, $self->{proto_num}) ||
+#<       croak("icmp socket error - $!");
+#---
+#>     if ($^O eq "linux")
+#>     {
+#> 	    socket($self->{fh}, $AF_INET6, SOCK_DGRAM, $self->{proto_num}) ||
+#> 	      croak("icmp socket error - $!");
+#>     }
+#>     else
+#>     {
+#> 	    socket($self->{fh}, $AF_INET6, SOCK_RAW, $self->{proto_num}) ||
+#> 	      croak("icmp socket error - $!");
+#>     }
+#
+# End of patch
+
 
 # Pull in dependencies
 package Loader;
@@ -133,6 +174,7 @@ sub new
 	    Interfaces  => [ Net::Interface->interfaces() ], # List of interfaces
 	    DefaultUser => $user,
 	    asroot      => 0,
+	    power_off   => 0, # Power off the switch at end of override_switch (default=no)
         };
 
 	foreach my $if (@{$self->{"Interfaces"}})
@@ -557,20 +599,35 @@ sub override_switch
     print STDERR "Received: ($before) ($matched) ($after)\n";
     $error_count++ if ($err);
     croak("Did not receive Prompt after finalizing: $err for $Name\n") if ($err);
-    #$JUNIPER->send("quit\n");
-    print $JUNIPER "quit\n";
-    if ($self->{'asroot'})
+
+    if ($self->{'power_off'} && $error_count == 0)
     {
-      ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(10,
-	      '% ',
-      );
-      $before =~ s/\033/<Esc>/g;
-      $after =~ s/\033/<Esc>/g;
-      $error_count++ if ($err);
-      croak("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
-      print $JUNIPER "exit\n";
+	    print $JUNIPER "request system power-off\n";
+	    print STDERR "Power Off Request sent.\n";
+	    sleep 5;
+	    $JUNIPER->hard_close();
     }
-    $JUNIPER->soft_close();
+    elsif ($self->{'power_off'})
+    {
+	    warn "WARNING: Power Off aborted due to earlier errors!\n";
+	    print STDERR "You may need to send the power off command to the switch manually.\n";
+    }
+    else
+    {
+    	print $JUNIPER "quit\n";
+	    if ($self->{'asroot'})
+	    {
+	      ($pos, $err, $matched, $before, $after) = $JUNIPER->expect(10,
+		      '% ',
+	      );
+	      $before =~ s/\033/<Esc>/g;
+	      $after =~ s/\033/<Esc>/g;
+	      $error_count++ if ($err);
+	      croak("Did not get shell prompt ($err) for $Name after exiting CLI as root\n") if ($err);
+	      print $JUNIPER "exit\n";
+	    }
+	    $JUNIPER->soft_close();
+    }
     print STDERR ($error_count ? "Uns" : "S") . "uccessful completion of configuration for $Name\n";
     push @messages, ($error_count ? "Uns" : "S") . "uccessful completion of configuration for $Name\n";
     push @messages, "Encountered $error_count errors for $Name\n";
