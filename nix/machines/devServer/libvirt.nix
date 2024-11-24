@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   security.polkit.enable = true;
 
@@ -12,7 +12,7 @@
     onShutdown = "shutdown";
 
     hooks.qemu = {
-      dynamic-ssh = ./dynamic-ssh.sh;
+      dynamic-ssh = "${pkgs.writeShellScript "dynamic-ssh" (builtins.readFile ./dynamic-ssh.sh)}";
     };
   };
 

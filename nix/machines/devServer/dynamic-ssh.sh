@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 GUEST_NAME=$1
 ACTION=$2
 
