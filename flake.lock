@@ -24,7 +24,7 @@
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
-          "nixpkgs"
+          "nixpkgs-2405"
         ]
       },
       "locked": {
@@ -63,7 +63,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-2405"
         ],
         "spectrum": []
       },
@@ -82,13 +82,13 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "nixpkgs-2405": {
       "locked": {
-        "lastModified": 1728500571,
-        "narHash": "sha256-dOymOQ3AfNI4Z337yEwHGohrVQb4yPODCW9MDUyAc4w=",
+        "lastModified": 1731797254,
+        "narHash": "sha256-df3dJApLPhd11AlueuoN0Q4fHo/hagP75LlM5K1sz9g=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d51c28603def282a24fa034bcb007e2bcb5b5dd0",
+        "rev": "e8c38b73aeb218e27163376a2d617e61a2ad9b59",
         "type": "github"
       },
       "original": {
@@ -119,7 +119,10 @@
         "disko": "disko",
         "flake-parts": "flake-parts",
         "microvm": "microvm",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": [
+          "nixpkgs-2405"
+        ],
+        "nixpkgs-2405": "nixpkgs-2405",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "treefmt-nix": "treefmt-nix"
       }

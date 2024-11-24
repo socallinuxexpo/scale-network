@@ -5,10 +5,6 @@
   ...
 }:
 {
-  imports = [
-    ./libvirt.nix
-  ];
-
   # ZFS uniq system ID
   # to generate: head -c4 /dev/urandom | od -A none -t x4
   networking.hostId = "25c531dc";

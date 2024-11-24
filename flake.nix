@@ -4,14 +4,15 @@
   inputs = {
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
+      inputs.nixpkgs-lib.follows = "nixpkgs-2405";
     };
     microvm = {
       url = "github:sarcasticadmin/microvm.nix/rh/1707108673virtio";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-2405";
       inputs.spectrum.follows = "";
     }; # Currently using this fork since the upstream seems to be causing an issue
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-2405.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.follows = "nixpkgs-2405"; # get rid of this once flake parts is gone
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -35,6 +36,8 @@
     // {
       formatter = import ./nix/formatter inputs;
       formatterModule = import ./nix/formatterModule inputs;
+      library = import ./nix/library inputs;
       nixosModules = import ./nix/nixos-modules inputs;
+      nixosConfigurations = import ./nix/nixos-configurations inputs;
     };
 }
