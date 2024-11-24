@@ -20,7 +20,7 @@ in
 
   config = mkIf cfg.enable {
     # default to stateVersion for current lock
-    system.stateVersion = config.system.nixos.version;
+    system.stateVersion = config.system.nixos.release;
 
     # remove the annoying experimental warnings
     nix.extraOptions = ''

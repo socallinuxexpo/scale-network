@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  ...
 }:
 let
   cfg = config.scale-network.users.rhamel;

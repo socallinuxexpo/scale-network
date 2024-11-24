@@ -1,9 +1,11 @@
 {
   lib,
   config,
+  ...
 }:
 let
   cfg = config.scale-network.users.berkhan;
+
   inherit (lib.modules)
     mkIf
     ;

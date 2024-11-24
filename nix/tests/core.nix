@@ -75,11 +75,11 @@ in
           inherit inputs;
         };
         imports = [
-          ../machines/core/master.nix
-          ../modules/facts.nix
+          ../nixos-configurations/core-master/configuration.nix
+          ../nixos-modules/facts.nix
         ];
 
-        facts = lib.mkForce {
+        scale-network.facts = lib.mkForce {
           ipv4 = "${coremasterAddr.ipv4}/24";
           ipv6 = "${coremasterAddr.ipv6}/64";
           eth = "eth1";

@@ -1,20 +1,36 @@
-{ ... }:
+{ config, lib, ... }:
 let
-  port = 9100;
+  cfg = config.scale-network.services.prometheus;
+
+  inherit (lib.modules)
+    mkIf
+    ;
+
+  inherit (lib.options)
+    mkEnableOption
+    ;
 in
 {
-  networking.firewall.allowedTCPPorts = [ port ];
+  options.scale-network.services.prometheus.enable = mkEnableOption "SCaLE network prometheus exporter";
 
-  services.prometheus.exporters.node = {
-    enable = true;
-    port = port;
-    enabledCollectors = [
-      "logind"
-      "systemd"
-      "network_route"
-    ];
-    disabledCollectors = [
-      "textfile"
-    ];
-  };
+  config =
+    let
+      port = 9100;
+    in
+    mkIf cfg.enable {
+      networking.firewall.allowedTCPPorts = [ port ];
+
+      services.prometheus.exporters.node = {
+        enable = true;
+        port = port;
+        enabledCollectors = [
+          "logind"
+          "systemd"
+          "network_route"
+        ];
+        disabledCollectors = [
+          "textfile"
+        ];
+      };
+    };
 }

@@ -70,8 +70,8 @@
               inputs.self.packages.${pkgs.system}.scaleInventory
             }/config/dhcp6-server.conf $TMP/dhcp6-server.conf
             substituteInPlace "$TMP/dhcp6-server.conf" \
-              --replace '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.facts.ipv6)}' \
-              --replace '@@INTERFACE@@' '${config.facts.eth}'
+              --replace '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.scale-network.facts.ipv6)}' \
+              --replace '@@INTERFACE@@' '${config.scale-network.facts.eth}'
             cp $TMP/dhcp6-server.conf $out
           '';
 

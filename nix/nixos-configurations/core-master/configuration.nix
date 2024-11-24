@@ -14,7 +14,7 @@ in
     ./common.nix
   ];
 
-  facts = {
+  scale-network.facts = {
     ipv4 = "10.128.3.5/24";
     ipv6 = "2001:470:f026:503::5/64";
     eth = "eth0";
@@ -41,8 +41,8 @@ in
         name = "e*0*";
         enable = true;
         address = [
-          config.facts.ipv4
-          config.facts.ipv6
+          config.scale-network.facts.ipv4
+          config.scale-network.facts.ipv6
         ];
         routes = [
           { routeConfig.Gateway = "10.128.3.1"; }
