@@ -7,7 +7,7 @@ BASE_PORT=2222
 
 # Function to get the assigned IP address of the VM
 get_vm_ip() {
-    virsh domifaddr "$GUEST_NAME" --source agent | grep -oP '(\d{1,3}\.){3}\d{1,3}'
+    virsh domifaddr "$GUEST_NAME" | grep -oP '(\d{1,3}\.){3}\d{1,3}'
 }
 
 # Calculate a unique host port for this VM based on its name hash
