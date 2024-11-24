@@ -11,7 +11,7 @@
     onBoot = "ignore";
     onShutdown = "shutdown";
 
-    hooks.network = {
+    hooks.qemu = {
       dynamic-ssh = ./dynamic-ssh.sh;
     };
   };
