@@ -118,6 +118,7 @@ $opt_l = 1 if ($opt_b);
 $opt_l = 1 if ($opt_t);
 
 die "Error: -b and -k are incompatible.\n" if ($opt_b && $opt_k);
+die "Error: -l and -t are incompatible.\n" if ($opt_t && $opt_l);
 
 my @list = @ARGV;
 
