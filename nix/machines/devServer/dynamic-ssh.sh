@@ -22,8 +22,7 @@ if [ "$ACTION" = "started" ]; then
     VM_IP=$(get_vm_ip)
     if [ -n "$VM_IP" ]; then
         HOST_PORT=$(calculate_port)
-        #sudo iptables -t nat -A PREROUTING -p tcp --dport "$HOST_PORT" -j DNAT --to-destination "$VM_IP:22"
-        sudo iptables -I FORWARD -o virbr0 -p tcp -d $VM_IP --dport $GUEST_PORT -j ACCEPT
+        sudo iptables -I FORWARD -o virbr0 -p tcp -d $VM_IP --dport 22 -j ACCEPT
         sudo iptables -t nat -I PREROUTING -p tcp --dport $HOST_PORT -j DNAT --to $VM_IP:22
         echo "Port forwarding set: Host port $HOST_PORT -> $VM_IP:22"
     fi
@@ -31,8 +30,7 @@ if [ "$ACTION" = "started" ]; then
 # When the VM stops, remove the iptables rule for that VM
 elif [ "$ACTION" = "stopped" ]; then
     HOST_PORT=$(calculate_port)
-    #sudo iptables -t nat -D PREROUTING -p tcp --dport "$HOST_PORT" -j DNAT --to-destination "$(get_vm_ip):22"
-    sudo iptables -D FORWARD -o virbr0 -p tcp -d $VM_IP --dport $GUEST_PORT -j ACCEPT
-    sudo iptables -t nat -D PREROUTING -p tcp --dport $HOST_PORT -j DNAT --to $VM_IP:22
+    sudo iptables -D FORWARD -o virbr0 -p tcp -d $(get_vm_ip) --dport 22 -j ACCEPT
+    sudo iptables -t nat -D PREROUTING -p tcp --dport $HOST_PORT -j DNAT --to $(get_vm_ip):22
     echo "Port forwarding removed for Host port $HOST_PORT"
 fi
