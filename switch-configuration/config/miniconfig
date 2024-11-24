@@ -70,6 +70,12 @@ system {
                 ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIUUXkExX9jkNOz+3LsT6Lbd50g1Ge3mEKFky1Ug4cs Jeff Jung - SCaLE";
             }
         }
+	user carlynlee {
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAS6QGttw0MBR9UKWfiO3dDp7J/MQdAfpkRQ2hO5oATv carlyn.lee@gmail.com";
+            }
+        }
     }
     services {
         ssh {
