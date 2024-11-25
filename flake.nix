@@ -36,8 +36,10 @@
     // {
       formatter = import ./nix/formatter inputs;
       formatterModule = import ./nix/formatterModule inputs;
+      legacyPackages = import ./nix/legacy-packages inputs;
       library = import ./nix/library inputs;
       nixosModules = import ./nix/nixos-modules inputs;
       nixosConfigurations = import ./nix/nixos-configurations inputs;
+      overlays = import ./nix/overlays inputs;
     };
 }

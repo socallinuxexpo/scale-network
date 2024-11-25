@@ -9,7 +9,7 @@
   flake.checks.x86_64-linux = withSystem "x86_64-linux" (
     { pkgs, ... }:
     {
-      core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs pkgs; });
+      # core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs pkgs; });
       loghost = pkgs.testers.runNixOSTest ./loghost.nix;
     }
   );

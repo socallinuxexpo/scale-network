@@ -8,7 +8,7 @@
 }:
 let
   local_manifests = copyPathsToStore [
-    ../../openwrt/scripts/massflash/massflash
+    ../../../openwrt/scripts/massflash/massflash
   ];
 in
 stdenvNoCC.mkDerivation {

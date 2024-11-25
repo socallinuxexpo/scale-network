@@ -66,7 +66,7 @@ in
         {
           job_name = "ap";
           static_configs = builtins.fromJSON (
-            builtins.readFile "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/prom.json"
+            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom.json"
           );
         }
       ];

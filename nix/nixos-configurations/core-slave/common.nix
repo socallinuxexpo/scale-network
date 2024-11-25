@@ -36,7 +36,7 @@
     ldns
     bind
     kea
-    inputs.self.packages.${pkgs.system}.scaleInventory
+    scale-network.scaleInventory
     vim
     git
   ];
@@ -60,15 +60,13 @@
     kea = {
       dhcp4 = {
         enable = true;
-        configFile = "${inputs.self.packages.${pkgs.system}.scaleInventory}/config/dhcp4-server.conf";
+        configFile = "${pkgs.scale-network.scaleInventory}/config/dhcp4-server.conf";
       };
       dhcp6 =
         let
           dhcp6PopulateConfig = pkgs.runCommand "replace" { } ''
             mkdir $out
-            cp ${
-              inputs.self.packages.${pkgs.system}.scaleInventory
-            }/config/dhcp6-server.conf $TMP/dhcp6-server.conf
+            cp ${pkgs.scale-network.scaleInventory}/config/dhcp6-server.conf $TMP/dhcp6-server.conf
             substituteInPlace "$TMP/dhcp6-server.conf" \
               --replace '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.scale-network.facts.ipv6)}' \
               --replace '@@INTERFACE@@' '${config.scale-network.facts.eth}'
