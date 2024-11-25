@@ -89,7 +89,7 @@ in
         systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
         systemd.network = {
           networks = {
-            # Override the phyiscal interface config
+            # Override the physical interface config
             "10-lan" = lib.mkForce {
               name = "eth1";
               enable = true;

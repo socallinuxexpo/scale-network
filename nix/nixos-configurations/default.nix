@@ -32,6 +32,7 @@ mapAttrs' (
           { ... }:
           {
             networking.hostName = mkDefault hostDirectory;
+            nixpkgs.overlays = [ inputs.self.overlays.default ];
           }
         )
         inputs.disko.nixosModules.disko

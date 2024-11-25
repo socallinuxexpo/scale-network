@@ -2,7 +2,7 @@
 
 ## Notes for updating
 
-Build an apppriate Gemfile (by hand seems ok) then get into a `nix shell`:
+Build an appropriate Gemfile (by hand seems ok) then get into a `nix shell`:
 
 ```
 $ nix shell nixpkgs#ruby nixpkgs#bundix

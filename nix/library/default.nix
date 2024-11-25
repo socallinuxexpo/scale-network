@@ -2,6 +2,11 @@ inputs:
 let
   inherit (inputs.nixpkgs-unstable) lib;
 
+  inherit (lib.attrsets)
+    mapAttrs'
+    nameValuePair
+    ;
+
   inherit (lib.strings)
     splitString
     substring
@@ -22,5 +27,7 @@ rec {
 
   kebabToCamel =
     s: mutFirstChar toLower (concatMapStrings (mutFirstChar toUpper) (splitString "-" s));
+
+  attrNamesKebabToCamel = mapAttrs' (name: value: nameValuePair (kebabToCamel name) value);
 
 }

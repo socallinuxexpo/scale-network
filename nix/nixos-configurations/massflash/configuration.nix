@@ -121,7 +121,7 @@ in
         expect
         git
         kea
-        inputs.self.packages.${pkgs.system}.massflash
+        scale-network.massflash
         unixtools.ping
         tmux
         vim
@@ -163,7 +163,7 @@ in
                 "hooks-libraries": [{
                           "library": "${pkgs.kea}/lib/kea/hooks/libdhcp_run_script.so",
                           "parameters": {
-                              "name": "${inputs.self.packages.${pkgs.system}.massflash}/bin/massflash",
+                              "name": "${pkgs.scale-network.massflash}/bin/massflash",
                               "sync": false
                         }
                 }]

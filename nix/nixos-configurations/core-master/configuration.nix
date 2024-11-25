@@ -84,9 +84,7 @@ in
                                 IN    NS      coreexpo.scale.lan.
                                 IN    NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${
-                inputs.self.packages.${pkgs.system}.scaleInventory
-              }/config/db.scale.lan.records")
+              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.scale.lan.records")
             ]
           );
         };
@@ -108,9 +106,7 @@ in
                                 IN NS      coreexpo.scale.lan.
                                 IN NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${
-                inputs.self.packages.${pkgs.system}.scaleInventory
-              }/config/db.ipv4.arpa.records")
+              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv4.arpa.records")
             ]
           );
         };
@@ -133,9 +129,7 @@ in
                                 IN NS      coreexpo.scale.lan.
                                 IN NS      coreconf.scale.lan.
               ''
-              (builtins.readFile "${
-                inputs.self.packages.${pkgs.system}.scaleInventory
-              }/config/db.ipv6.arpa.records")
+              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv6.arpa.records")
             ]
           );
         };
