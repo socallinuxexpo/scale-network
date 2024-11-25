@@ -4,8 +4,6 @@
   inputs = {
     disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
     disko.url = "github:nix-community/disko/e55f9a8678adc02024a4877c2a403e3f6daf24fe";
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-2405";
-    flake-parts.url = "github:hercules-ci/flake-parts";
     microvm.inputs.nixpkgs.follows = "nixpkgs-2405";
     microvm.inputs.spectrum.follows = "";
     # Currently using this fork since the upstream seems to be causing an issue
