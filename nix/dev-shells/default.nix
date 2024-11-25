@@ -7,10 +7,7 @@ inputs.nixpkgs.lib.genAttrs
   (
     system:
     let
-      pkgs = import inputs.nixpkgs {
-        inherit system;
-        overlays = [ inputs.self.overlays.default ];
-      };
+      pkgs = inputs.self.legacyPackages.${system};
 
       scalePython = [
         (pkgs.python3.withPackages (
