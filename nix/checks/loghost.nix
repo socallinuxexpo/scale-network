@@ -2,7 +2,9 @@
   name = "loghost";
 
   nodes.machine1 = {
-    imports = [ ../machines/loghost.nix ];
+    imports = [
+      ../nixos-configurations/loghost/base.nix
+    ];
     virtualisation.graphics = false;
   };
 
