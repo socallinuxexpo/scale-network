@@ -22,8 +22,9 @@
     formatterModule = import ./nix/formatterModule inputs;
     legacyPackages = import ./nix/legacy-packages inputs;
     library = import ./nix/library inputs;
-    nixosModules = import ./nix/nixos-modules inputs;
     nixosConfigurations = import ./nix/nixos-configurations inputs;
+    nixosModules = import ./nix/nixos-modules inputs;
     overlays = import ./nix/overlays inputs;
+    packages = import ./nix/packages inputs;
   };
 }
