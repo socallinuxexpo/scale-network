@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs }:
 let
   chomp = "103";
   prefix = "2001:470:f026:${chomp}";

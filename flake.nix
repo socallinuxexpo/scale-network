@@ -12,28 +12,20 @@
     microvm.url = "github:sarcasticadmin/microvm.nix/rh/1707108673virtio";
     nixpkgs-2405.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs.follows = "nixpkgs-2405"; # get rid of this once flake parts is gone
+    nixpkgs.follows = "nixpkgs-2405";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs =
-    inputs:
-    (inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      imports = [ ./nix/flake-module.nix ];
-    })
-    // {
-      devShells = import ./nix/dev-shells inputs;
-      formatter = import ./nix/formatter inputs;
-      formatterModule = import ./nix/formatterModule inputs;
-      legacyPackages = import ./nix/legacy-packages inputs;
-      library = import ./nix/library inputs;
-      nixosModules = import ./nix/nixos-modules inputs;
-      nixosConfigurations = import ./nix/nixos-configurations inputs;
-      overlays = import ./nix/overlays inputs;
-    };
+  outputs = inputs: {
+    checks = import ./nix/checks inputs;
+    devShells = import ./nix/dev-shells inputs;
+    formatter = import ./nix/formatter inputs;
+    formatterModule = import ./nix/formatterModule inputs;
+    legacyPackages = import ./nix/legacy-packages inputs;
+    library = import ./nix/library inputs;
+    nixosModules = import ./nix/nixos-modules inputs;
+    nixosConfigurations = import ./nix/nixos-configurations inputs;
+    overlays = import ./nix/overlays inputs;
+  };
 }
