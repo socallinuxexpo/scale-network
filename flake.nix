@@ -2,38 +2,31 @@
   nixConfig.bash-prompt = "\\[\\033[01;32m\\][nix-flakes \\W] \$\\[\\033[00m\\] ";
 
   inputs = {
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-    microvm = {
-      url = "github:sarcasticadmin/microvm.nix/rh/1707108673virtio";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.spectrum.follows = "";
-    }; # Currently using this fork since the upstream seems to be causing an issue
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    disko.url = "github:nix-community/disko/e55f9a8678adc02024a4877c2a403e3f6daf24fe";
+    microvm.inputs.nixpkgs.follows = "nixpkgs-2405";
+    microvm.inputs.spectrum.follows = "";
+    # Currently using this fork since the upstream seems to be causing an issue
+    microvm.url = "github:sarcasticadmin/microvm.nix/rh/1707108673virtio";
+    # nixpkgs-2405 has been pinned to this rev to maintain parity from before flake-parts was removed
+    # If you want to bump this input, change it back to `github:NixOS/nixpkgs/nixos-24.05` and lock the flake again
+    nixpkgs-2405.url = "github:NixOS/nixpkgs?rev=d51c28603def282a24fa034bcb007e2bcb5b5dd0";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    disko = {
-      url = "github:nix-community/disko/e55f9a8678adc02024a4877c2a403e3f6daf24fe";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    nixpkgs.follows = "nixpkgs-2405";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs =
-    inputs:
-    (inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      imports = [ ./nix/flake-module.nix ];
-    })
-    // {
-      formatter = import ./nix/formatter inputs;
-      formatterModule = import ./nix/formatterModule inputs;
-    };
+  outputs = inputs: {
+    checks = import ./nix/checks inputs;
+    devShells = import ./nix/dev-shells inputs;
+    formatter = import ./nix/formatter inputs;
+    formatterModule = import ./nix/formatterModule inputs;
+    legacyPackages = import ./nix/legacy-packages inputs;
+    library = import ./nix/library inputs;
+    nixosConfigurations = import ./nix/nixos-configurations inputs;
+    nixosModules = import ./nix/nixos-modules inputs;
+    overlays = import ./nix/overlays inputs;
+    packages = import ./nix/packages inputs;
+  };
 }
