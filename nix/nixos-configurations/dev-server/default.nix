@@ -19,9 +19,9 @@
           base.enable = true;
           libvirt.enable = true;
           services.gitlab.enable = true;
-          services.prometheus.enable = true;
-          services.ssh4vms.enable = true;
-          timeServers.enable = true;
+          services.prometheus.enable = false;
+          services.ssh4vms.enable = false;
+          timeServers.enable = false;
 
           users.berkhan.enable = true;
           users.dlang.enable = true;

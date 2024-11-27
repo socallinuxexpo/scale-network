@@ -19,6 +19,7 @@
         scale-network = {
           base.enable = true;
           services.prometheus.enable = true;
+          libvirt.enable = true;
 
           users.berkhan.enable = true;
           users.dlang.enable = true;
