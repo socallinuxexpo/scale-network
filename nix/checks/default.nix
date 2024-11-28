@@ -76,7 +76,7 @@ genAttrs
           }
           ''
             cd $src/facts
-            fish test_duplicates.fish
+            fish --no-config test_duplicates.fish
             touch $out
           ''
       );
