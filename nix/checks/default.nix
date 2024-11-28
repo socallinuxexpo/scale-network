@@ -69,12 +69,16 @@ genAttrs
         );
 
       duplicates-facts = (
-        pkgs.runCommand "duplicates-facts" { buildInputs = [ pkgs.fish ]; } ''
-          cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-          cd facts
-          fish test_duplicates.fish
-          touch $out
-        ''
+        pkgs.runCommand "duplicates-facts"
+          {
+            src = factsSrc;
+            buildInputs = [ pkgs.fish ];
+          }
+          ''
+            cd $src/facts
+            fish test_duplicates.fish
+            touch $out
+          ''
       );
 
       perl-switches = (
