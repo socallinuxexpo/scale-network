@@ -55,13 +55,18 @@ genAttrs
             )
           );
         in
-        (pkgs.runCommand "pytest-facts" { } ''
-          cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-          cd facts
-          ${testPython}/bin/pylint --persistent n *.py
-          ${testPython}/bin/pytest -vv -p no:cacheprovider
-          touch $out
-        '');
+        (pkgs.runCommand "pytest-facts"
+          {
+            src = factsSrc;
+            buildInputs = [ testPython ];
+          }
+          ''
+            cd $src/facts
+            pylint --persistent n *.py
+            pytest -vv -p no:cacheprovider
+            touch $out
+          ''
+        );
 
       duplicates-facts = (
         pkgs.runCommand "duplicates-facts" { buildInputs = [ pkgs.fish ]; } ''
