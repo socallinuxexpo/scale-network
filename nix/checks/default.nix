@@ -1,5 +1,6 @@
 inputs:
 let
+  # inherits
   inherit (inputs.nixpkgs)
     lib
     ;
@@ -8,9 +9,25 @@ let
     genAttrs
     ;
 
+  inherit (lib.fileset)
+    toSource
+    unions
+    ;
+
   inherit (lib.sources)
     cleanSource
     ;
+
+  # sources
+
+  # Used for derivations where facts is the primary directory.
+  factsSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../switch-configuration
+    ];
+  };
 in
 genAttrs
   [
