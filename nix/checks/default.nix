@@ -28,6 +28,15 @@ let
       ../../switch-configuration
     ];
   };
+
+  # Used for derivations where switch-configuration is the primary directory.
+  switchConfigurationSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../switch-configuration
+    ];
+  };
 in
 genAttrs
   [
