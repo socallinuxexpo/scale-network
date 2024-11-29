@@ -90,22 +90,27 @@ genAttrs
           ''
       );
 
-      perl-switches = (
-        pkgs.runCommand "perl-switches"
-          {
-            buildInputs = [
-              pkgs.gnumake
-              pkgs.perl
-            ];
-          }
-          ''
-            cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-            cd switch-configuration
-            make .lint
-            make .build-switch-configs
-            touch $out
-          ''
-      );
+      perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
+        pname = "perl-switches";
+        version = "0.1.0";
+
+        src = switchConfigurationSrc;
+
+        nativeBuildInputs = with pkgs; [
+          gnumake
+          perl
+        ];
+
+        buildPhase = ''
+          cd switch-configuration
+          make .lint
+          make .build-switch-configs
+        '';
+
+        installPhase = ''
+          touch $out
+        '';
+      });
 
       openwrt-golden =
         pkgs.runCommand "openwrt-golden"
