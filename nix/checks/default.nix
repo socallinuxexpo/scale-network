@@ -132,7 +132,10 @@ genAttrs
         buildPhase = ''
           cd tests/unit/openwrt
           mkdir -p $out/tmp/ar71xx
-          ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
+        '';
+
+        installPhase = ''
+          ./test.sh -t ar71xx -o $out
         '';
       });
 
