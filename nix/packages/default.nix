@@ -11,5 +11,6 @@ inputs.nixpkgs.lib.genAttrs
       serverspec
       perlNetArp
       perlNetInterface
+      perlNetPing
       ;
   })

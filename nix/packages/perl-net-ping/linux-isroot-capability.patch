@@ -1,0 +1,48 @@
+diff --git a/lib/Net/Ping.pm b/lib/Net/Ping.pm
+index 0b7be8c..60aca57 100644
+--- a/lib/Net/Ping.pm
++++ b/lib/Net/Ping.pm
+@@ -227,13 +227,21 @@ sub new
+   }
+   elsif ($self->{proto} eq "icmp")
+   {
+-    croak("icmp ping requires root privilege") if !_isroot();
++    croak("icmp ping requires root privilege") if !_isroot() && ($^O ne "linux");
+     $self->{proto_num} = eval { (getprotobyname('icmp'))[2] } ||
+       croak("Can't get icmp protocol by name");
+     $self->{pid} = $$ & 0xffff;           # Save lower 16 bits of pid
+     $self->{fh} = FileHandle->new();
+-    socket($self->{fh}, PF_INET, SOCK_RAW, $self->{proto_num}) ||
+-      croak("icmp socket error - $!");
++    if ($^O eq "linux")
++    {
++	    socket($self->{fh}, PF_INET, SOCK_DGRAM, $self->{proto_num}) ||
++	      croak("icmp socket error - $!");
++    }
++    else
++    {
++	    socket($self->{fh}, PF_INET, SOCK_RAW, $self->{proto_num}) ||
++	      croak("icmp socket error - $!");
++    }
+     $self->_setopts();
+     if ($self->{'ttl'}) {
+       setsockopt($self->{fh}, IPPROTO_IP, IP_TTL, pack("I*", $self->{'ttl'}))
+@@ -250,8 +258,16 @@ sub new
+       croak("Can't get ipv6-icmp protocol by name"); # 58
+     $self->{pid} = $$ & 0xffff;           # Save lower 16 bits of pid
+     $self->{fh} = FileHandle->new();
+-    socket($self->{fh}, $AF_INET6, SOCK_RAW, $self->{proto_num}) ||
+-      croak("icmp socket error - $!");
++    if ($^O eq "linux")
++    {
++	    socket($self->{fh}, $AF_INET6, SOCK_DGRAM, $self->{proto_num}) ||
++	      croak("icmp socket error - $!");
++    }
++    else
++    {
++	    socket($self->{fh}, $AF_INET6, SOCK_RAW, $self->{proto_num}) ||
++	      croak("icmp socket error - $!");
++    }
+     $self->_setopts();
+     if ($self->{'gateway'}) {
+       my $g = $self->{gateway};
