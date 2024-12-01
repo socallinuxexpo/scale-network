@@ -14,10 +14,6 @@ let
     unions
     ;
 
-  inherit (lib.sources)
-    cleanSource
-    ;
-
   # sources
 
   # Used for derivations where facts is the primary directory.
