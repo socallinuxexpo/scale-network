@@ -10,5 +10,6 @@ inputs.nixpkgs.lib.genAttrs
       scaleInventory
       serverspec
       perlNetArp
+      perlNetInterface
       ;
   })
