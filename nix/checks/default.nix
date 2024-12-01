@@ -37,6 +37,16 @@ let
       ../../switch-configuration
     ];
   };
+
+  # Used for derivations where openwrt is the primary directory.
+  openwrtSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../openwrt
+      ../../tests
+    ];
+  };
 in
 genAttrs
   [
@@ -112,20 +122,23 @@ genAttrs
         '';
       });
 
-      openwrt-golden =
-        pkgs.runCommand "openwrt-golden"
-          {
-            buildInputs = [
-              pkgs.diffutils
-              pkgs.gomplate
-            ];
-          }
-          ''
-            cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-            cd tests/unit/openwrt
-            mkdir -p $out/tmp/ar71xx
-            ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
-          '';
+      openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
+        pname = "openwrt-golden";
+        version = "0.1.0";
+
+        src = openwrtSrc;
+
+        buildInputs = [
+          pkgs.diffutils
+          pkgs.gomplate
+        ];
+
+        buildPhase = ''
+          cd tests/unit/openwrt
+          mkdir -p $out/tmp/ar71xx
+          ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
+        '';
+      });
 
       formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
 
