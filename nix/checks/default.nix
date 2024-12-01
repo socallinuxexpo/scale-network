@@ -1,5 +1,6 @@
 inputs:
 let
+  # inherits
   inherit (inputs.nixpkgs)
     lib
     ;
@@ -8,9 +9,40 @@ let
     genAttrs
     ;
 
-  inherit (lib.sources)
-    cleanSource
+  inherit (lib.fileset)
+    toSource
+    unions
     ;
+
+  # sources
+
+  # Used for derivations where facts is the primary directory.
+  factsSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../switch-configuration
+    ];
+  };
+
+  # Used for derivations where switch-configuration is the primary directory.
+  switchConfigurationSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../switch-configuration
+    ];
+  };
+
+  # Used for derivations where openwrt is the primary directory.
+  openwrtSrc = toSource {
+    root = ../..;
+    fileset = unions [
+      ../../facts
+      ../../openwrt
+      ../../tests
+    ];
+  };
 in
 genAttrs
   [
@@ -38,54 +70,74 @@ genAttrs
             )
           );
         in
-        (pkgs.runCommand "pytest-facts" { } ''
-          cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-          cd facts
-          ${testPython}/bin/pylint --persistent n *.py
-          ${testPython}/bin/pytest -vv -p no:cacheprovider
-          touch $out
-        '');
-
-      duplicates-facts = (
-        pkgs.runCommand "duplicates-facts" { buildInputs = [ pkgs.fish ]; } ''
-          cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-          cd facts
-          fish test_duplicates.fish
-          touch $out
-        ''
-      );
-
-      perl-switches = (
-        pkgs.runCommand "perl-switches"
+        (pkgs.runCommand "pytest-facts"
           {
-            buildInputs = [
-              pkgs.gnumake
-              pkgs.perl
-            ];
+            src = factsSrc;
+            buildInputs = [ testPython ];
           }
           ''
-            cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-            cd switch-configuration
-            make .lint
-            make .build-switch-configs
+            cd $src/facts
+            pylint --persistent n *.py
+            pytest -vv -p no:cacheprovider
+            touch $out
+          ''
+        );
+
+      duplicates-facts = (
+        pkgs.runCommand "duplicates-facts"
+          {
+            src = factsSrc;
+            buildInputs = [ pkgs.fish ];
+          }
+          ''
+            cd $src/facts
+            fish --no-config test_duplicates.fish
             touch $out
           ''
       );
 
-      openwrt-golden =
-        pkgs.runCommand "openwrt-golden"
-          {
-            buildInputs = [
-              pkgs.diffutils
-              pkgs.gomplate
-            ];
-          }
-          ''
-            cp -r --no-preserve=mode ${cleanSource inputs.self}/* .
-            cd tests/unit/openwrt
-            mkdir -p $out/tmp/ar71xx
-            ${pkgs.bash}/bin/bash test.sh -t ar71xx -o $out
-          '';
+      perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
+        pname = "perl-switches";
+        version = "0.1.0";
+
+        src = switchConfigurationSrc;
+
+        nativeBuildInputs = with pkgs; [
+          gnumake
+          perl
+        ];
+
+        buildPhase = ''
+          cd switch-configuration
+          make .lint
+          make .build-switch-configs
+        '';
+
+        installPhase = ''
+          touch $out
+        '';
+      });
+
+      openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
+        pname = "openwrt-golden";
+        version = "0.1.0";
+
+        src = openwrtSrc;
+
+        buildInputs = [
+          pkgs.diffutils
+          pkgs.gomplate
+        ];
+
+        buildPhase = ''
+          cd tests/unit/openwrt
+          mkdir -p $out/tmp/ar71xx
+        '';
+
+        installPhase = ''
+          ./test.sh -t ar71xx -o $out
+        '';
+      });
 
       formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
 
