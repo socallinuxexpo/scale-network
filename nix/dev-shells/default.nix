@@ -54,6 +54,7 @@ inputs.nixpkgs.lib.genAttrs
         perlPackages.NetSFTPForeign
         scale-network.perlNetArp
         scale-network.perlNetInterface
+        scale-network.perlNetPing
         ghostscript
       ];
     in
