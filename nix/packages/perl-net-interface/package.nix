@@ -6,11 +6,11 @@
 
 perlPackages.buildPerlPackage {
   pname = "NetInterface";
-  version = "1.015";
+  version = "1.016";
   buildInputs = [ linuxHeaders ];
   doCheck = false;
   src = fetchurl {
-    url = "mirror://cpan/authors/id/M/MI/MIKER/Net-Interface-1.015.tar.gz";
-    hash = "sha256-x6MFjTGh73k+eAtqTJCQEI/SxMNFeQ774AeFKgIvf4E=";
+    url = "mirror://cpan/authors/id/M/MI/MIKER/Net-Interface-1.016.tar.gz";
+    hash = "sha256-e+RGk14BPQ7dPTcfkvuQo7s4q+mVYoidgXiVMSnlNQg=";
   };
 }
