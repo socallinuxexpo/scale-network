@@ -48,6 +48,13 @@ inputs.nixpkgs.lib.genAttrs
 
       networkSub = with pkgs; [
         perl
+        perlPackages.libnet
+        perlPackages.Expect
+        perlPackages.TermReadKey
+        perlPackages.NetSFTPForeign
+        scale-network.perlNetArp
+        scale-network.perlNetInterface
+        scale-network.perlNetPing
         ghostscript
       ];
     in
