@@ -1679,7 +1679,7 @@ protocols {
     lldp-med {
         interface all;
     }
-$PROTOCOL_CONFIG;
+$PROTOCOL_CONFIG
 }
 firewall {
 $FIREWALL_CONFIG
