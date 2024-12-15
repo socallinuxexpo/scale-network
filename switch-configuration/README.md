@@ -4,6 +4,11 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 
 # Prereqs
 
+THese instructions are obsolete and there are now additional requirements. Please check in the PODs for the
+PERL scripts in the config/scripts/ directory and in the config/scripts/README.md file.
+
+Preserved for posterity and no longer particularly relevant.
+
 PERL 5
 Ubuntu instructions
 
@@ -14,9 +19,13 @@ apt-get install libnet-arp-perl
 apt-get install libnet-interface-perl
 ```
 
+Some scripts have additional dependencies... The POD for each script is the most current information.
+There's also documentation of the scripts in config/scripts/README.md that should be reviewed.
+There are also extensive comments in most of the scripts in that directory. When in doubt, use the source, Luke.
+
 # Firmware
 
-The latest version of the firmware can be downloaded from `s3`
+The latest version of the firmware can be downloaded from `dhcp-01.delong.com`
 
 ## Models
 
@@ -24,33 +33,48 @@ The latest version of the firmware can be downloaded from `s3`
 
 We are running the following versions of `junos` and its `bootloader`:
 
-- [jloader 12.1R3](http://sarcasticadmin.com/scale/junos/jloader-ex-3242-12.1R3-signed.tgz)
-- [jinstall 15.1R6.7](http://sarcasticadmin.com/scale/junos/jinstall-ex-4200-15.1R6.7-domestic-signed.tgz)
+- [jloader 12.1R3](http://dhcp-01.delong.com/images/jloader-ex-3242-12.1R3-signed.tgz)
+- [jinstall 15.1R7.9](http://dhcp-01.delong.com/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tgz)
 
 ### SRX300
 
 We are running the following versions of `junos` on the router:
 
-- [junos 15.1X49-D120.3](http://sarcasticadmin.com/scale/junos/junos-srxsme-15.1X49-D120.3-domestic.tgz)
+- [junos 24.2R1.17](http://dhcp-01.delong.com/images/junos-srxsme-15.1X49-D120.3-domestic.tgz)
 
 ## Validate
 
 Current `SHA256` for the juniper firmware:
 
 ```
-bddc7d8a0571e3ed7a7379366b55595664300fbd564cf157be20ff4781ef6add  jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
-44e1fa5d7b1a09eef4772189cb2c0c0d6e8c0492f655bc5e840bbe0056e2a361  jloader-ex-3242-12.1R3-signed.tgz
-9e21098d685eb5a4034645ce5a457c13384003accaa7e0e1e92dd637b6c3021f  junos-srxsme-15.1X49-D120.3-domestic.tgz
+e30b55fa1832be8a1227d0a55a1b2654b42e162ea6182253922793f2243d52a9  jloader-ex-3242-12.1R3-signed.tar.gz
+b23864284709b3b9e485628e43f9078075978b341412a79a682857660fb98419  jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
+d3cb75afd0bdd260155337027b74c8218fb700a51da6682e49af8b61ec10ec27  jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz
+ed6c23a35cd71412cb73c4b7a826db2d8e4c21e7c93c7736dadc6b1b891c98a5  junos-srxsme-24.2R1.17.tgz
 ```
 
-### Remote
+### Verification
 
 Grab the `SHA256` to check the image validity:
 
 ```
 cd <toimagedir>
-curl -O http://sarcasticadmin.com/scale/junos/SHA256SUMS
+curl -O http://dhcp-01.delong.com/images/SHA256SUMS
 shasum -c SHA256SUMS
+```
+
+Expected output:
+
+```
+% curl -O http://dhcp-01.delong.com/images/SHA256SUMS
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   423  100   423    0     0  27963      0 --:--:-- --:--:-- --:--:-- 38454
+% shasum -c SHA256SUMS
+jloader-ex-3242-12.1R3-signed.tar.gz: OK
+jinstall-ex-4200-15.1R6.7-domestic-signed.tgz: OK
+jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz: OK
+junos-srxsme-24.2R1.17.tgz: OK
 ```
 
 # Configuration Files (User Servicable)
@@ -95,10 +119,14 @@ RT_JUNOS	<junos_version>				Default JunOS version for routers
 rootpw		<encrypted password string>		Root Authentication Password
 ```
 
+Note, the actual root password hash has been removed from the repo and lives within the secrets directory.
+The one here is a standin that doesn't really work. Check with a senior team member if you need a copy of
+the secrets directory.
+
 ## config/switchtypes
 
 This file defines the name and type of each switch. It is a  tab delimeted file (tab8
-formatting preferred) containing the following fields:
+formatting preferred) containing many fields, including the following:
 
 ```
 	Name	The name of the switch (e.g. conf214a)
@@ -108,6 +136,8 @@ formatting preferred) containing the following fields:
 	Type	Type of switch (must match a file in config/types/, e.g. Room for a Room switch)
 ```
 
+See the file itself for the most up to date documentation on these fields.
+
 ## config/vlans
 
 ## config/vlans.d/<name>
@@ -115,6 +145,9 @@ formatting preferred) containing the following fields:
 The config/vlans file is the master VLAN configuration file. It may include other files where it
 makes sense to subdivide the configuration (e.g. Conference, Expo, etc.). If so, these files should
 be stored in the config/vlans.d directory.
+
+Our current structure is to have config/vlans only be a list of files in vlans.d to include in the current configuration.
+This allows us to more easily switch venues should that become necessary again.
 
 The syntax of a config/vlans file (either master or within an included file) is as fillows:
 
@@ -147,6 +180,9 @@ represent the full range of VLAN IDs in any human readable form, no attempt is m
 In our example above of VLAN IDs in the range 200-399, a /16 is perfect (e.g. 10.1.0.0/16 would map to 10.1.0.0/24
 through 10.1.199.0/24).
 
+Related to this, there is a special vlan vendor_backbone (499) which is the gateway network all of the vendor VLANs are
+routed to on each switch and which is shared amongst the expo switches.
+
 [<directive>] // <text>				Any text after a double slash is considered a comment
 						to the end of line.  It is ignored by the parser.
 ```
@@ -175,107 +211,21 @@ FIBER   <port> <vlan_name>[,<vlan_name>...] <trunktype>
 ```
 
 ## config/routers/{backups,to_push}/<name>
+These directories contain backups of the routers (backups) and staged configurations to be pushed onto the
+routers (to_push).
 
-These files describe the base configuration for a router. The information in
-these files is combined with certain assumptions and other data in the other
-configuration files to produce a router configuration. This is a work in
-progress, as is the script that processes this file. As such, this description
-section may lag development slightly. It is unlikely that the script will be
-ready to produce full working configurations for the routers by showtime this
-year, so focus for now is on biggest bang for the buck. Effort will be focused
-in the following priority order.
+It has been decided not to pursue templated generated configurations for routers because the small number of
+routers and the effort to implement such do not make sense. The routers currently use "bespoke" configurations
+that are generated/modified by hand.
 
-1. Basic router template (system parameters, authentication, etc.)
-1. L3 VLAN interface configuration
-1. Bridging configuration for interfaces
-1. Firewall rule configuartion
-1. Other items (TBD)
+Any time a configuration is changed on a router, it should be backed up to the routers/backups directory.
 
-The basic router template will be built into the code, but will also pull
-data from configuration files. This will include building user authentication
-based on data in the authentication/keys directory, etc.
-
-The script doing this will be similar to the buildswitches script and
-will use the same library (template.pl) to read configuration files.
-
-Each file describes one router and shares the same name as the router for which
-the configuraiton is being produced. (E.g. ExMDF will produce the ExMDF router
-configuration)
-
-The backups directory contains configuartions pulled from routers.
-The to_push directory contains edited configuration files intended for loading onto routers.
-In some cases, there may be accompanying encapsulated PostScript (.eps) files. In such a case, the eps file should produce
-a port label for the router in question. Such labels are hand coded, use with caution.
-
-### L3 VLAN configuration Directives
-
-interface   \<VL_Name>
-or
-interfaces  \<VL_regexp>
-This directive specifies one (interface) or more (interfaces) VLANs
-to have L3 interfaces on the router in question.
-
-### Bridging Interface Configuration Directives
-
-l2if    \<if_name> <mode> \<VL_Name>\[,\<VL_NAME>\[...\]\]
-This directive specifies a physical interface to be a Layer 2 bridging
-interface (family ethernet-switching).
-
-```
-If no unit is specified in if_name (e.g. ge-0/0/0 instead of ge-0/0/0.4),
-then one of two things will be done, depending on <mode>.
-
-If <mode> is access, then unit 0 will be used and only a single VL_Name
-parameter is valid. THe first one will be used and any extras will be
-ignored with a warning.
-
-If <mode> is trunk, then the VL_ID of each specified VLAN name will be
-used as the unit number tagged for that VLAN.
-
-All trunks will be configured as standard 802.1q.
-```
-
-### Firewall rule configuration
-
-firewall    \<VL_Source> \<VL_Dest> \<Traffic_Class> <Action>
-Specifies a firewall rule to be built.
-VL_Source and VL_Dest can either be literal VLAN names or they can be
-One of the following special VLAN categories:
-ALL     Matches IPv4 0.0.0.0/0 and/or IPv6 ::/0
-INET    Matches non-local addresses (Non-RFC1918 for IPv4,
-outside the show /48 for IPv6)
-LOCAL   Matches local addresses (IPv4 RFC-1918, IPv6 show /48)
-Expo    Matches addresses assigned to Expo Hall
-Conf    Matches addresses assigned to Conference Building
-
-## config/routers/traffic_classes/\*
-
-These files describe traffic classes for firewalls. They are essentially
-additional expressions to be placed in a from clase (along with the ones
-that cause the Source and Destination to be matched)
-
-e.g. a file named "ICMP" might contain:
-
-```
-protocol [ icmp icmp6 ];
-```
-
-## config/routers/actions/\*
-
-These files describe terminating (or non-terminating) actions to take when
-a firewall rule is matched. These files contain statements which are
-incorporated literally and wholesale into a "then" clause in the firewall
-rule produced. The syntax, therefore is identical to a Juniper then clause
-in C-Style configuration notation (not in display-set notation).
-
-e.g. a file named "permit_and_log" might contain:
-
-```
-permit;
-log;
-```
+The to_push directory should always contain the most current desired configuration in the event a router needs to be
+restored.
 
 ## Source for Vendor Booth Information:
+
+This link may be out of date and may need updating year to year.
 
 https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuYxmU/edit?ts=5a80d55a#gid=1023875758
 
@@ -283,19 +233,25 @@ https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuY
 
 scripts/
 
+However, there is documentation of the scripts in scripts/README.md which should be reviewed.
+Also, the comments and POD in the scripts may prove relevant to users of the scripts.
+
 # Standard Operational Procedures
 
 ## How to build a set of switch configurations
 
-The procedure below is mostly replaced with a Makefile now.
+The procedure below is replaced with a Makefile now. The rest is preserved for historical
+purposes and troubleshooting in case of an issue with the make process.
 
 You should be able to go into the switch-configuration directory and simply type 'make'.
+This should generate all of the PDFs, Sticker EPS files, Configuraiton, and Map files
+needed. 
 
 Once the configuration files are all set up (as described above) and you
 have set up authentication parameters as described below, simply run
 
 ```
-scripts/buildswitches
+scripts/build_switch_configs.pl
 ```
 
 The resulting configuration files will be written to the output/switch_confugrations directory.
@@ -304,30 +260,51 @@ If you want to rebuild the configuration file for a single switch or a subset
 of switches, specify their names as arguments on the command line
 
 ```
-scripts/buildswitches <switch1>[ <switch2>...]
+scripts/build_switch_configs.pl <switch1>[ <switch2>...]
 ```
 
-## How to mass-update a set of (running) switches
+Note: The above command will only perform the first step in the postscript generation for sticker and PDF files.
+Instructions for the rest of the process are in the Makefile. 
 
-After completing the configuration build (as described in the previous section) review the
-generated configuration files and make sure they match expectations. Once you are confident
-in the output, simply run
+It should also be noted that the Makefile takes care of some prerequisites and validation steps to inform of some
+missing dependencies and other issues as well as some other housekeeping. If at all possible, use the Makefile. Doing
+this by hand is just unnecessarily painful and not very reliable.
 
+## Loading configurations onto switches
+
+All config loading is now accomplished using the switch_config_loader script. See scripts/README.md for
+its documentation.
+
+This should be run from the switch_configration/config directory as scripts/switch_config_loader.
+
+Some quick examples:
+Load miniconfig via the serial port (this is the first step for a new switch or one whose config has been reset (amnesiac)):
 ```
-scripts/update_switches
+	scripts/switch_config_loader -c miniconfig -t /dev/<serial_port>
 ```
 
-This will compare the proposed config to the configuration currently on the switch in production
-and apply the necessary changes.
-
-## How to build and push a new configuration to a single switch
-
-As in the above section for updating all switches, run the same command, but with the name of
-the switch(es) you wish to update as argument(s):
-
+Load the switch with the appropriate configuration based on its me0 MAC address in switchtypes:
 ```
-scripts/update_switches BallroomG Room126
+	scripts/switch_config_loader -l
 ```
+
+Load configs on to a bunch of switches (sequentially), monitoring for the ethernet to disconnect and reconnect to
+tell when the next switch is ready to be flashed:
+```
+	scripts/switch_config_loader -b
+```
+
+Push updated configurations to all switches live at the show:
+```
+	scripts/switch_config_loader
+```
+
+Push updated configurations to a subset of switches by name (live at the show):
+```
+	scripts/switch_config_loader <switch_spec>
+```
+(Where <switch_spec> is any combination of switch names, group names, etc.)
+
 
 ## How to set up a switch initially
 
@@ -344,51 +321,78 @@ scripts/update_switches BallroomG Room126
 1. Determine the serial port device name on your computer. The examples in this
    section will use __/dev/ttyS6__ as the serial port.
 
-1. Connect switch port ge-0/0/0 (top left port) to the network (or to the computer running
-   these scripts).
+1. Connect switch management ethernet (next to console port)  directly to the computer running
+   these scripts.
 
-1. Determine a valid network address the switch can use during this process (this address
-   will not remain on the switch after the process is completed)
-
-1. Make sure that the address in the previous step is one the computer running the script
-   can reach.
-
-1. If the computer is not on the same network as the switch, determine the default gateway
-   address needed by the switch to reach the computer.
+1. Configure the computer's ethernet port to an address other than 192.168.255.76 on the 192.168.255.0/24
+   network. The switch will have address 192.168.255.76 once miniconfig is loaded via serial.
 
 1. Make sure you have an ssh private key (preferably installed in a running agent session)
-   that corresponds to an ssh public key that is configured for switch authentication
+   that corresponds to an ssh public key that is included in miniconfig
    available for use during this process.
 
-1. Make sure that the switch configuration file is built and correct in
-   output/switch_configurations.
+1. Make sure that the switch configuration file is built and correct in the
+   output/switch_configurations directory.
 
 1. Run the following command:
 
    ```
-   scripts/initialize_switch /dev/ttyS6 <switch_number> <switch_IP_address> [<default_gateway>]
+   scripts/switch_config_loader -c miniconfig -t /dev/<serial_port>
    ```
+
+   This will default to logging into the switch as root. If you want to use a different username,
+   you can add:
+   ```
+   ... -u <username>
+   ```
+   to the command line above. It may also be useful to add the '-p' flag to cause the script to prompt
+   for the password to use for authentication.
+
+   It is possible that in the future, miniconfig will be made available via a zero-touch provisioning
+   capability which will allow the switch to be factory-initialized and then retrieve miniconfig
+   automatically. This will require additional infrastructure.
 
 1. The script will display information about each step as it proceeds. It will perform the
    following steps:
 
    1. It will validate that it can talk to the CLI of the switch via the serial port.
-   1. It will configure the switch with an IP address on VLAN 1.
-   1. It will install the default gateway (if needed).
-   1. It will check the version of JunOS on the switch and compare it to the configured
-      version for the specified switch.
-   1. It configure the switch to support administration via SSH using the specified SSH
-      public keys.
-   1. It will (if necessary) stage the configured version of JunOS onto the switch for
-      installation via SCP.
-   1. It will (if necessary) perform the software upgrade on the switch and reboot the
-      switch.
-   1. After rebooting the switch, it will load the generated configuration file
-      onto the switch.
-   1. It will shutdown the switch.
+   1. It will attempt to authenticate onto the switch
+   1. It will replace the existing configuration on the switch with the contents of miniconfig
 
-1. Once the switch powers down, you will know that the process is completed and the switch
-   should be ready for installation.
+1. When the script exits, review the messages for any errors or problems encountered. If unsuccessful, either
+   try again or troubleshoot the problem and correct it manually or correct the problem and retry with the script.
+
+1. Once miniconfig is bootstrapped onto the switch, it can be accessed with SSH and public key authentication
+   over the management interface. Use this to upgrade or reinstall the software and/or boot loader onto the switch.
+
+1. Once the correct version of the software is installed, load the switches proper configuration using the following
+   command:
+
+   ```
+   scripts/switch_config_loader -l
+   ```
+
+   Alternatively, if there are several switches with miniconfig or an older show configuration loaded on them
+   which need updated configurations via this method, you can use the following command:
+
+   ```
+   scripts/switch_config_loader -b
+   ```
+
+   In the first case (-l), the script will exit when finished and you should log into the switch and prepare
+   it for shutdown using the following switch cli command:
+   ```
+   request system power-off
+   ```
+
+   In the second case (-b), the script will send the power-off command to the switch upon successful completion
+   and you should watch for the "SYS" light (middle LED in the group of 3 to the right of the LCD display) to turn
+   off, indicating that the switch has halted and is ready for power-off. Once this is done, you can move the
+   ethernet cable to the management port of the next switch to be loaded and the script will soon install the
+   configuration onto that switch. When all switches are complete, simply use Ctrl-C to exit the script.
+
+   The bulk load (-b) flag thus allows several switches to be powered up and waiting for configuration such that
+   all of the switches can be rapidly loaded with their configurations.
 
 ## To get the configuration for a switch:
 
@@ -412,6 +416,10 @@ scripts/update_switches BallroomG Room126
    ```
 
 ## To replace the configuration on one of last years switches:
+   These instructions are now obsolete... Use switch_config_loader instead.
+
+   They are preserved here in case the switch_config_loader can't be made operable
+   and desperate measures are required.
 
 1. ```
     Connect to switch via serial console.
@@ -423,26 +431,18 @@ scripts/update_switches BallroomG Room126
     Start the cli.
    ```
 1. ```
-    Type "edit" to enter edit mode and perform the following steps:
-    A.      delete system
-    B.      delete chassis
-    C.      delete interfaces
-    D.      delete snmp
-    E.      delete routing-options
-    F.      delete protocols
-    G.      delete ethernet-switching-options
-    H.      delete vlans
-    I.      delete poe
+    type "edit"
    ```
 1. ```
-    You now have an empty configuraton. Type "load merge terminal"  
+    Type "load override terminal"  
     to enter a mode where you can paste in the new configuration file.
    ```
 1. ```
     Bring up the configuration file from the switch in another window
     and paste about 1 screenful at a time into the switch.
     Be watchful for any error reports. If you encounter an error,
-    start back at step 4.A. and repeat the process. If the error
+    start back at the previous step (Hit CTRL-D to abort the load if  you didn't
+    already, then type rollback 1, then try again from the previous step). If the error
     is persistent, ask for help.
    ```
 1. ```
@@ -474,10 +474,17 @@ private keys) to us along with a phone number where we can verify your key finge
 
 Public keys are stored in the authentication/keys directory and ARE PUBLIC.
 
-Keys must be at least 2048 bits.
+Keys must be at least 2048 bits. ED25519 is preferred, ECDSA and RSA keys are also acceptable
+in that order of preference
 
 Public keys will also become visible in all switch and router configurations.
 
 Since these are public keys, publication should not be a security risk. Should it become a security risk,
 SCALE will likely be the least of your worries, but we will make every effort to remove visibility to
 keys in the repository upon finding out that this is an issue.
+
+If your key becomes compromised, please notify us immediately. We recommend using a different key for SCaLE from
+your other activities to minimize the probability of cross-contagion from key compromise.
+
+We reserve the right to remove any key at any time in the event we suspect a key has been compromised.
+
