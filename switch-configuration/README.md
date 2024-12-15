@@ -211,6 +211,7 @@ FIBER   <port> <vlan_name>[,<vlan_name>...] <trunktype>
 ```
 
 ## config/routers/{backups,to_push}/<name>
+
 These directories contain backups of the routers (backups) and staged configurations to be pushed onto the
 routers (to_push).
 
@@ -245,7 +246,7 @@ purposes and troubleshooting in case of an issue with the make process.
 
 You should be able to go into the switch-configuration directory and simply type 'make'.
 This should generate all of the PDFs, Sticker EPS files, Configuraiton, and Map files
-needed. 
+needed.
 
 Once the configuration files are all set up (as described above) and you
 have set up authentication parameters as described below, simply run
@@ -264,7 +265,7 @@ scripts/build_switch_configs.pl <switch1>[ <switch2>...]
 ```
 
 Note: The above command will only perform the first step in the postscript generation for sticker and PDF files.
-Instructions for the rest of the process are in the Makefile. 
+Instructions for the rest of the process are in the Makefile.
 
 It should also be noted that the Makefile takes care of some prerequisites and validation steps to inform of some
 missing dependencies and other issues as well as some other housekeeping. If at all possible, use the Makefile. Doing
@@ -279,32 +280,37 @@ This should be run from the switch_configration/config directory as scripts/swit
 
 Some quick examples:
 Load miniconfig via the serial port (this is the first step for a new switch or one whose config has been reset (amnesiac)):
+
 ```
 	scripts/switch_config_loader -c miniconfig -t /dev/<serial_port>
 ```
 
 Load the switch with the appropriate configuration based on its me0 MAC address in switchtypes:
+
 ```
 	scripts/switch_config_loader -l
 ```
 
 Load configs on to a bunch of switches (sequentially), monitoring for the ethernet to disconnect and reconnect to
 tell when the next switch is ready to be flashed:
+
 ```
 	scripts/switch_config_loader -b
 ```
 
 Push updated configurations to all switches live at the show:
+
 ```
 	scripts/switch_config_loader
 ```
 
 Push updated configurations to a subset of switches by name (live at the show):
+
 ```
 	scripts/switch_config_loader <switch_spec>
 ```
-(Where <switch_spec> is any combination of switch names, group names, etc.)
 
+(Where \<switch_spec> is any combination of switch names, group names, etc.)
 
 ## How to set up a switch initially
 
@@ -342,9 +348,11 @@ Push updated configurations to a subset of switches by name (live at the show):
 
    This will default to logging into the switch as root. If you want to use a different username,
    you can add:
+
    ```
    ... -u <username>
    ```
+
    to the command line above. It may also be useful to add the '-p' flag to cause the script to prompt
    for the password to use for authentication.
 
@@ -381,6 +389,7 @@ Push updated configurations to a subset of switches by name (live at the show):
 
    In the first case (-l), the script will exit when finished and you should log into the switch and prepare
    it for shutdown using the following switch cli command:
+
    ```
    request system power-off
    ```
@@ -416,10 +425,11 @@ Push updated configurations to a subset of switches by name (live at the show):
    ```
 
 ## To replace the configuration on one of last years switches:
-   These instructions are now obsolete... Use switch_config_loader instead.
 
-   They are preserved here in case the switch_config_loader can't be made operable
-   and desperate measures are required.
+These instructions are now obsolete... Use switch_config_loader instead.
+
+They are preserved here in case the switch_config_loader can't be made operable
+and desperate measures are required.
 
 1. ```
     Connect to switch via serial console.
@@ -487,4 +497,3 @@ If your key becomes compromised, please notify us immediately. We recommend usin
 your other activities to minimize the probability of cross-contagion from key compromise.
 
 We reserve the right to remove any key at any time in the event we suspect a key has been compromised.
-

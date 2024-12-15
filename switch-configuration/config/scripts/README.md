@@ -4,6 +4,13 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
 
 ## Scripts
 
+- Needed updates:
+  -- Write introductory text
+  -- Add documentation for ../../Makefile
+  -- Add documentation for switch_config_loader
+  -- Add documentation for Loader.pm
+  -- Review documentation of other scripts and update as needed
+
 - build_switch_configs.pl
   -- This should be the first script you run in the tool chain. It will create the output directory if it doesn't exist. It will clean it out if it does. Then it will generate all of the switch configuration files. It will also produce the EPS files that can be combined/printed to produce human-readable port references for the tops of the switches. If you give it any arguments, it will treat those as switch names and generate only those files.
 
@@ -22,28 +29,9 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
 - switch_pinger
   -- This script attempts to ping every switch and displays the status of each one.
 
-- load_switch.py
-  -- WIP -- Not currently used.
+- override_switches -- Deprecated, use switch_config_loader instead
 
-- update_switches
-  -- WIP -- Not currently used. Probably will get deprecated in favor of Ansible rather than completed.
-
-- override_switches
-  -- Loads new configuration onto switches, completely replacing existing configuration.
-  --- Can use -l flag as follows:
-  ---- Build switch configurations (See build_switch_configs.pl above)
-  ---- Set an interface on your system to an appropriate address (contact a senior team member for more information).
-  ---- Connect that interface to the management port of the target switch.
-  ---- Use the command as "override_switches -l \<switch_name>" e.g. "override_switches -l NOC" if you are connected to the NOC switch.
-  ---- USE CAUTION: This will load the configuration for the specified \<switch_name> onto whatever switch you are connected to.
-  --- Can take group names as arguments. For example, group F (Ballroom F IDF and dependents) will replace configurations on NW-IDF, BallroomDE, BallroomF, BallroomG, BallroomH
-
-- bulk_local_load_switches
-  -- Similar to override_switches, but set up for doing multiple switches in a row.
-  -- Uses MAC address of whatever switch is pingable at me0 address (see a senior team member for more information) to identify switch
-  -- Loads configuration for switch identified by MAC address
-  -- Once configuration load is complete, waits for switch to go off line and then begins looking for another switch
-  -- If the switch doesn't have an me0 interface configuration for SCaLE, that may need to be put on via the serial port to enable loading.
+- bulk_local_load_switches -- Deprecated, use switch_config_loader instead
 
 ## Contributing
 
