@@ -45,6 +45,10 @@
         };
 
         systemd.network = {
+          # The notion of "online" is a broken concept
+          # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
+          # https://github.com/NixOS/nixpkgs/issues/247608
+          wait-online.enable = false;
           enable = true;
           networks = {
             "10-lan" = {
