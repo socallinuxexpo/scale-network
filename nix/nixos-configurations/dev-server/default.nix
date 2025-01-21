@@ -397,6 +397,11 @@
                   routeConfig.Gateway = "10.0.3.1";
                   routeConfig.GatewayOnLink = true;
                 }
+                {
+                  routeConfig.Destination = "2001:470:f026::/48";
+                  routeConfig.Gateway = "2001:470:f026:103::1";
+                  routeConfig.GatewayOnLink = true;
+                }
               ];
             };
             "50-bridge104" = {
