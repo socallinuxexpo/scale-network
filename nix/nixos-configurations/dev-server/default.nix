@@ -44,6 +44,20 @@
           firewall.enable = true;
         };
 
+        # ensure non-mgmt interfaces disable accept RA for ipv6
+        # opting for sysctl and IPv6AcceptRA=false for systemd.networkd
+        boot.kernel.sysctl = {
+          "net.ipv6.conf.bridge100.autoconf" = false;
+          "net.ipv6.conf.bridge101.autoconf" = false;
+          "net.ipv6.conf.bridge102.autoconf" = false;
+          "net.ipv6.conf.bridge104.autoconf" = false;
+          "net.ipv6.conf.bridge105.autoconf" = false;
+          "net.ipv6.conf.bridge107.autoconf" = false;
+          "net.ipv6.conf.bridge110.autoconf" = false;
+          "net.ipv6.conf.bridge112.autoconf" = false;
+          "net.ipv6.conf.bridge499.autoconf" = false;
+        };
+
         systemd.network = {
           # The notion of "online" is a broken concept
           # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
@@ -349,14 +363,23 @@
             "50-bridge100" = {
               matchConfig.Name = "bridge100";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge101" = {
               matchConfig.Name = "bridge101";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge102" = {
               matchConfig.Name = "bridge102";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge103" = {
               matchConfig.Name = "bridge103";
@@ -369,26 +392,44 @@
             "50-bridge104" = {
               matchConfig.Name = "bridge104";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge105" = {
               matchConfig.Name = "bridge105";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge107" = {
               matchConfig.Name = "bridge107";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge110" = {
               matchConfig.Name = "bridge110";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge112" = {
               matchConfig.Name = "bridge112";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
             "50-bridge499" = {
               matchConfig.Name = "bridge499";
               enable = true;
+              networkConfig = {
+                IPv6AcceptRA = false;
+              };
             };
           };
         };
