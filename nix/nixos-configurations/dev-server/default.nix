@@ -391,6 +391,13 @@
                 "10.0.3.20/24"
                 "2001:470:f026:103::20/64"
               ];
+              routes = [
+                {
+                  routeConfig.Destination = "10.0.0.0/8";
+                  routeConfig.Gateway = "10.0.3.1";
+                  routeConfig.GatewayOnLink = true;
+                }
+              ];
             };
             "50-bridge104" = {
               matchConfig.Name = "bridge104";
