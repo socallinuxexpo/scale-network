@@ -4,6 +4,7 @@
   modules =
     {
       pkgs,
+      lib,
       ...
     }:
     {
@@ -56,6 +57,8 @@
           "net.ipv6.conf.bridge110.autoconf" = false;
           "net.ipv6.conf.bridge112.autoconf" = false;
           "net.ipv6.conf.bridge499.autoconf" = false;
+          # completely disable IPv6 temporary addresses
+          "net.ipv6.conf.default.use_tempaddr" = lib.mkForce 0;
         };
 
         systemd.network = {
