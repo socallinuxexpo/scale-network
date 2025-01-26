@@ -27,7 +27,7 @@ CURL := $(shell command -v curl 2> /dev/null)
 OPENWRT_VER ?= c8ea1aa970bf5a0275e3b0b7da777e804821ddcd
 # If bumping opkg it needs to be a commit that exists in the fork
 # https://github.com/sarcasticadmin/opkgs
-OPENWRT_PKG_VERSION ?= b18cf76d0f31fa12877f7b8e83596d27d89f0020
+OPENWRT_PKG_VERSION ?= 38e0f8c7d5c2f69f1603abb99e0fd3886c05f687
 
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)
