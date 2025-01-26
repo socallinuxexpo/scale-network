@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        target: ["ar71xx", "mt7622"]
+        target: ["ath79", "mt7622"]
     container:
       # Ubuntu 20.04
       image: sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922
