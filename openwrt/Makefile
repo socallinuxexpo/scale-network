@@ -1,5 +1,5 @@
 #
-# Builds Openwrt images for ar71xx & ipq806x targets used at Scale
+# Builds Openwrt images for targets used at Scale
 # Assumes all dependency tools are already installed
 #
 
@@ -24,7 +24,7 @@ KEYPATH ?= ../facts/keys/
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER ?= 9062e5faaedc03823ee419fe34de1de73f48babc
+OPENWRT_VER ?= c8ea1aa970bf5a0275e3b0b7da777e804821ddcd
 # If bumping opkg it needs to be a commit that exists in the fork
 # https://github.com/sarcasticadmin/opkgs
 OPENWRT_PKG_VERSION ?= b18cf76d0f31fa12877f7b8e83596d27d89f0020
