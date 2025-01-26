@@ -31,7 +31,7 @@ for all members of the tech team.
 To start building:
 
 ```
-# Make sure to mount the git root inside this container
+# Make sure to mount the git rev-parse --show-toplevel) inside this container
 docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922  /bin/bash
 cd /home/openwrt/scale-network
 ```
@@ -255,7 +255,7 @@ rm -f *.config
 If you already have a true common config (meaning no specific arch or arch packages inside) you can copy it in:
 
 ```
-cp $(git root)/openwrt/configs/common.config ./.config
+cp $(git rev-parse --show-toplevel)/openwrt/configs/common.config ./.config
 ```
 
 Or create a new one:
@@ -270,29 +270,29 @@ Install only packages which are utilities and non arch specific things. We dont 
 the `common.config`
 
 ```
-./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git root)/openwrt/configs/common.config
+./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git rev-parse --show-toplevel)/openwrt/configs/common.config
 ```
 
 ```
-comm -23 <(sort ./.diffconfig) <(sort $(git root)/openwrt/configs/common.config) > $(git root)/openwrt/configs/x86-generic.config
+comm -23 <(sort ./.diffconfig) <(sort $(git rev-parse --show-toplevel)/openwrt/configs/common.config) > $(git rev-parse --show-toplevel)/openwrt/configs/x86-generic.config
 ```
 
 Now we have the `common.config` and `x86-generic.config`. To add in a specific board:
 
 ```
 cd <build source>
-cat $(git root)/openwrt/configs/common.config > ./.config
-cat $(git root)/openwrt/configs/x86_generic.config >> ./.config
+cat $(git rev-parse --show-toplevel)/openwrt/configs/common.config > ./.config
+cat $(git rev-parse --show-toplevel)/openwrt/configs/x86_generic.config >> ./.config
 ```
 
 Run `make menuconfig` and change the arch from x86 to target arch:
 
 ```
-./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git root)/openwrt/configs/common.config
+./scripts/diffconfig.sh | tee .diffconfig | grep -v CONFIG_TARGET > $(git rev-parse --show-toplevel)/openwrt/configs/common.config
 ```
 
 ```
-comm -23 <(sort ./.diffconfig) <(sort $(git root)/openwrt/configs/common.config) > $(git root)/openwrt/configs/mt7622-generic.config
+comm -23 <(sort ./.diffconfig) <(sort $(git rev-parse --show-toplevel)/openwrt/configs/common.config) > $(git rev-parse --show-toplevel)/openwrt/configs/mt7622-generic.config
 ```
 
 > Assuming mt7622 is our target arch

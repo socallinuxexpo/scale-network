@@ -131,11 +131,11 @@ genAttrs
 
         buildPhase = ''
           cd tests/unit/openwrt
-          mkdir -p $out/tmp/ar71xx
+          mkdir -p $out/tmp/ath79
         '';
 
         installPhase = ''
-          ./test.sh -t ar71xx -o $out
+          ./test.sh -t ath79 -o $out
         '';
       });
 

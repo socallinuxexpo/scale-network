@@ -42,7 +42,7 @@ do
 done
 shift $((OPTIND -1))
 
-TARGET=${TARGET:-'ar71xx'}
+TARGET=${TARGET:-'ath79'}
 UPDATE=${UPDATE:-0}
 
 TMPLOC="${OUTPUT:-.}/tmp/${TARGET}"

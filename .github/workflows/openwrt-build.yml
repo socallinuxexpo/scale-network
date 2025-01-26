@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        target: ["ar71xx", "mt7622"]
+        target: ["ath79", "mt7622"]
     container:
-      # Ubuntu 20.04
-      image: sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922
-      # Since user is openwrt and gets 1001 from inside container
-      options: --user 1001
+      # Ubuntu 24.04
+      image: sarcasticadmin/openwrt-build@sha256:25ac9d0dd4eeaad1aaaa7c82c09e9ecc103c69224fc55eb9717c4cfb018a5281
+      # Since user is ubuntu and gets 1000 from inside container
+      options: --user 1000
     steps:
       - uses: actions/checkout@v1
         with:
