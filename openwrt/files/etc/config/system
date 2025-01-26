@@ -10,7 +10,7 @@ config timeserver 'ntp'
         option enable_server '0'
         list server '{{ (datasource "openwrt").ntp.server }}'
 
-{{ if (eq (env.Getenv "TARGET") "ar71xx") }}
+{{ if (eq (env.Getenv "TARGET") "ath79") }}
 config led 'led_wan'
         option name 'WAN LED (green)'
         option sysfs 'netgear:green:wan'
