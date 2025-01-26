@@ -11,7 +11,7 @@ include include/*.mk
 SHELL = /usr/bin/env bash
 
 # WNDR by default
-TARGET ?= ar71xx
+TARGET ?= ath79
 
 BUILD_DIR ?= build
 # Set to configure -j (defaults to nproc)
