@@ -4,10 +4,8 @@ config interface 'loopback'
         option ipaddr '127.0.0.1'
         option netmask '255.0.0.0'
 
-
 config globals 'globals'
         option ula_prefix 'fdfa:7251:0374::/48'
-
 
 
 config switch
@@ -124,7 +122,6 @@ config interface 'backdoor'
         option proto 'static'
         
 
-
 config switch_port
         option device 'rtl8366s'
         option port '1'
@@ -139,4 +136,3 @@ config switch_port
         option device 'rtl8366s'
         option port '5'
         option led '2'
-
