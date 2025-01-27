@@ -14,8 +14,8 @@ jobs:
     container:
       # Ubuntu 24.04
       image: sarcasticadmin/openwrt-build@sha256:25ac9d0dd4eeaad1aaaa7c82c09e9ecc103c69224fc55eb9717c4cfb018a5281
-      # Since user is ubuntu and gets 1000 from inside container
-      options: --user 1000
+      # Since user is openwrt and gets 1001 from inside container
+      options: --user 1001
     steps:
       - uses: actions/checkout@v1
         with:
