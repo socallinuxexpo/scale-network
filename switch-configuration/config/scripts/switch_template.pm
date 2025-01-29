@@ -12,6 +12,7 @@
 ##FIXME## those defined in the types/* files.
 
 ##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
+##FIXME## Assumes v6 prefix is a /48 and many code dependencies on this assumption. Safe at least for now.
 
 ##FIXME## Add a PS color block to PoE ports
 
@@ -33,6 +34,7 @@ our $VV_name_prefix   = "";
 our $DEBUGLEVEL       = 9;
 our %Switchtypes      = ();
 our %Switchgroups     = ();
+our $PREFIX           = "";
 
 our @ISA = qw(Exporter);
 
@@ -189,6 +191,26 @@ sub read_config_file
   return(\@OUTPUT);
 }
 
+sub get_prefix
+{
+  my @OUTPUT = @{ read_config_file("ipv6_prefix") };
+  if (@OUTPUT != 1)
+  {
+    die("ERROR: more than one entry in ipv6_prefix file.\n".
+	" File must contain a single IPv6 prefix on one line and otherwise be empty.\n");
+  }
+  chomp(@OUTPUT);
+  my ($prefix,$pfxlen) = split(/\//, $OUTPUT[0]);
+  if ($pfxlen ne "48")
+  {
+    die("ERROR: Only /48 is allowed at this time. File (ipv6_prefix) has /$pfxlen.\n");
+  }
+  $prefix = lc($prefix);
+  $prefix =~ s/([23][0-9a-f]{3}):([0-9a-f]{1,4}):([0-9a-f]{0,4})::{0,1}.*$/\1:\2:\3::/;
+  $prefix =~ s/:+$/::/;
+  return $PREFIx;
+}
+  
 sub get_switchlist
 {
   my $include_Z = shift(@_);
@@ -758,6 +780,7 @@ EOF
   return($OUTPUT, $gw);
 }
 
+
 sub build_vlans_from_config
 {
   my $hostname = shift @_;
@@ -836,6 +859,85 @@ EOF
     }
   }
   return($OUTPUT);
+}
+
+sub build_trunktypes_from_config
+{
+  my $hostname = shift @_;
+  my $VL_CONFIG = read_config_file("vlans");
+  # Convert configuration data to hash with VLAN ID as key
+  my %VLANS;         # Hash containing VLAN data structure as follows:
+                     # %VLANS = {
+                     #     <VLANID> => [ <type>, <name>, <IPv6>,
+                     #                   <IPv4>, <desc>, <prim> ],
+                     #     ...
+                     # }
+  my %VLANS_byname;  # Hash mapping VLAN Name => ID
+  my $OUTPUT = "";
+
+  my $type;   # Type of VLAN (VLAN, PRIM, ISOL, COMM)
+              # Where:
+              #    VLAN = Ordinary VLAN
+              #    PRIM = Primary PVLAN
+              #    ISOL = Isolated Secondary PVLAN
+              #    COMM = Community Secondary PVLAN
+  my $name;   # VLAN Name
+  my $vlid;   # VLAN ID (802.1q tag number)
+  my $IPv6;   # IPv6 Prefix (For reference and possible future consistency
+              #   checks). Not used in config generation for switches..
+  my $IPv4;   # IPv4 Prefix (For reference and possible future consistency
+              #   checks). Not used in config generation for switches..
+  my $desc;   # Description
+  my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
+  my %TRUNKTYPES = ();
+  debug(9, "Got ", $#{$VL_CONFIG}, " Lines of VLAN configuraton\n");
+  foreach(@{$VL_CONFIG})
+  {
+    my @TOKENS;
+    @TOKENS = split(/\t/, $_);
+    $prim = 0;
+    $name = $TOKENS[1];
+    if ($TOKENS[0] eq "VLAN") # Standard VLAN
+    {
+      $type = $TOKENS[0]; # VLAN
+      $vlid = $TOKENS[2];
+      $desc = $TOKENS[5];
+      $IPv6 = $TOKENS[3];
+      $IPv4 = $TOKENS[4];
+      $VLANS_byname{$name} = $vlid;
+      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
+                        ($prim ? $prim : undef) ];
+      debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
+    }
+    elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
+    {
+      # Skip this line here... Process elsewhere
+    }
+  }
+  my $TT = read_config_files("trunktypes");
+  foreach(@{$TT})
+  {
+    my @TOKENS = split(/\t/, $_);
+    my $name = $TOKENS[0];
+    my $vlans = $TOKENS[1];
+    my $fgcolor = $TOKENS[2];
+    my $bgcolor = $TOKENS[3];
+    my @vlans = split(/,/, $vlans);
+    # Validate VLANs for each trunk type are defined
+    foreach my $k (@vlans)
+    {
+      if (!exists($VLANS_byname{$k}))
+      {
+        die("ERROR: VLAN $k not found in VLAN Configuration for Trunk Type $name\n");
+      }
+    }
+    if (exists($TRUNKTYPES{$name}))
+    {
+      die("ERROR: Multiple definitions of trunktype $name\n");
+    }
+    $TRUNKTYPES{$name} = [ $vlans, $fgcolor, $bgcolor ];
+  }
+  return \%TRUNKTYPES;
 }
 
 
@@ -1057,8 +1159,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     destination-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
                     }
                     destination-port domain;
                 }
@@ -1069,7 +1171,7 @@ sub VV_init_firewall
 	  term ipv6_icmp_basics {
               from {
                   destination-address {
-                        2001:470:f026::/48
+                        $PREFIX::/48
                   }
                   icmp-type [ neighbor-solicit neighbor-advertisement router-solicit packet-too-big time-exceeded ];
               }
@@ -1080,7 +1182,7 @@ sub VV_init_firewall
           term ping {
               from {
                   destination-address {
-                        2001:470:f026::/48
+                        $PREFIX::/48
                   }
                   icmp-type [ echo-reply echo-request ];
               }
@@ -1091,8 +1193,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     destination-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
                     }
                     destination-port [ bootps dhcp ];
                 }
@@ -1103,7 +1205,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     destination-address {
-                        2001:470:f026::/48;
+                        $PREFIX::/48;
                         fc00::/7;
                     }
                 }
@@ -1134,8 +1236,8 @@ sub VV_init_firewall
           term dns {
                 from {
                     source-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
                     }
                     source-port domain;
                 }
@@ -1146,8 +1248,8 @@ sub VV_init_firewall
           term dhcp {
                 from {
                     source-address {
-                        2001:470:f026:103::/64;
-                        2001:470:f026:503::/64;
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
                     }
                     source-port [ bootps dhcp ];
                 }
@@ -1158,7 +1260,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     source-address {
-                        2001:470:f026::/48;
+                        $PREFIX::/48;
                         fc00::/7;
                     }
                 }
@@ -1239,6 +1341,7 @@ sub build_vendor_from_config
     }
     elsif ($cmd eq "TRUNK" || $cmd eq "FIBER")
     {
+      ##FIXME## Handle TRUNK names that are TRUNKTYPE macros
       # Skip -- Not vendor VLAN related, handled elsewhere
       # Need to account for the interfaces, though.
       my $iname = $tokens[0];
@@ -1416,19 +1519,19 @@ EOF
             }
             server-group {
                 Conference {
-                    2001:470:f026:503::5;
+                    $PREFIX:503::5;
                 }
                 Expo {
-                    2001:470:f026:103::5;
+                    $PREFIX:103::5;
                 }
                 Vendors {
-                    2001:470:f026:103::5;
+                    $PREFIX:103::5;
                 }
                 Hilton {
-                    2001:470:f026:103::5;
+                    $PREFIX:103::5;
                 }
                 AV {
-                    2001:470:f026:105::10;
+                    $PREFIX:105::10;
                 }
             }
             active-server-group $active_srv_grp;
@@ -1481,8 +1584,8 @@ EOF
     $VV_protocols .= <<EOF;
         interface $_ {
             other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:103::15;
+            dns-server-address $PREFIX:103::5;
+            dns-server-address $PREFIX:103::15;
             prefix $pfx {
                 on-link;
                 autonomous;
@@ -1577,10 +1680,12 @@ sub build_config_from_template
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
   my ($vcfg, $portmap_vendor) = build_vendor_from_config($hostname);
   my %VENDOR_CONFIGURATION = {};
+  our $PREFIX = get_prefix();
   %VENDOR_CONFIGURATION = %{$vcfg} if (reftype $vcfg eq reftype {});;
   debug(5, "Received Vendor configuration:\n");
   debug(5, Dumper(%VENDOR_CONFIGURATION));
   debug(5, "End Vendor Config\n");
+  my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
   my ($INTERFACES_LAYER3, $IPV6_DEFGW) = build_l3_from_config($hostname);
   $INTERFACES_PHYSICAL .= ${VENDOR_CONFIGURATION}{"interfaces"};
   $VLAN_CONFIGURATION  .= ${VENDOR_CONFIGURATION}{"vlans"};
@@ -1644,8 +1749,8 @@ snmp {
     community Junitux {
         authorization read-only;
         clients {
-        2001:470:f026:103::/64;
-        2001:470:f026:503::/64;
+        $PREFIX:103::/64;
+        $PREFIX:503::/64;
         }
     }
 }

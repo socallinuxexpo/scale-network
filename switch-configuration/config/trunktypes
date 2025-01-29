@@ -1,0 +1,39 @@
+# Trunktypes file -- This file defines VLAN lists for certain types of trunks which
+# can be referenced in switch types (types/*) files in Trunk Port declarations
+#
+# Format: <name>\t<vlan>[,<vlan>...]\t<bgcolor>\t<fgcolor>
+#
+# where <name> is an arbitrary name (which should not match a VLAN name
+# 	<vlan> is a vlan name defined in vlans or one of its includes.
+#	<bgcolor> is a 0xRRGGBB value defining a background color for such interfaces
+#	<fgcolor> is a 0xRRGGBB value defining the text color for such interfaces
+#
+# If a <name> overlaps a <vlan>, then types files will interpret it as a
+# name and expand it based on the definition here. Expansions here are not
+# recursive, so any vlan here will not be treated as a name, even if it conflicts.
+#
+# This makes it possible to work around conflicts, but will be very confusing and
+# is thus, best avoided.
+#
+// Expo Booth Area switch Template
+
+// Uplink definition can be used for both Uplink and Downlink ports, but different colors
+// are desirable, so we define them separately here.
+exUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
+				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
+				0xff0000	0xffffff
+exDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
+				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
+				0x0000ff	0xffffff
+bogus			exInfra,bogon,nonexistant,bogus
+exAccess_point		exInfra,exSCALE-SLOW,exSCALE-FAST \
+				0xffff00	0x000000
+cfUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
+				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
+				0xff0000	0xffffff
+cfDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
+				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
+				0x0000ff	0xffffff
+cfAccess_point		exInfra,exSCALE-SLOW,exSCALE-FAST \
+				0xffff00	0x000000
+
