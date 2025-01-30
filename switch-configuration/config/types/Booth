@@ -1,20 +1,19 @@
 // Expo Booth Area switch Template
-TRUNK	ge-0/0/0	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN, \
-				exSigns,exVmVendor,vendor_backbone			-	Uplink
-TRUNK	ge-0/0/1	exSCALE-SLOW,exSCALE-FAST,exSpeaker,exInfra,exAVLAN, \
-				exSigns,exVmVendor,vendor_backbone			-	Downlink
+TRUNK	ge-0/0/0	exUplink		-	Uplink
+TRUNK	ge-0/0/1	exDownlink		-	Downlink
 RSRVD	6
-TRUNK	ge-0/0/8	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/9	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/10	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/11	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/12	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/13	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/14	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/15	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/16	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
-TRUNK	ge-0/0/17	exInfra,exSCALE-SLOW,exSCALE-FAST		POE	AP
+TRUNK	ge-0/0/8	exAccessPoint		POE	AP
+TRUNK	ge-0/0/9	exAccessPoint		POE	AP
+TRUNK	ge-0/0/10	exAccessPoint		POE	AP
+TRUNK	ge-0/0/11	exAccessPoint		POE	AP
+TRUNK	ge-0/0/12	exAccessPoint		POE	AP
+TRUNK	ge-0/0/13	exAccessPoint		POE	AP
+TRUNK	ge-0/0/14	exAccessPoint		POE	AP
+TRUNK	ge-0/0/15	exAccessPoint		POE	AP
+TRUNK	ge-0/0/16	exAccessPoint		POE	AP
+TRUNK	ge-0/0/17	exAccessPoint		POE	AP
 RSRVD	6			// 18-23
 VVLAN	16			// Dynamically assigned Vendor VLAN ports 24-39
-VLAN	exVmVendor	1						-	// 40
+VLAN	exVmVendor	1						-	// ge-0/0/40
+RSRVD	7									// ge-0/0/41-47
 VVBB

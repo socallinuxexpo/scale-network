@@ -4,6 +4,7 @@
 # of the scripts directory where this script lives. All scripts are expected
 # to be run from this location for consistency and ease of use.
 
+##FIXME## Finish implementing VLAN coloring (%vfgcolor, %vbgcolor, parsing in VLAN parser)
 ##FIXME## Clean up separation of package variables (our *), use package object instead
 
 ##FIXME## Add POD for all (exportable) functions
@@ -35,6 +36,9 @@ our $DEBUGLEVEL       = 9;
 our %Switchtypes      = ();
 our %Switchgroups     = ();
 our $PREFIX           = "";
+our %TRUNKTYPES       = ();
+our %vfgcolor         = ();
+our %vbgcolor         = ();
 
 our @ISA = qw(Exporter);
 
@@ -61,29 +65,44 @@ our @EXPORT = qw(
 
 my %colormap = (
 	"AP" => {
-		'red'	=> 0,
-		'green'	=> 0.25,
-		'blue'  => 0.25,
+		'bgred'		=> 0,
+		'bggreen'	=> 0.25,
+		'bgblue'	=> 0.25,
+                'fgred'		=> 0,
+                'fggreen'	=> 0,
+                'fgblue'	=> 0,
 		},
 	"Uplink" => {
-		'red'	=> 0,
-		'green'	=> 0.25,
-		'blue'	=> 0,
+		'bgred'		=> 0,
+		'bggreen'	=> 0.25,
+		'bgblue'	=> 0,
+                'fgred'		=> 0,
+                'fggreen'	=> 0,
+                'fgblue'	=> 0,
 		},
 	"Downlink" => {
-		'red'	=> 0.25,
-		'green'	=> 0.25,
-		'blue'	=> 0,
+		'bgred'		=> 0.25,
+		'bggreen'	=> 0.25,
+		'bgblue'	=> 0,
+                'fgred'		=> 0,
+                'fggreen'	=> 0,
+                'fgblue'	=> 0,
 		},
 	"MassFlash" => {
-		'red'	=> 0.25,
-		'green'	=> 0,
-		'blue'	=> 0.25,
+		'bgred'		=> 0.25,
+		'bggreen'	=> 0,
+		'bgblue'	=> 0.25,
+                'fgred'		=> 1,
+                'fggreen'	=> 1,
+                'fgblue'	=> 1,
 		},
 	"Unknown" => {
-		'red'	=> 0.25,
-		'green'	=> 0,
-		'blue'	=> 0,
+		'bgred'		=> 0.25,
+		'bggreen'	=> 0,
+		'bgblue'	=> 0,
+                'fgred'		=> 0,
+                'fggreen'	=> 0,
+                'fgblue'	=> 0,
 		},
 );
 sub BEGIN
@@ -104,7 +123,15 @@ sub new
 }
 
 
-
+sub parse_hex_color
+{
+  my $hexcolor = shift @_;
+  my $value = hex($hexcolor);
+  my $red   = (int($value / 0x10000)) / 256.0;		# Extract red and scale to postscript color range (0-1 float)
+  my $green = (int($value / 0x100) % 0xff) / 256.0;	# Extract green and scale
+  my $blue  = ($value % 0xff) / 256.0;			# Extract blue and scale
+  return ($red, $green, $blue);
+}
 
 sub set_debug_level
 {
@@ -173,7 +200,6 @@ sub read_config_file
     $_ =~ s@//.*@@; # Eliminate comments
     next if ($_ =~ /^\s*$/); # Ignore blank lines
     $_ =~ s/\t+/\t/g;
-    debug(8, "Cooked output: $_\n");
     if ($_ =~ /^\s*#include (.*)/)
     {
         debug(8, "\tProcessing included file $1\n");
@@ -183,7 +209,10 @@ sub read_config_file
     }
     else
     {
+        $_ =~ s@#.*@@; # Eliminate comments
+        next if ($_ =~ /^\s*$/); # Ignore blank lines
         push @OUTPUT, $_;
+        debug(8, "Cooked output: $_\n");
     }
   }
   close $CONFIG;
@@ -208,7 +237,7 @@ sub get_prefix
   $prefix = lc($prefix);
   $prefix =~ s/([23][0-9a-f]{3}):([0-9a-f]{1,4}):([0-9a-f]{0,4})::{0,1}.*$/\1:\2:\3::/;
   $prefix =~ s/:+$/::/;
-  return $PREFIx;
+  return $prefix;
 }
   
 sub get_switchlist
@@ -490,7 +519,8 @@ SwitchMapDict begin
   closepath % Draw line from boxLeft BoxTop to boxLeft boxBottom
  } bind def
 
- % DrawPort [ Text r g b Number ] -> [ ]
+ % DrawPort [ fr fg fb Text br bg bb Number ] -> [ ]
+ % fr/g/b are text color, br/g/b are box color
 /DrawPort {
   % Convert Number to X and Y position
     % Identify the ligature line and bottom of box
@@ -501,7 +531,7 @@ SwitchMapDict begin
   dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
   /Ligature Bottom 0.35 Inch add def
     % Identify left and bottom edge of Port Box on Map (consumes Number)
-    % [ Text r g b Number ] -> [ Text r g b ]
+    % [ r g b Text r g b Number ] -> [ r g b Text r g b ]
   2 div                     % Get horizontal port position
   dup cvi 6 idiv            % Get number of preceding port groups
   Port_Group_Gap mul        % Convert to width
@@ -509,7 +539,7 @@ SwitchMapDict begin
   cvi Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
   Left_Port_Edge add        % Add offset for left port edge
   /Left exch def            % Save as Left
-  % Set color for fill [ Text r g b ] -> [ Text ]
+  % Set color for fill [ r g b Text r g b ] -> [ r g b Text ]
   setrgbcolor
   % Build Box path
   Left Bottom Port_Width Box_Height Box
@@ -520,14 +550,21 @@ SwitchMapDict begin
   grestore
   0 0 0 setrgbcolor %black
   stroke
-  % Draw Text [ Text ] -> [ ]
+  gsave
+  % Draw Text [ r g b Text ] -> [ ]
   BoxFont
-  dup stringwidth pop 2 div /W exch def
+  % Save Text in variable for later use.
+  /Text exch def
+  % Set text color.
+  setrgbcolor % pull text RGB color from stack.
+  % Put Text back on stack and compute position
+  Text dup stringwidth pop 2 div /W exch def
   Left Port_Width 2 div add W sub Ligature moveto
   show
   /P PortNum s cvs def
   P stringwidth pop 2 div /W exch def
   Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+  grestore
 } bind def
 
  % DrawFiberPort [ Text r g b Number ] -> [ ]
@@ -638,7 +675,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-(UNUSED) 0.75 0.75 0.75 $port DrawPort
+0 0 0 (UNUSED) 0.75 0.75 0.75 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -650,7 +687,7 @@ EOF
       ##FIXME## This really should convert to using port counts like VLAN
       ##FIXME## Access ports do (except for FIBER directive).
 
-      ##FIXME## Build interface ranges
+
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
       my $poe = shift(@tokens) if ($cmd eq "TRUNK"); # No PoE on Fiber
@@ -661,8 +698,24 @@ EOF
 	      warn("TRUNK $_ invalid trunktype: \"$trunktype\" -- setting to Unknown\n");
 	      $trunktype="Unknown";
       }
-      debug(9, "\t$cmd\t$iface ($vlans)\n");
-      $vlans =~ s/\s*,\s*/ /g;
+      my @vlans = split(/,/, $vlans);
+      for (my $i=0; $i < $#vlans; $i++)
+      {
+        if (defined($TRUNKTYPES{$vlans[$i]}))
+        {
+          my ($vl, $bgcolor, $fgcolor) = @{$TRUNKTYPES{$vlans[$i]}};
+          $trunktype=$vlans[$i];
+          my ($bgr, $bgg, $bgb) = parse_hex_color($bgcolor);
+          my ($fgr, $fgg, $fgb) = parse_hex_color($fgcolor);
+          $colormap{$trunktype} = {
+            'fgred' => $fgr, 'fggreen' => $fgg, 'fgblue' => $fgb,
+            'bgred' => $bgr, 'bggreen' => $bgg, 'bgblue' => $bgb
+          };
+          debug(5, "Assigned $bgcolor and $fgcolor to trunk type $trunktype as hash: ".Dumper(%{$colormap{$trunktype}}));
+          $vlans[$i] = $vl;
+        }
+      }    
+      debug(9, "\t$cmd\t$iface (", join(",", @vlans),")\n");
       my $portnum = $iface;
       if ($cmd eq "TRUNK")
       {
@@ -693,9 +746,12 @@ EOF
       if ($cmd eq "TRUNK")
       {
         # Handle non-fiber trunk port
-        debug(9, "$cmd output standard box for port $portnum ($iface) ($trunktype) -- (".${colormap{$trunktype}}{'red'}.",".${colormap{$trunktype}}{'green'}.",".${colormap{$trunktype}}{'blue'}.")\n");
+        debug(6, "Trunktype reported as $trunktype for $_\n");
+        debug(7, "Trunktypes available: ".Dumper(%colormap));
+        debug(5, "dereferencing $trunktype in colormap FGRED = ".${$colormap{$trunktype}}{'fgred'}.".\n");
+        debug(9, "$cmd output standard box for port $portnum ($iface) ($trunktype) -- (".$colormap{$trunktype}{'bgred'}.",".$colormap{$trunktype}{'bggreen'}.",".$colormap{$trunktype}{'bgblue'}.")\n");
         $portmap_PS .= <<EOF;
-($trunktype) $colormap{$trunktype}{'red'} $colormap{$trunktype}{'green'} $colormap{$trunktype}{'blue'} $portnum DrawPort
+$colormap{$trunktype}{'fgred'} $colormap{$trunktype}{'fggreen'} $colormap{$trunktype}{'fgblue'} ($trunktype) $colormap{$trunktype}{'bgred'} $colormap{$trunktype}{'bggreen'} $colormap{$trunktype}{'bgblue'} $portnum DrawPort
 EOF
       }
 
@@ -731,7 +787,7 @@ EOF
           $MEMBERS.= "        member ge-0/0/$port;\n";
           push @POEPORTS, "ge-0/0/$port" if ($POEFLAG);
           $portmap_PS .= <<EOF;
-($vlan) 0.75 0.75 1 $port DrawPort
+$vfgcolor{$vlan} ($vlan) $vbgcolor{$vlan} $port DrawPort
 EOF
           $count--;
           $port++;
@@ -784,65 +840,15 @@ EOF
 sub build_vlans_from_config
 {
   my $hostname = shift @_;
+
+  my $OUTPUT;
+
   my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
-  # MgtVL is treated special because it has a layer 3 interface spec
-  # to interface vlan.$MgtVL.
+  my ($VLANS, $VLANS_byname) = build_vlan_hash();
 
-  my $VL_CONFIG = read_config_file("vlans");
-  # Convert configuration data to hash with VLAN ID as key
-  my %VLANS;         # Hash containing VLAN data structure as follows:
-                     # %VLANS = {
-                     #     <VLANID> => [ <type>, <name>, <IPv6>,
-                     #                   <IPv4>, <desc>, <prim> ],
-                     #     ...
-                     # }
-  my %VLANS_byname;  # Hash mapping VLAN Name => ID
-  my $OUTPUT = "";
-
-  my $type;   # Type of VLAN (VLAN, PRIM, ISOL, COMM)
-              # Where:
-              #    VLAN = Ordinary VLAN
-              #    PRIM = Primary PVLAN
-              #    ISOL = Isolated Secondary PVLAN
-              #    COMM = Community Secondary PVLAN
-  my $name;   # VLAN Name
-  my $vlid;   # VLAN ID (802.1q tag number)
-  my $IPv6;   # IPv6 Prefix (For reference and possible future consistency
-              #   checks). Not used in config generation for switches..
-  my $IPv4;   # IPv4 Prefix (For reference and possible future consistency
-              #   checks). Not used in config generation for switches..
-  my $desc;   # Description
-  my $prim;   # Primary VLAN Name (if this is a secondary (ISOL | COMM) VLAN)
-  debug(9, "Got ", $#{$VL_CONFIG}, " Lines of VLAN configuraton\n");
-  foreach(@{$VL_CONFIG})
+  foreach(sort(keys(%{$VLANS})))
   {
-    my @TOKENS;
-    @TOKENS = split(/\t/, $_);
-    $prim = 0;
-    $name = $TOKENS[1];
-    if ($TOKENS[0] eq "VLAN") # Standard VLAN
-    {
-      $type = $TOKENS[0]; # VLAN
-      $vlid = $TOKENS[2];
-      $desc = $TOKENS[5];
-      $IPv6 = $TOKENS[3];
-      $IPv4 = $TOKENS[4];
-      $VLANS_byname{$name} = $vlid;
-      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
-                        ($prim ? $prim : undef) ];
-      debug(1, "VLAN $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
-    }
-    elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
-    {
-      # Skip this line here... Process elsewhere
-    }
-  }
-
-  # Now that we have a hash containing all of the VLAN configurations, iterate
-  # through and write out the switch configuration vlans {} section.
-  foreach(sort(keys(%VLANS)))
-  {
-    ($type, $name, $IPv6, $IPv4, $desc, $prim) = @{$VLANS{$_}};
+    my ($type, $name, $IPv6, $IPv4, $desc, $prim) = @{${$VLANS}{$_}};
     if ($type eq "VLAN")
     {
       $OUTPUT .= <<EOF;
@@ -861,9 +867,8 @@ EOF
   return($OUTPUT);
 }
 
-sub build_trunktypes_from_config
+sub build_vlan_hash
 {
-  my $hostname = shift @_;
   my $VL_CONFIG = read_config_file("vlans");
   # Convert configuration data to hash with VLAN ID as key
   my %VLANS;         # Hash containing VLAN data structure as follows:
@@ -897,6 +902,8 @@ sub build_trunktypes_from_config
     @TOKENS = split(/\t/, $_);
     $prim = 0;
     $name = $TOKENS[1];
+    $name =~ s/^\s*//; # Eliminate accidental space possibly introduced by continuation lines
+    debug(9, "Processing VLAN Config line $_ for hashing\n");
     if ($TOKENS[0] eq "VLAN") # Standard VLAN
     {
       $type = $TOKENS[0]; # VLAN
@@ -914,7 +921,15 @@ sub build_trunktypes_from_config
       # Skip this line here... Process elsewhere
     }
   }
-  my $TT = read_config_files("trunktypes");
+  return (\%VLANS,\%VLANS_byname);
+}
+
+sub build_trunktypes_from_config
+{
+  my $hostname = shift @_;
+  my ($VLANS, $VLANS_byname) = build_vlan_hash();
+  my $TT = read_config_file("trunktypes");
+  %TRUNKTYPES=();	# Reset contents of TRUNKTYPES hash
   foreach(@{$TT})
   {
     my @TOKENS = split(/\t/, $_);
@@ -923,16 +938,21 @@ sub build_trunktypes_from_config
     my $fgcolor = $TOKENS[2];
     my $bgcolor = $TOKENS[3];
     my @vlans = split(/,/, $vlans);
+    debug(5, "Trunktype $name expanding\n");
     # Validate VLANs for each trunk type are defined
     foreach my $k (@vlans)
     {
-      if (!exists($VLANS_byname{$k}))
+      $k =~ s/^\s*//; # Eliminate accidental space possibly introduced by continuation lines
+      if (!exists(${$VLANS_byname}{$k}))
       {
-        die("ERROR: VLAN $k not found in VLAN Configuration for Trunk Type $name\n");
+        debug(1, "VLAN Build Returned: ". Dumper(%{$VLANS}). " with byname: ". Dumper(%{$VLANS_byname}));
+        print "VLANS_byname{$k}->".${$VLANS_byname}{$k}."\n";
+        die("ERROR: VLAN \"$k\" not found in VLAN Configuration for Trunk Type $name\n");
       }
     }
     if (exists($TRUNKTYPES{$name}))
     {
+      debug(1, "Existing TRUNKTYPES: ".Dumper(%TRUNKTYPES));
       die("ERROR: Multiple definitions of trunktype $name\n");
     }
     $TRUNKTYPES{$name} = [ $vlans, $fgcolor, $bgcolor ];
@@ -1341,7 +1361,6 @@ sub build_vendor_from_config
     }
     elsif ($cmd eq "TRUNK" || $cmd eq "FIBER")
     {
-      ##FIXME## Handle TRUNK names that are TRUNKTYPE macros
       # Skip -- Not vendor VLAN related, handled elsewhere
       # Need to account for the interfaces, though.
       my $iname = $tokens[0];
@@ -1420,7 +1439,7 @@ EOF
     }
 EOF
         $VV_portmap .= <<EOF;
-(Vend_$VLID) 0.75 1 0.75 $intnum DrawPort
+0 0 0 (Vend_$VLID) 0.75 1 0.75 $intnum DrawPort
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }

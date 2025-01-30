@@ -20,20 +20,19 @@
 // Uplink definition can be used for both Uplink and Downlink ports, but different colors
 // are desirable, so we define them separately here.
 exUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
-				0xff0000	0xffffff
+				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+				vendor_backbone	0xff0000	0xffffff
 exDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
-				0x0000ff	0xffffff
-bogus			exInfra,bogon,nonexistant,bogus
-exAccess_point		exInfra,exSCALE-SLOW,exSCALE-FAST \
-				0xffff00	0x000000
+				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+				vendor_backbone	0x0000ff	0xffffff
+exAccessPoint		exInfra,exSCALE-SLOW, \
+				exSCALE-FAST	0xffff00	0xffffff
 cfUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
-				0xff0000	0xffffff
+				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+				vendor_backbone	0xff0000	0xffffff
 cfDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor,vendor_backbone \
-				0x0000ff	0xffffff
-cfAccess_point		exInfra,exSCALE-SLOW,exSCALE-FAST \
-				0xffff00	0x000000
+				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+				vendor_backbone	0x0000ff	0xffffff
+cfAccessPoint		exInfra,exSCALE-SLOW, \
+				exSCALE-FAST	0xffff00	0xffffff
 

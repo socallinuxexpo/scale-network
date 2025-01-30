@@ -1,12 +1,12 @@
 // Room Switch Template -- AV Room Switch
-TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns,HAM_BRIDGE	-	Uplink
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns,HAM_BRIDGE	-	Downlink
-TRUNK	ge-0/0/2	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
-TRUNK	ge-0/0/3	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
-TRUNK	ge-0/0/4	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
-TRUNK	ge-0/0/5	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
-TRUNK	ge-0/0/6	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
-TRUNK	ge-0/0/7	cfInfra,cfSCALE-SLOW,cfSCALE-FAST,cfAVLAN				POE	AP
+TRUNK	ge-0/0/0	cfUplink	-	Uplink
+TRUNK	ge-0/0/1	cfDownlink	-	Downlink
+TRUNK	ge-0/0/2	cfAccessPoint	POE	AP
+TRUNK	ge-0/0/3	cfAccessPoint	POE	AP
+TRUNK	ge-0/0/4	cfAccessPoint	POE	AP
+TRUNK	ge-0/0/5	cfAccessPoint	POE	AP
+TRUNK	ge-0/0/6	cfAccessPoint	POE	AP
+TRUNK	ge-0/0/7	cfAccessPoint	POE	AP
 VLAN	cfSigns		4									POE	// ge-0/0/{8-11}
 VLAN	cfAVLAN		36									POE	// ge-0/0/{12-47}
 

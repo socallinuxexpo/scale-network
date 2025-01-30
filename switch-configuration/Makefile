@@ -16,6 +16,13 @@ lint:	.lint
 		find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
 	touch .lint
 
+perms:	.perms
+
+.perms: config/scripts/*.pl config/scripts/make_lldp_map config/scripts/switch_pinger
+	cd config/scripts && \
+		chmod ugo+x *.pl make_lldp_map switch_pinger
+	touch .perms
+
 ../facts/secrets/jroot_pw:
 	echo "$(JROOT_SECRET)" > ../facts/secrets/jroot_pw
 
