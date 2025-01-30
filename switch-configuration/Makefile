@@ -39,7 +39,7 @@ build-switch-configs: .build-switch-configs
 
 # Make the switch-maps-bundle which is a collection of all the switch port maps
 # this is a for printing for the cable team
-switch-maps-outputs: config/switch-maps/refs.ps config/switch-maps/refs.pdf config/switch-maps/stickers.ps config/switch-maps/stickers.pdf
+switch-maps-outputs: perms config/switch-maps/refs.ps config/switch-maps/refs.pdf config/switch-maps/stickers.ps config/switch-maps/stickers.pdf
 
 # Bundle is technically obsolete at this point and doesn't work properly any more
 #config/switch-maps/bundle.ps: .build-switch-configs .build-switch-configs

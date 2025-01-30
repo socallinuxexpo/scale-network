@@ -2,3 +2,4 @@
 .lint
 .secrets
 .build-switch-configs
+.perms
