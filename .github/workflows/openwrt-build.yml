@@ -38,6 +38,10 @@ jobs:
           retention-days: 30
           # Since we cant turn off compression set to lowest level
           compression-level: 0
+          # rerunning jobs overwrites artifacts from previous runs
+          # this was the default behavior in v3.x
+          # ref: https://github.com/actions/upload-artifact/blob/v3.1.1/README.md?plain=1#L152
+          overwrite: true
       - name: 'Upload openwrt build log'
         uses: actions/upload-artifact@v4.6.0
         with:
@@ -45,3 +49,4 @@ jobs:
           path: |
             openwrt/*build.log
           retention-days: 30
+          overwrite: true
