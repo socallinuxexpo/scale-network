@@ -36,6 +36,8 @@ jobs:
           path: |
             openwrt/build/artifacts/*.tar.gz
           retention-days: 30
+          # Since we cant turn off compression set to lowest level
+          compression-level: 0
       - name: 'Upload openwrt build log'
         uses: actions/upload-artifact@v4.6.0
         with:
