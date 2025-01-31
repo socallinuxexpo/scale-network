@@ -2,6 +2,9 @@
 
 <!--
 Brief description of the changes in PR
+
+If change is related to an open issue template include at the top of your
+description.
 -->
 
 ## Previous Behavior
