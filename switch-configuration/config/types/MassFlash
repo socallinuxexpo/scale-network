@@ -1,49 +1,49 @@
 // Mass Flashing Switch Configuration
-TRUNK	ge-0/0/0	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/1	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/2	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/3	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/4	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/5	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/6	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/7	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/8	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/9	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/10	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/11	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/12	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/13	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/14	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/15	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/16	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/17	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/18	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/19	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/20	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/21	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/22	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/23	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/24	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/25	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/26	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/27	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/28	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/29	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/30	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/31	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/32	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/33	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/34	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/35	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/36	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/37	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/38	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/39	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/40	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/41	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/42	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/43	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/44	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/45	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/46	cfInfra		POE	MassFlash
-TRUNK	ge-0/0/47	cfInfra		POE	MassFlash
+TRUNK	ge-0/0/0	massflash		POE
+TRUNK	ge-0/0/1	massflash		POE
+TRUNK	ge-0/0/2	massflash		POE
+TRUNK	ge-0/0/3	massflash		POE
+TRUNK	ge-0/0/4	massflash		POE
+TRUNK	ge-0/0/5	massflash		POE
+TRUNK	ge-0/0/6	massflash		POE
+TRUNK	ge-0/0/7	massflash		POE
+TRUNK	ge-0/0/8	massflash		POE
+TRUNK	ge-0/0/9	massflash		POE
+TRUNK	ge-0/0/10	massflash		POE
+TRUNK	ge-0/0/11	massflash		POE
+TRUNK	ge-0/0/12	massflash		POE
+TRUNK	ge-0/0/13	massflash		POE
+TRUNK	ge-0/0/14	massflash		POE
+TRUNK	ge-0/0/15	massflash		POE
+TRUNK	ge-0/0/16	massflash		POE
+TRUNK	ge-0/0/17	massflash		POE
+TRUNK	ge-0/0/18	massflash		POE
+TRUNK	ge-0/0/19	massflash		POE
+TRUNK	ge-0/0/20	massflash		POE
+TRUNK	ge-0/0/21	massflash		POE
+TRUNK	ge-0/0/22	massflash		POE
+TRUNK	ge-0/0/23	massflash		POE
+TRUNK	ge-0/0/24	massflash		POE
+TRUNK	ge-0/0/25	massflash		POE
+TRUNK	ge-0/0/26	massflash		POE
+TRUNK	ge-0/0/27	massflash		POE
+TRUNK	ge-0/0/28	massflash		POE
+TRUNK	ge-0/0/29	massflash		POE
+TRUNK	ge-0/0/30	massflash		POE
+TRUNK	ge-0/0/31	massflash		POE
+TRUNK	ge-0/0/32	massflash		POE
+TRUNK	ge-0/0/33	massflash		POE
+TRUNK	ge-0/0/34	massflash		POE
+TRUNK	ge-0/0/35	massflash		POE
+TRUNK	ge-0/0/36	massflash		POE
+TRUNK	ge-0/0/37	massflash		POE
+TRUNK	ge-0/0/38	massflash		POE
+TRUNK	ge-0/0/39	massflash		POE
+TRUNK	ge-0/0/40	massflash		POE
+TRUNK	ge-0/0/41	massflash		POE
+TRUNK	ge-0/0/42	massflash		POE
+TRUNK	ge-0/0/43	massflash		POE
+TRUNK	ge-0/0/44	massflash		POE
+TRUNK	ge-0/0/45	massflash		POE
+TRUNK	ge-0/0/46	massflash		POE
+TRUNK	ge-0/0/47	massflash		POE

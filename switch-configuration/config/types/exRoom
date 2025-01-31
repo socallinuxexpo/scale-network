@@ -1,17 +1,17 @@
 // Room Switch Template -- All conference rooms Expo Center
-TRUNK	ge-0/0/0	exUplink	-	Uplink
-TRUNK	ge-0/0/1	exDownlink	-	Downlink
+TRUNK	ge-0/0/0	exUplink	-
+TRUNK	ge-0/0/1	exDownlink	-
 RSRVD	6
-TRUNK	ge-0/0/8	exAccessPoint	POE	AP
-TRUNK	ge-0/0/9	exAccessPoint	POE	AP
-TRUNK	ge-0/0/10	exAccessPoint	POE	AP
-TRUNK	ge-0/0/11	exAccessPoint	POE	AP
-TRUNK	ge-0/0/12	exAccessPoint	POE	AP
-TRUNK	ge-0/0/13	exAccessPoint	POE	AP
-TRUNK	ge-0/0/14	exAccessPoint	POE	AP
-TRUNK	ge-0/0/15	exAccessPoint	POE	AP
-TRUNK	ge-0/0/16	exAccessPoint	POE	AP
-TRUNK	ge-0/0/17	exAccessPoint	POE	AP
+TRUNK	ge-0/0/8	exAccessPoint	POE
+TRUNK	ge-0/0/9	exAccessPoint	POE
+TRUNK	ge-0/0/10	exAccessPoint	POE
+TRUNK	ge-0/0/11	exAccessPoint	POE
+TRUNK	ge-0/0/12	exAccessPoint	POE
+TRUNK	ge-0/0/13	exAccessPoint	POE
+TRUNK	ge-0/0/14	exAccessPoint	POE
+TRUNK	ge-0/0/15	exAccessPoint	POE
+TRUNK	ge-0/0/16	exAccessPoint	POE
+TRUNK	ge-0/0/17	exAccessPoint	POE
 VLAN	exSigns		4									POE	// ge-0/0/{18-21}
 VLAN	exAVLAN		6									POE	// ge-0/0/{22-27}
 VLAN	exSpeaker	2									-	// ge-0/0/{28,29}

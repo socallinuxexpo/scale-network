@@ -26,7 +26,7 @@ exDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
 				vendor_backbone	0x0000ff	0xffffff
 exAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0xffff00	0xffffff
+				exSCALE-FAST	0x808000	0xffffff
 cfUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
 				vendor_backbone	0xff0000	0xffffff
@@ -34,5 +34,5 @@ cfDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
 				vendor_backbone	0x0000ff	0xffffff
 cfAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0xffff00	0xffffff
-
+				exSCALE-FAST	0x808000	0xffffff
+massflash		cfInfra	0x400040	0xffffff

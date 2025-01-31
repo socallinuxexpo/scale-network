@@ -474,9 +474,15 @@ SwitchMapDict begin
 /BoxFont { /Helvetica findfont 6 scalefont setfont } bind def
 /TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
 
+% Color Setting
+/PoEOnColor { 0 1 0 setrgbcolor } def
+
 % Misc. Subroutines used in constant definitions (mostly unit conversions)
 /Inch { 72 mul } bind def   % Inch converted to points (I -> pts)
 /mm  { 2.835 mul } bind def % mm converted to points   (mm -> pts)
+
+% Leave the lesser of the top two stack items on the stack (min(a,b))
+/minimum { /b exch def /a exch def a b lt { a } { b } ifelse } bind def
 
 % Constants for use in building portmaps
 /Origin           [ 0.5 Inch 0.25 Inch ] def    % Bottom Left Corner of port map (After rotation and translatin of [0,0])
@@ -524,19 +530,33 @@ SwitchMapDict begin
   closepath % Draw line from boxLeft BoxTop to boxLeft boxBottom
  } bind def
 
- % DrawPort [ fr fg fb Text br bg bb Number ] -> [ ]
+/DrawPoEBox {
+  /PortHeight exch def
+  /PortWidth exch def
+  /PortBottom exch def
+  /PortLeft exch def
+  /BoxSize PortHeight PortWidth minimum 8 div def % 1/8th of shortest PortBox dimension
+  /LeftEdge PortWidth 8 div PortLeft add def
+  /BottomEdge PortHeight 8 div 6 mul PortBottom add def
+  gsave
+  LeftEdge BottomEdge BoxSize BoxSize Box
+  fillpath
+  grestore
+} bind def
+
+ % DrawPort [ poe fr fg fb Text br bg bb Number ] -> [ ]
  % fr/g/b are text color, br/g/b are box color
 /DrawPort {
   % Convert Number to X and Y position
-    % Identify the ligature line and bottom of box
-    % [ Text r g b Number ] -> [ Text r g b Number ]
-    % Save Port Number
+  % Identify the ligature line and bottom of box
+  % [ poe r g b Text r g b Number ] -> [ poe r g b Text r g b Number ]
+  % Save Port Number
   dup /PortNum exch def
-    % Determine bottom edge of box
+  % Determine bottom edge of box
   dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
   /Ligature Bottom 0.35 Inch add def
-    % Identify left and bottom edge of Port Box on Map (consumes Number)
-    % [ r g b Text r g b Number ] -> [ r g b Text r g b ]
+  % Identify left and bottom edge of Port Box on Map (consumes Number)
+  % [ r g b Text r g b Number ] -> [ r g b Text r g b ]
   2 div                     % Get horizontal port position
   dup cvi 6 idiv            % Get number of preceding port groups
   Port_Group_Gap mul        % Convert to width
@@ -544,8 +564,11 @@ SwitchMapDict begin
   cvi Port_Width mul add    % Convert Port Horizontal Position to width and add to Group offset
   Left_Port_Edge add        % Add offset for left port edge
   /Left exch def            % Save as Left
-  % Set color for fill [ r g b Text r g b ] -> [ r g b Text ]
-  setrgbcolor
+  % Set color for fill [ poe r g b Text r g b ] -> [ poe r g b Text ]
+  /bgred exch def % Save blue value for background
+  /bggreen exch def % Save blue value for background
+  /bgblue exch def % Save blue value for background
+  bgred bggreen bgblue setrgbcolor % Set color for background
   % Build Box path
   Left Bottom Port_Width Box_Height Box
   % Fill Box
@@ -555,20 +578,26 @@ SwitchMapDict begin
   grestore
   0 0 0 setrgbcolor %black
   stroke
-  gsave
-  % Draw Text [ r g b Text ] -> [ ]
+  % Draw Text
   BoxFont
-  % Save Text in variable for later use.
+  % Save Text in variable for later use. [ poe r g b Text ] -> [ poe r g b ] (Defines Text)
   /Text exch def
-  % Set text color.
+  % Set text color. [ poe r g b ] -> [ poe ]
   setrgbcolor % pull text RGB color from stack.
-  % Put Text back on stack and compute position
+  % Put Text back on stack and compute position [ poe ] -> [ poe text ] (Computes W (textwidth/2))
   Text dup stringwidth pop 2 div /W exch def
+  % Move to the left edge of text at ligature position
   Left Port_Width 2 div add W sub Ligature moveto
+  % Render text [ poe text ] -> [ poe ]
   show
-  /P PortNum s cvs def
+  /P PortNum cvs def
   P stringwidth pop 2 div /W exch def
   Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
+  grestore
+  gsave
+5  /PoE exch def
+5  { PoEOnColor } { bgred bggreen bgblue setcolor } PoE ifelse % Set color for PoE State box
+5  Left Bottom Port_Width Box_Height DrawPoEBox
   grestore
 } bind def
 
@@ -646,7 +675,7 @@ EOF
     my $POEFLAG = 0;
     my @tokens = split(/\t/, $_); # Split line into tokens
     my $cmd = shift(@tokens);     # Command is always first token.
-    # Handle POE Flag Hack (P<cmd>)
+    # Handle POE Flag Hack
     if ($tokens[2] =~ /poe/i)
     {
       $POEFLAG = 1;
@@ -665,6 +694,7 @@ EOF
         die "Error in configuration for $Type at $_ -- Invalid POE specification ($tokens[2])";
       }
     }
+    my $POE = ($POEFLAG ? "true" : "false");
     debug(9, "\tCommand: $cmd ", join(",", @tokens), "\n");
     if ($cmd eq "RSRVD")
     {
@@ -681,7 +711,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-0 0 0 (UNUSED) 0.75 0.75 0.75 $port DrawPort
+$POE 0 0 0 (UNUSED) 0.75 0.75 0.75 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -697,20 +727,18 @@ EOF
       my $iface = shift(@tokens);
       my $vlans = shift(@tokens);
       my $poe = shift(@tokens) if ($cmd eq "TRUNK"); # No PoE on Fiber
-      my $trunktype = shift(@tokens);
-      $trunktype =~ s/^\s*(\S+)\s*/$1/;
-      if (!exists($colormap{$trunktype}))
-      {
-	      warn("TRUNK $_ invalid trunktype: \"$trunktype\" -- setting to Unknown\n");
-	      $trunktype="Unknown";
-      }
+      my $trunktype = "unknown";
       my @vlans = split(/,/, $vlans);
-      for (my $i=0; $i < $#vlans; $i++)
+      for (my $i=0; $i < scalar(@vlans); $i++)
       {
+        debug(9, "Checking $vlans[$i] for trunk macro\n");
+        debug(9, "Looking in: ".Dumper(%TRUNKTYPES)."\n");
         if (defined($TRUNKTYPES{$vlans[$i]}))
         {
+          debug(9, "\tExpanding\n");
           my ($vl, $bgcolor, $fgcolor) = @{$TRUNKTYPES{$vlans[$i]}};
           $trunktype=$vlans[$i];
+          debug(5, "Set trunktype $vlans[$i] with ($vl,$bgcolor,$fgcolor)\n");
           my ($bgr, $bgg, $bgb) = parse_hex_color($bgcolor);
           my ($fgr, $fgg, $fgb) = parse_hex_color($fgcolor);
           $colormap{$trunktype} = {
@@ -720,9 +748,11 @@ EOF
           debug(5, "Assigned $bgcolor ($bgr,$bgg, $bgb) and $fgcolor ($fgr,$fgg,$fgb) to trunk type $trunktype as hash: ".Dumper(%{$colormap{$trunktype}}));
           $vlans[$i] = $vl;
         }
-      }    
+      }
+      debug(5, "Finished VLAN expansion with trunktype=$trunktype\n");
       debug(9, "\t$cmd\t$iface (", join(",", @vlans),")\n");
       my $portnum = $iface;
+      my $POE = ($POEFLAG ? "true" : "false");
       if ($cmd eq "TRUNK")
       {
         push @POEPORTS, $iface if ($POEFLAG);
@@ -756,8 +786,10 @@ EOF
         debug(7, "Trunktypes available: ".Dumper(%colormap));
         debug(5, "dereferencing $trunktype in colormap FGRED = ".${$colormap{$trunktype}}{'fgred'}." FGGREEN=".${$colormap{$trunktype}}{'fggreen'}." FGBLUE=".${$colormap{$trunktype}}{'fgblue'}.".\n");
         debug(9, "$cmd output standard box for port $portnum ($iface) ($trunktype) -- (".$colormap{$trunktype}{'fgred'}.",".$colormap{$trunktype}{'fggreen'}.",".$colormap{$trunktype}{'fgblue'}."), (".$colormap{$trunktype}{'bgred'}.",".$colormap{$trunktype}{'bggreen'}.",".$colormap{$trunktype}{'bgblue'}.")\n");
+        my $name = $trunktype;
+        $name =~ s/^cf|ex|hi//;
         $portmap_PS .= <<EOF;
-${$colormap{$trunktype}}{'fgred'} ${$colormap{$trunktype}}{'fggreen'} ${$colormap{$trunktype}}{'fgblue'} ($trunktype) ${$colormap{$trunktype}}{'bgred'} ${$colormap{$trunktype}}{'bggreen'} ${$colormap{$trunktype}}{'bgblue'} $portnum DrawPort
+$POE ${$colormap{$trunktype}}{'fgred'} ${$colormap{$trunktype}}{'fggreen'} ${$colormap{$trunktype}}{'fgblue'} ($name) ${$colormap{$trunktype}}{'bgred'} ${$colormap{$trunktype}}{'bggreen'} ${$colormap{$trunktype}}{'bgblue'} $portnum DrawPort
 EOF
         debug(9, "Resulting portmap_PS string: \"$portmap_PS\"\n\n");
       }
@@ -800,13 +832,14 @@ EOF
       $bgcolor = join(" ", parse_hex_color(${$vlinfo}[6]));
       $fgcolor = join(" ", parse_hex_color(${$vlinfo}[7]));
       debug(5, "Access Port Color: (".${$vlinfo}[6].",".${$vlinfo}[7].") -> ($bgcolor,$fgcolor)\n");
+      my $POE = ($POEFLAG ? "true" : "false");
       while ($count)
       {
           debug(9, "\t\tMember ge-0/0/$port remaining $count\n");
           $MEMBERS.= "        member ge-0/0/$port;\n";
           push @POEPORTS, "ge-0/0/$port" if ($POEFLAG);
           $portmap_PS .= <<EOF;
-$fgcolor ($vname) $bgcolor $port DrawPort
+$POE $fgcolor ($vname) $bgcolor $port DrawPort
 EOF
           $count--;
           $port++;
@@ -960,6 +993,7 @@ sub build_trunktypes_from_config
     my @TOKENS = split(/\t/, $_);
     my $name = $TOKENS[0];
     my $vlans = $TOKENS[1];
+    $vlans =~ s/\s*,\s*/,/g;	# Eliminate possible spaces from continuation artifact
     my $fgcolor = $TOKENS[2];
     my $bgcolor = $TOKENS[3];
     my @vlans = split(/,/, $vlans);
@@ -1720,6 +1754,7 @@ sub build_config_from_template
   $VV_name_prefix = shift @_;
   
   # Add configuration file fetches here:
+  my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
   my $USER_AUTHENTICATION = build_users_from_auth();
   my ($INTERFACES_PHYSICAL, $POE_PORTS, $portmap) = build_interfaces_from_config($hostname);
   my $POE_CONFIG = build_poe_from_portlist(@{$POE_PORTS});
@@ -1731,7 +1766,6 @@ sub build_config_from_template
   debug(5, "Received Vendor configuration:\n");
   debug(5, Dumper(%VENDOR_CONFIGURATION));
   debug(5, "End Vendor Config\n");
-  my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
   my ($INTERFACES_LAYER3, $IPV6_DEFGW) = build_l3_from_config($hostname);
   $INTERFACES_PHYSICAL .= ${VENDOR_CONFIGURATION}{"interfaces"};
   $VLAN_CONFIGURATION  .= ${VENDOR_CONFIGURATION}{"vlans"};

@@ -1,49 +1,49 @@
 // Expo Center Catwalk Switch Configuration
-TRUNK	ge-0/0/0	exUplink		-	Uplink
-TRUNK	ge-0/0/1	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/2	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/3	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/4	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/5	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/6	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/7	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/8	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/9	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/10	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/11	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/12	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/13	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/14	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/15	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/16	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/17	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/18	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/19	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/20	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/21	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/22	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/23	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/24	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/25	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/26	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/27	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/28	exDownlink,vendor_backbone		-	Downlink
-TRUNK	ge-0/0/29	exDownlink,vendor_backbone,exVmVendor	-	Downlink
-TRUNK	ge-0/0/30	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/31	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/32	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/33	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/34	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/35	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/36	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/37	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/38	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/39	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/40	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/41	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/42	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/43	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/44	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/45	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/46	exAccessPoint				POE	AP // for Game Night
-TRUNK	ge-0/0/47	exAccessPoint				POE	AP // for Game Night
+TRUNK	ge-0/0/0	exUplink			-
+TRUNK	ge-0/0/1	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/2	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/3	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/4	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/5	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/6	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/7	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/8	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/9	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/10	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/11	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/12	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/13	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/14	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/15	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/16	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/17	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/18	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/19	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/20	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/21	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/22	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/23	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/24	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/25	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/26	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/27	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/28	exDownlink,vendor_backbone	-
+TRUNK	ge-0/0/29	exDownlink,vendor_backbone,exVmVendor	-
+TRUNK	ge-0/0/30	exAccessPoint			POE
+TRUNK	ge-0/0/31	exAccessPoint			POE
+TRUNK	ge-0/0/32	exAccessPoint			POE
+TRUNK	ge-0/0/33	exAccessPoint			POE
+TRUNK	ge-0/0/34	exAccessPoint			POE
+TRUNK	ge-0/0/35	exAccessPoint			POE
+TRUNK	ge-0/0/36	exAccessPoint			POE
+TRUNK	ge-0/0/37	exAccessPoint			POE
+TRUNK	ge-0/0/38	exAccessPoint			POE
+TRUNK	ge-0/0/39	exAccessPoint			POE
+TRUNK	ge-0/0/40	exAccessPoint			POE
+TRUNK	ge-0/0/41	exAccessPoint			POE
+TRUNK	ge-0/0/42	exAccessPoint			POE
+TRUNK	ge-0/0/43	exAccessPoint			POE
+TRUNK	ge-0/0/44	exAccessPoint			POE
+TRUNK	ge-0/0/45	exAccessPoint			POE
+TRUNK	ge-0/0/46	exAccessPoint			POE
+TRUNK	ge-0/0/47	exAccessPoint			POE
