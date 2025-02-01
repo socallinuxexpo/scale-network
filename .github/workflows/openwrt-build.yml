@@ -14,8 +14,8 @@ jobs:
     container:
       # Ubuntu 24.04
       image: sarcasticadmin/openwrt-build@sha256:25ac9d0dd4eeaad1aaaa7c82c09e9ecc103c69224fc55eb9717c4cfb018a5281
-      # Since user is ubuntu and gets 1000 from inside container
-      options: --user 1000
+      # Since user is openwrt and gets 1001 from inside container
+      options: --user 1001
     steps:
       - uses: actions/checkout@v1
         with:
@@ -28,7 +28,7 @@ jobs:
           cd openwrt
           TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
       - name: 'Upload openwrt build artifact tarball'
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: ${{ matrix.target }}-openwrt-build-artifacts
           # Cant use relative pathing .. or . for artifacts action
@@ -36,10 +36,20 @@ jobs:
           path: |
             openwrt/build/artifacts/*.tar.gz
           retention-days: 30
+          # Since we cant turn off compression set to lowest level
+          compression-level: 0
+          # rerunning jobs overwrites artifacts from previous runs
+          # this was the default behavior in v3.x
+          # ref: https://github.com/actions/upload-artifact/blob/v3.1.1/README.md?plain=1#L152
+          overwrite: true
+          # if we dont have images, scream loudly
+          if-no-files-found: "error"
       - name: 'Upload openwrt build log'
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: ${{ matrix.target }}-openwrt-buildlog
           path: |
             openwrt/*build.log
           retention-days: 30
+          overwrite: true
+          if-no-files-found: "error"

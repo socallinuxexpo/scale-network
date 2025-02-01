@@ -29,7 +29,7 @@ jobs:
           # is not a PR event
           REF=$(curl -sSf \
             --url ${{ steps.pr-standardize-comment.outputs.url }} \
-            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'Authorization: Bearer ${{ secrets.SCALE_GITHUB_TOKEN }}' \
             --header 'Content-Type: application/json' | jq -r '.head.ref' \
           )
           echo "subcomm=$SUBCOMM" >> $GITHUB_OUTPUT
