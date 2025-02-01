@@ -21,18 +21,18 @@
 // are desirable, so we define them separately here.
 exUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
-				vendor_backbone	0xff0000	0xffffff
+				vendor_backbone	0x0a4a0a	0xffffff
 exDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
-				vendor_backbone	0x0000ff	0xffffff
+				vendor_backbone	0x0a1a3a	0xffffff
 exAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0x808000	0xffffff
+				exSCALE-FAST	0xa9f9ff	0x000000
 cfUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
-				vendor_backbone	0xff0000	0xffffff
+				vendor_backbone	0x0a4a0a	0xffffff
 cfDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
 				exSpeaker,exAVLAN,exSigns,exVmVendor, \
-				vendor_backbone	0x0000ff	0xffffff
+				vendor_backbone	0x0a1a3a	0xffffff
 cfAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0x808000	0xffffff
-massflash		cfInfra	0x400040	0xffffff
+				exSCALE-FAST	0xa9f9ff	0x000000
+massflash		cfInfra			0xff00b0	0xffffff

@@ -131,9 +131,9 @@ sub parse_hex_color
   debug(5, "Parse_hex_color: ".$value/0x10000 % 0x100."\n");
   debug(5, "Parse_hex_color: ".$value/0x100 % 0x100."\n");
   debug(5, "Parse_hex_color: ".$value%0x100."\n");
-  my $red   = ((($value / 0x10000) % 0x100) / 255.0);		# Extract red and scale to postscript color range (0-1 float)
+  my $blue   = ((($value / 0x10000) % 0x100) / 255.0);		# Extract red and scale to postscript color range (0-1 float)
   my $green = ((($value / 0x100) % 0x100) / 255.0);	# Extract green and scale
-  my $blue  = (($value % 0x100) / 255.0);			# Extract blue and scale
+  my $red  = (($value % 0x100) / 255.0);			# Extract blue and scale
   debug(5, "Parsed $hexcolor -> ($red, $green, $blue)\n");
   return ($red, $green, $blue);
 }
@@ -733,7 +733,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-$POE 0 0 0 (UNUSED) 0.75 0.75 0.75 $port DrawPort
+$POE 0.92 0.92 0.92 (UNUSED) 0 0 0 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -998,7 +998,20 @@ sub build_vlan_hash
     }
     elsif ($TOKENS[0] eq "VVRNG") # Vendor VLAN Range Specification
     {
-      # Skip this line here... Process elsewhere
+      # Grab color and assign to lowest VLID in range
+      $type = "VVRNG";
+      my $vlan_range = $TOKENS[2];
+      ($vlid, my $rest)  = split(/-/, $vlan_range,2); # Get just the first vlan in the range
+      $IPv6=undef;
+      $IPv4=undef;
+      $desc="Vendor Vlan Range";
+      $bgco = $TOKENS[6];
+      $fgco = $TOKENS[7];
+      $VLANS_byname{$name} = $vlid;
+      $VLANS{$vlid} = [ $type, $name, $IPv6, $IPv4, $desc, 
+                        ($prim ? $prim : undef),
+                        $bgco, $fgco ];
+      debug(1, "VVRNG $vlid => $name ($type) $IPv6 $IPv4 $prim $desc\n");
     }
   }
   return (\%VLANS,\%VLANS_byname);
@@ -1429,6 +1442,7 @@ sub build_vendor_from_config
 
   my $VV_portmap = "";
   my $intnum = 0;
+  my ($VLANS, $VLANS_byname) = build_vlan_hash();
   foreach(@{$switchtype})
   {
     my @tokens = split(/\t/, $_); # Split line into tokens
@@ -1472,19 +1486,15 @@ sub build_vendor_from_config
 
       # Initialize config fragments. These initialized values (may) get appended to for each interface.
       $VV_interfaces = "";
-      ##FIXME## Given that the Vendor VLAN Backbone is hard coded, this is a little bit silly, but avoids a dangling
-      ##FIXME## timebomb if that ever gets corrected.
       my $v4_nexthop = ($MgtVL < 500) ? "10.2.0.1" : "10.130.0.1";
       debug(5, "Vendor v4_nexthop set to $v4_nexthop\n");
-      ##FIXME## Vendor VLAN Backbone should come from a configuration file. This is a terrible hack for expedience
-      ##FIXME## It means that 10.1.0.0/24 needs to be remembered and avoided which is a major timebomb in the code.
       $VV_defgw_ipv4 = <<EOF;
     static {
         route 0.0.0.0/0 next-hop $v4_nexthop;
     }
 EOF
       $VV_firewall = VV_init_firewall();
-
+      my $VV_BASE = VV_get_vlid(0); # Get the base Vendor VLAN
       while ($count)
       {
         my $VLID = VV_get_vlid($VV_COUNT);
@@ -1521,8 +1531,15 @@ EOF
         }
     }
 EOF
+##FIXME## Use colors from file
+        my $vlinfo=${$VLANS}{$VV_BASE};
+        debug(4, "For $cmd $_ -> Vendor $VLID (pulled from $VV_BASE): ".Dumper(@{$vlinfo})."\n");
+        debug(5, "Background: ".${$vlinfo}[6]." -> ".Dumper(parse_hex_color(${$vlinfo}[6]))."\n");
+        debug(5, "Text: ".${$vlinfo}[6]." -> ".Dumper(parse_hex_color(${$vlinfo}[7]))."\n");
+        my $bgcolor = join(" ", parse_hex_color(${$vlinfo}[6]));
+        my $fgcolor = join(" ", parse_hex_color(${$vlinfo}[7]));
         $VV_portmap .= <<EOF;
-0 0 0 (Vend_$VLID) 0.75 1 0.75 $intnum DrawPort
+false $fgcolor (Vend_$VLID) $bgcolor $intnum DrawPort
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }
