@@ -4,7 +4,7 @@ VLAN	cfSCALE-FAST		501	2001:470:f026:501::/64	10.128.136.0/21	5G Wireless Networ
 VLAN	cfSpeaker		502	2001:470:f026:502::/64	10.128.2.0/24	Speaker Network					0xeeddbb	0x000000
 VLAN	cfInfra			503	2001:470:f026:503::/64	10.128.3.0/24	SCALE Net Infra and Servers (Conference Center)	0xcbf8cb	0x000000
 VLAN	cfCTF			504	2001:470:f026:504::/64	10.128.4.0/24	Capture the Flag				0x000000	0xffffff
-VLAN	cfAVLAN			505	2001:470:f026:505::/64	10.128.5.0/24	Audio Visual Network (DHCP Helper to AV server)	0xf5a500	0xffffff
+VLAN	cfAVLAN			505	2001:470:f026:505::/64	10.128.5.0/24	Audio Visual Network (DHCP Helper to AV server)	0xff4f00	0xffffff
 VLAN	cfNOC			506	2001:470:f026:506::/64	10.128.6.0/24	Wired network in NOC				0xf6d669	0x000000
 VLAN	cfSigns			507	2001:470:f026:507::/64	0.0.0.0/0	Signs network (Conference Center) IPv6 Only	0x604040	0xffffff
 //VLAN	cfStaff			508	2001:470:f026:508::/64	10.128.8.0/24	Staff Wifi Network				0x0300f6	0xffffff

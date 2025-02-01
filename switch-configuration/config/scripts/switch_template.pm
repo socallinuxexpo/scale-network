@@ -131,9 +131,9 @@ sub parse_hex_color
   debug(5, "Parse_hex_color: ".$value/0x10000 % 0x100."\n");
   debug(5, "Parse_hex_color: ".$value/0x100 % 0x100."\n");
   debug(5, "Parse_hex_color: ".$value%0x100."\n");
-  my $blue   = ((($value / 0x10000) % 0x100) / 255.0);		# Extract red and scale to postscript color range (0-1 float)
-  my $green = ((($value / 0x100) % 0x100) / 255.0);	# Extract green and scale
-  my $red  = (($value % 0x100) / 255.0);			# Extract blue and scale
+  my $red   = ((($value / 0x10000) % 0x100) / 255.0);		# Extract red and scale to postscript color range (0-1 float)
+  my $green = ((($value / 0x100) % 0x100) / 255.0);		# Extract green and scale
+  my $blue  = (($value % 0x100) / 255.0);			# Extract blue and scale
   debug(5, "Parsed $hexcolor -> ($red, $green, $blue)\n");
   return ($red, $green, $blue);
 }
@@ -571,9 +571,9 @@ SwitchMapDict begin
   % Set color for fill [ poe r g b Text r g b ] -> [ poe r g b Text ]
   % (DrawPort Set color for fill) print
   % pstack()=
-  /bgred exch def % Save blue value for background
-  /bggreen exch def % Save blue value for background
   /bgblue exch def % Save blue value for background
+  /bggreen exch def % Save blue value for background
+  /bgred exch def % Save blue value for background
   bgred bggreen bgblue setrgbcolor % Set color for background
   % Build Box path
   Left Bottom Port_Width Box_Height Box
@@ -591,7 +591,10 @@ SwitchMapDict begin
   % (DrawPort saved Text) print
   % pstack()=
   % Set text color. [ poe r g b ] -> [ poe ]
-  setrgbcolor % pull text RGB color from stack.
+  /b exch def
+  /g exch def
+  /r exch def
+  r g b setrgbcolor % pull text RGB color from stack.
   % (DrawPort TextColor Selected) print
   % pstack()=
   % Put Text back on stack and compute position [ poe ] -> [ poe text ] (Computes W (textwidth/2))
@@ -642,7 +645,10 @@ SwitchMapDict begin
   Left_Port_Edge add              % Add offset for left port edge
   /Left exch def                  % Save as Left
   % Set color for fill [ Text r g b ] -> [ Text ] (consumes r g b)
-  setrgbcolor
+  /b exch def
+  /g exch def
+  /r exch def
+  r g b setrgbcolor
   % Build Box path
   Left Bottom Port_Width Box_Height Box % Graphics context now includes a path for the box
   % Fill Box
@@ -733,7 +739,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-$POE 0.92 0.92 0.92 (UNUSED) 0 0 0 $port DrawPort
+$POE 1 1 1 (UNUSED) 0.75 0 0.0 $port DrawPort
 EOF
         $portcount--;
         $port++;
