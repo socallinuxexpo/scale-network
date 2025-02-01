@@ -537,10 +537,10 @@ SwitchMapDict begin
   /PortLeft exch def
   /BoxSize PortHeight PortWidth minimum 8 div def % 1/8th of shortest PortBox dimension
   /LeftEdge PortWidth 8 div PortLeft add def
-  /BottomEdge PortHeight 8 div 6 mul PortBottom add def
+  /BottomEdge PortHeight 8 div PortBottom add def
   gsave
   LeftEdge BottomEdge BoxSize BoxSize Box
-  fillpath
+  fill
   grestore
 } bind def
 
@@ -548,15 +548,19 @@ SwitchMapDict begin
  % fr/g/b are text color, br/g/b are box color
 /DrawPort {
   % Convert Number to X and Y position
-  % Identify the ligature line and bottom of box
+  % -Identify the ligature line and bottom of box
   % [ poe r g b Text r g b Number ] -> [ poe r g b Text r g b Number ]
-  % Save Port Number
+  % -Save Port Number
+  % (Entered DrawPort) print
+  % pstack()=
   dup /PortNum exch def
-  % Determine bottom edge of box
+  % -Determine bottom edge of box
   dup /Bottom exch 2 mod 0 eq { Even_Bottom } { Odd_Bottom } ifelse def
   /Ligature Bottom 0.35 Inch add def
-  % Identify left and bottom edge of Port Box on Map (consumes Number)
-  % [ r g b Text r g b Number ] -> [ r g b Text r g b ]
+  % -Identify left and bottom edge of Port Box on Map (consumes Number)
+  % [ poe r g b Text r g b Number ] -> [ poe r g b Text r g b ]
+  % (DrawPort Find Left and Bottom of box) print
+  % pstack()=
   2 div                     % Get horizontal port position
   dup cvi 6 idiv            % Get number of preceding port groups
   Port_Group_Gap mul        % Convert to width
@@ -565,6 +569,8 @@ SwitchMapDict begin
   Left_Port_Edge add        % Add offset for left port edge
   /Left exch def            % Save as Left
   % Set color for fill [ poe r g b Text r g b ] -> [ poe r g b Text ]
+  % (DrawPort Set color for fill) print
+  % pstack()=
   /bgred exch def % Save blue value for background
   /bggreen exch def % Save blue value for background
   /bgblue exch def % Save blue value for background
@@ -582,22 +588,38 @@ SwitchMapDict begin
   BoxFont
   % Save Text in variable for later use. [ poe r g b Text ] -> [ poe r g b ] (Defines Text)
   /Text exch def
+  % (DrawPort saved Text) print
+  % pstack()=
   % Set text color. [ poe r g b ] -> [ poe ]
   setrgbcolor % pull text RGB color from stack.
+  % (DrawPort TextColor Selected) print
+  % pstack()=
   % Put Text back on stack and compute position [ poe ] -> [ poe text ] (Computes W (textwidth/2))
   Text dup stringwidth pop 2 div /W exch def
+  % (DrawPort Text back on stack) print
+  % pstack()=
   % Move to the left edge of text at ligature position
   Left Port_Width 2 div add W sub Ligature moveto
   % Render text [ poe text ] -> [ poe ]
+  % (DrawPort Ready to render PortDesc) print
+  % pstack()=
   show
-  /P PortNum cvs def
+  /P PortNum s cvs def
   P stringwidth pop 2 div /W exch def
-  Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
-  grestore
+  Left Port_Width 2 div add W sub Ligature 10 sub moveto
+  P % Put Portnum back on stack for rendering
+  % (DrawPort Ready to render PortNum) print
+  % pstack()=
+  show
+  % (DrawPort Ready to PortNum rendered) print
+  % pstack()=
+  /PoE exch def
   gsave
-5  /PoE exch def
-5  { PoEOnColor } { bgred bggreen bgblue setcolor } PoE ifelse % Set color for PoE State box
-5  Left Bottom Port_Width Box_Height DrawPoEBox
+  PoE { PoEOnColor } { bgred bggreen bgblue setrgbcolor }
+  % (DrawPort Ready to render PoE) print
+  % pstack()=
+  ifelse % Set color for PoE State box
+  Left Bottom Port_Width Box_Height DrawPoEBox
   grestore
 } bind def
 
@@ -800,7 +822,7 @@ EOF
         my ($first, $second, $portnum) = split(/\//, $iface);
 	print STDERR "REACHED DrawFiberPort IF statement\n";
         $portmap_PS .= <<EOF;
-(FIBER) 0 1 1 $portnum DrawFiberPort
+false 0 0 0 (FIBER) 0 1 1 $portnum DrawFiberPort
 EOF
         debug(9, "$cmd output Fiber box for port $portnum ($iface)\n");
 
