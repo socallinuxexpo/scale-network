@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# set case insensitive match. This only works if a comparison is made with
+# double brackets
+shopt -s nocasematch
 
 case "$1" in
   # Same actions for renew or bound for the time being
@@ -7,10 +11,21 @@ case "$1" in
     set > /tmp/dhcp.params
     radio0=`uci show 'wireless.radio0.channel'|cut -f 2 -d "'"`
     radio1=`uci show 'wireless.radio1.channel'|cut -f 2 -d "'"`
-    if [ ! -z "$opt224" ] || [ ! -z "$opt225" ]; then
-      if [ "$opt224" != "$radio0" ] || [ "$opt225" != "$radio1" ]; then
-        uci set 'wireless.radio0.channel'=$(printf %d "0x$opt224")
-        uci set 'wireless.radio1.channel'=$(printf %d "0x$opt225")
+
+    if [[ ! -z "$opt224" ]] && [[ ! -z "$opt225" ]]; then
+      if [[ "$opt224" != "$radio0" ]] || [[ "$opt225" != "$radio1" ]]; then
+        if [[ "$opt224" != "off" ]]; then
+          uci set 'wireless.radio0.channel'=$(printf %d "0x$opt224")
+          uci set 'wireless.radio0.disabled'=0
+        else
+          uci set 'wireless.radio0.disabled'=1
+        fi
+        if [[ "$opt225" != "off" ]]; then
+          uci set 'wireless.radio1.channel'=$(printf %d "0x$opt225")
+          uci set 'wireless.radio1.disabled'=0
+        else
+          uci set 'wireless.radio1.disabled'=1
+        fi
         uci commit
         wifi reload
       fi
