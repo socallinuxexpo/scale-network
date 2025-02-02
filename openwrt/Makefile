@@ -17,7 +17,7 @@ BUILD_DIR ?= build
 # Set to configure -j (defaults to nproc)
 JOBS ?= $(shell nproc)
 
-BUILD_SECRETS ?= ../facts/secrets/$(TARGET)-openwrt-example.yaml
+BUILD_SECRETS ?= ../facts/aps/$(TARGET)-openwrt-example.yaml
 KEYPATH ?= ../facts/keys/
 
 # bins
