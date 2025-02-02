@@ -1,5 +1,5 @@
 # only used for console/su
-root_hash: "$6$A.qZ6.jIUKL/WS0P$lrIP99C3BgP7OMmVlYOGaErcatjipS0cL0AiVFeTAAk6IwBkstXz/EpMv1SOtO8rDifzC.mLta3eOvG/q4cRq."
+root_hash: "$6$CvGoTRZ3/d7w0jt.$kaZnn83uGemQgPznFMz6WgMM8h58Sgs/ydUETmh44RPrCS7D8dqBCklXQyHXKsYnf5nEis4ylwxfNm0NU0piC."
 # Bump for each year for scale
 scale: 22
 sshd:
