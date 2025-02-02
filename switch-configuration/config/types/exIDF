@@ -23,18 +23,18 @@ TRUNK	ge-0/0/20	exDownlink	-
 TRUNK	ge-0/0/21	exDownlink	-
 TRUNK	ge-0/0/22	exDownlink	-
 TRUNK	ge-0/0/23	exDownlink	-
-TRUNK	ge-0/0/24	exAccessPoint	POE
-TRUNK	ge-0/0/25	exAccessPoint	POE
-TRUNK	ge-0/0/26	exAccessPoint	POE
-TRUNK	ge-0/0/27	exAccessPoint	POE
-TRUNK	ge-0/0/28	exAccessPoint	POE
-TRUNK	ge-0/0/29	exAccessPoint	POE
-TRUNK	ge-0/0/30	exAccessPoint	POE
-TRUNK	ge-0/0/31	exAccessPoint	POE
-TRUNK	ge-0/0/32	exAccessPoint	POE
-TRUNK	ge-0/0/33	exAccessPoint	POE
-TRUNK	ge-0/0/34	exAccessPoint	POE
-TRUNK	ge-0/0/35	exAccessPoint	POE
+TRUNK	ge-0/0/24	exAP		POE
+TRUNK	ge-0/0/25	exAP		POE
+TRUNK	ge-0/0/26	exAP		POE
+TRUNK	ge-0/0/27	exAP		POE
+TRUNK	ge-0/0/28	exAP		POE
+TRUNK	ge-0/0/29	exAP		POE
+TRUNK	ge-0/0/30	exAP		POE
+TRUNK	ge-0/0/31	exAP		POE
+TRUNK	ge-0/0/32	exAP		POE
+TRUNK	ge-0/0/33	exAP		POE
+TRUNK	ge-0/0/34	exAP		POE
+TRUNK	ge-0/0/35	exAP		POE
 VLAN	exSigns		4							POE	// ge-0/0/{36-39}
 RSRVD	8										// ge-0/0/{40-47}
 FIBER	ge-0/1/0	exUplink

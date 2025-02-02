@@ -1,22 +1,22 @@
 // Room Switch Template -- All conference rooms Conference Center
 TRUNK	ge-0/0/0	cfUplink	-
 TRUNK	ge-0/0/1	cfDownlink	-
-TRUNK	ge-0/0/2	cfAccessPoint	POE
-TRUNK	ge-0/0/3	cfAccessPoint	POE
-TRUNK	ge-0/0/4	cfAccessPoint	POE
-TRUNK	ge-0/0/5	cfAccessPoint	POE
-TRUNK	ge-0/0/6	cfAccessPoint	POE
-TRUNK	ge-0/0/7	cfAccessPoint	POE
-TRUNK	ge-0/0/8	cfAccessPoint	POE
-TRUNK	ge-0/0/9	cfAccessPoint	POE
-TRUNK	ge-0/0/10	cfAccessPoint	POE
-TRUNK	ge-0/0/11	cfAccessPoint	POE
-TRUNK	ge-0/0/12	cfAccessPoint	POE
-TRUNK	ge-0/0/13	cfAccessPoint	POE
-TRUNK	ge-0/0/14	cfAccessPoint	POE
-TRUNK	ge-0/0/15	cfAccessPoint	POE
-TRUNK	ge-0/0/16	cfAccessPoint	POE
-TRUNK	ge-0/0/17	cfAccessPoint	POE
+TRUNK	ge-0/0/2	cfAP		POE
+TRUNK	ge-0/0/3	cfAP		POE
+TRUNK	ge-0/0/4	cfAP		POE
+TRUNK	ge-0/0/5	cfAP		POE
+TRUNK	ge-0/0/6	cfAP		POE
+TRUNK	ge-0/0/7	cfAP		POE
+TRUNK	ge-0/0/8	cfAP		POE
+TRUNK	ge-0/0/9	cfAP		POE
+TRUNK	ge-0/0/10	cfAP		POE
+TRUNK	ge-0/0/11	cfAP		POE
+TRUNK	ge-0/0/12	cfAP		POE
+TRUNK	ge-0/0/13	cfAP		POE
+TRUNK	ge-0/0/14	cfAP		POE
+TRUNK	ge-0/0/15	cfAP		POE
+TRUNK	ge-0/0/16	cfAP		POE
+TRUNK	ge-0/0/17	cfAP		POE
 VLAN	cfSigns		6										POE	// ge-0/0/{18-23}
 VLAN	cfNOC		12										POE	// ge-0/0/{24-35}
 VLAN	cfInfra		12										POE	// ge-0/0/{36-47}

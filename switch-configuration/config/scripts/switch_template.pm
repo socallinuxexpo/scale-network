@@ -471,7 +471,7 @@ sub build_interfaces_from_config
 /SwitchMapDict 20 dict def
 SwitchMapDict begin
 % Font Definitions
-/BoxFont { /Helvetica findfont 6 scalefont setfont } bind def
+/BoxFont { /Helvetica-Bold findfont 9 scalefont setfont } bind def
 /TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
 
 % Color Setting
@@ -739,7 +739,7 @@ EOF
     }
 EOF
         $portmap_PS .= <<EOF;
-$POE 1 1 1 (UNUSED) 0.75 0 0.0 $port DrawPort
+$POE 1 1 1 (UNUSED) 0.5 0 0.5 $port DrawPort
 EOF
         $portcount--;
         $port++;
@@ -1545,7 +1545,7 @@ EOF
         my $bgcolor = join(" ", parse_hex_color(${$vlinfo}[6]));
         my $fgcolor = join(" ", parse_hex_color(${$vlinfo}[7]));
         $VV_portmap .= <<EOF;
-false $fgcolor (Vend_$VLID) $bgcolor $intnum DrawPort
+false $fgcolor (Vnd_$VLID) $bgcolor $intnum DrawPort
 EOF
 #	"vlans"       -> $VV_vlans,
 #	context: vlans { <here> }

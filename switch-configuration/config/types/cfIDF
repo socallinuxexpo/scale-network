@@ -23,19 +23,19 @@ TRUNK	ge-0/0/20	cfDownlink	-
 TRUNK	ge-0/0/21	cfDownlink	-
 TRUNK	ge-0/0/22	cfDownlink	-
 TRUNK	ge-0/0/23	cfDownlink	-
-TRUNK	ge-0/0/24	cfAccessPoint	POE
-TRUNK	ge-0/0/25	cfAccessPoint	POE
-TRUNK	ge-0/0/26	cfAccessPoint	POE
-TRUNK	ge-0/0/27	cfAccessPoint	POE
-TRUNK	ge-0/0/28	cfAccessPoint	POE
-TRUNK	ge-0/0/29	cfAccessPoint	POE
-TRUNK	ge-0/0/30	cfAccessPoint	POE
-TRUNK	ge-0/0/31	cfAccessPoint	POE
-TRUNK	ge-0/0/32	cfAccessPoint	POE
-TRUNK	ge-0/0/33	cfAccessPoint	POE
-TRUNK	ge-0/0/34	cfAccessPoint	POE
-TRUNK	ge-0/0/35	cfAccessPoint	POE
+TRUNK	ge-0/0/24	cfAP		POE
+TRUNK	ge-0/0/25	cfAP		POE
+TRUNK	ge-0/0/26	cfAP		POE
+TRUNK	ge-0/0/27	cfAP		POE
+TRUNK	ge-0/0/28	cfAP		POE
+TRUNK	ge-0/0/29	cfAP		POE
+TRUNK	ge-0/0/30	cfAP		POE
+TRUNK	ge-0/0/31	cfAP		POE
+TRUNK	ge-0/0/32	cfAP		POE
+TRUNK	ge-0/0/33	cfAP		POE
+TRUNK	ge-0/0/34	cfAP		POE
+TRUNK	ge-0/0/35	cfAP		POE
 VLAN	cfCTF		10								-	// ge-0/0/{36-45}
 VLAN	cfInfra		1								-	// ge-0/0/46 -- Conference Center Bhyve Server
-VLAN	cfAVLAN		1								-	// ge-0/0/47 -- Conference Center AV Server
+VLAN	cfAV		1								-	// ge-0/0/47 -- Conference Center AV Server
 

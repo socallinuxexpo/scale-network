@@ -1,16 +1,16 @@
 // Expo Center -- VLANS 100-499
-VLAN	exSCALE-SLOW	100	2001:470:f026:100::/64	10.0.128.0/21	2.4G Wireless Network in Expo Center	0x0088ac	0xffffff
-VLAN	exSCALE-FAST	101	2001:470:f026:101::/64	10.0.136.0/21	5G Wireless Network in Expo Center	0x044c84	0xffffff
-VLAN	exSpeaker	102	2001:470:f026:102::/64	10.0.2.0/24	Speaker Network				0xeeddbb	0x000000
+VLAN	exw-SLOW	100	2001:470:f026:100::/64	10.0.128.0/21	2.4G Wireless Network in Expo Center	0x0088ac	0xffffff
+VLAN	exw-FAST	101	2001:470:f026:101::/64	10.0.136.0/21	5G Wireless Network in Expo Center	0x044c84	0xffffff
+VLAN	exSpkr		102	2001:470:f026:102::/64	10.0.2.0/24	Speaker Network				0xeeddbb	0x000000
 VLAN	exInfra		103	2001:470:f026:103::/64	10.0.3.0/24	SCALE NetInfra + Servers (Expo Center)	0xcbf8cb	0x000000
 VLAN	exMDF		104	2001:470:f026:104::/64	10.0.4.0/24	Link to MDF Router			0xffff00	0x000000
-VLAN	exAVLAN		105	2001:470:f026:105::/64	10.0.5.0/24	AV Network (DHCP Relay to AV server)	0xff4f00	0xffffff
+VLAN	exAV		105	2001:470:f026:105::/64	10.0.5.0/24	AV Network (DHCP Relay to AV server)	0xff4f00	0xffffff
 //106 not used
 VLAN	exSigns		107	2001:470:f026:107::/64	0.0.0.0/0	Signs network (Expo Center) IPv6 Only	0x604040	0xffffff
 //VLAN	exStaff		108	2001:470:f026:108::/64	10.0.8.0/24	Staff Wireless Network			0x0300f6	0xffffff
 //109 not used
-VLAN	exRegistration	110	2001:470:f026:110::/64	10.0.10.0/24	Registration Network (Expo Center)	0x9abfca	0x000000
-VLAN	exVmVendor	112	2001:470:f026:112::/64	10.0.144.0/20	Special network for VM Vending Machine	0x660c4f	0xffffff
+VLAN	exReg		110	2001:470:f026:110::/64	10.0.10.0/24	Registration Network (Expo Center)	0x9abfca	0x000000
+VLAN	exVmVndr	112	2001:470:f026:112::/64	10.0.144.0/20	Special network for VM Vending Machine	0x0000ff	0xffffff
 //113 through 199 not used
 //200 through 499 Vendors
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.

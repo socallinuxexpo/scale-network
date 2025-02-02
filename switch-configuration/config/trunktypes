@@ -19,20 +19,20 @@
 
 // Uplink definition can be used for both Uplink and Downlink ports, but different colors
 // are desirable, so we define them separately here.
-exUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+exUplink		exInfra,exw-SLOW,exw-FAST, \
+				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a4a0a	0xffffff
-exDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+exDownlink		exInfra,exw-SLOW,exw-FAST, \
+				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a1a3a	0xffffff
-exAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0xa9f9ff	0x000000
-cfUplink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+exAP			exInfra,exw-SLOW, \
+				exw-FAST	0xa9f9ff	0x000000
+cfUplink		exInfra,exw-SLOW,exw-FAST, \
+				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a4a0a	0xffffff
-cfDownlink		exInfra,exSCALE-SLOW,exSCALE-FAST, \
-				exSpeaker,exAVLAN,exSigns,exVmVendor, \
+cfDownlink		exInfra,exw-SLOW,exw-FAST, \
+				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a1a3a	0xffffff
-cfAccessPoint		exInfra,exSCALE-SLOW, \
-				exSCALE-FAST	0xa9f9ff	0x000000
+cfAP			exInfra,exw-SLOW, \
+				exw-FAST	0xa9f9ff	0x000000
 massflash		cfInfra			0xff00b0	0xffffff
