@@ -1,12 +1,10 @@
 inputs:
 let
+
   # inherits
+
   inherit (inputs.nixpkgs)
     lib
-    ;
-
-  inherit (lib.attrsets)
-    genAttrs
     ;
 
   inherit (lib.fileset)
@@ -44,102 +42,97 @@ let
     ];
   };
 in
-genAttrs
-  [
-    "x86_64-linux"
-    "aarch64-linux"
-  ]
-  (
-    system:
-    let
-      pkgs = inputs.self.legacyPackages.${system};
-    in
-    {
-      core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs; });
-      loghost = pkgs.testers.runNixOSTest ./loghost.nix;
+inputs.self.library.defaultSystems (
+  system:
+  let
+    pkgs = inputs.self.legacyPackages.${system};
+  in
+  {
+    core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs; });
+    loghost = pkgs.testers.runNixOSTest ./loghost.nix;
 
-      pytest-facts =
-        let
-          testPython = (
-            pkgs.python3.withPackages (
-              pythonPackages: with pythonPackages; [
-                pylint
-                pytest
-                jinja2
-              ]
-            )
-          );
-        in
-        (pkgs.runCommand "pytest-facts"
-          {
-            src = factsSrc;
-            buildInputs = [ testPython ];
-          }
-          ''
-            cd $src/facts
-            pylint --persistent n *.py
-            pytest -vv -p no:cacheprovider
-            touch $out
-          ''
+    pytest-facts =
+      let
+        testPython = (
+          pkgs.python3.withPackages (
+            pythonPackages: with pythonPackages; [
+              pylint
+              pytest
+              jinja2
+            ]
+          )
         );
-
-      duplicates-facts = (
-        pkgs.runCommand "duplicates-facts"
-          {
-            src = factsSrc;
-            buildInputs = [ pkgs.fish ];
-          }
-          ''
-            cd $src/facts
-            fish --no-config test_duplicates.fish
-            touch $out
-          ''
+      in
+      (pkgs.runCommand "pytest-facts"
+        {
+          src = factsSrc;
+          buildInputs = [ testPython ];
+        }
+        ''
+          cd $src/facts
+          pylint --persistent n *.py
+          pytest -vv -p no:cacheprovider
+          touch $out
+        ''
       );
 
-      perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
-        pname = "perl-switches";
-        version = "0.1.0";
-
-        src = switchConfigurationSrc;
-
-        nativeBuildInputs = with pkgs; [
-          gnumake
-          perl
-        ];
-
-        buildPhase = ''
-          cd switch-configuration
-          make .lint
-          make .build-switch-configs
-        '';
-
-        installPhase = ''
+    duplicates-facts = (
+      pkgs.runCommand "duplicates-facts"
+        {
+          src = factsSrc;
+          buildInputs = [ pkgs.fish ];
+        }
+        ''
+          cd $src/facts
+          fish --no-config test_duplicates.fish
           touch $out
-        '';
-      });
+        ''
+    );
 
-      openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
-        pname = "openwrt-golden";
-        version = "0.1.0";
+    perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
+      pname = "perl-switches";
+      version = "0.1.0";
 
-        src = openwrtSrc;
+      src = switchConfigurationSrc;
 
-        buildInputs = [
-          pkgs.diffutils
-          pkgs.gomplate
-        ];
+      nativeBuildInputs = with pkgs; [
+        gnumake
+        perl
+      ];
 
-        buildPhase = ''
-          cd tests/unit/openwrt
-          mkdir -p $out/tmp/ath79
-        '';
+      buildPhase = ''
+        cd switch-configuration
+        make .lint
+        make .build-switch-configs
+      '';
 
-        installPhase = ''
-          ./test.sh -t ath79 -o $out
-        '';
-      });
+      installPhase = ''
+        touch $out
+      '';
+    });
 
-      formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
+    openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
+      pname = "openwrt-golden";
+      version = "0.1.0";
 
-    }
-  )
+      src = openwrtSrc;
+
+      buildInputs = [
+        pkgs.diffutils
+        pkgs.gomplate
+      ];
+
+      buildPhase = ''
+        cd tests/unit/openwrt
+        mkdir -p $out/tmp/ath79
+      '';
+
+      installPhase = ''
+        ./test.sh -t ath79 -o $out
+      '';
+    });
+
+    formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
+
+  }
+)
