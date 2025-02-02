@@ -74,7 +74,7 @@ cp ./facts/aps/openwrt-example.yaml ./facts/aps/openwrt.yaml
 Generate and update the root password hash in `openwrt.yaml`:
 
 ```bash
-openssl passwd -1 secretpassword
+openssl passwd -6 secretpassword
 ```
 
 Compile the templates:
