@@ -1,8 +1,16 @@
 inputs:
 let
-  inherit (inputs.nixpkgs-unstable) lib;
+  inherit (builtins)
+    attrNames
+    readDir
+    ;
+
+  inherit (inputs.nixpkgs-unstable)
+    lib
+    ;
 
   inherit (lib.attrsets)
+    filterAttrs
     genAttrs
     mapAttrs'
     nameValuePair
@@ -37,5 +45,8 @@ rec {
     "x86_64-darwin"
     "aarch64-darwin"
   ];
+
+  getDirectories =
+    path: attrNames (filterAttrs (_: fileType: fileType == "directory") (readDir path));
 
 }
