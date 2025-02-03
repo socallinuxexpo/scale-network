@@ -31,6 +31,7 @@ inputs.nixpkgs.lib.genAttrs
       ];
 
       openwrtSub = with pkgs; [
+        dnsmasq
         expect
         gomplate
         magic-wormhole
