@@ -1476,7 +1476,7 @@ sub build_vendor_from_config
     {
       # Skip -- Not vendor VLAN related, handled elsewhere
       # Need to account for the interfaces, though.
-      my $count = $tokens[0];
+      my $count = $tokens[1];
       $intnum += $count;
       debug(5, "\t\tSkipping $count vlan ports, new intnum $intnum.\n");
     }

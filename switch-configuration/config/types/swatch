@@ -1,0 +1,30 @@
+TRUNK	ge-0/0/0	exUplink	-
+TRUNK	ge-0/0/1	exDownlink	-
+TRUNK	ge-0/0/2	exAP		POE
+TRUNK	ge-0/0/3	cfUplink	-
+TRUNK	ge-0/0/4	cfDownlink	-
+TRUNK	ge-0/0/5	cfAP		POE
+TRUNK	ge-0/0/6	massflash	POE
+VLAN	exw-SLOW	1		-	// 7
+VLAN	exw-FAST	1		-	// 8
+VLAN	exSpkr		1		-	// 9
+VLAN	exInfra		1		-	// 10
+VLAN	exMDF		1		-	// 11
+VLAN	exAV		1		POE	// 12
+VLAN	exSigns		1		POE	// 13
+VLAN	exReg		1		POE	// 14
+VLAN	exVmVndr	1		-	// 15
+RSRVD			2			// 16-17
+VVLAN			6			// 18-23
+VLAN	cfw-SLOW	1		-	// 24
+VLAN	cfw-FAST	1		-	// 25
+VLAN	cfSpkr		1		-	// 26
+VLAN	cfInfra		1		-	// 27
+VLAN	cfCTF		1		-	// 28
+VLAN	cfAV		1		POE	// 29
+VLAN	cfNOC		1		POE	// 30
+VLAN	cfSigns		1		POE	// 31
+VLAN	cfInstl		1		-	// 32
+RSRVD			3			// 33-35
+RSRVD			12			// 36-47
+VVBB
