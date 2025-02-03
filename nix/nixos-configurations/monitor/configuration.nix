@@ -1,12 +1,10 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }:
 let
   hostname = "monitoring.scale.lan";
-  dashboard = pkgs.copyPathToStore ../../../monitoring/openwrt_dashboard.json;
 in
 {
   boot.kernelParams = [
@@ -97,7 +95,7 @@ in
         dashboards.settings.providers = [
           {
             name = "openwrt";
-            options.path = dashboard;
+            options.path = pkgs.scale-network.openwrtDashboardJsonSrc;
           }
         ];
       };

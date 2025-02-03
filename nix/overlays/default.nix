@@ -1,9 +1,7 @@
 inputs:
 let
   inherit (builtins)
-    attrNames
     attrValues
-    readDir
     ;
 
   inherit (inputs.nixpkgs-unstable)
@@ -11,9 +9,7 @@ let
     ;
 
   inherit (lib.attrsets)
-    filterAttrs
     genAttrs
-    mapAttrs'
     ;
 
   inherit (lib.fixedPoints)
@@ -23,10 +19,8 @@ let
   inherit (inputs.self.library)
     attrNamesKebabToCamel
     kebabToCamel
+    getDirectories
     ;
-
-  getDirectories =
-    path: attrNames (filterAttrs (_: fileType: fileType == "directory") (readDir path));
 
   allLocalPackages = attrNamesKebabToCamel (
     genAttrs (getDirectories ../packages) (

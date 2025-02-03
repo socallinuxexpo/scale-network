@@ -1,8 +1,17 @@
 inputs:
 let
-  inherit (inputs.nixpkgs-unstable) lib;
+  inherit (builtins)
+    attrNames
+    readDir
+    ;
+
+  inherit (inputs.nixpkgs-unstable)
+    lib
+    ;
 
   inherit (lib.attrsets)
+    filterAttrs
+    genAttrs
     mapAttrs'
     nameValuePair
     ;
@@ -29,5 +38,15 @@ rec {
     s: mutFirstChar toLower (concatMapStrings (mutFirstChar toUpper) (splitString "-" s));
 
   attrNamesKebabToCamel = mapAttrs' (name: value: nameValuePair (kebabToCamel name) value);
+
+  defaultSystems = genAttrs [
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
+  ];
+
+  getDirectories =
+    path: attrNames (filterAttrs (_: fileType: fileType == "directory") (readDir path));
 
 }

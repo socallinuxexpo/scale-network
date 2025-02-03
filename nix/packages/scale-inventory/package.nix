@@ -1,34 +1,39 @@
 {
-  stdenvNoCC,
-  copyPathsToStore,
   lib,
   python3,
-  python310Packages,
+  stdenvNoCC,
 }:
 let
-  local_manifests = copyPathsToStore [
-    ../../../switch-configuration
-    ../../../facts
-  ];
+  inherit (lib.fileset)
+    toSource
+    unions
+    ;
 in
 stdenvNoCC.mkDerivation {
 
   name = "scaleInventory";
 
-  propagatedBuildInputs = [
-    python3
-    python310Packages.jinja2
+  src = toSource {
+    root = ../../..;
+    fileset = unions [
+      ../../../facts
+      ../../../switch-configuration
+    ];
+  };
+
+  nativeBuildInputs = [
+    (python3.withPackages (ps: [ ps.jinja2 ]))
   ];
 
-  buildCommand = ''
-    mkdir $out
-    cd $out
-    mkdir .repo
-    mkdir config
-    for local_manifest in ${lib.concatMapStringsSep " " toString local_manifests}; do
-      cp -r $local_manifest .repo/$(stripHash $local_manifest; echo $strippedName)
-    done
-    cd $out/.repo/facts
-    python inventory.py all $out/config
+  buildPhase = ''
+    mkdir build
+    cd facts
+    python inventory.py all ../build
+    cd ..
+  '';
+
+  installPhase = ''
+    mkdir -p $out/config
+    cp build/* $out/config/
   '';
 }
