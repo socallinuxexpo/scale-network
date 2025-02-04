@@ -28,10 +28,11 @@
 # New finctionality:
 #
 # command line usage:
-#   switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
+#   switch_config_loader (-h | [-b] [-c <filename>] [-k] [-l] [-n] [-p] [-t <target>] [-u <username> ] [-x] [-z] [<switch_spec>])
 #
 #       -b -- Run in bulk mode, loop forever trying to install on each switch
 #           attached. Implies -l, incompatible with -k.
+#		NOTE: Will execute a request system power-off at the end of the config load.
 #
 #       -c <filename> -- Use <filename> to configure every affected switch
 #
@@ -55,6 +56,8 @@
 #           switch. Implies -l.
 #
 #       -u <username> -- username to provide to swtiches for authentication
+#
+#	-x -- Do not power off switch (Only meaningful with -b)
 #
 #       -z -- Go ahead and process switches in the Z (unused) hierarchy
 #
@@ -105,8 +108,9 @@ our $opt_n;
 our $opt_p;
 our $opt_t;
 our $opt_u;
+our $opt_x;
 our $opt_z;
-getopts('bc:hklnpt:u:z');
+getopts('bc:hklnpt:u:xz');
 
 # Check for implicit or incompatible arguments.
 if ($opt_h)
@@ -118,6 +122,8 @@ $opt_l = 1 if ($opt_b);
 $opt_l = 1 if ($opt_t);
 
 die "Error: -b and -k are incompatible.\n" if ($opt_b && $opt_k);
+die "Error: -l and -t are incompatible.\n" if ($opt_t && $opt_l);
+warn "Warning: -x only meaningful if used with -b.\n" if ($opt_x) unless($opt_b);
 
 my @list = @ARGV;
 
@@ -220,6 +226,10 @@ unless($opt_b)
   exit 0;
 }
 
+# Power off switches if in bulk mode.
+$Loader->{'power_off'} = 1;
+$Loader->{'power_off'} = 0 if ($opt_x);
+
 while (1)
 {
   # Bulk mode
@@ -279,6 +289,7 @@ sub process_switch
   return($result);
 }
 
+
 sub report_error
 {
   if ($opt_k)
@@ -297,10 +308,12 @@ sub usage
   # Display usage information
 
   print STDOUT <<EOF;
- switch_config_loader (-h | [-b] [-c <filename>] [-l] [-n] [-t <target>] [<switch_spec>])
+ switch_config_loader (-h | [-b] [-c <filename>] [-k] [-l] [-n] [-p] [-t <target>] [-u <username> ] [-x] [-z] [<switch_spec>])
 
        -b -- Run in bulk mode, loop forever trying to install on each switch
            attached. Implies -l, incompatible with -k.
+
+	   NOTE: Will power off switch after config commit unless -x is specified.
 
        -c <filename> -- Use <filename> to configure every affected switch
 
@@ -315,13 +328,21 @@ sub usage
        -n -- No-Apply -- Send out the configuration, do the show | compare,
            but do not apply the configuration, rollback instead.
 
-       -t <target> -- Specify the target. <target> can be a host name, an
+	-p -- Prompt for password
+
+	-t <target> -- Specify the target. <target> can be a host name, an
            IP address, or a /dev/ name. If /dev/, then it is treated as a
            Serial Port. Otherwise, treated as a Host Name or IP Address
            and passed unchecked to library routines for connecting to the
            switch. Implies -l.
 
-       <switch_spec> -- One or more switch names and/or groups
+	-u <username> -- Specify username for login prompt (serial) or SSH
+
+	-x -- Do not power off switch (only meaningful with -b)
+
+	-z
+
+	<switch_spec> -- One or more switch names and/or groups
            Cannot be used with -l or any of the options that imply -l
              unless it resolves to a single switch.
            For more informoation on groups, see the "expand_switch_groups()"
