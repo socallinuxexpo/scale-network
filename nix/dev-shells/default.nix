@@ -44,6 +44,7 @@ inputs.nixpkgs.lib.genAttrs
         pkg-config
         gcc
         stdenv
+        scale-network.makeDhcpd
         scale-network.serverspec
       ];
 
