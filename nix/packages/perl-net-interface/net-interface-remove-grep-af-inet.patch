@@ -1,0 +1,16 @@
+diff --git a/Makefile.PL b/Makefile.PL
+index 973e65e..6ad0d51 100644
+--- a/Makefile.PL
++++ b/Makefile.PL
+@@ -176,11 +176,6 @@ unless (open(F,'./netsymbolC.inc')) {
+   exit;
+ }
+ 
+-unless (scalar grep {/# define\s+_NI_AF_INET/} (<F>)) {
+-  close F;
+-  die "AF_INET not found in netsymbolsC.inc,\nprerequisite development library header files missing from /usr/include/sys\n";
+-  exit 0;
+-}
+ close F;
+ 
+ WriteMakefile(%makeparms);

@@ -9,5 +9,8 @@ inputs.nixpkgs.lib.genAttrs
       massflash
       scaleInventory
       serverspec
+      perlNetArp
+      perlNetInterface
+      perlNetPing
       ;
   })
