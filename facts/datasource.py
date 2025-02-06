@@ -210,7 +210,12 @@ def test_datafile(delimiter, meta):
             continue
         # run the validators for each column
         for i, val in enumerate(elems):
+            # If we don't have tests for extra columns, ignore them.
+            if i >= len(meta["cols"]):
+                continue
+            print("Processing index ", i, ' with value "', val, '"\n')
             if not meta["cols"][i](val.rstrip("\n")):
+                print("Test failed at", i, "Because not newline?\n")
                 return False, "invalid field " + val + " failed " + meta["cols"][
                     i
                 ].__name__ + " at line " + str(linenum + 1) + " of " + meta["file"]
