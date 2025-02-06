@@ -123,7 +123,10 @@ $opt_l = 1 if ($opt_t);
 
 die "Error: -b and -k are incompatible.\n" if ($opt_b && $opt_k);
 die "Error: -l and -t are incompatible.\n" if ($opt_t && $opt_l);
-warn "Warning: -x only meaningful if used with -b.\n" if ($opt_x) unless($opt_b);
+if ($opt_x)
+{
+  warn "Warning: -x only meaningful if used with -b.\n" unless($opt_b);
+}
 
 my @list = @ARGV;
 
@@ -227,8 +230,8 @@ unless($opt_b)
 }
 
 # Power off switches if in bulk mode.
-$Loader->{'power_off'} = 1;
-$Loader->{'power_off'} = 0 if ($opt_x);
+$LOADER->{'power_off'} = 1;
+$LOADER->{'power_off'} = 0 if ($opt_x);
 
 while (1)
 {
