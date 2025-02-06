@@ -166,15 +166,19 @@ sub new
         
         STDERR->autoflush(1);   # Turn on autoflush for STDERR
         get_switchtype("anonymous");
-	
+
+        my $ping = Net::Ping->new("icmp"),
+        print STDERR "Ping OK\n";
+        my $interfaces = [ Net::Interface->interfaces() ], # List of interfaces
+        print STDERR "Interfaces OK\n";
         my $self = {
-            ping        => Net::Ping->new("icmp"),
+            ping        => $ping,
             DefaultIP   => "192.168.255.76", # Switch target management IP
             line_delay  => 100 * 1000, # Delay 100 milliseconds between lines sent to /dev (presumably serial line)
-	    Interfaces  => [ Net::Interface->interfaces() ], # List of interfaces
-	    DefaultUser => $user,
-	    asroot      => 0,
-	    power_off   => 0, # Power off the switch at end of override_switch (default=no)
+            Interfaces  => $interfaces,
+            DefaultUser => $user,
+            asroot      => 0,
+            power_off   => 0, # Power off the switch at end of override_switch (default=no)
         };
 
 	foreach my $if (@{$self->{"Interfaces"}})
