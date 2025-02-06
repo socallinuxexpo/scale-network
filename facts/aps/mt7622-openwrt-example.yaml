@@ -1,7 +1,7 @@
 # scale
 root_hash: "$1$zh0PjBbB$f9aFGDX9vNYNdSRexhib8/"
 # Bump for each year for scale
-scale: 21
+scale: 22
 sshd:
   password_auth: true
 rsyslog:

@@ -6,6 +6,7 @@ inputs.nixpkgs.lib.genAttrs
   ]
   (system: {
     inherit (inputs.self.legacyPackages.${system}.scale-network)
+      makeDhcpd
       massflash
       scaleInventory
       serverspec

@@ -1,9 +1,9 @@
-# only used for console/su
-root_hash: "$6$A.qZ6.jIUKL/WS0P$lrIP99C3BgP7OMmVlYOGaErcatjipS0cL0AiVFeTAAk6IwBkstXz/EpMv1SOtO8rDifzC.mLta3eOvG/q4cRq."
+# scale
+root_hash: "$1$zh0PjBbB$f9aFGDX9vNYNdSRexhib8/"
 # Bump for each year for scale
-scale: 21
+scale: 22
 sshd:
-  password_auth: false
+  password_auth: true
 rsyslog:
   server: 'loghost.scale.lan'
   port: '514'

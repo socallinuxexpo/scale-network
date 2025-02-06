@@ -31,6 +31,7 @@ inputs.nixpkgs.lib.genAttrs
       ];
 
       openwrtSub = with pkgs; [
+        dnsmasq
         expect
         gomplate
         magic-wormhole
@@ -43,6 +44,7 @@ inputs.nixpkgs.lib.genAttrs
         pkg-config
         gcc
         stdenv
+        scale-network.makeDhcpd
         scale-network.serverspec
       ];
 

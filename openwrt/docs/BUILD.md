@@ -63,10 +63,10 @@ The `*sysupgrade.bin` and `*factory.img` files match the AP models
 To get the configuration thats used at scale the templates need to be baked into
 the image.
 
-Copy over the default secrets:
+Copy over the default config:
 
 ```bash
-cp ./facts/secrets/openwrt-example.yaml ./facts/secrets/openwrt.yaml
+cp ./facts/aps/openwrt-example.yaml ./facts/aps/openwrt.yaml
 ```
 
 > If needed update the defaults in `openwrt.yaml` to represent actual values
@@ -74,7 +74,7 @@ cp ./facts/secrets/openwrt-example.yaml ./facts/secrets/openwrt.yaml
 Generate and update the root password hash in `openwrt.yaml`:
 
 ```bash
-openssl passwd -1 secretpassword
+openssl passwd -6 secretpassword
 ```
 
 Compile the templates:
