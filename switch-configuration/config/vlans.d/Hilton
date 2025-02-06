@@ -1,15 +1,15 @@
 //	Conference	Center	--	VLANS	100-499
-VLAN	hiSCALE-SLOW		100	2001:470:f026:100::/64	10.0.128.0/21	2.4G Wireless Network in 
-VLAN	hiSCALE-FAST		101	2001:470:f026:101::/64	10.0.136.0/21	5G Wireless Network in 
-VLAN	hiSpeaker		102	2001:470:f026:102::/64	10.0.2.0/24	Speaker Network
+VLAN	hiw-SLOW		100	2001:470:f026:100::/64	10.0.128.0/21	2.4G Wireless Network in 
+VLAN	hiw-FAST		101	2001:470:f026:101::/64	10.0.136.0/21	5G Wireless Network in 
+VLAN	hiSpkr			102	2001:470:f026:102::/64	10.0.2.0/24	Speaker Network
 VLAN	hiInfra			103	2001:470:f026:103::/64	10.0.3.0/24	SCALE Network Infrastructure and Servers
 VLAN	hiCTF			104	2001:470:f026:104::/64	10.0.4.0/24	Capture the Flag
-VLAN	hiAVLAN			105	2001:470:f026:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
+VLAN	hiAV			105	2001:470:f026:105::/64	10.0.5.0/24	Audio Visual Network (DHCP Helper to AV server)
 VLAN	hiNOC			106	2001:470:f026:106::/64	10.0.6.0/24	Wired network in NOC
 VLAN	hiSigns			107	2001:470:f026:107::/64	0.0.0.0/0	Signs network (IPv6 Only)
 //VLAN	hiStaff			108	2001:470:f026:108::/64	10.0.8.0/24	Staff Wifi Network
-VLAN	hiRegistration		110	2001:470:f026:110::/64	10.0.10.0/24	Registration
-VLAN	hiInstall		111	2001:470:f026:111::/64	10.0.11.0/24	Install Fests and Workshops
+VLAN	hiReg			110	2001:470:f026:110::/64	10.0.10.0/24	Registration
+VLAN	hiInstl			111	2001:470:f026:111::/64	10.0.11.0/24	Install Fests and Workshops
 //111 through 199 not used
 //200 through 499 Vendors
 //200-498 are dynamically generated from Booth information file as Vendor VLANs.

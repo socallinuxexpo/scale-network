@@ -1,43 +1,41 @@
 // Conference Center IDF Switch Configuration
-TRUNK	ge-0/0/0	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
-TRUNK	ge-0/0/1	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfCTF,cfAVLAN,cfNOC, \
-			cfSigns,cfHam_N6S,HAM_BRIDGE 					-	Uplink
-TRUNK	ge-0/0/2	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/3	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/4	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/5	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/6	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/7	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/8	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/9	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/10	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/11	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/12	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/13	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/14	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/15	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/16	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/17	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/18	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/19	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/20	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/21	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/22	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/23	cfSCALE-SLOW,cfSCALE-FAST,cfSpeaker,cfInfra,cfAVLAN,cfSigns	-	Downlink
-TRUNK	ge-0/0/24	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/25	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/26	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/27	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/28	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/29	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/30	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/31	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/32	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/33	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/34	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-TRUNK	ge-0/0/35	cfSCALE-SLOW,cfSCALE-FAST,cfInfra				POE	AP
-VLAN	cfCTF		10								-	/ ge-0/0/{36-45}
+TRUNK	ge-0/0/0	cfUplink	-
+TRUNK	ge-0/0/1	cfUplink	-
+TRUNK	ge-0/0/2	cfDownlink	-
+TRUNK	ge-0/0/3	cfDownlink	-
+TRUNK	ge-0/0/4	cfDownlink	-
+TRUNK	ge-0/0/5	cfDownlink	-
+TRUNK	ge-0/0/6	cfDownlink	-
+TRUNK	ge-0/0/7	cfDownlink	-
+TRUNK	ge-0/0/8	cfDownlink	-
+TRUNK	ge-0/0/9	cfDownlink	-
+TRUNK	ge-0/0/10	cfDownlink	-
+TRUNK	ge-0/0/11	cfDownlink	-
+TRUNK	ge-0/0/12	cfDownlink	-
+TRUNK	ge-0/0/13	cfDownlink	-
+TRUNK	ge-0/0/14	cfDownlink	-
+TRUNK	ge-0/0/15	cfDownlink	-
+TRUNK	ge-0/0/16	cfDownlink	-
+TRUNK	ge-0/0/17	cfDownlink	-
+TRUNK	ge-0/0/18	cfDownlink	-
+TRUNK	ge-0/0/19	cfDownlink	-
+TRUNK	ge-0/0/20	cfDownlink	-
+TRUNK	ge-0/0/21	cfDownlink	-
+TRUNK	ge-0/0/22	cfDownlink	-
+TRUNK	ge-0/0/23	cfDownlink	-
+TRUNK	ge-0/0/24	cfAP		POE
+TRUNK	ge-0/0/25	cfAP		POE
+TRUNK	ge-0/0/26	cfAP		POE
+TRUNK	ge-0/0/27	cfAP		POE
+TRUNK	ge-0/0/28	cfAP		POE
+TRUNK	ge-0/0/29	cfAP		POE
+TRUNK	ge-0/0/30	cfAP		POE
+TRUNK	ge-0/0/31	cfAP		POE
+TRUNK	ge-0/0/32	cfAP		POE
+TRUNK	ge-0/0/33	cfAP		POE
+TRUNK	ge-0/0/34	cfAP		POE
+TRUNK	ge-0/0/35	cfAP		POE
+VLAN	cfCTF		10								-	// ge-0/0/{36-45}
 VLAN	cfInfra		1								-	// ge-0/0/46 -- Conference Center Bhyve Server
-VLAN	cfAVLAN		1								-	// ge-0/0/47 -- Conference Center AV Server
+VLAN	cfAV		1								-	// ge-0/0/47 -- Conference Center AV Server
 

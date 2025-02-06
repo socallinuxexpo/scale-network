@@ -36,5 +36,18 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
 ## Contributing
 
 SCaLE happens once a year but the team has ongoing projects and prep year round.
-If you are interesting in volunteering please request to join our mailing list:
+If you are interested in volunteering please request to join our mailing list:
 https://lists.linuxfests.org/cgi-bin/mailman/listinfo/tech
+
+> NOTE:
+> If you are contributing and need to debug problems with generated PostScript code,
+> edit the Makefile two levels up and take out the > /dev/null redirects on the gs
+> calls. This will make PostScript error reports and stdout messages visible.
+>
+> PostScript code can be instrumented using "(string) print" commands and "pstack()="
+> can be used to dump the current contents of the operand stack. If you need a newline,
+> you can use "() print". (no newlines are added if () is not empty).
+>
+> A little instrumentation and being able to see the messages from GS can go a long
+> way in helping debug the code. Look for pstack() (commented out at this time) in
+> the switch_template.pm file for examples of instrumentation.

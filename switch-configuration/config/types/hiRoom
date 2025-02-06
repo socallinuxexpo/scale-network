@@ -13,10 +13,10 @@ TRUNK	ge-0/0/14	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRe
 TRUNK	ge-0/0/15	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
 TRUNK	ge-0/0/16	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
 TRUNK	ge-0/0/17	hiSCALE-SLOW,hiSCALE-FAST,hiSpeaker,hiInfra,hiAVLAN,hiSigns,hiRegistration,hiNOC,hiInstall,vendor_backbone	-
-VLAN	hiSigns		4														-	// ge-0/0/{18-21}
-VLAN	hiAVLAN		6														POE	// ge-0/0/{22-27}
-VLAN	hiSpeaker	2														-	// ge-0/0/{28,29}
-VLAN	hiCTF		1														-	// ge-0/0/30
-RSRVD	1			// ge-0/0/31 (was HAM_BRIDGE)
-VLAN	hiInstall	8														-	// ge-0/0/{32-39}
+VLAN	hiSigns		4					-	// ge-0/0/{18-21}
+VLAN	hiAVLAN		6					POE	// ge-0/0/{22-27}
+VLAN	hiSpeaker	2					-	// ge-0/0/{28,29}
+VLAN	hiCTF		1					-	// ge-0/0/30
+RSRVD	1								// ge-0/0/31
+VLAN	hiInstall	8					-	// ge-0/0/{32-39}
 RSRVD	8
