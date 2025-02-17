@@ -128,7 +128,7 @@ in
               prefix: index_
               period: 24h
       storage_config:
-        filesyste:
+        filesystem:
           directory: /tmp/loki/chunks
       '';
     };
