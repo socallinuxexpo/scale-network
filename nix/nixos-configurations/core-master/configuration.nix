@@ -5,8 +5,8 @@
 {
 
   scale-network.facts = {
-    ipv4 = "10.128.3.5/24";
-    ipv6 = "2001:470:f026:503::5/64";
+    ipv4 = "10.128.3.20/24";
+    ipv6 = "2001:470:f026:503::20/64";
     eth = "eth0";
   };
   scale-network.services.keaMaster.enable = true;
@@ -20,7 +20,7 @@
   #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
   networking = {
     extraHosts = ''
-      10.128.3.5 coreconf.scale.lan
+      10.128.3.20 coreconf.scale.lan
     '';
   };
 
