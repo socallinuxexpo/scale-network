@@ -76,7 +76,7 @@ in
         };
         imports = [
           ../nixos-configurations/core-master/configuration.nix
-          ../nixos-modules/facts.nix
+          inputs.self.nixosModules.default
         ];
 
         scale-network.facts = lib.mkForce {
