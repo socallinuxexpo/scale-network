@@ -42,7 +42,6 @@ case "$1" in
       if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
         # reload/restart whatever needs the hostname updated
         /etc/init.d/system reload
-        service zabbix_agentd restart
         service rsyslog restart
         service lldpd restart
       fi
