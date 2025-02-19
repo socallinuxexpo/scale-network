@@ -7,8 +7,8 @@ let
     ipv4 = "10.0.3.1";
   };
   coremasterAddr = {
-    ipv6 = "${prefix}::5";
-    ipv4 = "10.0.3.5";
+    ipv6 = "${prefix}::20";
+    ipv4 = "10.0.3.20";
   };
 
 in
@@ -76,7 +76,7 @@ in
         };
         imports = [
           ../nixos-configurations/core-master/configuration.nix
-          ../nixos-modules/facts.nix
+          inputs.self.nixosModules.default
         ];
 
         scale-network.facts = lib.mkForce {

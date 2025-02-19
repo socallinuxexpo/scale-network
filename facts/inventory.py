@@ -447,7 +447,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "max-valid-lifetime": 1440,
             # Next we set up the interfaces to be used by the server.
             "interfaces-config": {
-                "interfaces": ["*"],
+                "interfaces": ["@@INTERFACE@@"],
                 "service-sockets-max-retries": 5,
                 "service-sockets-retry-wait-time": 5000,
             },

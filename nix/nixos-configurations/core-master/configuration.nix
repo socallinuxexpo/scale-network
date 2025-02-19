@@ -1,24 +1,17 @@
 {
   config,
-  lib,
-  pkgs,
-  inputs,
   ...
 }:
-let
-  zoneSerial = toString inputs.self.lastModified;
-in
 {
 
-  imports = [
-    ./common.nix
-  ];
-
   scale-network.facts = {
-    ipv4 = "10.128.3.5/24";
-    ipv6 = "2001:470:f026:503::5/64";
+    ipv4 = "10.128.3.20/24";
+    ipv6 = "2001:470:f026:503::20/64";
     eth = "eth0";
   };
+  scale-network.services.keaMaster.enable = true;
+  scale-network.services.bindMaster.enable = true;
+  scale-network.services.ntp.enable = true;
 
   networking.hostName = "coremaster";
 
@@ -27,7 +20,7 @@ in
   #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
   networking = {
     extraHosts = ''
-      10.128.3.5 coreconf.scale.lan
+      10.128.3.20 coreconf.scale.lan
     '';
   };
 
@@ -48,91 +41,6 @@ in
           { routeConfig.Gateway = "10.128.3.1"; }
           { routeConfig.Gateway = "2001:470:f026:503::1"; }
         ];
-      };
-    };
-  };
-
-  services = {
-    bind = {
-      enable = true;
-      cacheNetworks = [
-        "::1/128"
-        "127.0.0.0/8"
-        "2001:470:f026::/48"
-        "10.0.0.0/8"
-      ];
-      forwarders = [
-        "8.8.8.8"
-        "8.8.4.4"
-      ];
-      zones = {
-        "scale.lan." = {
-          master = true;
-          slaves = [ "2001:470:f026:103::5" ];
-          file = pkgs.writeText "named.scale.lan" (
-            lib.strings.concatStrings [
-              ''
-                $ORIGIN scale.lan.
-                $TTL    86400
-                @ IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                ${zoneSerial}           ; serial number
-                3600                    ; refresh
-                900                     ; retry
-                1209600                 ; expire
-                1800                    ; ttl
-                )
-                                IN    NS      coreexpo.scale.lan.
-                                IN    NS      coreconf.scale.lan.
-              ''
-              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.scale.lan.records")
-            ]
-          );
-        };
-        "10.in-addr.arpa." = {
-          master = true;
-          slaves = [ "2001:470:f026:103::5" ];
-          file = pkgs.writeText "named-10.rev" (
-            lib.strings.concatStrings [
-              ''
-                $ORIGIN 10.in-addr.arpa.
-                $TTL    86400
-                10.in-addr.arpa. IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                ${zoneSerial}           ; serial number
-                3600                    ; refresh
-                900                     ; retry
-                1209600                 ; expire
-                1800                    ; ttl
-                )
-                                IN NS      coreexpo.scale.lan.
-                                IN NS      coreconf.scale.lan.
-              ''
-              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv4.arpa.records")
-            ]
-          );
-        };
-        # 2001:470:f026::
-        "6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa." = {
-          master = true;
-          slaves = [ "2001:470:f026:103::5" ];
-          file = pkgs.writeText "named-2001.470.f026-48.rev" (
-            lib.strings.concatStrings [
-              ''
-                $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
-                $TTL    86400
-                @ IN SOA coreexpo.scale.lan. admin.scale.lan. (
-                ${zoneSerial}           ; serial number
-                3600                    ; refresh
-                900                     ; retry
-                1209600                 ; expire
-                1800                    ; ttl
-                )
-                                IN NS      coreexpo.scale.lan.
-                                IN NS      coreconf.scale.lan.
-              ''
-              (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv6.arpa.records")
-            ]
-          );
-        };
       };
     };
   };

@@ -20,6 +20,8 @@
           base.enable = true;
           libvirt.enable = true;
           services.gitlab.enable = true;
+          services.bindMaster.enable = true;
+          services.keaMaster.enable = true;
           services.prometheus.enable = false;
           services.ssh4vms.enable = false;
           timeServers.enable = false;
@@ -447,6 +449,19 @@
               };
             };
           };
+        };
+
+        # This are needed for kea to know which port to bind to
+        scale-network.facts = {
+          ipv4 = "10.0.3.20/24";
+          ipv6 = "2001:470:f026:103::20/64";
+          eth = "bridge103";
+        };
+
+        networking = {
+          extraHosts = ''
+            10.0.3.20 coreexpo.scale.lan
+          '';
         };
 
         environment.systemPackages = with pkgs; [
