@@ -44,6 +44,9 @@ case "$1" in
         /etc/init.d/system reload
         service rsyslog restart
         service lldpd restart
+        # prometheus doesnt understand restart
+        service prometheus-node-exporter-lua stop
+        service prometheus-node-exporter-lua start
       fi
     fi
     if [ ! -z "$opt226" ]; then
