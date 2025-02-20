@@ -54,12 +54,6 @@
     fsType = "zfs";
   };
 
-  # Make sure we have a place to storage persistent volumes
-  system.activationScripts.persist_microvm = lib.stringAfter [ "stdio" ] ''
-    mkdir -m 750 -p /persist/microvm
-    chown microvm:kvm /persist/microvm
-  '';
-
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

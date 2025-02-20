@@ -83,9 +83,5 @@ in
     i18n.extraLocaleSettings = {
       LC_TIME = "C.UTF-8";
     };
-
-    # Force noXlibs per recommendation in microVMs
-    # ref: https://github.com/astro/microvm.nix/issues/167
-    environment.noXlibs = false;
   };
 }

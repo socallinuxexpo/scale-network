@@ -21,47 +21,6 @@
         "type": "github"
       }
     },
-    "flake-utils": {
-      "inputs": {
-        "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1701680307,
-        "narHash": "sha256-kAuep2h5ajznlPMD9rnQyffWG8EM/C73lejGofXvdM8=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "4022d587cbbfd70fe950c1e2083a02621806a725",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "microvm": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs-2405"
-        ],
-        "spectrum": []
-      },
-      "locked": {
-        "lastModified": 1707111432,
-        "narHash": "sha256-zkBH/k6YEimyyecSRQsV2VlNGsRdS0hygci+cI3xXRU=",
-        "owner": "sarcasticadmin",
-        "repo": "microvm.nix",
-        "rev": "37a09d245d2aa401da575e344978cf981005fc3a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sarcasticadmin",
-        "ref": "rh/1707108673virtio",
-        "repo": "microvm.nix",
-        "type": "github"
-      }
-    },
     "nixpkgs-2405": {
       "locked": {
         "lastModified": 1728500571,
@@ -97,28 +56,12 @@
     "root": {
       "inputs": {
         "disko": "disko",
-        "microvm": "microvm",
         "nixpkgs": [
           "nixpkgs-2405"
         ],
         "nixpkgs-2405": "nixpkgs-2405",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "treefmt-nix": "treefmt-nix"
-      }
-    },
-    "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
       }
     },
     "treefmt-nix": {
