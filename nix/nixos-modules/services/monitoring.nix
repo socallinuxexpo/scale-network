@@ -7,12 +7,17 @@
 let
   cfg = config.scale-network.services.monitoring;
 
+  inherit (lib)
+    types
+    ;
+
   inherit (lib.modules)
     mkIf
     ;
 
   inherit (lib.options)
     mkEnableOption
+    mkOption
     ;
 in
 {
@@ -23,12 +28,13 @@ in
     description = "Publicly facing domain name used to access grafana from a browser";
   };
 
-  config =
-    let
-      openwrt-dashboard = pkgs.copyPathToStore ../../../monitoring/openwrt_dashboard.json;
-    in
-    mkIf cfg.enable {
+  config = mkIf cfg.enable {
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
 
+    services = {
       prometheus.enable = true;
       prometheus.enableReload = true;
       prometheus.scrapeConfigs = [
@@ -75,7 +81,7 @@ in
         providers = [
           {
             name = "openwrt";
-            options.path = openwrt-dashboard;
+            options.path = ../../../monitoring/openwrt_dashboard.json;
           }
         ];
       };
@@ -91,4 +97,5 @@ in
         proxyWebsockets = true;
       };
     };
+  };
 }
