@@ -349,13 +349,14 @@ def populatepis(pisfile):
 
 
 def serveralias(name):
-    """generate aliases for servers"""
+    """generate aliases for servers. Rendered as CNAMES"""
     payload = []
     match name.lower():
         case "monitoring1":
             payload = [
                 "loghost",
                 "monitoring",
+                "signs"
             ]
         case "coreexpo":
             payload = [
