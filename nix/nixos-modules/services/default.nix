@@ -8,6 +8,7 @@
     ./ntp.nix
     ./prometheus.nix
     ./rsyslogd.nix
+    ./signs.nix
     ./ssh4vms.nix
   ];
 }
