@@ -352,12 +352,6 @@ def serveralias(name):
     """generate aliases for servers. Rendered as CNAMES"""
     payload = []
     match name.lower():
-        case "monitoring1":
-            payload = [
-                "loghost",
-                "monitoring",
-                "signs"
-            ]
         case "coreexpo":
             payload = [
                 "coremaster",
@@ -366,13 +360,16 @@ def serveralias(name):
         case "coreconf":
             payload = [
                 "coreslave",
+                "loghost",
+                "monitoring",
                 "ntpconf",
+                "signs",
             ]
     return payload
 
 
 def roomalias(name):
-    """generats room name based alias names for switches"""
+    """generates room name based alias names for switches"""
     payload = []
     upname = name.upper()
     if "RM" in upname and "-" in name:
