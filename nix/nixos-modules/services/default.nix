@@ -7,6 +7,7 @@
     ./kea-master.nix
     ./ntp.nix
     ./prometheus.nix
+    ./rsyslogd.nix
     ./ssh4vms.nix
   ];
 }

@@ -12,6 +12,7 @@
   scale-network.services.keaMaster.enable = true;
   scale-network.services.bindMaster.enable = true;
   scale-network.services.ntp.enable = true;
+  scale-network.services.rsyslogd.enable = true;
 
   networking.hostName = "coremaster";
 
