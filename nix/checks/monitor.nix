@@ -16,8 +16,8 @@
   testScript = ''
     start_all()
     coremaster.succeed("sleep 2")
-    coremaster.succeed("systemctl is-active grafana")
-    coremaster.succeed("systemctl is-active prometheus")
+    coremaster.wait_for_unit("grafana.service", None, 30)
+    coremaster.wait_for_unit("prometheus.service", None, 30)
     coremaster.wait_until_succeeds("nc -vz localhost 3000")
   '';
 
