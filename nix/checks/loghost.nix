@@ -1,18 +1,23 @@
+{ inputs }:
 {
   name = "loghost";
 
-  nodes.machine1 = {
+  nodes.coremaster = {
+    _module.args = {
+      inherit inputs;
+    };
     imports = [
-      ../nixos-configurations/loghost/base.nix
+      ../nixos-configurations/core-master/configuration.nix
+      inputs.self.nixosModules.default
     ];
     virtualisation.graphics = false;
   };
 
   testScript = ''
     start_all()
-    machine1.succeed("sleep 2")
-    machine1.succeed("systemctl is-active syslog")
-    machine1.succeed("logger -n 127.0.0.1 -P 514 --tcp 'troy'")
-    machine1.succeed("cat /var/log/**/**/root.log | grep troy")
+    coremaster.succeed("sleep 2")
+    coremaster.succeed("systemctl is-active syslog")
+    coremaster.succeed("logger -n 127.0.0.1 -P 514 --tcp 'troy'")
+    coremaster.succeed("cat /persist/rsyslog/**/root.log | grep troy")
   '';
 }

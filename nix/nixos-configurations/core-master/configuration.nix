@@ -12,6 +12,9 @@
   scale-network.services.keaMaster.enable = true;
   scale-network.services.bindMaster.enable = true;
   scale-network.services.ntp.enable = true;
+  scale-network.services.rsyslogd.enable = true;
+  scale-network.services.signs.enable = true;
+  scale-network.services.monitoring.enable = true;
 
   networking.hostName = "coremaster";
 
@@ -26,6 +29,7 @@
 
   # Make sure that the nix/machines/core/master.nixmakes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
   # Ref: https://github.com/systemd/systemd/issues/9227#issuecomment-395500679
+  networking.useDHCP = false;
   systemd.network = {
     enable = true;
     networks = {

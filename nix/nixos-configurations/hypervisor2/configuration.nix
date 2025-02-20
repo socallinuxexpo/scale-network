@@ -68,11 +68,6 @@
     tio
   ];
 
-  microvm.autostart = [
-    "coreSlave"
-    "monitor"
-  ];
-
   services.openssh = {
     enable = true;
     openFirewall = true;

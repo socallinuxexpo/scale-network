@@ -3,14 +3,12 @@
 
   modules =
     {
-      inputs,
       ...
     }:
     {
       imports = [
         ./configuration.nix
-        ./microvm-config.nix
-        inputs.microvm.nixosModules.microvm
+        ./hardware-configuration.nix
       ];
 
       config = {

@@ -74,4 +74,8 @@
       }
     ];
   };
+
+  # ZFS uniq system ID
+  # to generate: head -c4 /dev/urandom | od -A none -t x4
+  networking.hostId = "6333bc40";
 }

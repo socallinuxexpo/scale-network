@@ -29,6 +29,7 @@
 
   # Make sure that the makes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
   # Ref: https://github.com/systemd/systemd/issues/9227#issuecomment-395500679
+  networking.useDHCP = false;
   systemd.network = {
     enable = true;
     networks = {
