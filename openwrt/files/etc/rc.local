@@ -16,4 +16,9 @@
 # the result is wifi is up but the wifi tool detects it as down
 (sleep 30 && /root/bin/apinger-pop.sh "8.8.8.8") &> /dev/null &
 
+# if the device crashes capture the pstore crashlog ring-buffer, then
+# ship that off to rsyslog and delete it. Need to wait for pstore to be
+# mounted so sleep a little before trying to check for /sys/fs/pstore
+(sleep 30 && logger -p kern.emerg -t pstore -f /sys/fs/pstore/dmesg-ramoops-0 && rm -f /sys/fs/pstore/dmesg-ramoops-0) &> /dev/null &
+
 exit 0
