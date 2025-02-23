@@ -16,7 +16,7 @@ test_dhcp(){
 	export opt225=$3 	# radio1 channel | off
 
 	echo "" > $UCILOG
-	bash $TOPDIR/openwrt/files/etc/udhcpc.user renew
+	sh $TOPDIR/openwrt/files/etc/udhcpc.user renew
 
 	if ! diff "$testname"_uci.log "$testname"_expected.log; then
 		echo "FAILED: $testname"
