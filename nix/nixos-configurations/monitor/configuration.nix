@@ -106,12 +106,12 @@ in
     loki = {
       enable = true;
       configuration = {
-        server.http_listen_port = 3101;
+        server.http_listen_port = 3100;
         auth_enabled = false;
 
         ingester = {
           lifecycler = {
-            address = "128.0.0.1";
+            address = "127.0.0.1";
             ring = {
               kvstore = {
                 store = "inmemory";
