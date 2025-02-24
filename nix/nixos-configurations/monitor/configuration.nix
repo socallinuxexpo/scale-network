@@ -114,7 +114,7 @@ in
           filename = "/tmp/positions.yaml";
         };
         clients = [{
-          url = "http://127.0.0.1:3200/loki/api/v1/push";
+          url = "http://127.0.0.1:3100/loki/api/v1/push";
         }];
         scrape_configs = [{
           job_name = "journal";
