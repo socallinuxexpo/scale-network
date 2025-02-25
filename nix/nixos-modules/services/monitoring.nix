@@ -12,6 +12,7 @@ let
     ;
 
   inherit (lib.modules)
+    mkDefault
     mkIf
     ;
 
@@ -35,7 +36,7 @@ in
     ];
 
     services = {
-      prometheus.enable = true;
+      prometheus.enable = mkDefault true;
       prometheus.enableReload = true;
       prometheus.scrapeConfigs = [
         {
@@ -57,7 +58,7 @@ in
         }
       ];
 
-      grafana.enable = true;
+      grafana.enable = mkDefault true;
       grafana.settings = {
         server = {
           http_addr = "127.0.0.1";
