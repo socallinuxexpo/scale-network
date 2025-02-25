@@ -23,11 +23,6 @@ let
 in
 {
   options.scale-network.services.monitoring.enable = mkEnableOption "SCaLE network monitoring server";
-  options.scale-network.services.monitoring.grafanaDomain = mkOption {
-    type = types.str;
-    default = "localhost";
-    description = "Publicly facing domain name used to access grafana from a browser";
-  };
 
   config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [
@@ -63,7 +58,7 @@ in
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = cfg.grafanaDomain;
+          domain = "localhost";
         };
         analytics.reporting_Enabled = false;
       };
