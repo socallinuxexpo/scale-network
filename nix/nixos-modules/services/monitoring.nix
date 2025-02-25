@@ -22,7 +22,14 @@ let
     ;
 in
 {
-  options.scale-network.services.monitoring.enable = mkEnableOption "SCaLE network monitoring server";
+  options.scale-network.services.monitoring = {
+    enable = mkEnableOption "SCaLE network monitoring server";
+    nginxFQDN = mkOption {
+      type = types.str;
+      default = "monitoring.scale.lan";
+      description = "Publicly facing domain name used to access grafana from a browser";
+    };
+  };
 
   config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [
@@ -82,15 +89,17 @@ in
         ];
       };
 
-      nginx.enable = false;
+      nginx.enable = mkDefault true;
       # TODO: TLS enabled
       # Good example enable TLS, but would like to keep it out of the /nix/store
       # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
-      nginx.virtualHosts."${config.networking.hostname}" = {
+      nginx.virtualHosts."${cfg.nginxFQDN}" = {
         default = true;
         enableACME = false;
-        locations."/".proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
-        proxyWebsockets = true;
+        locations."/" = {
+          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
+          proxyWebsockets = true;
+        };
       };
     };
   };
