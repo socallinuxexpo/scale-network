@@ -24,7 +24,7 @@ KEYPATH ?= ../facts/keys/
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER ?= fbe0bd5f6453a61fab871bee56883afc5c6308cf
+OPENWRT_VER ?= 3dfd1f69a769bd857061b4856270dfc78e30c610
 # If bumping opkg it needs to be a commit that exists in the fork
 # https://github.com/sarcasticadmin/opkgs
 OPENWRT_PKG_VERSION ?= 38e0f8c7d5c2f69f1603abb99e0fd3886c05f687

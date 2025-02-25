@@ -150,6 +150,11 @@ RSpec.shared_examples "openwrt" do
     its(:stdout) { should eq "0\n" }
   end
 
+  # Make sure ap_isolate=1 (enabled) always on hostapd
+  describe command("cat /tmp/run/hostapd-phy*.conf | awk -F= '$1==\"ap_isolate\" && $2!=1 {print; err = 1} END {exit err}'") do
+    its(:exit_status) { should eq 0 }
+  end
+
   # Make sure bash is roots shell
   describe command("awk -F: -v user='root' '$1 == user {print $NF}' /etc/passwd") do
       its(:stdout) { should match /\/bin\/bash/ }
