@@ -31,6 +31,18 @@ in
       description = "TODO: @sarcasticadmin";
     };
 
+    certCert = mkOption {
+      type = types.str;
+      default = "${cfg.certPath}/cert.crt";
+      description = "TODO: @sarcasticadmin";
+    };
+
+    certKey = mkOption {
+      type = types.str;
+      default = "${cfg.certPath}/cert.key";
+      description = "TODO: @sarcasticadmin";
+    };
+
     commonName = mkOption {
       type = types.str;
       description = "TODO: @sarcasticadmin";
@@ -49,7 +61,7 @@ in
         ConditionPathExists = "!${cfg.certPath}/cert.crt";
       };
       serviceConfig = {
-        ExecStart = "openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj '/C=US/ST=California/L=Pasadena/O=SCaLE Security/OU=NOC/CN=${cfg.commonName}' -keyout ${cfg.certPath}/cert.key -out ${cfg.certPath}/cert.crt";
+        ExecStart = "${lib.getExe pkgs.openssl} req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj '/C=US/ST=California/L=Pasadena/O=SCaLE Security/OU=NOC/CN=${cfg.commonName}' -keyout ${cfg.certKey} -out ${cfg.certCert}";
       };
       wantedBy = [ "network.target" ];
     };
