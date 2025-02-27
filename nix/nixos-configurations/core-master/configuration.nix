@@ -11,6 +11,8 @@
   };
   scale-network.services.keaMaster.enable = true;
   scale-network.services.bindMaster.enable = true;
+  scale-network.services.cert-generator.enable = true;
+  scale-network.services.cert-generator.commonName = "coreconf.scale.lan";
   scale-network.services.ntp.enable = true;
   scale-network.services.rsyslogd.enable = true;
   scale-network.services.signs.enable = true;
