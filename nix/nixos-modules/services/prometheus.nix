@@ -11,7 +11,8 @@ let
     ;
 in
 {
-  options.scale-network.services.prometheus.enable = mkEnableOption "SCaLE network prometheus exporter";
+  options.scale-network.services.prometheus.enable =
+    mkEnableOption "SCaLE network prometheus exporter";
 
   config =
     let
