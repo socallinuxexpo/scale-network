@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.scale-network.services.monitoring;
+  cfgCertGenerator = config.scale-network.services.cert-generator;
 
   inherit (lib)
     types
@@ -14,6 +15,7 @@ let
   inherit (lib.modules)
     mkDefault
     mkIf
+    mkMerge
     ;
 
   inherit (lib.options)
@@ -90,17 +92,24 @@ in
       };
 
       nginx.enable = mkDefault true;
-      # TODO: TLS enabled
-      # Good example enable TLS, but would like to keep it out of the /nix/store
-      # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
-      nginx.virtualHosts."${cfg.nginxFQDN}" = {
-        default = true;
-        enableACME = false;
-        locations."/" = {
-          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
-          proxyWebsockets = true;
-        };
-      };
+      nginx.virtualHosts."${cfg.nginxFQDN}" = mkMerge [
+
+        {
+          default = true;
+          enableACME = false;
+          locations."/" = {
+            proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
+            proxyWebsockets = true;
+          };
+        }
+
+        (mkIf cfgCertGenerator.enable {
+          addSSL = true;
+          sslCertificate = cfgCertGenerator.certCert;
+          sslCertificateKey = cfgCertGenerator.certKey;
+        })
+
+      ];
     };
   };
 }
