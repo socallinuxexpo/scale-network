@@ -691,6 +691,22 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
     return True
 
 
+def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
+    wasgehtconfig = {}
+    for switch in switches:
+        wasgehtconfig[switch["name"]] = {"address": switch["ipv6"]}
+    for router in routers:
+        wasgehtconfig[router["name"]] = {"address": router["ipv6"]}
+    for pi in pis:
+        wasgehtconfig[pi["name"]] = {"address": pi["ipv6"]}
+    for ap in aps:
+        wasgehtconfig[ap["name"]] = {"address": ap["ipv4"]}
+    for server in servers:
+        wasgehtconfig[server["name"]] = {"address": server["ipv6"]}
+    with open(f"{outputdir}/scale-wasgeht-config.json", "w") as f:
+        json.dump(wasgehtconfig, f)
+
+
 def main():
     """command entry point"""
 
@@ -723,10 +739,13 @@ def main():
         generatezones(switches, routers, pis, aps, servers, outputdir)
     elif subcomm == "prom":
         generatepromconfig(servers, aps, vlans, outputdir)
+    elif subcomm == "wasgeht":
+        generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
     elif subcomm == "all":
         generatekeaconfig(servers, aps, vlans, outputdir)
         generatezones(switches, routers, pis, aps, servers, outputdir)
         generatepromconfig(servers, aps, vlans, outputdir)
+        generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
 
 
 if __name__ == "__main__":
