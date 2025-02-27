@@ -6,7 +6,7 @@
     disko.url = "github:nix-community/disko/e55f9a8678adc02024a4877c2a403e3f6daf24fe";
     nixpkgs-2405.url = "github:NixOS/nixpkgs?rev=d51c28603def282a24fa034bcb007e2bcb5b5dd0";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs.follows = "nixpkgs-2405";
+    nixpkgs.follows = "nixpkgs-unstable";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
