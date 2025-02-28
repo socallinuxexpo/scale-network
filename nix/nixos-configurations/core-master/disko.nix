@@ -3,7 +3,7 @@
     disk = {
       one = {
         type = "disk";
-        device = "/dev/disk/by-id/wwn-0x5000c500b794a007";
+        device = "/dev/disk/by-path/pci-0000:10:00.0-scsi-0:0:10:0";
         content = {
           type = "gpt";
           partitions = {
@@ -28,7 +28,7 @@
       };
       two = {
         type = "disk";
-        device = "/dev/disk/by-id/wwn-0x5000c500bca7d633";
+        device = "/dev/disk/by-path/pci-0000:10:00.0-scsi-0:0:9:0";
         content = {
           type = "gpt";
           partitions = {
