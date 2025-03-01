@@ -11,7 +11,7 @@
     services.signs.enable = true;
     services.monitoring.enable = true;
     services.prometheus.enable = true;
-    services.ssh4vms.enable = true;
+    services.ssh.enable = true;
     libvirt.enable = true;
     timeServers.enable = true;
 
