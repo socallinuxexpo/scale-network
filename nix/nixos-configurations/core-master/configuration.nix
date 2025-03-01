@@ -2,13 +2,26 @@
   ...
 }:
 {
+  scale-network = {
+    base.enable = true;
+    services.keaMaster.enable = true;
+    services.bindMaster.enable = true;
+    services.ntp.enable = true;
+    services.rsyslogd.enable = true;
+    services.signs.enable = true;
+    services.monitoring.enable = true;
+    services.prometheus.enable = true;
+    services.ssh4vms.enable = true;
+    timeServers.enable = true;
 
-  scale-network.services.keaMaster.enable = true;
-  scale-network.services.bindMaster.enable = true;
-  scale-network.services.ntp.enable = true;
-  scale-network.services.rsyslogd.enable = true;
-  scale-network.services.signs.enable = true;
-  scale-network.services.monitoring.enable = true;
-
+    users.berkhan.enable = true;
+    users.dlang.enable = true;
+    users.jsh.enable = true;
+    users.kylerisse.enable = true;
+    users.owen.enable = true;
+    users.rhamel.enable = true;
+    users.rob.enable = true;
+    users.root.enable = true;
+    users.ruebenramirez.enable = true;
   };
 }
