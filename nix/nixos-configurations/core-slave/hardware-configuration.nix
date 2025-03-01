@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   modulesPath,
   ...
 }:
@@ -24,35 +23,6 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-
-  fileSystems."/" = {
-    device = "zroot/root";
-    fsType = "zfs";
-  };
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
-    fsType = "vfat";
-    options = [ "nofail" ];
-  };
-  fileSystems."/boot2" = {
-    device = "/dev/disk/by-label/BOOT2";
-    fsType = "vfat";
-    options = [ "nofail" ];
-  };
-  fileSystems."/nix" = {
-    device = "zroot/nix";
-    fsType = "zfs";
-  };
-
-  fileSystems."/home" = {
-    device = "zroot/home";
-    fsType = "zfs";
-  };
-
-  fileSystems."/persist" = {
-    device = "zroot/persist";
-    fsType = "zfs";
-  };
 
   swapDevices = [ ];
 
