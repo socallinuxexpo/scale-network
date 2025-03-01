@@ -23,8 +23,8 @@
         nixpkgs.hostPlatform = "x86_64-linux";
 
         scale-network.facts = {
-          ipv4 = "10.0.3.5/24";
-          ipv6 = "2001:470:f026:103::5/64";
+          ipv4 = "10.0.3.20/24";
+          ipv6 = "2001:470:f026:103::20/64";
           eth = "virbr0";
         };
 
@@ -35,7 +35,7 @@
         #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
         networking = {
           extraHosts = ''
-            10.0.3.5 coreexpo.scale.lan
+            10.0.3.20 coreexpo.scale.lan
           '';
         };
 
