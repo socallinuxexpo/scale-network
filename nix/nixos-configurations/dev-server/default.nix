@@ -23,7 +23,7 @@
           services.bindMaster.enable = true;
           services.keaMaster.enable = true;
           services.prometheus.enable = false;
-          services.ssh4vms.enable = false;
+          services.ssh.enable = false;
           timeServers.enable = false;
 
           users.berkhan.enable = true;

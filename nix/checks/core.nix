@@ -87,7 +87,9 @@ in
 
         virtualisation.vlans = [ 1 ];
         systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
+        networking.useDHCP = false;
         systemd.network = {
+          enable = true;
           networks = {
             # Override the physical interface config
             "10-lan" = lib.mkForce {

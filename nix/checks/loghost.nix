@@ -7,10 +7,11 @@
       inherit inputs;
     };
     imports = [
-      ../nixos-configurations/core-master/configuration.nix
+      ../nixos-modules/services/rsyslogd.nix
       inputs.self.nixosModules.default
     ];
     virtualisation.graphics = false;
+    scale-network.services.rsyslogd.enable = true;
   };
 
   testScript = ''

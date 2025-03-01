@@ -7,17 +7,17 @@
       inherit inputs;
     };
     imports = [
-      ../nixos-configurations/core-master/configuration.nix
+      ../nixos-modules/services/monitoring.nix
       inputs.self.nixosModules.default
     ];
     virtualisation.graphics = true;
+    scale-network.services.monitoring.enable = true;
   };
 
   nodes.client1 =
     { pkgs, ... }:
     {
       systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
-      #networking.extraHosts = "IP monitoring.scale.lan";
       environment = {
         systemPackages = with pkgs; [
           curl
