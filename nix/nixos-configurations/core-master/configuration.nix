@@ -12,6 +12,7 @@
     services.monitoring.enable = true;
     services.prometheus.enable = true;
     services.ssh4vms.enable = true;
+    libvirt.enable = true;
     timeServers.enable = true;
 
     users.berkhan.enable = true;
