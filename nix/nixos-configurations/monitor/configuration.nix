@@ -134,18 +134,56 @@ in
     };
     
     nginx = {
-      enable = false;
-      # TODO: TLS enabled
-      # Good example enable TLS, but would like to keep it out of the /nix/store
-      # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
-      virtualHosts."${hostname}" = {
-        default = true;
-        # ACME wont work for us on the private network
-        enableACME = false;
+      enable = true;
+      recommendedProxySettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      # recommendedTlsSettings = true;
+
+      upstreams = {
+        "grafana" = {
+          servers = {
+            "127.0.0.1:3100" = {};
+          };
+        };
+        "loki" = {
+          servers = {
+            "127.0.0.1:3200" = {};
+          };
+        };
+        "promtail" = {
+          servers = {
+            "127.0.0.1:3300" = {};
+          };
+        };
+      };
+      virtualHosts.grafana = {
         locations."/" = {
-          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
+          proxyPass = "http://grafana";
           proxyWebsockets = true;
         };
+        listen = [{
+          addr = "192.168.1.147";
+          port = 8010;
+        }];
+      };
+
+      # confirm with http://192.168.1.10:8030/loki/api/v1/status/buildinfo
+      #     (or)     /config /metrics /ready
+      virtualHosts.loki = {
+        locations."/".proxyPass = "http://loki";
+        listen = [{
+          addr = "192.168.1.147";
+          port = 8020;
+        }];
+      };
+
+      virtualHosts.promtail = {
+        locations."/".proxyPass = "http://promtail";
+        listen = [{
+          addr = "192.168.1.147";
+          port = 8030;
+        }];
       };
     };
   };
