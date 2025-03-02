@@ -16,7 +16,8 @@ let
     ;
 in
 {
-  options.scale-network.services.keaMaster.enable = mkEnableOption "SCaLE network kea master DHCP server";
+  options.scale-network.services.keaMaster.enable =
+    mkEnableOption "SCaLE network kea master DHCP server";
 
   config = mkIf cfg.enable {
     networking = {
