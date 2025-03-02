@@ -2,8 +2,9 @@
   lib,
   buildGoModule,
   fetchFromGitHub,
+  makeWrapper,
+  iputils,
   rrdtool,
-  unixtools,
 }:
 
 buildGoModule {
@@ -25,9 +26,24 @@ buildGoModule {
   ];
 
   buildInputs = [
+    iputils
+    makeWrapper
     rrdtool
-    unixtools.ping
   ];
+
+  propogatedBuildInputs = [
+    iputils
+    rrdtool
+  ];
+
+  postFixup = ''
+    wrapProgram $out/bin/wasgehtd --set PATH ${
+      lib.makeBinPath [
+        rrdtool
+        iputils
+      ]
+    }
+  '';
 
   meta = with lib; {
     description = "90s style monitoring";
