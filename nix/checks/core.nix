@@ -153,14 +153,11 @@ in
     in
     ''
       start_all()
-      router.wait_for_unit("systemd-networkd-wait-online.service")
       router.wait_for_unit("radvd.service")
-      coremaster.wait_for_unit("systemd-networkd-wait-online.service")
       coremaster.wait_for_unit("ntpd.service")
       coremaster.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
       coremaster.succeed("kea-dhcp6 -t /etc/kea/dhcp6-server.conf")
       coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
-      client1.wait_for_unit("systemd-networkd-wait-online.service")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
       client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${routerAddr.ipv4}")
