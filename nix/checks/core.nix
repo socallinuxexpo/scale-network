@@ -1,4 +1,4 @@
-{ inputs }:
+{ inputs, lib }:
 let
   chomp = "103";
   prefix = "2001:470:f026:${chomp}";
@@ -11,6 +11,9 @@ let
     ipv4 = "10.0.3.20";
   };
 
+  inherit (lib.modules)
+    mkForce
+    ;
 in
 {
   name = "core";
@@ -174,7 +177,7 @@ in
     let
       interactiveDefaults = hostPort: {
         services.openssh.enable = true;
-        services.openssh.settings.PermitRootLogin = "yes";
+        services.openssh.settings.PermitRootLogin = mkForce "yes";
         users.extraUsers.root.initialPassword = "";
         systemd.network.networks."01-eth0" = {
           name = "eth0";

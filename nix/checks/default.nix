@@ -55,7 +55,7 @@ genAttrs
       pkgs = inputs.self.legacyPackages.${system};
     in
     {
-      core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs; });
+      core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs lib; });
       loghost = pkgs.testers.runNixOSTest (import ./loghost.nix { inherit inputs; });
       monitor = pkgs.testers.runNixOSTest (import ./monitor.nix { inherit inputs; });
 
