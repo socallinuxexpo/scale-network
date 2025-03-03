@@ -241,7 +241,7 @@ sub get_prefix
   }
   $prefix = lc($prefix);
   $prefix =~ s/([23][0-9a-f]{3}):([0-9a-f]{1,4}):([0-9a-f]{0,4})::{0,1}.*$/$1:$2:$3::/;
-  $prefix =~ s/:+$/::/;
+  $prefix =~ s/:+$//;
   return $prefix;
 }
   
@@ -777,8 +777,10 @@ EOF
           $vlans[$i] = $vl;
         }
       }
+      $vlans = join(" ", @vlans);
+      $vlans =~ s/,/ /g;
       debug(5, "Finished VLAN expansion with trunktype=$trunktype\n");
-      debug(9, "\t$cmd\t$iface (", join(",", @vlans),")\n");
+      debug(9, "Finished VLAN expansion -> \t$cmd\t$iface ($vlans)\n");
       my $portnum = $iface;
       my $POE = ($POEFLAG ? "true" : "false");
       if ($cmd eq "TRUNK")
