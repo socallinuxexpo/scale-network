@@ -2,6 +2,7 @@
 {
   imports = [
     ./berkhan.nix
+    ./conjones.nix
     ./dlang.nix
     ./jsh.nix
     ./kylerisse.nix
