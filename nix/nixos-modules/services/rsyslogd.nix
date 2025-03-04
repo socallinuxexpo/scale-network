@@ -37,8 +37,10 @@ in
         input(type="imudp" port="514")
 
         $template RemoteLogs,"/persist/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
-        *.* ?RemoteLogs
-        & ~
+        ?RemoteLogs
+
+        $template RemoteLogs2,"/persist/rsyslog/%HOSTNAME%/messages.log"
+        ?RemoteLogs2
       '';
     };
   };
