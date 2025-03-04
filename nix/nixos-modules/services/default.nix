@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./bind-master.nix
+    ./bind-master
     ./bind-slave.nix
     ./gitlab.nix
     ./kea-master.nix
