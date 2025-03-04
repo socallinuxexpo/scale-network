@@ -345,12 +345,12 @@ def serveralias(name):
     match name.lower():
         case "coreexpo":
             payload = [
-                "coremaster",
+                "coreslave",
                 "ntpexpo",
             ]
         case "coreconf":
             payload = [
-                "coreslave",
+                "coremaster",
                 "loghost",
                 "monitoring",
                 "ntpconf",
