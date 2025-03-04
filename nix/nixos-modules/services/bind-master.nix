@@ -94,6 +94,7 @@ let
       pid-file "/run/named/named.pid";
       allow-recursion { any; };
       dnssec-validation auto;
+      max-cache-size 10%;
     };
 
     zone "." IN {
