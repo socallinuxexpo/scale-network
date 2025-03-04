@@ -148,10 +148,10 @@ in
   testScript =
     { nodes, ... }:
     let
-      # TODO: do this for all zones
-      #scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
-      #coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
     in
+    # TODO: do this for all zones
+    #scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
+    #coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
     ''
       start_all()
       router.wait_for_unit("systemd-networkd-wait-online.service")
