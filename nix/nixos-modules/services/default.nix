@@ -11,5 +11,6 @@
     ./rsyslogd.nix
     ./signs.nix
     ./ssh.nix
+    ./wasgeht.nix
   ];
 }
