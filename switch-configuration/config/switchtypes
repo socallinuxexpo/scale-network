@@ -61,9 +61,9 @@ BallroomDE	43	103	2001:470:f026:103::200:43	exRoom		F.9		Normal		ex4200-48p	00:2
 BallroomF	44	103	2001:470:f026:103::200:44	exRoom		F.9		Loud		ex4200-48p	00:26:88:7c:41:7f
 BallroomG	45	103	2001:470:f026:103::200:45	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b1:ff
 BallroomH	46	103	2001:470:f026:103::200:46	exRoom		F.9		Loud		ex4200-48p	00:26:88:7f:0e:7f
-Rm209-210	47	103	2001:470:f026:103::200:47	cfRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
+Rm209-210	47	103	2001:470:f026:503::200:47	cfRoom		Z.9		Normal		ex4200-48p	00:26:88:6e:9f:ff
 SpareH		48	103	2001:470:f026:103::200:48	exRoom		Z.9		??		ex4200-48p	84:18:88:ac:d7:7f
 SpareI		49	103	2001:470:f026:103::200:49	exRoom		Z.9		??		ex4200-48p	84:18:88:ab:df:ff
-SpareJ		50	103	2001:470:f026:103::200:50	Booth		W.9		??		ex4200-48p	84:18:88:ad:4e:ff
+SpareJ		50	103	2001:470:f026:503::200:50	cfRoom		W.9		??		ex4200-48p	84:18:88:ad:4e:ff
 DONOTUSE	51	103	2001:470:f026:103::200:51	swatch		Z.9		Loud		ex4200-48px	ec:3e:f7:50:58:ff
 RegDesk		52	103	2001:470:f026:103::200:52	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:7f
