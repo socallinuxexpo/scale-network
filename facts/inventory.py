@@ -742,6 +742,24 @@ def main():
         generatezones(switches, routers, pis, aps, servers, outputdir)
         generatepromconfig(servers, aps, vlans, outputdir)
         generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
+    elif subcomm == "debug":
+        # overload outputdir as 2nd debug parameter
+        debug_variable = outputdir
+        # valid variables to inspect
+        valid_debug_variables = {
+            "switches": switches,
+            "routers": routers,
+            "vlans": vlans,
+            "servers": servers,
+            "aps": aps,
+            "pis": pis,
+        }
+        if debug_variable in valid_debug_variables.keys():
+            print(json.dumps(valid_debug_variables[debug_variable]))
+        else:
+            print(f"invalid debug variable {debug_variable}")
+    else:
+        print("invalid subcommand")
 
 
 if __name__ == "__main__":
