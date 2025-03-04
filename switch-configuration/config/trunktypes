@@ -27,12 +27,12 @@ exDownlink		exInfra,exw-SLOW,exw-FAST, \
 				vendor_backbone	0x0a1a3a	0xffffff
 exAP			exInfra,exw-SLOW, \
 				exw-FAST	0xa9f9ff	0x000000
-cfUplink		exInfra,exw-SLOW,exw-FAST, \
-				exSpkr,exAV,exSigns,exVmVndr, \
-				vendor_backbone	0x0a4a0a	0xffffff
-cfDownlink		exInfra,exw-SLOW,exw-FAST, \
-				exSpkr,exAV,exSigns,exVmVndr, \
-				vendor_backbone	0x0a1a3a	0xffffff
-cfAP			exInfra,exw-SLOW, \
-				exw-FAST	0xa9f9ff	0x000000
+cfUplink		cfInfra,cfw-SLOW,cfw-FAST, \
+				cfSpkr,cfAV, \
+				cfSigns		0x0a4a0a	0xffffff
+cfDownlink		cfInfra,cfw-SLOW,cfw-FAST, \
+				cfSpkr,cfAV, \
+				cfSigns		0x0a1a3a	0xffffff
+cfAP			cfInfra,cfw-SLOW, \
+				cfw-FAST	0xa9f9ff	0x000000
 massflash		cfInfra			0xff00b0	0xffffff
