@@ -12,6 +12,7 @@
     services.monitoring.enable = true;
     services.prometheus.enable = true;
     services.ssh.enable = true;
+    services.wasgeht.enable = true;
     libvirt.enable = true;
     timeServers.enable = true;
 

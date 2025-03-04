@@ -703,6 +703,11 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         wasgehtconfig[ap["name"]] = {"address": ap["ipv4"]}
     for server in servers:
         wasgehtconfig[server["name"]] = {"address": server["ipv6"]}
+    wasgehtconfig["google88v6"] = {"address": "2001:4860:4860::8888"}
+    wasgehtconfig["google88v4"] = {"address": "8.8.8.8"}
+    wasgehtconfig["google44v6"] = {"address": "2001:4860:4860::8844"}
+    wasgehtconfig["google44v4"] = {"address": "8.8.4.4"}
+    wasgehtconfig["localhost"] = {"address": "::1"}
     with open(f"{outputdir}/scale-wasgeht-config.json", "w") as f:
         json.dump(wasgehtconfig, f)
 
