@@ -15,7 +15,7 @@ def test_apuse_csv():
         "count": 9,
         "cols": [
             ds.isvalidhostname,
-            ds.isuntested,
+            ds.isinaplist,
             ds.isvalidip,
             ds.isvalidwifi24chan,
             ds.isvalidwifi5chan,

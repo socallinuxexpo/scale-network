@@ -153,6 +153,18 @@ def isvalidnoiselevel(val):
     return False
 
 
+def isinaplist(val):
+    """test for existence of the value in apuse.csv"""
+    lines = []
+    with open("aps/aps.csv", "r", encoding="utf-8") as fh:
+        lines = fh.readlines()
+    aplist = set()
+    for line in lines[1:]:
+        cols = line.split(",")
+        aplist.add(cols[0])
+    return val in aplist
+
+
 def isvalidtype(val):
     """test for valid switch type, denoted by existence of file in types dir"""
     type_path = "../switch-configuration/config/types/"
