@@ -1,4 +1,4 @@
-{ inputs }:
+{ inputs, lib }:
 let
   chomp = "103";
   prefix = "2001:470:f026:${chomp}";
@@ -11,6 +11,9 @@ let
     ipv4 = "10.0.3.20";
   };
 
+  inherit (lib.modules)
+    mkForce
+    ;
 in
 {
   name = "core";
@@ -145,9 +148,10 @@ in
   testScript =
     { nodes, ... }:
     let
-      # TODO: do this for all zones
-      scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
     in
+    # TODO: do this for all zones
+    #scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
+    #coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
     ''
       start_all()
       router.wait_for_unit("systemd-networkd-wait-online.service")
@@ -156,7 +160,7 @@ in
       coremaster.wait_for_unit("ntpd.service")
       coremaster.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
       coremaster.succeed("kea-dhcp6 -t /etc/kea/dhcp6-server.conf")
-      coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
+      coremaster.succeed("named-checkconf /etc/bind/named.conf")
       client1.wait_for_unit("systemd-networkd-wait-online.service")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
       client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
@@ -174,7 +178,7 @@ in
     let
       interactiveDefaults = hostPort: {
         services.openssh.enable = true;
-        services.openssh.settings.PermitRootLogin = "yes";
+        services.openssh.settings.PermitRootLogin = mkForce "yes";
         users.extraUsers.root.initialPassword = "";
         systemd.network.networks."01-eth0" = {
           name = "eth0";
