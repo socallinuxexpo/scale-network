@@ -5,10 +5,7 @@
   scale-network = {
     base.enable = true;
     services.keaMaster.enable = true;
-    services.bindSlave = {
-      enable = true;
-      masters = [ "2001:470:f026:503::20" ];
-    };
+    services.bindMaster.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
     services.signs.enable = true;
