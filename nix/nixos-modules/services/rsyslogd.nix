@@ -20,7 +20,10 @@ in
 
   config = mkIf cfg.enable {
 
-    networking.firewall.allowedTCPPorts = [ 514 ];
+    networking.firewall = {
+      allowedTCPPorts = [ 514 ];
+      allowedUDPPorts = [ 514 ];
+    };
 
     environment.systemPackages = with pkgs; [ rsyslog ];
 
@@ -30,9 +33,14 @@ in
         module(load="imtcp")
         input(type="imtcp" port="514")
 
+        module(load="imudp")
+        input(type="imudp" port="514")
+
         $template RemoteLogs,"/persist/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
-        *.* ?RemoteLogs
-        & ~
+        ?RemoteLogs
+
+        $template RemoteLogs2,"/persist/rsyslog/%HOSTNAME%/messages.log"
+        ?RemoteLogs2
       '';
     };
   };
