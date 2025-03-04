@@ -15,6 +15,7 @@ inputs.nixpkgs.lib.genAttrs
             pytest
             pylint
             ipdb
+            jinja2
           ]
         ))
       ];
