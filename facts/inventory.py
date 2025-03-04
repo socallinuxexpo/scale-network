@@ -192,20 +192,11 @@ def dhcp4ranges(prefix, bitmask):
         return ["", "", "", "", ""]
     ipsplit = re.split(r"\.", prefix)
     if bitmask == 24:
-        # FIX: Hardcoding the hiInfra for larger pool to handle aplist.csv
-        # not accounting for the 2 buildings since hilton is solo
-        if prefix == "10.0.3.0":  # pylint: disable=R1705
-            return [
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".150",
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".250",
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
-            ]
-        else:
-            return [
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".254",
-                ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
-            ]
+        return [
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".80",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".254",
+            ipsplit[0] + "." + ipsplit[1] + "." + ipsplit[2] + ".1",
+        ]
     numocs = 2 ** (24 - bitmask)
     topthird = int(int(ipsplit[2]) + (numocs - 1))
     return [
