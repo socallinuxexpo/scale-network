@@ -72,10 +72,16 @@ in
           "2001:470:f026::/48"
           "10.0.0.0/8"
         ];
-        forwarders = [
-          "8.8.8.8"
-          "8.8.4.4"
-        ];
+        extraOptions = ''
+          allow-recursion { any; };
+          dnssec-validation auto;
+        '';
+        extraConfig = ''
+          zone "." IN {
+            type hint;
+            file "${./named.root}"
+          };
+        '';
         zones = {
           "scale.lan." = {
             master = true;
