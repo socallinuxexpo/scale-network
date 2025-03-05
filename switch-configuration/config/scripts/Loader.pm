@@ -507,7 +507,7 @@ sub override_switch
     {
         # Send cconfiguration file via SFTP, then use Expect to send $SWITCH_COMMANDS to activate
         my $result;
-	#	my $target = lc($Name).'.scale.lan';
+	unless($target eq $DEFAULT_IP) $target = lc($Name).'.scale.lan';
         print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         push @messages, "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         my $sftp = Net::SFTP::Foreign->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
