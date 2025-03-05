@@ -65,9 +65,11 @@ in
       type = types.str;
       default = "wasgehtd";
     };
+
   };
 
   config = mkIf cfg.enable {
+
     systemd.services.wasgeht = {
       description = "wasgeht monitoring service";
       after = [ "network.target" ];
@@ -75,13 +77,21 @@ in
       serviceConfig = {
         User = "${cfg.user}";
         Group = "${cfg.group}";
-        ExecStart = "${getExe cfg.package} --data-dir=${cfg.statePath} --host-file=${cfg.hostFile} --port=${builtins.toString cfg.port} --log-level=${cfg.logLevel}";
+        ExecStart = ''
+          ${getExe cfg.package} \
+          --data-dir=${cfg.statePath} \
+          --host-file=${cfg.hostFile} \
+          --port=${builtins.toString cfg.port} \
+          --log-level=${cfg.logLevel}
+        '';
         ExecReload = "${pkgs.coreutils}/bin/kill -SIGUSR1 $MAINPID";
       };
     };
+
     systemd.tmpfiles.rules = [
       "d ${cfg.statePath} 0755 ${cfg.user} ${cfg.group}"
     ];
+
     users = {
       users."${cfg.user}" = {
         isNormalUser = true;
@@ -89,10 +99,12 @@ in
       };
       groups.${cfg.group} = { };
     };
+
     networking = {
       firewall.allowedTCPPorts = [
         cfg.port
       ];
     };
+
   };
 }
