@@ -507,7 +507,7 @@ sub override_switch
     {
         # Send cconfiguration file via SFTP, then use Expect to send $SWITCH_COMMANDS to activate
         my $result;
-	unless($target eq $DEFAULT_IP) $target = lc($Name).'.scale.lan';
+	$target = lc($Name).'.scale.lan' unless($target eq $self->{'DefaultIP'});
         print STDERR "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         push @messages, "Initializing SFTP connection to $target with user ",$self->{"DefaultUser"},"\n";
         my $sftp = Net::SFTP::Foreign->new($target, (user=>$self->{"DefaultUser"}, password=>$self->{"DefaultPassword"})) || croak("Failed to initiate SFTP to $target ($Name)\n");
@@ -833,7 +833,7 @@ sub wait_offline
 {
     my $self = shift @_;
     my $IP = shift @_;
-    $IP = $Loader::DefaultIP unless($IP);
+    $IP = $self->{'DefaultIP'} unless($IP);
     print STDERR "Waiting for switch ($IP) to go offline\n";
     # Wait for the switch to go off line before trying to find next switch.
     my $success = 1;
