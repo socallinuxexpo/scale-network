@@ -464,7 +464,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {
                     "name": "radio24-channel",
                     "code": 224,
-                    "type": "uint8",
+                    "type": "string",
                     "array": False,
                     "record-types": "",
                     "space": "dhcp4",
@@ -473,7 +473,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {
                     "name": "radio5-channel",
                     "code": 225,
-                    "type": "uint8",
+                    "type": "string",
                     "array": False,
                     "record-types": "",
                     "space": "dhcp4",
@@ -482,7 +482,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {
                     "name": "ap-network-config",
                     "code": 226,
-                    "type": "uint8",
+                    "type": "string",
                     "array": False,
                     "record-types": "",
                     "space": "dhcp4",
