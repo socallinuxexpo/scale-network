@@ -51,19 +51,17 @@ case "$1" in
       /root/bin/apinger-pop.sh "$router"
     fi
 
-    if [ ! -z "$hostname" ]; then
+    if [[ ! -z "$hostname" ]] && [[ `uci get 'system.@system[0].hostname' | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]]; then
       uci set 'system.@system[0].hostname'="$hostname"
       uci commit
-      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
-        logger -t "dhcp-hostname" "changed hostname from $HOSTNAME to $hostname"
-        # reload/restart whatever needs the hostname updated
-        /etc/init.d/system reload
-        service rsyslog restart
-        service lldpd restart
-        # prometheus doesnt understand restart
-        service prometheus-node-exporter-lua stop
-        service prometheus-node-exporter-lua start
-      fi
+      logger -t "dhcp-hostname" "changed hostname from $HOSTNAME to $hostname"
+      # reload/restart whatever needs the hostname updated
+      /etc/init.d/system reload
+      service rsyslog restart
+      service lldpd restart
+      # prometheus doesnt understand restart
+      service prometheus-node-exporter-lua stop
+      service prometheus-node-exporter-lua start
     fi
     if [ ! -z "$opt226" ]; then
       /root/bin/config-version.sh -c $opt226
