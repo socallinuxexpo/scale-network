@@ -26,7 +26,7 @@ inputs.nixpkgs.lib.genAttrs
         fish
         git
         jq
-        kermit
+        tio
         screen
         glibcLocales
       ];

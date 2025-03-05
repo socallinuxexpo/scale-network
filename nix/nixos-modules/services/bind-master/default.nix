@@ -141,7 +141,6 @@ in
 
   config = mkIf cfg.enable {
     networking = {
-      #useDHCP = false;
       firewall.allowedTCPPorts = [
         53
       ];
@@ -155,10 +154,7 @@ in
       bind
     ];
 
-    environment.etc."bind/named.conf".source = config.services.bind.configFile;
-
     systemd.services.bind = {
-      serviceConfig.ExecStart = lib.mkForce "${cfgBind.package.out}/sbin/named -u named ${lib.strings.optionalString cfgBind.ipv4Only "-4"} -c /etc/bind/named.conf -f";
       restartTriggers = [
         cfgBind.configFile
       ];
