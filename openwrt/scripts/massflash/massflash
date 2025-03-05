@@ -3,6 +3,7 @@
 export PATH=/run/wrappers/bin:/root/.nix-profile/bin:/etc/profiles/per-user/root/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
 
 # kea hook and switch statement for lease type
+# Only continue if this is a lease renew response
 hook=$1
 case $hook in
   leases4_committed)
@@ -14,10 +15,9 @@ case $hook in
     if [ "$QUERY4_TYPE" != "DHCPREQUEST" ]; then exit 0; fi;;
   *)
     echo $hook
-    exit 0
+    exit 0 
 esac
 
-host="$LEASE4_ADDRESS"
 
 # Read config for options set and where to locate the stateful files (e.g. imgs, ssh_keys, etc.)
 
@@ -26,36 +26,21 @@ config_file="/etc/massflash.conf"
 . $config_file
 
 state_dir="${state_dir:-/tmp/massflash}"
-ssh_user="${ssh_user:-root}"
-ssh_port="${ssh_port:-22}"
 
-flash_sha=$(cat "${state_dir}/flash_sha")
+[ ! -d "$state_dir" ] && mkdir $state_dir
 
-# TODO: nc/ssh-keyscan until port 22 is up instead of sleeping
-sleep 20
-
-
-# TODO: Dynamic architecture/board detection
-#puts "$arch"
-#set archb [format "hello%s" $arch]
-# Concat the arch and a string (eventually will be flash .bin)
-#puts [format "hello%s" $arch]
-#set archb "hello"
-ap_type=$(ssh -i $state_dir/id_priv -p $ssh_port \
-  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  $ssh_user@$host "cat /etc/board.json | jq -r .model.id | cut -d',' -f2")
-
-[ -z "ap_type" ] && echo "/etc/board.json type not parsed" && exit 1
-
-scp -O -P $ssh_port \
-  -i $state_dir/id_priv \
-  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  "$state_dir/$ap_type/flash.bin" $ssh_user@$host:/tmp/
-
-echo "scp good!"
-
-ssh -i $state_dir/id_priv -p $ssh_port -t \
-  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
-
-echo "Done with $host"
+if [ -f $state_dir/mac-$LEASE4_HWADDR ]
+then
+  if grep "STATUS completed"
+  then
+    echo "$LEASE4_HWADDR has already been completed"
+    exit 0
+  elif grep "STATUS upgrading"
+    echo "$LEASE4_HWADDR has already been completed"
+    ./remoteflash $LEASE4_ADDRESS $LEASE4_HWADDR 2>>$state_dir/mac-$LEASE4_HWADDR
+  else
+    echo -n "$LEASE4_HWADDR already in progress, state: "; tail -1 $state_dir/mac-$LEASE4_HWADDR
+  fi
+else
+    ./remoteflash $LEASE4_ADDRESS $LEASE4_HWADDR 2>$state_dir/mac-$LEASE4_HWADDR
+fi

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+export PATH=/run/wrappers/bin:/root/.nix-profile/bin:/etc/profiles/per-user/root/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
+
+host="$1"
+mac="$2"
+
+echo "$mac starting, IP $host" >&2
+
+# Read config for options set and where to locate the stateful files (e.g. imgs, ssh_keys, etc.)
+
+config_file="/etc/massflash.conf"
+
+. $config_file
+
+state_dir="${state_dir:-/tmp/massflash}"
+ssh_user="${ssh_user:-root}"
+ssh_port="${ssh_port:-22}"
+
+flash_sha=$(cat "${state_dir}/flash_sha")
+
+# TODO: nc/ssh-keyscan until port 22 is up instead of sleeping
+sleep 20
+
+
+# TODO: Dynamic architecture/board detection
+#puts "$arch"
+#set archb [format "hello%s" $arch]
+# Concat the arch and a string (eventually will be flash .bin)
+#puts [format "hello%s" $arch]
+#set archb "hello"
+ap_type=$(ssh -i $state_dir/id_priv -p $ssh_port \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  $ssh_user@$host "cat /etc/board.json | jq -r .model.id | cut -d',' -f2")
+
+[ -z "ap_type" ] && echo "/etc/board.json type not parsed" && exit 1
+
+echo "$mac AP type $app_type" >&2
+
+scp -O -P $ssh_port \
+  -i $state_dir/id_priv \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  "$state_dir/$ap_type/flash.bin" $ssh_user@$host:/tmp/
+
+echo "i$mac copied image to ap" >&2
+echo "scp good!"
+
+ssh -i $state_dir/id_priv -p $ssh_port -t \
+  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+  status=$ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then echo "STATUS completed"; poweroff; else echo "STATUS upgrading"; sysupgrade -n -v /tmp/flash.bin; fi" |
+
+cat $status |while read line; do echo "$mac $line" >&2 ; done
+echo "Done with $host"
