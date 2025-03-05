@@ -28,10 +28,10 @@ exDownlink		exInfra,exw-SLOW,exw-FAST, \
 exAP			exInfra,exw-SLOW, \
 				exw-FAST	0xa9f9ff	0x000000
 cfUplink		cfInfra,cfw-SLOW,cfw-FAST, \
-				cfSpkr,cfAV, \
+				cfSpkr,cfAV,cfNOC, \
 				cfSigns		0x0a4a0a	0xffffff
 cfDownlink		cfInfra,cfw-SLOW,cfw-FAST, \
-				cfSpkr,cfAV, \
+				cfSpkr,cfAV,cfNOC,  \
 				cfSigns		0x0a1a3a	0xffffff
 cfAP			cfInfra,cfw-SLOW, \
 				cfw-FAST	0xa9f9ff	0x000000
