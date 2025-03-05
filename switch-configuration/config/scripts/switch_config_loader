@@ -98,6 +98,7 @@ use Loader;
 use switch_template;
 
 use Term::ReadKey;
+use Data::Dumper;
 use Getopt::Std;
 our $opt_b;
 our $opt_c;
@@ -156,6 +157,7 @@ else
 @list = Loader::expand_switch_groups(@list);
 
 print "List expansion yielded ", scalar(@list), " Switch names.\n";
+print Dumper(@list), "\n";
 
 if ($opt_t && (scalar(@list) != 1))
 {
