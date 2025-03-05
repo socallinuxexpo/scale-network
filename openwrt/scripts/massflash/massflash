@@ -54,8 +54,14 @@ scp -O -P $ssh_port \
 
 echo "scp good!"
 
-ssh -i $state_dir/id_priv -p $ssh_port -t \
-  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
+if [[ "$ap_type" == "one" ]]; then
+  ssh -i $state_dir/id_priv -p $ssh_port -t \
+    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+    $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then echo 255 > /sys/class/leds/amber\:lan/brightness; else sysupgrade -n -v /tmp/flash.bin; fi"
+else
+  ssh -i $state_dir/id_priv -p $ssh_port -t \
+    -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+    $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
+fi
 
 echo "Done with $host"
