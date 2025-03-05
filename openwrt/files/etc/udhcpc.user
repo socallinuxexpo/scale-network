@@ -26,15 +26,16 @@ case "$1" in
 
     if [[ ! -z "$opt224" ]] && [[ ! -z "$opt225" ]]; then
       if [[ "$opt224" != "$radio0" ]] || [[ "$opt225" != "$radio1" ]]; then
-        logger -t "dhcp-wifi" "changed radio0 from $radio0 to $opt224"
         if [[ "`echo $opt224 | tr '[A-Z]' '[a-z]'`" != "off" ]]; then
+          logger -t "dhcp-wifi" "changed radio0 from $radio0 to $opt224"
           uci set 'wireless.radio0.channel'=$opt224
           uci set 'wireless.radio0.disabled'=0
         else
           uci set 'wireless.radio0.disabled'=1
         fi
+
         if [[ "`echo $opt225 | tr '[A-Z]' '[a-z]'`" != "off" ]]; then
-        logger -t "dhcp-wifi" "changed radio1 from $radio1 to $opt225"
+          logger -t "dhcp-wifi" "changed radio1 from $radio1 to $opt225"
           uci set 'wireless.radio1.channel'=$opt225
           uci set 'wireless.radio1.disabled'=0
         else
