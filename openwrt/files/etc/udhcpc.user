@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Take options ascii options and convert to strings
+opt224=$(printf "%b\n" "$(echo $opt224 | sed 's/\(..\)/\\x\1/g')")
+opt225=$(printf "%b\n" "$(echo $opt225 | sed 's/\(..\)/\\x\1/g')")
+opt226=$(printf "%b\n" "$(echo $opt226 | sed 's/\(..\)/\\x\1/g')")
+
 # Since this is called from other udhcpc scripts this cannot be changed to
 # use /bin/bash without also modifying the script that calls this.
 
