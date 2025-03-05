@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Take options ascii options and convert to strings
+opt224=$(printf "%b\n" "$(echo $opt224 | sed 's/\(..\)/\\x\1/g')")
+opt225=$(printf "%b\n" "$(echo $opt225 | sed 's/\(..\)/\\x\1/g')")
+opt226=$(printf "%b\n" "$(echo $opt226 | sed 's/\(..\)/\\x\1/g')")
+
 # Since this is called from other udhcpc scripts this cannot be changed to
 # use /bin/bash without also modifying the script that calls this.
 
@@ -9,18 +14,29 @@ case "$1" in
     # dump params to tmp so its easier to troubleshoot
     set > /tmp/dhcp.params
     radio0=`uci show 'wireless.radio0.channel'|cut -f 2 -d "'"`
+    if [[ `uci show 'wireless.radio0.disabled'|cut -f 2 -d "'"` == '1' ]]
+    then
+      radio0="off"
+    fi
     radio1=`uci show 'wireless.radio1.channel'|cut -f 2 -d "'"`
+    if [[ `uci show 'wireless.radio1.disabled'|cut -f 2 -d "'"` == '1' ]]
+    then
+      radio1="off"
+    fi
 
     if [[ ! -z "$opt224" ]] && [[ ! -z "$opt225" ]]; then
       if [[ "$opt224" != "$radio0" ]] || [[ "$opt225" != "$radio1" ]]; then
         if [[ "`echo $opt224 | tr '[A-Z]' '[a-z]'`" != "off" ]]; then
-          uci set 'wireless.radio0.channel'=$(printf %d "0x$opt224")
+          logger -t "dhcp-wifi" "changed radio0 from $radio0 to $opt224"
+          uci set 'wireless.radio0.channel'=$opt224
           uci set 'wireless.radio0.disabled'=0
         else
           uci set 'wireless.radio0.disabled'=1
         fi
+
         if [[ "`echo $opt225 | tr '[A-Z]' '[a-z]'`" != "off" ]]; then
-          uci set 'wireless.radio1.channel'=$(printf %d "0x$opt225")
+          logger -t "dhcp-wifi" "changed radio1 from $radio1 to $opt225"
+          uci set 'wireless.radio1.channel'=$opt225
           uci set 'wireless.radio1.disabled'=0
         else
           uci set 'wireless.radio1.disabled'=1
@@ -35,21 +51,20 @@ case "$1" in
       /root/bin/apinger-pop.sh "$router"
     fi
 
-    if [ ! -z "$hostname" ]; then
+    if [[ ! -z "$hostname" ]] && [[ `uci get 'system.@system[0].hostname' | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]]; then
       uci set 'system.@system[0].hostname'="$hostname"
       uci commit
-      if [ `echo "$HOSTNAME" | tr '[A-Z]' '[a-z]'` != `echo "$hostname" | tr '[A-Z]' '[a-z]'` ]; then
-        # reload/restart whatever needs the hostname updated
-        /etc/init.d/system reload
-        service rsyslog restart
-        service lldpd restart
-        # prometheus doesnt understand restart
-        service prometheus-node-exporter-lua stop
-        service prometheus-node-exporter-lua start
-      fi
+      logger -t "dhcp-hostname" "changed hostname from $HOSTNAME to $hostname"
+      # reload/restart whatever needs the hostname updated
+      /etc/init.d/system reload
+      service rsyslog restart
+      service lldpd restart
+      # prometheus doesnt understand restart
+      service prometheus-node-exporter-lua stop
+      service prometheus-node-exporter-lua start
     fi
     if [ ! -z "$opt226" ]; then
-      /root/bin/config-version.sh -c $(printf %d "0x$opt226")
+      /root/bin/config-version.sh -c $opt226
     fi
   ;;
 esac
