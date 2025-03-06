@@ -72,6 +72,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
             "10-lan-eno3" = {
               matchConfig.Name = "eno3";
@@ -80,6 +81,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
             # Keep this for troubleshooting
             "10-lan-eno1" = {
@@ -90,6 +92,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
           };
         };
