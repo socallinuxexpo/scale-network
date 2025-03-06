@@ -59,6 +59,8 @@
                 config.scale-network.facts.ipv4
                 config.scale-network.facts.ipv6
               ];
+              # block service that depend on network-online.target until route is avail
+              linkConfig.RequiredForOnline = "routable";
               routes = [
                 { routeConfig.Gateway = "10.0.3.1"; }
                 { routeConfig.Gateway = "2001:470:f026:103::1"; }
