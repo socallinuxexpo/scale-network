@@ -1803,6 +1803,8 @@ sub build_config_from_template
   my $hostname = shift @_;
   my $root_auth = shift @_;
   $VV_name_prefix = shift @_;
+  my @switchtype = get_switchtype($hostname);
+  my $type = $switchtype[4];
   
   # Add configuration file fetches here:
   my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
@@ -1825,6 +1827,70 @@ sub build_config_from_template
   my $FIREWALL_CONFIG   = ${VENDOR_CONFIGURATION}{"firewall"};
   my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
   my $PROTOCOL_CONFIG   = ${VENDOR_CONFIGURATION}{"protocols"};
+##FIXME## This is a complete hack to deploy QoS without thinking about it
+##FIXME## QoS should be configurable. Worse, we have to hand-hork this to
+##FIXME## avoid applying it to IDF switches
+  my $QOS_CONFIG = <<EOF;
+family ethernet-switching {
+    filter qos {
+        term wifi {
+            from {
+                vlan [ cfw-FAST cfw-SLOW cfCTF ];
+            }
+            then {
+                forwarding-class wifi;
+                loss-priority high;
+                policer wifi-cop;
+            }
+        }
+        term av {
+            from {
+                vlan cfAV;
+            }
+            then {
+                forwarding-class av;
+                loss-priority low;
+                policer av-cop;
+            }
+        }
+        term infra {
+            from {
+                vlan cfInfra;
+            }
+            then {
+                forwarding-class infra;
+                loss-priority low;
+                policer infra-cop;
+            }
+        }
+    }
+}
+policer wifi-cop {
+    filter-specific;
+    if-exceeding {
+        bandwidth-limit 15m;
+        burst-size-limit 512k;
+    }
+    then discard;
+}
+policer av-cop {
+    filter-specific;
+    if-exceeding {
+        bandwidth-limit 1g;
+        burst-size-limit 2147450880;
+    }                                   
+    then loss-priority high;
+}
+policer infra-cop {
+    filter-specific;
+    if-exceeding {
+        bandwidth-limit 1m;
+        burst-size-limit 4m;
+    }
+    then loss-priority high;
+}
+EOF
+
   debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
   my $OUTPUT = <<EOF;
 system {
@@ -1930,6 +1996,10 @@ protocols {
 $PROTOCOL_CONFIG
 }
 firewall {
+EOF
+##FIXME## Looking for IDF at the end of the type is a hack
+$OUTPUT .= $QOS_CONFIG if ($type !~ /idf$/i);
+$OUTPUT .= <<EOF;
 $FIREWALL_CONFIG
 }
 ethernet-switching-options {
