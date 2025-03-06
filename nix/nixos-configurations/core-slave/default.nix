@@ -1,5 +1,5 @@
 {
-  release = "2405";
+  release = "unstable";
 
   modules =
     {
@@ -39,7 +39,6 @@
           '';
         };
 
-        systemd.services.systemd-networkd-wait-online.enable = mkForce false;
         # Make sure that the nix/machines/core/master.nixmakes of these files are actually lexicographically before 99-default.link provides by systemd defaults since first match wins
         # Ref: https://github.com/systemd/systemd/issues/9227#issuecomment-395500679
         networking.useDHCP = false;
@@ -59,6 +58,8 @@
                 config.scale-network.facts.ipv4
                 config.scale-network.facts.ipv6
               ];
+              # block service that depend on network-online.target until route is avail
+              linkConfig.RequiredForOnline = "routable";
               routes = [
                 { routeConfig.Gateway = "10.0.3.1"; }
                 { routeConfig.Gateway = "2001:470:f026:103::1"; }
@@ -71,6 +72,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
             "10-lan-eno3" = {
               matchConfig.Name = "eno3";
@@ -79,6 +81,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
             # Keep this for troubleshooting
             "10-lan-eno1" = {
@@ -89,6 +92,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              linkConfig.RequiredForOnline = "no";
             };
           };
         };
