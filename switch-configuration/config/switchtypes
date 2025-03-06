@@ -15,8 +15,8 @@
 // ... Switch chain order from .1 (e.g. C.2 is plugged into C.1 level, C.3 is plugged into C.2 level, etc.)
 // .9 = Stub (No subordinate switches) regardless of next level up switch
 //Name		Num	MgtVL	IPv6				Type		Hierarchy	Noiselevel	Model		Mgmt MAC
-NOC		1	503	2001:470:f026:503::200:1	cfNOC		I.2		Quiet		ex4200-48p	2c:6b:f5:39:e9:7f
-ConfIDF		2	503	2001:470:f026:503::200:2	cfIDF		I.9		Loud		ex4200-48p	00:26:88:60:79:7f
+NOC		1	503	2001:470:f026:503::200:1	cfNOC		I.9		Quiet		ex4200-48p	2c:6b:f5:39:e9:7f
+ConfIDF		2	503	2001:470:f026:503::200:2	cfIDF		I.1		Loud		ex4200-48p	00:26:88:60:79:7f
 NW-IDF		3	103	2001:470:f026:103::200:3	exIDF		F.1		Loud		ex4200-48p	00:26:88:6e:ba:ff
 NE-IDF		4	103	2001:470:f026:103::200:4	exIDF		C.1		Normal		ex4200-48p	00:26:88:7d:fb:7f
 ExpoIDF		5	103	2001:470:f026:103::200:5	exIDF		X.1		-		ex4200-48p	00:26:88:6e:aa:ff
