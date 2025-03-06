@@ -19,10 +19,10 @@
 
 // Uplink definition can be used for both Uplink and Downlink ports, but different colors
 // are desirable, so we define them separately here.
-exUplink		exInfra,exw-SLOW,exw-FAST, \
+exUplink		exInfra,exw-SLOW,exw-FAST,exReg, \
 				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a4a0a	0xffffff
-exDownlink		exInfra,exw-SLOW,exw-FAST, \
+exDownlink		exInfra,exw-SLOW,exw-FAST,exReg, \
 				exSpkr,exAV,exSigns,exVmVndr, \
 				vendor_backbone	0x0a1a3a	0xffffff
 exAP			exInfra,exw-SLOW, \
