@@ -99,6 +99,9 @@ in
         enableACME = false;
         locations."/" = {
           proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
+        };
+        locations."/api/live" = {
+          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
           proxyWebsockets = true;
         };
       };
