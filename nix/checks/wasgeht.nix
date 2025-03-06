@@ -33,6 +33,7 @@
       coremaster.succeed("curl -v --fail http://localhost:1982")
       coremaster.succeed("curl -v --fail http://localhost:1982/imgs")
       coremaster.succeed("curl -v --fail http://localhost:1982/api")
+      coremaster.succeed("curl -v --fail http://localhost:1982/metrics")
       coremaster.wait_until_succeeds("test -f /persist/var/lib/wasgeht/rrds/localhost_latency.rrd")
       coremaster.wait_until_succeeds("journalctl -u wasgeht --no-pager | grep localhost | grep 'Ping successful'")
       coremaster.wait_until_succeeds("test -f /persist/var/lib/wasgeht/graphs/imgs/localhost/localhost_latency_15m.png")
@@ -40,5 +41,6 @@
       client1.succeed("curl -v --fail http://${nodes.coremaster.networking.hostName}:1982")
       client1.succeed("curl -q http://${nodes.coremaster.networking.hostName}:1982/api | grep true")
       client1.succeed("curl -v --fail http://${nodes.coremaster.networking.hostName}:1982/imgs/localhost/localhost_latency_15m.png")
+      client1.succeed("curl -q http://${nodes.coremaster.networking.hostName}:1982/metrics | grep localhost | grep true")
     '';
 }

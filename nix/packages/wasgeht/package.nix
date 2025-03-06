@@ -7,15 +7,15 @@
   rrdtool,
 }:
 
-buildGoModule {
+buildGoModule rec {
   pname = "wasgeht";
-  version = "0.1.2";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "kylerisse";
     repo = "wasgeht";
-    rev = "refs/tags/0.1.2";
-    hash = "sha256-Sqfi3Yo6ZUNZLNy8g+P85Q5JwMUgiGYuQZxVcQOUDLM=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-+KLjVt5WKcngFCGyQTIoNJVKprn/7fyAiNLkxW6onN0=";
   };
 
   strictDeps = true;
