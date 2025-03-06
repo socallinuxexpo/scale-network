@@ -17,7 +17,7 @@ in
   options.scale-network.users.gene.enable = mkEnableOption "user gene";
 
   config = mkIf cfg.enable {
-    users.users = {
+    users.user = {
       gene = {
         isNormalUser = true;
         uid = 2013;
