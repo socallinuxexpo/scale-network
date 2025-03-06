@@ -3,6 +3,7 @@
   imports = [
     ./bind-master
     ./bind-slave.nix
+    ./cert-generator.nix
     ./gitlab.nix
     ./kea-master.nix
     ./monitoring.nix

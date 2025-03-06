@@ -8,6 +8,10 @@
     services.bindMaster.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
+    services.cert-generator = {
+      enable = true;
+      commonName = "coreconf.scale.lan";
+    };
     services.signs.enable = true;
     services.monitoring.enable = true;
     services.prometheus.enable = true;
