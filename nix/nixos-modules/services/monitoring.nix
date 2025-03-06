@@ -95,7 +95,7 @@ in
       # Good example enable TLS, but would like to keep it out of the /nix/store
       # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
       nginx.virtualHosts."${cfg.nginxFQDN}" = {
-        default = true;
+        default = false;
         enableACME = false;
         locations."/" = {
           proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
