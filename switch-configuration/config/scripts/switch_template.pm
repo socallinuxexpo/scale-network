@@ -1843,13 +1843,11 @@ system {
     }
 
     syslog {
-        any any
-        authorization info
-        interactive-commands any
-        log-prefix NOC
-
-        host loghost {
-        any any;
+        host loghost.scale.lan {
+            any any;
+            authorization info;
+            interactive-commands any;
+            log-prefix NOC;
         }
     }
     login {
