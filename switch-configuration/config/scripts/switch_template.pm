@@ -1847,7 +1847,6 @@ system {
             any any;
             authorization info;
             interactive-commands any;
-            log-prefix NOC;
         }
     }
     login {
