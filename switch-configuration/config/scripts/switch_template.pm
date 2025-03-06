@@ -1837,8 +1837,17 @@ system {
         server 2001:470:f026:503::20;
         server 2001:470:f026:103::20;
     }
+    name-server {
+        server 2001:470:f026:503::20;
+        server 2001:470:f026:103::20;
+    }
 
     syslog {
+        any any
+        authorization info
+        interactive-commands any
+        log-prefix NOC
+
         host loghost {
         any any;
         }
