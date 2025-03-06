@@ -1,0 +1,8 @@
+#!/bin/bash
+cat piuse.csv |sed s/,/' '/g |while read name id ip1
+do
+  grep -w $id pis.csv |sed s/,/' '/g |while read id2 mac ip2
+  do
+    echo "$name,001:470:f026:$ip1:$ip2"
+  done
+done >pilist.csv
