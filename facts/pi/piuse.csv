@@ -8,7 +8,7 @@ pi-reg6,pi4-006,110
 pi-reg7,pi4-007,110
 pi-reg8,pi4-008,110
 pi-confu1,pi4-009,507
-pi-confu2,pi4-010,507
+pi-confu2,pi4-021,507
 pi-confu3,pi4-011,507
 pi-confl1,pi4-012,507
 pi-confl2,pi4-013,507
@@ -18,7 +18,6 @@ pi-expo3,pi4-016,107
 pi-expo4,pi4-017,107
 pi-expo5,pi4-019,107
 pi-e1,pi4-020,110
-pi-e2,pi4-021,110
 pi-e3,pi4-022,110
 pi-e4,pi4-023,110
 pi-e5,pi4-024,110
