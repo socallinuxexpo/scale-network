@@ -1837,10 +1837,16 @@ system {
         server 2001:470:f026:503::20;
         server 2001:470:f026:103::20;
     }
+    name-server {
+        server 2001:470:f026:503::20;
+        server 2001:470:f026:103::20;
+    }
 
     syslog {
-        host loghost {
-        any any;
+        host loghost.scale.lan {
+            any any;
+            authorization info;
+            interactive-commands any;
         }
     }
     login {
