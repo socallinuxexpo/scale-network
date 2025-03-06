@@ -4,7 +4,7 @@
   ...
 }:
 let
-  cfg = config.scale-network.user.gene;
+  cfg = config.scale-network.users.gene;
   inherit (lib.modules)
     mkIf
     ;
@@ -17,7 +17,7 @@ in
   options.scale-network.users.gene.enable = mkEnableOption "user gene";
 
   config = mkIf cfg.enable {
-    users.user = {
+    users.users = {
       gene = {
         isNormalUser = true;
         uid = 2013;
