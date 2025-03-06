@@ -103,6 +103,79 @@ in
       };
     };
     
+    loki = {
+      enable = true;
+      configuration = {
+        server.http_listen_port = 3100;
+        auth_enabled = false;
+
+        ingester = {
+          lifecycler = {
+            address = "127.0.0.1";
+            ring = {
+              kvstore = {
+                store = "inmemory";
+              };
+              replication_factor = 2;
+            };
+          };
+          chunk_idle_period = "2h";
+          max_chunk_age = "2h";
+          chunk_target_size = 1000000;
+          chunk_retain_period = "31s";
+          # max_transfer_retries = 1;
+        };
+
+        schema_config = {
+          configs = [{
+            from = "2024-10-15";
+            store = "tsdb";
+            object_store = "filesystem";
+            schema = "v13";
+            index = {
+              prefix = "index_";
+              period = "24h";
+            };
+          }];
+        };
+
+        storage_config = {
+          filesystem = {
+            directory = "/var/lib/loki/chunks";
+          };
+          tsdb_shipper = {
+            active_index_directory = "/var/lib/loki/tsdb_index";
+            cache_location = "/var/lib/loki/tsdb_cache";
+          };
+        };
+
+        limits_config = {
+          reject_old_samples = true;
+          reject_old_samples_max_age = "169h";
+        };
+
+        chunk_store_config = {
+          # max_look_back_period = "1s";
+        };
+
+        table_manager = {
+          retention_deletes_enabled = false;
+          retention_period = "1s";
+        };
+
+        compactor = {
+          working_directory = "/var/lib/loki";
+          # shared_store = "filesystem";
+          compactor_ring = {
+            kvstore = {
+              store = "inmemory";
+            };
+          };
+        };
+      };
+    };
+
+
     services.promtail = {
       enable = true;
       configuration = {
@@ -114,7 +187,7 @@ in
           filename = "/tmp/positions.yaml";
         };
         clients = [{
-          url = "http://127.0.0.1:3200/loki/api/v1/push";
+          url = "http://127.0.0.1:3100/loki/api/v1/push";
         }];
         scrape_configs = [{
           job_name = "journal";
