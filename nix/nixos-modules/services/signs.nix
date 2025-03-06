@@ -36,9 +36,6 @@ in
       containers.scale-signs = {
         ports = [ "8080:80" ];
         image = "sarcasticadmin/scale-signs:2309424 ";
-        extraOptions = [
-          "--network=host"
-        ];
       };
     };
 
