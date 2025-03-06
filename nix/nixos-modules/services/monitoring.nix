@@ -65,7 +65,7 @@ in
         server = {
           http_addr = "127.0.0.1";
           http_port = 3000;
-          domain = "localhost";
+          domain = "${cfg.nginxFQDN}";
         };
         analytics.reporting_Enabled = false;
       };
@@ -90,6 +90,7 @@ in
       };
 
       nginx.enable = mkDefault true;
+      nginx.recommendedProxySettings = true;
       # TODO: TLS enabled
       # Good example enable TLS, but would like to keep it out of the /nix/store
       # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
