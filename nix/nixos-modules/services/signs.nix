@@ -21,7 +21,7 @@ in
     networking.firewall.allowedTCPPorts = [ 80 ];
     virtualisation.oci-containers = {
       containers.scale-signs = {
-        image = "sarcasticadmin/scale-signs:1a4fbab";
+        image = "sarcasticadmin/scale-signs:2309424 ";
         ports = [ "80:80" ];
         extraOptions = [
           "--network=host"
