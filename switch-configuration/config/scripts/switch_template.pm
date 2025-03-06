@@ -1295,7 +1295,7 @@ sub VV_init_firewall
 	  term ipv6_icmp_basics {
               from {
                   destination-address {
-                        $PREFIX::/48
+                        ${PREFIX}::/48
                   }
                   icmp-type [ neighbor-solicit neighbor-advertisement router-solicit packet-too-big time-exceeded ];
               }
@@ -1306,7 +1306,7 @@ sub VV_init_firewall
           term ping {
               from {
                   destination-address {
-                        $PREFIX::/48
+                        ${PREFIX}::/48
                   }
                   icmp-type [ echo-reply echo-request ];
               }
@@ -1329,7 +1329,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     destination-address {
-                        $PREFIX::/48;
+                        ${PREFIX}::/48;
                         fc00::/7;
                     }
                 }
@@ -1384,7 +1384,7 @@ sub VV_init_firewall
           term no-local {
                 from {
                     source-address {
-                        $PREFIX::/48;
+                        ${PREFIX}::/48;
                         fc00::/7;
                     }
                 }
