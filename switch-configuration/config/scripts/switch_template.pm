@@ -693,6 +693,9 @@ EOF
             family inet {
                     address 192.168.255.76/24;
             }
+            family inet6 {
+                address fe80::$Number/64;
+            }
         }
     }
 EOF
@@ -911,6 +914,7 @@ sub build_l3_from_config
         unit $MgtVL {
             family inet6 {
                 address $IPv6addr/64;
+                address fe80::$Number/64;
             }
         }
 EOF
@@ -1824,10 +1828,16 @@ sub build_config_from_template
   debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
   my $OUTPUT = <<EOF;
 system {
+    time-zone UTC;
     host-name $hostname;
     root-authentication {
         encrypted-password "$root_auth";
     }
+    ntp {
+        server 2001:470:f026:503::20;
+        server 2001:470:f026:103::20;
+    }
+
     syslog {
         host loghost {
         any any;
