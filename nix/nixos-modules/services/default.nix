@@ -6,6 +6,7 @@
     ./gitlab.nix
     ./kea-master.nix
     ./monitoring.nix
+    ./mrtg.nix
     ./ntp.nix
     ./prometheus.nix
     ./rsyslogd.nix
