@@ -1974,9 +1974,9 @@ snmp {
 }
 class-of-service {
     forwarding-classes {
-        class wifi queue-num 1;
+        class infra queue-num 1;
         class av queue-num 2;
-        class infra queue-num 3;
+        class wifi queue-num 3;
     }
 }
 interfaces {
