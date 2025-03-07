@@ -408,9 +408,12 @@ sub build_users_from_auth
     $type = $2;
     debug(9, "\tFound USER $user type $type\n");
     open KEYFILE, "<$file" || die("Failed to open key file: $file\n");
-    while (my $key = <KEYFILE>)
+    my $line = 0;
+    foreach my $key (<KEYFILE>)
     {
+      $line++;
       chomp($key);
+      debug(9, "\t\tKeyfile $file Line $line: $key\n");
       close KEYFILE;
       if (!defined($Keys{$user}))
       {
