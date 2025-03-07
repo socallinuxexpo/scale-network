@@ -1872,6 +1872,15 @@ family ethernet-switching {
                 policer infra-cop;
             }
         }
+        term vendor {
+            from {
+                vlan vendor_backbone;
+            }
+            then {
+                forwarding-class vendor;
+                loss-priority low;
+                policer vendor-cop;
+            }
     }
 }
 policer wifi-cop {
@@ -1897,6 +1906,14 @@ policer infra-cop {
         burst-size-limit 4m;
     }
     then loss-priority high;
+}
+policer vendor-cop {
+    filter-specific;
+    if-exceeding {
+        bandwidth-limit 250m;
+        burst-size-limit 100m;
+    }
+    then discard;
 }
 EOF
 
@@ -1974,9 +1991,10 @@ snmp {
 }
 class-of-service {
     forwarding-classes {
+        class vendor queue-num 2
         class infra queue-num 1;
-        class av queue-num 2;
-        class wifi queue-num 3;
+        class av queue-num 1;
+        class wifi queue-num 0;
     }
 }
 interfaces {
