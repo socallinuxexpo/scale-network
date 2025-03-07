@@ -83,7 +83,7 @@ in
           metrics_path = "/snmp";
           params = {
             auth = [ "Junitux" ];
-            module = [ "juniper" ];
+            module = [ "if_mib" ];
           };
           relabel_configs = [
             {
