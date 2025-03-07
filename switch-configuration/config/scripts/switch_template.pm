@@ -1650,16 +1650,16 @@ EOF
             }
             server-group {
                 Conference {
-                    $PREFIX:503::5;
+                    $PREFIX:503::20;
                 }
                 Expo {
-                    $PREFIX:103::5;
+                    $PREFIX:103::20;
                 }
                 Vendors {
-                    $PREFIX:103::5;
+                    $PREFIX:103::20;
                 }
                 Hilton {
-                    $PREFIX:103::5;
+                    $PREFIX:103::20;
                 }
                 AV {
                     $PREFIX:105::10;
@@ -1669,16 +1669,16 @@ EOF
         }
         server-group {
             Conference {
-                10.128.3.5;
+                10.128.3.20;
             }
             Expo {
-                10.0.3.5;
+                10.0.3.20;
             }
             Vendors {
-                10.0.3.5;
+                10.0.3.20;
             }
             Hilton {
-                10.0.3.5;
+                10.0.3.20;
             }
             AV {
                 10.0.5.10;
@@ -1715,8 +1715,8 @@ EOF
     $VV_protocols .= <<EOF;
         interface $_ {
             other-stateful-configuration;
-            dns-server-address $PREFIX:103::5;
-            dns-server-address $PREFIX:103::15;
+            dns-server-address $PREFIX:103::20;
+            dns-server-address $PREFIX:503::20;
             prefix $pfx {
                 on-link;
                 autonomous;
