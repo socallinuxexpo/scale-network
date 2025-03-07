@@ -58,6 +58,14 @@ in
             builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom.json"
           );
         }
+        {
+          job_name = "wasgeht";
+          static_configs = [
+            {
+              targets = [ "localhost:${toString config.scale-network.services.wasgeht.port}" ];
+            }
+          ];
+        }
       ];
 
       grafana.enable = mkDefault true;
