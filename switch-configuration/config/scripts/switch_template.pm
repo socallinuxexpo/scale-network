@@ -1991,7 +1991,7 @@ snmp {
 }
 class-of-service {
     forwarding-classes {
-        class vendor queue-num 2
+        class vendor queue-num 2;
         class infra queue-num 1;
         class av queue-num 1;
         class wifi queue-num 0;
