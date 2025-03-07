@@ -33,5 +33,10 @@ in
           "textfile"
         ];
       };
+
+      services.prometheus.exporters.snmp = {
+        enable = true;
+        configurationPath = ./snmp.yml;
+      };
     };
 }

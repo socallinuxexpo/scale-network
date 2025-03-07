@@ -66,6 +66,89 @@ in
             }
           ];
         }
+        {
+          job_name = "snmp";
+          static_configs = [
+            {
+              targets = [
+                "noc.scale.lan"
+                "confidf.scale.lan"
+                "nw-idf.scale.lan"
+                "ne-idf.scale.lan"
+                "expoidf.scale.lan"
+                "expo-catwalk.scale.lan"
+                "massflash.scale.lan"
+                "avswitch.scale.lan"
+                "deceased1.scale.lan"
+                "rm211.scale.lan"
+                "rm214.scale.lan"
+                "deceased3.scale.lan"
+                "rm103.scale.lan"
+                "rm104.scale.lan"
+                "rm105.scale.lan"
+                "rm106.scale.lan"
+                "rm107.scale.lan"
+                "sparea.scale.lan"
+                "spareb.scale.lan"
+                "sparec.scale.lan"
+                "spared.scale.lan"
+                "sparee.scale.lan"
+                "sparef.scale.lan"
+                "expoaw.scale.lan"
+                "expoa1.scale.lan"
+                "expoa2.scale.lan"
+                "expoa3.scale.lan"
+                "expoa4.scale.lan"
+                "expoa5.scale.lan"
+                "expob1.scale.lan"
+                "expob2.scale.lan"
+                "expob3.scale.lan"
+                "expob4.scale.lan"
+                "expob5.scale.lan"
+                "expoc1.scale.lan"
+                "expoc2.scale.lan"
+                "expoc3.scale.lan"
+                "expoc4.scale.lan"
+                "expoc5.scale.lan"
+                "ballrooma.scale.lan"
+                "ballroomb.scale.lan"
+                "ballroomc.scale.lan"
+                "ballroomde.scale.lan"
+                "ballroomf.scale.lan"
+                "ballroomg.scale.lan"
+                "deceased2.scale.lan"
+                "rm209-210.scale.lan"
+                "rm101-102.scale.lan"
+                "ballroomh.scale.lan"
+                "rm208.scale.lan"
+                "donotuse.scale.lan"
+                "regdesk.scale.lan"
+                "br-mdf-01.scale.lan"
+                "ex-mdf-01.scale.lan"
+                "cf-mdf-01.scale.lan"
+              ];
+            }
+          ];
+          metrics_path = "/snmp";
+          params = {
+            auth = [ "Junitux" ];
+            module = [ "juniper" ];
+          };
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9116";
+            }
+          ];
+        }
       ];
 
       grafana.enable = mkDefault true;
