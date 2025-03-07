@@ -75,8 +75,9 @@ in
             name = "${name}-mrtg";
             value = {
               after = [ "mrtg-generator.service" ];
+              environment.LANG = "C";
               serviceConfig = {
-                ExecStart = "${pkgs.mrtg}/bin/mrtg ${cfg.statePath}/configs/${name}";
+                ExecStart = "${pkgs.mrtg}/bin/mrtg ${cfg.statePath}/configs/${name}.cfg";
                 User = "${cfg.user}";
                 Group = "${cfg.group}";
                 Type = "simple";
@@ -92,6 +93,7 @@ in
               timerConfig = {
                 OnBootSec = "5m";
                 OnUnitActiveSec = "5m";
+                RandomizedDelaySec = "30";
                 Unit = "${name}-mrtg.service";
               };
             };
