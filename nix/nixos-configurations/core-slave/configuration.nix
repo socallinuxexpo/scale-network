@@ -9,7 +9,8 @@
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
     services.signs.enable = true;
-    services.monitoring.enable = true;
+    # Turning off monitoring so we dont snmp walk
+    services.monitoring.enable = false;
     services.prometheus.enable = true;
     services.ssh.enable = true;
     libvirt.enable = true;

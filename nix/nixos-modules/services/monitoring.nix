@@ -20,6 +20,13 @@ let
     mkEnableOption
     mkOption
     ;
+
+  unfilteredList = (
+    builtins.split "\n" (
+      builtins.readFile "${pkgs.scale-network.scaleInventory}/config/all-network-devices"
+    )
+  );
+  filteredList = (builtins.filter (line: line != [ ] && line != "") unfilteredList);
 in
 {
   options.scale-network.services.monitoring = {
@@ -66,7 +73,38 @@ in
             }
           ];
         }
+        {
+          job_name = "snmp";
+          static_configs = [
+            {
+              targets = filteredList;
+            }
+          ];
+          metrics_path = "/snmp";
+          params = {
+            auth = [ "Junitux" ];
+            module = [ "juniper" ];
+          };
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9116";
+            }
+          ];
+        }
       ];
+      prometheus.exporters.snmp = {
+        enable = true;
+        configurationPath = ./snmp.yml;
+      };
 
       grafana.enable = mkDefault true;
       grafana.settings = {
