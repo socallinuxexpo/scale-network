@@ -1,0 +1,69 @@
+---
+auths:
+  public_v1:
+    version: 1
+  public_v2:
+    version: 2
+  Junitux:
+    community: Junitux
+    version: 2
+modules:
+  # Juniper
+  #
+  # https://apps.juniper.net/mib-explorer/
+  # https://www.juniper.net/documentation/software/junos/junos244/juniper-mibs-24.4R1.10.zip
+  juniper:
+    walk:
+      - JUNIPER-MIB::jnxOperatingTable
+      - JUNIPER-MIB::jnxFruState
+      - IF-MIB::ifOutOctets
+      - IF-MIB::ifOutOctets
+      - IF-MIB::ifInOctets
+      - IF-MIB::ifSpeed
+      - JUNIPER-ALARM-MIB::jnxRedAlarms
+      - JUNIPER-ALARM-MIB::jnxYellowAlarms
+      - JUNIPER-SUBSCRIBER-MIB::jnxSubscriberPortTerminatedCounter
+    lookups:
+      - source_indexes: [jnxOperatingContentsIndex,jnxOperatingL1Index,jnxOperatingL2Index,jnxOperatingL3Index]
+        lookup: jnxOperatingDescr
+        drop_source_indexes: false
+      - source_indexes: [jnxFruContentsIndex,jnxFruL1Index,jnxFruL2Index,jnxFruL3Index]
+        lookup: jnxFruName
+        drop_source_indexes: true
+    overrides:
+      jnxOperatingContentsIndex:
+        ignore: true
+      jnxOperatingL1Index:
+        ignore: true
+      jnxOperatingL2Index:
+        ignore: true
+      jnxOperatingL3Index:
+        ignore: true
+      jnxOperatingDescr:
+        ignore: true
+      jnxYellowAlarmState:
+        type: EnumAsStateSet
+      jnxRedAlarmState:
+        type: EnumAsStateSet
+      jnxFruState:
+        type: EnumAsStateSet
+  juniper_optics:
+    walk:
+      - JUNIPER-DOM-MIB::jnxDomCurrentWarnings
+      - JUNIPER-DOM-MIB::jnxDomCurrentAlarms
+      - JUNIPER-DOM-MIB::jnxDomCurrentRxLaserPower
+      - JUNIPER-DOM-MIB::jnxDomCurrentTxLaserOutputPower
+      - JUNIPER-DOM-MIB::jnxDomCurrentTxLaserBiasCurrent
+    lookups:
+      - source_indexes: [ifIndex]
+        lookup: ifName
+        drop_source_indexes: true
+      - source_indexes: [ifIndex]
+        lookup: ifAlias
+    overrides:
+      jnxDomCurrentRxLaserPower:
+        scale: .01
+      jnxDomCurrentTxLaserOutputPower:
+        scale: .01
+      jnxDomCurrentTxLaserBiasCurrent:
+        scale: .001
