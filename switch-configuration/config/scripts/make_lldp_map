@@ -1,36 +1,91 @@
 #!/bin/bash
 #This goes through all switches in switchtypes, connects to them and gets a LLDP dump of what's connected to them.
 
+shopt -s lastpipe
+
+ls ../../router-configuration/backups/  |while read ip
+do
+  ssh -o ConnectTimeout=10 $ip.scale.lan 'show lldp neighbors' </dev/null |grep "^g" |while read line
+  do
+    echo  "$ip $line"
+  done
+done |tee map.lldp
+
 grep -v "^/" switchtypes |while read name num m ip type h n model mac
+do
+  ssh -o ConnectTimeout=10 $ip 'show lldp neighbors' </dev/null |grep "^g" |while read line
   do
-    ssh  $ip 'show lldp nei' </dev/null |grep "^g" |while read line
-      do
-        echo  "$name $line"
-      done
-   done |tee map.lldp
+    echo  "$name $line"
+  done
+done |tee -a map.lldp
 
-cat map.lldp |grep -v ") TT"|sort -r |sed -e s/\(.*\)// -e s/"TRUNK Port "/"Trunk"/ -e s/"FIBER Port "/"Fiber"/ |cut -f 1,2,5- -d ' ' |sed s/' '/=/g |sed -e s/=/' '/ -e s/=/' '/ -e s/=/_/g -e s/"[^ ]*_"//g -e s/"\/"/-/g  |tr "[A-Z]" "[a-z]">map.parts
+cat map.lldp |sed s/"\/"/-/g| tr "[A-Z]" "[a-z]" | while read host if p id rest; do name=`echo "$rest"|sed s/"^.* "//`; notname=`echo "$rest" |sed s/" [^ ]*$"//`; echo "$host $if $name";  done >map.parts
 
-( echo "blockdiag { orientation = landscape "
-#(echo "blockdiag {"
-grep br-mdf-01 map.parts |cut -f 1 |while read b if a; do
-  echo "br-mdf-01 -- $b;"
+cp map.parts map.parts.w
+while [ -s map.parts.w ]
+do
+  head -1 map.parts.w |read a if b
+  grep "^$a " map.parts >map.parts.$a
+  grep -v -e "^$a " -e " $a$"  map.parts.w >map.parts.r
+  mv map.parts.r map.parts.w
 done
-cat map.parts |grep -v -i br-mdf-01|grep -i ^tt |while read a if b
-  do
-    echo "$a -- $b;"
-    #echo -n "$a -- $b;"
-    echo "group { orientation = portrait"
-    grep -i "^$b" map.parts |grep -v br-mdf-01 |while read c if2 d
+( echo "blockdiag { orientation = portrait "
+echo "node_width = 80"
+echo "br-mdf-01 [ shape = ellipse ];"
+grep "^br-mdf-01 " map.parts.br-mdf-01 |grep -v "01$" |while read a if b
+do
+  echo "$b [ shape = ellipse ];"
+  echo "$b -- $a;"
+done
+grep "^br-mdf-01 " map.parts.br-mdf-01 |grep "01$" |while read a if b
+do
+  echo "$b [ shape = ellipse ];"
+  echo "$a -- $b;"
+  if [ -s map.parts.$b ]
+  then
+    echo "group { orientation = portrait color=white "
+      grep "^$b " map.parts.$b |grep -v " $a$" |while read c if2 d
       do
-        echo  "$c -- $d;"
+        echo "$c -- $d"
+	if [ -s map.parts.$d ]
+	then
+          echo "group { orientation = landscape color = lightgreen "
+          grep "^$d " map.parts.$d |grep -v " $c$" |while read e if3 f
+          do
+            echo "$e -- $f"
+            if [[ $f == "pi"* ]]
+            then
+              echo "$f [shape = flowchart.input, color=lightblue ];"
+            elif [[ $f == *"-"? ]]
+            then
+              echo "$f [shape = ellipse, color=lightblue ];"
+            fi
+	    if [ -s map.parts.$f ]
+	    then
+              echo "group { orientation = portrait "
+              grep "^$f " map.parts.$f |grep -v " $e$" |while read g if4 h
+              do
+                if [[ $h == "pi"* ]]
+                then
+                  echo "$h [shape = flowchart.input, color=lightblue ];"
+                elif [[ $h == *"-"? || $h == *"-"?? ]]
+                then
+                  echo "$h [shape = ellipse, color=lightblue ];"
+                fi
+                echo "$g -- $h"
+              done
+              echo "}"
+        fi
+          done
+          echo "}"
+        fi
       done
-  # echo ";" 
-  echo "  }"
-  done 
+    echo "}"
+  fi
+done
 echo "}" )|sed -e s/"->,"/"->"/ -e s/" ->;"/";"/ > map.diag
+rm map.parts* 
 
-#(echo "blockdiag { orientation = portrait "; cat map.parts |grep -i ^tt |while read a if b; do echo -n "$a -- $b[label=\"$if\"] ->"; grep -i "^$b" map.parts |while read c if2 d; do echo -n  ", $d[label=\"$if2\"]"; done; echo ";" ; done ; echo "}" )|sed -e s/"->,"/"->"/ -e s/" ->;"/";"/ > map.diag
 
 /usr/bin/blockdiag3 map.diag -T png -o map.png
-/usr/bin/blockdiag3 map.diag -T png -o map.svg
+/usr/bin/blockdiag3 map.diag -T svg -o map.svg
