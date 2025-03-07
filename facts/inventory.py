@@ -703,6 +703,17 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         json.dump(wasgehtconfig, f)
 
 
+def generateallnetwork(switches, routers, outputdir):
+    hostlist = []
+    for switch in switches:
+        hostlist.append(switch["fqdn"])
+    for router in routers:
+        hostlist.append(router["fqdn"])
+    for h in hostlist:
+        with open(f"{outputdir}/all-network-devices", "a") as f:
+            f.write(f"{h}\n")
+
+
 def main():
     """command entry point"""
 
@@ -737,11 +748,14 @@ def main():
         generatepromconfig(servers, aps, vlans, outputdir)
     elif subcomm == "wasgeht":
         generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
+    elif subcomm == "allnet":
+        generateallnetwork(switches, routers, outputdir)
     elif subcomm == "all":
         generatekeaconfig(servers, aps, vlans, outputdir)
         generatezones(switches, routers, pis, aps, servers, outputdir)
         generatepromconfig(servers, aps, vlans, outputdir)
         generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
+        generateallnetwork(switches, routers, outputdir)
     elif subcomm == "debug":
         # overload outputdir as 2nd debug parameter
         debug_variable = outputdir
