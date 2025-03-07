@@ -75,69 +75,78 @@ in
         done
       '';
     in
-    mkIf cfg.enable (lib.mkMerge [
-      {
-        systemd.services = builtins.listToAttrs (
-          map (name: {
-            name = "${name}-mrtg";
-            value = {
-              after = [ "mrtg-generator.service" ];
-              environment.LANG = "C";
-              serviceConfig = {
-                ExecStart = "${pkgs.mrtg}/bin/mrtg ${cfg.statePath}/configs/${name}.cfg";
-                User = "${cfg.user}";
-                Group = "${cfg.group}";
-                Type = "simple";
+    mkIf cfg.enable (
+      lib.mkMerge [
+        {
+          systemd.services = builtins.listToAttrs (
+            map (name: {
+              name = "${name}-mrtg";
+              value = {
+                after = [ "mrtg-generator.service" ];
+                environment.LANG = "C";
+                serviceConfig = {
+                  ExecStart = "${pkgs.mrtg}/bin/mrtg ${cfg.statePath}/configs/${name}.cfg";
+                  User = "${cfg.user}";
+                  Group = "${cfg.group}";
+                  Type = "simple";
+                };
               };
-            };
-          }) filteredList
-        );
-        systemd.timers = builtins.listToAttrs (
-          map (name: {
-            name = "${name}-mrtg";
-            value = {
-              wantedBy = [ "timers.target" ];
-              timerConfig = {
-                OnBootSec = "5m";
-                OnUnitActiveSec = "5m";
-                RandomizedDelaySec = "30";
-                Unit = "${name}-mrtg.service";
+            }) filteredList
+          );
+          systemd.timers = builtins.listToAttrs (
+            map (name: {
+              name = "${name}-mrtg";
+              value = {
+                wantedBy = [ "timers.target" ];
+                timerConfig = {
+                  OnBootSec = "5m";
+                  OnUnitActiveSec = "5m";
+                  RandomizedDelaySec = "30";
+                  Unit = "${name}-mrtg.service";
+                };
               };
+            }) filteredList
+          );
+        }
+        {
+          systemd.services.mrtg-generator = {
+            description = "mrtg generator";
+            after = [ "network.target" ];
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+              User = "${cfg.user}";
+              Group = "${cfg.group}";
+              ExecStart = "${script}";
+              Type = "simple";
             };
-          }) filteredList
-        );
-      }
-      {
-        systemd.services.mrtg-generator = {
-          description = "mrtg generator";
-          after = [ "network.target" ];
-          wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            User = "${cfg.user}";
-            Group = "${cfg.group}";
-            ExecStart = "${script}";
-            Type = "simple";
           };
-        };
-        systemd.tmpfiles.rules = [
-          "d ${cfg.statePath} 0755 ${cfg.user} ${cfg.group}"
-        ];
+          systemd.tmpfiles.rules = [
+            "d ${cfg.statePath} 0755 ${cfg.user} ${cfg.group}"
+          ];
 
-        #mrtg ${cfg.statePath}/configs/${hostname}
+          #mrtg ${cfg.statePath}/configs/${hostname}
 
-        users = {
-          users."${cfg.user}" = {
-            isNormalUser = true;
-            group = "${cfg.group}";
+          users = {
+            users."${cfg.user}" = {
+              isNormalUser = true;
+              group = "${cfg.group}";
+            };
+            groups.${cfg.group} = { };
           };
-          groups.${cfg.group} = { };
-        };
 
-    services.nginx.enable = mkDefault true;
-    services.nginx.virtualHosts."${cfg.nginxFQDN}" = {
-      default = false;
-      root = "${cfg.statePath}";
-      };
-    }
-    ]);
+          services.nginx.enable = mkDefault true;
+          services.nginx.virtualHosts."${cfg.nginxFQDN}" = {
+            default = false;
+            root = "${cfg.statePath}";
+            location."/" = {
+              extraConfig = ''
+                autoindex on;
+                autoindex_exact_size off;
+                autoindex_localtime on;
+              '';
+            };
+          };
+        }
+      ]
+    );
 }
