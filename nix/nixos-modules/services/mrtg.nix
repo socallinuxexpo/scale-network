@@ -136,10 +136,8 @@ in
     services.nginx.enable = mkDefault true;
     services.nginx.virtualHosts."${cfg.nginxFQDN}" = {
       default = false;
-      locations."/" = {
-        root = "${cfg.statePath}";
+      root = "${cfg.statePath}";
       };
-    };
-      }
+    }
     ]);
 }
