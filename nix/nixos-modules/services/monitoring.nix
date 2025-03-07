@@ -75,6 +75,8 @@ in
         }
         {
           job_name = "snmp";
+          scrape_timeout = "115s";
+          scrape_interval = "2m";
           static_configs = [
             {
               targets = filteredList;
@@ -83,7 +85,41 @@ in
           metrics_path = "/snmp";
           params = {
             auth = [ "Junitux" ];
-            module = [ "juniper" ];
+            module = [
+              "if_mib"
+              "system"
+            ];
+          };
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "127.0.0.1:9116";
+            }
+          ];
+        }
+        {
+          job_name = "snmp-srx";
+          scrape_timeout = "115s";
+          scrape_interval = "2m";
+          static_configs = [
+            {
+              targets = [ "br-mdf-01.scale.lan" ];
+            }
+          ];
+          metrics_path = "/snmp";
+          params = {
+            auth = [ "Junitux" ];
+            module = [
+              "junos_bandwidth"
+            ];
           };
           relabel_configs = [
             {
