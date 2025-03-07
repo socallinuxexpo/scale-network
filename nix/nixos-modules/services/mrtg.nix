@@ -138,7 +138,7 @@ in
           services.nginx.virtualHosts."${cfg.nginxFQDN}" = {
             default = false;
             root = "${cfg.statePath}";
-            location."/" = {
+            locations."/" = {
               extraConfig = ''
                 autoindex on;
                 autoindex_exact_size off;
