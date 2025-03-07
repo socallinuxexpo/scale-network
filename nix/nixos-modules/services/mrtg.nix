@@ -58,6 +58,7 @@ in
         mkdir -p ${cfg.statePath}/graphs
         for hostname in ${toString filteredList}; do
           echo "''${hostname}"
+          mkdir -p ${cfg.statePath}/graphs/''${hostname}
           ${pkgs.mrtg}/bin/cfgmaker \
           --enable-ipv6 \
           --no-down \
