@@ -10,6 +10,7 @@
     services.rsyslogd.enable = true;
     services.signs.enable = true;
     services.monitoring.enable = true;
+    services.mrtg.enable = true;
     services.prometheus.enable = true;
     services.ssh.enable = true;
     services.wasgeht.enable = true;

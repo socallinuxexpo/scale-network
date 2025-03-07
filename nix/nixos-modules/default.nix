@@ -7,7 +7,6 @@ inputs: {
         ./facts.nix
         ./libvirt.nix
         ./time.nix
-
         ./services
         ./users
       ];
