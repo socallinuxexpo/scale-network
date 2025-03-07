@@ -47,7 +47,7 @@ ExpoA5		29	103	2001:470:f026:103::200:29	Booth		Z.9		Loud		ex4200-48p	28:c0:da:3
 ExpoB1		30	103	2001:470:f026:103::200:30	Booth		W.9		Normal		ex4200-48p	00:26:88:7e:36:7f
 ExpoB2		31	103	2001:470:f026:103::200:31	Booth		W.9		Quiet		ex4200-48p	00:26:88:7d:f5:ff
 ExpoB3		32	103	2001:470:f026:103::200:32	Booth		W.9		Normal		ex4200-48p	00:26:88:7a:76:ff
-ExpoB4		33	503	2001:470:f026:503::200:33	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:f8:7f
+ExpoB4		33	103	2001:470:f026:103::200:33	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:f8:7f
 ExpoB5		34	103	2001:470:f026:103::200:34	Booth		Z.9		Loud		ex4200-48p	00:26:88:6f:1e:7f
 ExpoC1		35	103	2001:470:f026:103::200:35	Booth		W.9		Loud		ex4200-48p	00:19:e2:56:23:3f
 ExpoC2		36	103	2001:470:f026:103::200:36	Booth		W.9		Normal		ex4200-48p	2c:6b:f5:39:cf:ff
