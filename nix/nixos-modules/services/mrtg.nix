@@ -14,6 +14,7 @@ let
 
   inherit (lib.modules)
     mkIf
+    mkDefault
     ;
 
   inherit (lib.options)
@@ -41,6 +42,11 @@ in
     statePath = mkOption {
       type = types.str;
       default = "/persist/var/lib/mrtg";
+    };
+    nginxFQDN = mkOption {
+      type = types.str;
+      default = "coreconf.scale.lan";
+      description = "Publicly facing domain name used to access grafana from a browser";
     };
   };
 
@@ -126,6 +132,14 @@ in
           };
           groups.${cfg.group} = { };
         };
+
+    services.nginx.enable = mkDefault true;
+    services.nginx.virtualHosts."${cfg.nginxFQDN}" = {
+      default = false;
+      locations."/" = {
+        root = "${cfg.statePath}";
+      };
+    };
       }
     ]);
 }
