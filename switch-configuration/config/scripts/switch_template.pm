@@ -394,7 +394,11 @@ sub build_users_from_auth
   foreach $file (glob("../../facts/keys/*"))
   {
     debug(9, "Examining key file $file\n");
-    $file =~ /..\/..\/facts\/keys\/(.*)_id_(.*).pub/;
+    unless ($file =~ /..\/..\/facts\/keys\/(.*)_id_(.*).pub/)
+    {
+      warn("Skipping key $file -- not a valid filename for key.\n");
+      next;
+    }
     if (length($1) < 3)
     {
       warn("Skipping key $file -- Invalid username $1\n");
@@ -404,20 +408,25 @@ sub build_users_from_auth
     $type = $2;
     debug(9, "\tFound USER $user type $type\n");
     open KEYFILE, "<$file" || die("Failed to open key file: $file\n");
-    my $key = <KEYFILE>;
-    chomp($key);
-    close KEYFILE;
-    if (!defined($Keys{$user}))
+    my $line = 0;
+    foreach my $key (<KEYFILE>)
     {
-      debug(9, "\t\tFirst key for USER $user\n");
-      $Keys{$user} = [];
+      $line++;
+      chomp($key);
+      debug(9, "\t\tKeyfile $file Line $line: $key\n");
+      close KEYFILE;
+      if (!defined($Keys{$user}))
+      {
+        debug(9, "\t\tFirst key for USER $user\n");
+        $Keys{$user} = [];
+      }
+      else
+      {
+        debug(9, "\t\tAdditional key for USER $user\n");
+      }
+      # Append anonymous hash reference onto list for $user.
+      push @{$Keys{$user}},{ 'type' => $type, 'key' => $key };
     }
-    else
-    {
-      debug(9, "\t\tAdditional key for USER $user\n");
-    }
-    # Append anonymous hash reference onto list for $user.
-    push @{$Keys{$user}},{ 'type' => $type, 'key' => $key };
   }
   my $OUTPUT = "";
   debug(9, "OUTPUT KEY ENTRIES...(", join(" ", sort(keys(%Keys))), ")\n");
@@ -1868,15 +1877,15 @@ family ethernet-switching {
 policer wifi-cop {
     filter-specific;
     if-exceeding {
-        bandwidth-limit 15m;
-        burst-size-limit 512k;
+        bandwidth-limit 10m;
+        burst-size-limit 128k;
     }
     then discard;
 }
 policer av-cop {
     filter-specific;
     if-exceeding {
-        bandwidth-limit 1g;
+        bandwidth-limit 10g;
         burst-size-limit 2147450880;
     }                                   
     then loss-priority high;
