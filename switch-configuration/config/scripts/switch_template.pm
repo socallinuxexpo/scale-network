@@ -1840,81 +1840,82 @@ sub build_config_from_template
 ##FIXME## QoS should be configurable. Worse, we have to hand-hork this to
 ##FIXME## avoid applying it to IDF switches
   my $QOS_CONFIG = <<EOF;
-family ethernet-switching {
-    filter qos {
-        term wifi {
-            from {
-                vlan [ cfw-FAST cfw-SLOW cfCTF ];
+    family ethernet-switching {
+        filter qos {
+            term wifi {
+                from {
+                    vlan [ cfw-FAST cfw-SLOW cfCTF ];
+                }
+                then {
+                    forwarding-class wifi;
+                    loss-priority high;
+                    policer wifi-cop;
+                }
             }
-            then {
-                forwarding-class wifi;
-                loss-priority high;
-                policer wifi-cop;
+            term av {
+                from {
+                    vlan cfAV;
+                }
+                then {
+                    forwarding-class av;
+                    loss-priority low;
+                    policer av-cop;
+                }
+            }
+            term infra {
+                from {
+                    vlan cfInfra;
+                }
+                then {
+                    forwarding-class infra;
+                    loss-priority low;
+                    policer infra-cop;
+                }
+            }
+            term vendor {
+                from {
+                    vlan vendor_backbone;
+                }
+                then {
+                    forwarding-class vendor;
+                    loss-priority low;
+                    policer vendor-cop;
+                }
             }
         }
-        term av {
-            from {
-                vlan cfAV;
-            }
-            then {
-                forwarding-class av;
-                loss-priority low;
-                policer av-cop;
-            }
+    }
+    policer wifi-cop {
+        filter-specific;
+        if-exceeding {
+            bandwidth-limit 10m;
+            burst-size-limit 128k;
         }
-        term infra {
-            from {
-                vlan cfInfra;
-            }
-            then {
-                forwarding-class infra;
-                loss-priority low;
-                policer infra-cop;
-            }
+        then discard;
+    }
+    policer av-cop {
+        filter-specific;
+        if-exceeding {
+            bandwidth-limit 10g;
+            burst-size-limit 2147450880;
+        }                                   
+        then loss-priority high;
+    }
+    policer infra-cop {
+        filter-specific;
+        if-exceeding {
+            bandwidth-limit 1m;
+            burst-size-limit 4m;
         }
-        term vendor {
-            from {
-                vlan vendor_backbone;
-            }
-            then {
-                forwarding-class vendor;
-                loss-priority low;
-                policer vendor-cop;
-            }
+        then loss-priority high;
     }
-}
-policer wifi-cop {
-    filter-specific;
-    if-exceeding {
-        bandwidth-limit 10m;
-        burst-size-limit 128k;
+    policer vendor-cop {
+        filter-specific;
+        if-exceeding {
+            bandwidth-limit 250m;
+            burst-size-limit 100m;
+        }
+        then discard;
     }
-    then discard;
-}
-policer av-cop {
-    filter-specific;
-    if-exceeding {
-        bandwidth-limit 10g;
-        burst-size-limit 2147450880;
-    }                                   
-    then loss-priority high;
-}
-policer infra-cop {
-    filter-specific;
-    if-exceeding {
-        bandwidth-limit 1m;
-        burst-size-limit 4m;
-    }
-    then loss-priority high;
-}
-policer vendor-cop {
-    filter-specific;
-    if-exceeding {
-        bandwidth-limit 250m;
-        burst-size-limit 100m;
-    }
-    then discard;
-}
 EOF
 
   debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
