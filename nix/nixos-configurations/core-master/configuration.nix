@@ -29,5 +29,6 @@
     users.ruebenramirez.enable = true;
     users.gene.enable = true;
     users.erikreinert.enable = true;
+    users.samuel.enable = true;
   };
 }
