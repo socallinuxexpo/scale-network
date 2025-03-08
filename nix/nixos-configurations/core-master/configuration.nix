@@ -27,5 +27,7 @@
     users.rob.enable = true;
     users.root.enable = true;
     users.ruebenramirez.enable = true;
+    users.gene.enable = true;
+    users.erikreinert.enable = true;
   };
 }
