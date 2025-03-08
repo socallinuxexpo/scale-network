@@ -950,6 +950,9 @@ sub build_vlans_from_config
     $name {
         description "$desc";
         vlan-id $_;
+	filter {
+            input qos;
+        }
 EOF
       $OUTPUT .= "        l3-interface vlan.$_;\n" if ($_ eq $MgtVL);
       $OUTPUT .= "    }\n";
@@ -1881,6 +1884,9 @@ sub build_config_from_template
                     loss-priority low;
                     policer vendor-cop;
                 }
+            }
+	    term allow-all {
+                then accept;
             }
         }
     }
