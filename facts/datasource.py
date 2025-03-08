@@ -96,8 +96,6 @@ def isvalidwifi5chan(chan):
         56,
         60,
         64,
-        68,
-        96,
         100,
         104,
         108,
