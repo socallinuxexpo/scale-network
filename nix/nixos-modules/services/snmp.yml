@@ -6,45 +6,385 @@ auths:
     auth_protocol: MD5
     priv_protocol: DES
     version: 2
-  public_v1:
-    community: public
-    security_level: noAuthNoPriv
-    auth_protocol: MD5
-    priv_protocol: DES
-    version: 1
-  public_v2:
-    community: public
-    security_level: noAuthNoPriv
-    auth_protocol: MD5
-    priv_protocol: DES
-    version: 2
 modules:
-  juniper:
+  if_mib:
     walk:
-      - 1.3.6.1.2.1.2.2.1.10
-      - 1.3.6.1.2.1.2.2.1.16
-      - 1.3.6.1.2.1.2.2.1.5
-      - 1.3.6.1.4.1.2636.3.1.13
-      - 1.3.6.1.4.1.2636.3.1.15.1.5
-      - 1.3.6.1.4.1.2636.3.1.15.1.8
-      - 1.3.6.1.4.1.2636.3.4.2.2
-      - 1.3.6.1.4.1.2636.3.4.2.3
-      - 1.3.6.1.4.1.2636.3.64.1.1.1.5.1.3
+      - 1.3.6.1.2.1.2
+      - 1.3.6.1.2.1.31.1.1
     metrics:
-      - name: ifInOctets
-        oid: 1.3.6.1.2.1.2.2.1.10
-        type: counter
-        help: The total number of octets received on the interface, including framing characters - 1.3.6.1.2.1.2.2.1.10
+      - name: ifNumber
+        oid: 1.3.6.1.2.1.2.1
+        type: gauge
+        help: The number of network interfaces (regardless of their current state) present on this system. - 1.3.6.1.2.1.2.1
+      - name: ifIndex
+        oid: 1.3.6.1.2.1.2.2.1.1
+        type: gauge
+        help: A unique value, greater than zero, for each interface - 1.3.6.1.2.1.2.2.1.1
         indexes:
           - labelname: ifIndex
             type: gauge
-      - name: ifOutOctets
-        oid: 1.3.6.1.2.1.2.2.1.16
-        type: counter
-        help: The total number of octets transmitted out of the interface, including framing characters - 1.3.6.1.2.1.2.2.1.16
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifType
+        oid: 1.3.6.1.2.1.2.2.1.3
+        type: EnumAsInfo
+        help: The type of interface - 1.3.6.1.2.1.2.2.1.3
         indexes:
           - labelname: ifIndex
             type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+        enum_values:
+          1: other
+          2: regular1822
+          3: hdh1822
+          4: ddnX25
+          5: rfc877x25
+          6: ethernetCsmacd
+          7: iso88023Csmacd
+          8: iso88024TokenBus
+          9: iso88025TokenRing
+          10: iso88026Man
+          11: starLan
+          12: proteon10Mbit
+          13: proteon80Mbit
+          14: hyperchannel
+          15: fddi
+          16: lapb
+          17: sdlc
+          18: ds1
+          19: e1
+          20: basicISDN
+          21: primaryISDN
+          22: propPointToPointSerial
+          23: ppp
+          24: softwareLoopback
+          25: eon
+          26: ethernet3Mbit
+          27: nsip
+          28: slip
+          29: ultra
+          30: ds3
+          31: sip
+          32: frameRelay
+          33: rs232
+          34: para
+          35: arcnet
+          36: arcnetPlus
+          37: atm
+          38: miox25
+          39: sonet
+          40: x25ple
+          41: iso88022llc
+          42: localTalk
+          43: smdsDxi
+          44: frameRelayService
+          45: v35
+          46: hssi
+          47: hippi
+          48: modem
+          49: aal5
+          50: sonetPath
+          51: sonetVT
+          52: smdsIcip
+          53: propVirtual
+          54: propMultiplexor
+          55: ieee80212
+          56: fibreChannel
+          57: hippiInterface
+          58: frameRelayInterconnect
+          59: aflane8023
+          60: aflane8025
+          61: cctEmul
+          62: fastEther
+          63: isdn
+          64: v11
+          65: v36
+          66: g703at64k
+          67: g703at2mb
+          68: qllc
+          69: fastEtherFX
+          70: channel
+          71: ieee80211
+          72: ibm370parChan
+          73: escon
+          74: dlsw
+          75: isdns
+          76: isdnu
+          77: lapd
+          78: ipSwitch
+          79: rsrb
+          80: atmLogical
+          81: ds0
+          82: ds0Bundle
+          83: bsc
+          84: async
+          85: cnr
+          86: iso88025Dtr
+          87: eplrs
+          88: arap
+          89: propCnls
+          90: hostPad
+          91: termPad
+          92: frameRelayMPI
+          93: x213
+          94: adsl
+          95: radsl
+          96: sdsl
+          97: vdsl
+          98: iso88025CRFPInt
+          99: myrinet
+          100: voiceEM
+          101: voiceFXO
+          102: voiceFXS
+          103: voiceEncap
+          104: voiceOverIp
+          105: atmDxi
+          106: atmFuni
+          107: atmIma
+          108: pppMultilinkBundle
+          109: ipOverCdlc
+          110: ipOverClaw
+          111: stackToStack
+          112: virtualIpAddress
+          113: mpc
+          114: ipOverAtm
+          115: iso88025Fiber
+          116: tdlc
+          117: gigabitEthernet
+          118: hdlc
+          119: lapf
+          120: v37
+          121: x25mlp
+          122: x25huntGroup
+          123: transpHdlc
+          124: interleave
+          125: fast
+          126: ip
+          127: docsCableMaclayer
+          128: docsCableDownstream
+          129: docsCableUpstream
+          130: a12MppSwitch
+          131: tunnel
+          132: coffee
+          133: ces
+          134: atmSubInterface
+          135: l2vlan
+          136: l3ipvlan
+          137: l3ipxvlan
+          138: digitalPowerline
+          139: mediaMailOverIp
+          140: dtm
+          141: dcn
+          142: ipForward
+          143: msdsl
+          144: ieee1394
+          145: if-gsn
+          146: dvbRccMacLayer
+          147: dvbRccDownstream
+          148: dvbRccUpstream
+          149: atmVirtual
+          150: mplsTunnel
+          151: srp
+          152: voiceOverAtm
+          153: voiceOverFrameRelay
+          154: idsl
+          155: compositeLink
+          156: ss7SigLink
+          157: propWirelessP2P
+          158: frForward
+          159: rfc1483
+          160: usb
+          161: ieee8023adLag
+          162: bgppolicyaccounting
+          163: frf16MfrBundle
+          164: h323Gatekeeper
+          165: h323Proxy
+          166: mpls
+          167: mfSigLink
+          168: hdsl2
+          169: shdsl
+          170: ds1FDL
+          171: pos
+          172: dvbAsiIn
+          173: dvbAsiOut
+          174: plc
+          175: nfas
+          176: tr008
+          177: gr303RDT
+          178: gr303IDT
+          179: isup
+          180: propDocsWirelessMaclayer
+          181: propDocsWirelessDownstream
+          182: propDocsWirelessUpstream
+          183: hiperlan2
+          184: propBWAp2Mp
+          185: sonetOverheadChannel
+          186: digitalWrapperOverheadChannel
+          187: aal2
+          188: radioMAC
+          189: atmRadio
+          190: imt
+          191: mvl
+          192: reachDSL
+          193: frDlciEndPt
+          194: atmVciEndPt
+          195: opticalChannel
+          196: opticalTransport
+          197: propAtm
+          198: voiceOverCable
+          199: infiniband
+          200: teLink
+          201: q2931
+          202: virtualTg
+          203: sipTg
+          204: sipSig
+          205: docsCableUpstreamChannel
+          206: econet
+          207: pon155
+          208: pon622
+          209: bridge
+          210: linegroup
+          211: voiceEMFGD
+          212: voiceFGDEANA
+          213: voiceDID
+          214: mpegTransport
+          215: sixToFour
+          216: gtp
+          217: pdnEtherLoop1
+          218: pdnEtherLoop2
+          219: opticalChannelGroup
+          220: homepna
+          221: gfp
+          222: ciscoISLvlan
+          223: actelisMetaLOOP
+          224: fcipLink
+          225: rpr
+          226: qam
+          227: lmp
+          228: cblVectaStar
+          229: docsCableMCmtsDownstream
+          230: adsl2
+          231: macSecControlledIF
+          232: macSecUncontrolledIF
+          233: aviciOpticalEther
+          234: atmbond
+          235: voiceFGDOS
+          236: mocaVersion1
+          237: ieee80216WMAN
+          238: adsl2plus
+          239: dvbRcsMacLayer
+          240: dvbTdm
+          241: dvbRcsTdma
+          242: x86Laps
+          243: wwanPP
+          244: wwanPP2
+          245: voiceEBS
+          246: ifPwType
+          247: ilan
+          248: pip
+          249: aluELP
+          250: gpon
+          251: vdsl2
+          252: capwapDot11Profile
+          253: capwapDot11Bss
+          254: capwapWtpVirtualRadio
+          255: bits
+          256: docsCableUpstreamRfPort
+          257: cableDownstreamRfPort
+          258: vmwareVirtualNic
+          259: ieee802154
+          260: otnOdu
+          261: otnOtu
+          262: ifVfiType
+          263: g9981
+          264: g9982
+          265: g9983
+          266: aluEpon
+          267: aluEponOnu
+          268: aluEponPhysicalUni
+          269: aluEponLogicalLink
+          270: aluGponOnu
+          271: aluGponPhysicalUni
+          272: vmwareNicTeam
+          277: docsOfdmDownstream
+          278: docsOfdmaUpstream
+          279: gfast
+          280: sdci
+          281: xboxWireless
+          282: fastdsl
+          283: docsCableScte55d1FwdOob
+          284: docsCableScte55d1RetOob
+          285: docsCableScte55d2DsOob
+          286: docsCableScte55d2UsOob
+          287: docsCableNdf
+          288: docsCableNdr
+          289: ptm
+          290: ghn
+          291: otnOtsi
+          292: otnOtuc
+          293: otnOduc
+          294: otnOtsig
+          295: microwaveCarrierTermination
+          296: microwaveRadioLinkTerminal
+          297: ieee8021axDrni
+          298: ax25
+          299: ieee19061nanocom
+          300: cpri
+          301: omni
+          302: roe
+          303: p2pOverLan
+      - name: ifMtu
+        oid: 1.3.6.1.2.1.2.2.1.4
+        type: gauge
+        help: The size of the largest packet which can be sent/received on the interface, specified in octets - 1.3.6.1.2.1.2.2.1.4
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
       - name: ifSpeed
         oid: 1.3.6.1.2.1.2.2.1.5
         type: gauge
@@ -52,852 +392,1141 @@ modules:
         indexes:
           - labelname: ifIndex
             type: gauge
-      - name: jnxOperatingState
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.6
-        type: gauge
-        help: The operating state of this subject. - 1.3.6.1.4.1.2636.3.1.13.1.6
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifPhysAddress
+        oid: 1.3.6.1.2.1.2.2.1.6
+        type: PhysAddress48
+        help: The interface's address at its protocol sub-layer - 1.3.6.1.2.1.2.2.1.6
         indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
+          - labelname: ifIndex
             type: gauge
         lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifAdminStatus
+        oid: 1.3.6.1.2.1.2.2.1.7
+        type: gauge
+        help: The desired state of the interface - 1.3.6.1.2.1.2.2.1.7
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
             type: DisplayString
         enum_values:
-          1: unknown
-          2: running
-          3: ready
-          4: reset
-          5: runningAtFullSpeed
-          6: down
-          7: standby
-      - name: jnxOperatingTemp
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.7
+          1: up
+          2: down
+          3: testing
+      - name: ifOperStatus
+        oid: 1.3.6.1.2.1.2.2.1.8
         type: gauge
-        help: The temperature in Celsius (degrees C) of this subject - 1.3.6.1.4.1.2636.3.1.13.1.7
+        help: The current operational state of the interface - 1.3.6.1.2.1.2.2.1.8
         indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
+          - labelname: ifIndex
             type: gauge
         lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
             type: DisplayString
-      - name: jnxOperatingCPU
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.8
-        type: gauge
-        help: The CPU utilization in percentage of this subject - 1.3.6.1.4.1.2636.3.1.13.1.8
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
             type: DisplayString
-      - name: jnxOperatingISR
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.9
-        type: gauge
-        help: The CPU utilization in percentage of this subject spending in interrupt service routine (ISR) - 1.3.6.1.4.1.2636.3.1.13.1.9
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingDRAMSize
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.10
-        type: gauge
-        help: The DRAM size in bytes of this subject - 1.3.6.1.4.1.2636.3.1.13.1.10
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingBuffer
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.11
-        type: gauge
-        help: The buffer pool utilization in percentage of this subject - 1.3.6.1.4.1.2636.3.1.13.1.11
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingHeap
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.12
-        type: gauge
-        help: The heap utilization in percentage of this subject - 1.3.6.1.4.1.2636.3.1.13.1.12
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingUpTime
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.13
-        type: gauge
-        help: The time interval in 10-millisecond period that this subject has been up and running - 1.3.6.1.4.1.2636.3.1.13.1.13
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingLastRestart
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.14
-        type: gauge
-        help: The value of sysUpTime when this subject last restarted - 1.3.6.1.4.1.2636.3.1.13.1.14
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingMemory
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.15
-        type: gauge
-        help: The installed memory size in Megabytes of this subject - 1.3.6.1.4.1.2636.3.1.13.1.15
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingStateOrdered
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.16
-        type: gauge
-        help: The operating state of this subject - 1.3.6.1.4.1.2636.3.1.13.1.16
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
             type: DisplayString
         enum_values:
-          1: running
-          2: standby
-          3: ready
-          4: runningAtFullSpeed
-          5: reset
-          6: down
-          7: unknown
-      - name: jnxOperatingChassisId
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.17
+          1: up
+          2: down
+          3: testing
+          4: unknown
+          5: dormant
+          6: notPresent
+          7: lowerLayerDown
+      - name: ifLastChange
+        oid: 1.3.6.1.2.1.2.2.1.9
         type: gauge
-        help: Identifies the chassis on which the contents of this row exists. - 1.3.6.1.4.1.2636.3.1.13.1.17
+        help: The value of sysUpTime at the time the interface entered its current operational state - 1.3.6.1.2.1.2.2.1.9
         indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
+          - labelname: ifIndex
             type: gauge
         lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
             type: DisplayString
-        enum_values:
-          1: unknown
-          2: singleChassis
-          3: scc
-          4: lcc0
-          5: lcc1
-          6: lcc2
-          7: lcc3
-          8: jcs1
-          9: jcs2
-          10: jcs3
-          11: jcs4
-          12: node0
-          13: node1
-          14: sfc0
-          15: sfc1
-          16: sfc2
-          17: sfc3
-          18: sfc4
-          19: lcc4
-          20: lcc5
-          21: lcc6
-          22: lcc7
-          23: lcc8
-          24: lcc9
-          25: lcc10
-          26: lcc11
-          27: lcc12
-          28: lcc13
-          29: lcc14
-          30: lcc15
-          31: member0
-          32: member1
-          33: member2
-          34: member3
-          35: member4
-          36: member5
-          37: member6
-          38: member7
-          39: nodeDevice
-          40: interconnectDevice
-          41: controlPlaneDevice
-          42: directorDevice
-          43: gnf1
-          44: gnf2
-          45: gnf3
-          46: gnf4
-          47: gnf5
-          48: gnf6
-          49: gnf7
-          50: gnf8
-          51: gnf9
-          52: gnf10
-      - name: jnxOperatingChassisDescr
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.18
-        type: DisplayString
-        help: A textual description of the chassis on which the contents of this row exists. - 1.3.6.1.4.1.2636.3.1.13.1.18
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
             type: DisplayString
-      - name: jnxOperatingRestartTime
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.19
-        type: DateAndTime
-        help: The time at which this entity last restarted. - 1.3.6.1.4.1.2636.3.1.13.1.19
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
           - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
             type: DisplayString
-      - name: jnxOperating1MinLoadAvg
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.20
-        type: gauge
-        help: The CPU Load Average over the last 1 minutes Here it will be shown as percentage value Zero if unavailable or inapplicable. - 1.3.6.1.4.1.2636.3.1.13.1.20
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperating5MinLoadAvg
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.21
-        type: gauge
-        help: The CPU Load Average over the last 5 minutes Here it will be shown as percentage value Zero if unavailable or inapplicable. - 1.3.6.1.4.1.2636.3.1.13.1.21
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperating15MinLoadAvg
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.22
-        type: gauge
-        help: The CPU Load Average over the last 15 minutes Here it will be shown as percentage value Zero if unavailable or inapplicable. - 1.3.6.1.4.1.2636.3.1.13.1.22
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperating1MinAvgCPU
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.23
-        type: gauge
-        help: The CPU utilization in percentage of this subject averaged over last 1 minutes - 1.3.6.1.4.1.2636.3.1.13.1.23
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperating5MinAvgCPU
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.24
-        type: gauge
-        help: The CPU utilization in percentage of this subject averaged over last 5 minutes - 1.3.6.1.4.1.2636.3.1.13.1.24
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperating15MinAvgCPU
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.25
-        type: gauge
-        help: The CPU utilization in percentage of this subject averaged over last 15 minutes - 1.3.6.1.4.1.2636.3.1.13.1.25
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingFRUPower
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.26
-        type: gauge
-        help: The present power of each FRU - 1.3.6.1.4.1.2636.3.1.13.1.26
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingBufferCP
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.27
-        type: gauge
-        help: The buffer pool utilization in percentage of this subject in control plane - 1.3.6.1.4.1.2636.3.1.13.1.27
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingMemoryCP
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.28
-        type: gauge
-        help: The Allocated memory size for control plane in Megabytes - 1.3.6.1.4.1.2636.3.1.13.1.28
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingBufferExt
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.29
-        type: gauge
-        help: The buffer pool utilization in percentage of this subject - 1.3.6.1.4.1.2636.3.1.13.1.29
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxOperatingTemperature
-        oid: 1.3.6.1.4.1.2636.3.1.13.1.30
-        type: gauge
-        help: The temperature in Celsius (degrees C) of this subject - 1.3.6.1.4.1.2636.3.1.13.1.30
-        indexes:
-          - labelname: jnxOperatingContentsIndex
-            type: gauge
-          - labelname: jnxOperatingL1Index
-            type: gauge
-          - labelname: jnxOperatingL2Index
-            type: gauge
-          - labelname: jnxOperatingL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxOperatingContentsIndex
-              - jnxOperatingL1Index
-              - jnxOperatingL2Index
-              - jnxOperatingL3Index
-            labelname: jnxOperatingDescr
-            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
-            type: DisplayString
-      - name: jnxFruState
-        oid: 1.3.6.1.4.1.2636.3.1.15.1.8
-        type: EnumAsStateSet
-        help: The current state for this subject. - 1.3.6.1.4.1.2636.3.1.15.1.8
-        indexes:
-          - labelname: jnxFruContentsIndex
-            type: gauge
-          - labelname: jnxFruL1Index
-            type: gauge
-          - labelname: jnxFruL2Index
-            type: gauge
-          - labelname: jnxFruL3Index
-            type: gauge
-        lookups:
-          - labels:
-              - jnxFruContentsIndex
-              - jnxFruL1Index
-              - jnxFruL2Index
-              - jnxFruL3Index
-            labelname: jnxFruName
-            oid: 1.3.6.1.4.1.2636.3.1.15.1.5
-            type: DisplayString
-          - labels: []
-            labelname: jnxFruContentsIndex
-          - labels: []
-            labelname: jnxFruL1Index
-          - labels: []
-            labelname: jnxFruL2Index
-          - labels: []
-            labelname: jnxFruL3Index
-        enum_values:
-          1: unknown
-          2: empty
-          3: present
-          4: ready
-          5: announceOnline
-          6: online
-          7: anounceOffline
-          8: offline
-          9: diagnostic
-          10: standby
-      - name: jnxYellowAlarmState
-        oid: 1.3.6.1.4.1.2636.3.4.2.2.1
-        type: EnumAsStateSet
-        help: The yellow alarm state on the craft interface panel - 1.3.6.1.4.1.2636.3.4.2.2.1
-        enum_values:
-          1: other
-          2: "off"
-          3: "on"
-      - name: jnxYellowAlarmCount
-        oid: 1.3.6.1.4.1.2636.3.4.2.2.2
-        type: gauge
-        help: The number of currently active and non-silent yellow alarms - 1.3.6.1.4.1.2636.3.4.2.2.2
-      - name: jnxYellowAlarmLastChange
-        oid: 1.3.6.1.4.1.2636.3.4.2.2.3
-        type: gauge
-        help: The value of sysUpTime when the yellow alarm last changed - either from off to on or vice versa - 1.3.6.1.4.1.2636.3.4.2.2.3
-      - name: jnxRedAlarmState
-        oid: 1.3.6.1.4.1.2636.3.4.2.3.1
-        type: EnumAsStateSet
-        help: The red alarm indication on the craft interface panel - 1.3.6.1.4.1.2636.3.4.2.3.1
-        enum_values:
-          1: other
-          2: "off"
-          3: "on"
-      - name: jnxRedAlarmCount
-        oid: 1.3.6.1.4.1.2636.3.4.2.3.2
-        type: gauge
-        help: The number of currently active and non-silent red alarms - 1.3.6.1.4.1.2636.3.4.2.3.2
-      - name: jnxRedAlarmLastChange
-        oid: 1.3.6.1.4.1.2636.3.4.2.3.3
-        type: gauge
-        help: The value of sysUpTime when the red alarm last changed - either from off to on or vice versa - 1.3.6.1.4.1.2636.3.4.2.3.3
-      - name: jnxSubscriberPortTerminatedCounter
-        oid: 1.3.6.1.4.1.2636.3.64.1.1.1.5.1.3
+      - name: ifInOctets
+        oid: 1.3.6.1.2.1.2.2.1.10
         type: counter
-        help: Number of active Tunneled subscribers present on the port - 1.3.6.1.4.1.2636.3.64.1.1.1.5.1.3
+        help: The total number of octets received on the interface, including framing characters - 1.3.6.1.2.1.2.2.1.10
         indexes:
-          - labelname: jnxSubscriberPort
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
             type: DisplayString
-  juniper_optics:
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInUcastPkts
+        oid: 1.3.6.1.2.1.2.2.1.11
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were not addressed to a multicast or broadcast address at this sub-layer - 1.3.6.1.2.1.2.2.1.11
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInNUcastPkts
+        oid: 1.3.6.1.2.1.2.2.1.12
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were addressed to a multicast or broadcast address at this sub-layer - 1.3.6.1.2.1.2.2.1.12
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInDiscards
+        oid: 1.3.6.1.2.1.2.2.1.13
+        type: counter
+        help: The number of inbound packets which were chosen to be discarded even though no errors had been detected to prevent their being deliverable to a higher-layer protocol - 1.3.6.1.2.1.2.2.1.13
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInErrors
+        oid: 1.3.6.1.2.1.2.2.1.14
+        type: counter
+        help: For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol - 1.3.6.1.2.1.2.2.1.14
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInUnknownProtos
+        oid: 1.3.6.1.2.1.2.2.1.15
+        type: counter
+        help: For packet-oriented interfaces, the number of packets received via the interface which were discarded because of an unknown or unsupported protocol - 1.3.6.1.2.1.2.2.1.15
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutOctets
+        oid: 1.3.6.1.2.1.2.2.1.16
+        type: counter
+        help: The total number of octets transmitted out of the interface, including framing characters - 1.3.6.1.2.1.2.2.1.16
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutUcastPkts
+        oid: 1.3.6.1.2.1.2.2.1.17
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were not addressed to a multicast or broadcast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.2.2.1.17
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutNUcastPkts
+        oid: 1.3.6.1.2.1.2.2.1.18
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were addressed to a multicast or broadcast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.2.2.1.18
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutDiscards
+        oid: 1.3.6.1.2.1.2.2.1.19
+        type: counter
+        help: The number of outbound packets which were chosen to be discarded even though no errors had been detected to prevent their being transmitted - 1.3.6.1.2.1.2.2.1.19
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutErrors
+        oid: 1.3.6.1.2.1.2.2.1.20
+        type: counter
+        help: For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors - 1.3.6.1.2.1.2.2.1.20
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutQLen
+        oid: 1.3.6.1.2.1.2.2.1.21
+        type: gauge
+        help: The length of the output packet queue (in packets). - 1.3.6.1.2.1.2.2.1.21
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifSpecific
+        oid: 1.3.6.1.2.1.2.2.1.22
+        type: OctetString
+        help: A reference to MIB definitions specific to the particular media being used to realize the interface - 1.3.6.1.2.1.2.2.1.22
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInMulticastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.2
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were addressed to a multicast address at this sub-layer - 1.3.6.1.2.1.31.1.1.1.2
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifInBroadcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.3
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were addressed to a broadcast address at this sub-layer - 1.3.6.1.2.1.31.1.1.1.3
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutMulticastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.4
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were addressed to a multicast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.31.1.1.1.4
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifOutBroadcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.5
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were addressed to a broadcast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.31.1.1.1.5
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCInOctets
+        oid: 1.3.6.1.2.1.31.1.1.1.6
+        type: counter
+        help: The total number of octets received on the interface, including framing characters - 1.3.6.1.2.1.31.1.1.1.6
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCInUcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.7
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were not addressed to a multicast or broadcast address at this sub-layer - 1.3.6.1.2.1.31.1.1.1.7
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCInMulticastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.8
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were addressed to a multicast address at this sub-layer - 1.3.6.1.2.1.31.1.1.1.8
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCInBroadcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.9
+        type: counter
+        help: The number of packets, delivered by this sub-layer to a higher (sub-)layer, which were addressed to a broadcast address at this sub-layer - 1.3.6.1.2.1.31.1.1.1.9
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCOutOctets
+        oid: 1.3.6.1.2.1.31.1.1.1.10
+        type: counter
+        help: The total number of octets transmitted out of the interface, including framing characters - 1.3.6.1.2.1.31.1.1.1.10
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCOutUcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.11
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were not addressed to a multicast or broadcast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.31.1.1.1.11
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCOutMulticastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.12
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were addressed to a multicast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.31.1.1.1.12
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifHCOutBroadcastPkts
+        oid: 1.3.6.1.2.1.31.1.1.1.13
+        type: counter
+        help: The total number of packets that higher-level protocols requested be transmitted, and which were addressed to a broadcast address at this sub-layer, including those that were discarded or not sent - 1.3.6.1.2.1.31.1.1.1.13
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifLinkUpDownTrapEnable
+        oid: 1.3.6.1.2.1.31.1.1.1.14
+        type: gauge
+        help: Indicates whether linkUp/linkDown traps should be generated for this interface - 1.3.6.1.2.1.31.1.1.1.14
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+        enum_values:
+          1: enabled
+          2: disabled
+      - name: ifHighSpeed
+        oid: 1.3.6.1.2.1.31.1.1.1.15
+        type: gauge
+        help: An estimate of the interface's current bandwidth in units of 1,000,000 bits per second - 1.3.6.1.2.1.31.1.1.1.15
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+      - name: ifPromiscuousMode
+        oid: 1.3.6.1.2.1.31.1.1.1.16
+        type: gauge
+        help: This object has a value of false(2) if this interface only accepts packets/frames that are addressed to this station - 1.3.6.1.2.1.31.1.1.1.16
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+        enum_values:
+          1: "true"
+          2: "false"
+      - name: ifConnectorPresent
+        oid: 1.3.6.1.2.1.31.1.1.1.17
+        type: gauge
+        help: This object has the value 'true(1)' if the interface sublayer has a physical connector and the value 'false(2)' otherwise. - 1.3.6.1.2.1.31.1.1.1.17
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+        enum_values:
+          1: "true"
+          2: "false"
+      - name: ifCounterDiscontinuityTime
+        oid: 1.3.6.1.2.1.31.1.1.1.19
+        type: gauge
+        help: The value of sysUpTime on the most recent occasion at which any one or more of this interface's counters suffered a discontinuity - 1.3.6.1.2.1.31.1.1.1.19
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+        lookups:
+          - labels:
+              - ifIndex
+            labelname: ifAlias
+            oid: 1.3.6.1.2.1.31.1.1.1.18
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifDescr
+            oid: 1.3.6.1.2.1.2.2.1.2
+            type: DisplayString
+          - labels:
+              - ifIndex
+            labelname: ifName
+            oid: 1.3.6.1.2.1.31.1.1.1.1
+            type: DisplayString
+  system:
     walk:
-      - 1.3.6.1.2.1.31.1.1.1.1
-      - 1.3.6.1.2.1.31.1.1.1.18
-      - 1.3.6.1.4.1.2636.3.60.1.1.1.1.1
-      - 1.3.6.1.4.1.2636.3.60.1.1.1.1.4
-      - 1.3.6.1.4.1.2636.3.60.1.1.1.1.5
-      - 1.3.6.1.4.1.2636.3.60.1.1.1.1.6
-      - 1.3.6.1.4.1.2636.3.60.1.1.1.1.7
+      - 1.3.6.1.2.1.1
     metrics:
-      - name: jnxDomCurrentAlarms
-        oid: 1.3.6.1.4.1.2636.3.60.1.1.1.1.1
-        type: Bits
-        help: This object identifies all the active DOM alarms on a SFF physical interface on this router. - 1.3.6.1.4.1.2636.3.60.1.1.1.1.1
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels:
-              - ifIndex
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-          - labels:
-              - ifIndex
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: []
-            labelname: ifIndex
-        enum_values:
-          0: domRxLossSignalAlarm
-          1: domRxCDRLossLockAlarm
-          2: domRxNotReadyAlarm
-          3: domRxLaserPowerHighAlarm
-          4: domRxLaserPowerLowAlarm
-          5: domTxLaserBiasCurrentHighAlarm
-          6: domTxLaserBiasCurrentLowAlarm
-          7: domTxLaserOutputPowerHighAlarm
-          8: domTxLaserOutputPowerLowAlarm
-          9: domTxDataNotReadyAlarm
-          10: domTxNotReadyAlarm
-          11: domTxLaserFaultAlarm
-          12: domTxCDRLossLockAlarm
-          13: domModuleTemperatureHighAlarm
-          14: domModuleTemperatureLowAlarm
-          15: domModuleNotReadyAlarm
-          16: domModulePowerDownAlarm
-          17: domLinkDownAlarm
-          18: domModuleRemovedAlarm
-          19: domModuleVoltageHighAlarm
-          20: domModuleVoltageLowAlarm
-          21: domTxDither
-          22: domTecFault
-          23: domWavelengthUnlocked
-          24: domTxTuned
-      - name: jnxDomCurrentWarnings
-        oid: 1.3.6.1.4.1.2636.3.60.1.1.1.1.4
-        type: Bits
-        help: This object identifies all the active DOM warnings on a SFF physical interface on this router. - 1.3.6.1.4.1.2636.3.60.1.1.1.1.4
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels:
-              - ifIndex
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-          - labels:
-              - ifIndex
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: []
-            labelname: ifIndex
-        enum_values:
-          0: domRxLaserPowerHighWarning
-          1: domRxLaserPowerLowWarning
-          2: domTxLaserBiasCurrentHighWarning
-          3: domTxLaserBiasCurrentLowWarning
-          4: domTxLaserOutputPowerHighWarning
-          5: domTxLaserOutputPowerLowWarning
-          6: domModuleTemperatureHighWarning
-          7: domModuleTemperatureLowWarning
-          8: domModuleVoltageHighWarning
-          9: domModuleVoltageLowWarning
-      - name: jnxDomCurrentRxLaserPower
-        oid: 1.3.6.1.4.1.2636.3.60.1.1.1.1.5
+      - name: sysDescr
+        oid: 1.3.6.1.2.1.1.1
+        type: DisplayString
+        help: A textual description of the entity - 1.3.6.1.2.1.1.1
+      - name: sysObjectID
+        oid: 1.3.6.1.2.1.1.2
+        type: OctetString
+        help: The vendor's authoritative identification of the network management subsystem contained in the entity - 1.3.6.1.2.1.1.2
+      - name: sysUpTime
+        oid: 1.3.6.1.2.1.1.3
         type: gauge
-        help: Receiver laser power. - 1.3.6.1.4.1.2636.3.60.1.1.1.1.5
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels:
-              - ifIndex
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-          - labels:
-              - ifIndex
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: []
-            labelname: ifIndex
-        scale: 0.01
-      - name: jnxDomCurrentTxLaserBiasCurrent
-        oid: 1.3.6.1.4.1.2636.3.60.1.1.1.1.6
+        help: The time (in hundredths of a second) since the network management portion of the system was last re-initialized. - 1.3.6.1.2.1.1.3
+      - name: sysContact
+        oid: 1.3.6.1.2.1.1.4
+        type: DisplayString
+        help: The textual identification of the contact person for this managed node, together with information on how to contact this person - 1.3.6.1.2.1.1.4
+      - name: sysName
+        oid: 1.3.6.1.2.1.1.5
+        type: DisplayString
+        help: An administratively-assigned name for this managed node - 1.3.6.1.2.1.1.5
+      - name: sysLocation
+        oid: 1.3.6.1.2.1.1.6
+        type: DisplayString
+        help: The physical location of this node (e.g., 'telephone closet, 3rd floor') - 1.3.6.1.2.1.1.6
+      - name: sysServices
+        oid: 1.3.6.1.2.1.1.7
         type: gauge
-        help: Transmitter laser bias current. - 1.3.6.1.4.1.2636.3.60.1.1.1.1.6
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels:
-              - ifIndex
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-          - labels:
-              - ifIndex
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: []
-            labelname: ifIndex
-        scale: 0.001
-      - name: jnxDomCurrentTxLaserOutputPower
-        oid: 1.3.6.1.4.1.2636.3.60.1.1.1.1.7
+        help: A value which indicates the set of services that this entity may potentially offer - 1.3.6.1.2.1.1.7
+      - name: sysORLastChange
+        oid: 1.3.6.1.2.1.1.8
         type: gauge
-        help: Transmitter laser output power. - 1.3.6.1.4.1.2636.3.60.1.1.1.1.7
+        help: The value of sysUpTime at the time of the most recent change in state or value of any instance of sysORID. - 1.3.6.1.2.1.1.8
+      - name: sysORIndex
+        oid: 1.3.6.1.2.1.1.9.1.1
+        type: gauge
+        help: The auxiliary variable used for identifying instances of the columnar objects in the sysORTable. - 1.3.6.1.2.1.1.9.1.1
         indexes:
-          - labelname: ifIndex
+          - labelname: sysORIndex
             type: gauge
         lookups:
           - labels:
-              - ifIndex
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
+              - sysORIndex
+            labelname: sysORDescr
+            oid: 1.3.6.1.2.1.1.9.1.3
             type: DisplayString
+      - name: sysORID
+        oid: 1.3.6.1.2.1.1.9.1.2
+        type: OctetString
+        help: An authoritative identification of a capabilities statement with respect to various MIB modules supported by the local SNMP application acting as a command responder. - 1.3.6.1.2.1.1.9.1.2
+        indexes:
+          - labelname: sysORIndex
+            type: gauge
+        lookups:
           - labels:
-              - ifIndex
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
+              - sysORIndex
+            labelname: sysORDescr
+            oid: 1.3.6.1.2.1.1.9.1.3
             type: DisplayString
-          - labels: []
-            labelname: ifIndex
-        scale: 0.01
+      - name: sysORDescr
+        oid: 1.3.6.1.2.1.1.9.1.3
+        type: DisplayString
+        help: A textual description of the capabilities identified by the corresponding instance of sysORID. - 1.3.6.1.2.1.1.9.1.3
+        indexes:
+          - labelname: sysORIndex
+            type: gauge
+        lookups:
+          - labels:
+              - sysORIndex
+            labelname: sysORDescr
+            oid: 1.3.6.1.2.1.1.9.1.3
+            type: DisplayString
+      - name: sysORUpTime
+        oid: 1.3.6.1.2.1.1.9.1.4
+        type: gauge
+        help: The value of sysUpTime at the time this conceptual row was last instantiated. - 1.3.6.1.2.1.1.9.1.4
+        indexes:
+          - labelname: sysORIndex
+            type: gauge
+        lookups:
+          - labels:
+              - sysORIndex
+            labelname: sysORDescr
+            oid: 1.3.6.1.2.1.1.9.1.3
+            type: DisplayString
+  jnxJsSPUMonitoring:
+    walk:
+      - 1.3.6.1.4.1.2636.3.39.1.12
+    metrics:
+      - name: jnxJsSPUMonitoringIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1
+        type: gauge
+        help: SPU's overall index in platform. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringFPCIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.2
+        type: gauge
+        help: Which FPC SPU is on. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.2
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringSPUIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.3
+        type: gauge
+        help: SPU'Index inside the FPC. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.3
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCPUUsage
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.4
+        type: gauge
+        help: Current SPU(CPU) Utilization in percentage. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.4
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringMemoryUsage
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.5
+        type: gauge
+        help: Current memory usage of SPU(CPU) in percentage. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.5
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCurrentFlowSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.6
+        type: gauge
+        help: Current flow session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.6
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringMaxFlowSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.7
+        type: gauge
+        help: Max flow session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.7
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCurrentCPSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.8
+        type: gauge
+        help: Current CP session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.8
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringMaxCPSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.9
+        type: gauge
+        help: Max CP session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.9
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringNodeIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.10
+        type: gauge
+        help: This attribute is used to identify a chassis - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.10
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringNodeDescr
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.11
+        type: DisplayString
+        help: This attribute is used to describe the chassis/cluster node information - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.11
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringFlowSessIPv4
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.12
+        type: gauge
+        help: Current IPv4 flow session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.12
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringFlowSessIPv6
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.13
+        type: gauge
+        help: Current IPv6 flow session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.13
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCPSessIPv4
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.14
+        type: gauge
+        help: Current IPv4 CP session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.14
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCPSessIPv6
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.15
+        type: gauge
+        help: Current IPv6 CP session number of SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.15
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringSPUThreadsNumber
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.16
+        type: gauge
+        help: Number of threads for an SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.16
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringCurrentTotalSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.2
+        type: gauge
+        help: System level total session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.2
+      - name: jnxJsSPUMonitoringMaxTotalSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.3
+        type: gauge
+        help: System level max session possible. - 1.3.6.1.4.1.2636.3.39.1.12.1.3
+      - name: jnxJsClusterMonitoringNodeIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.1
+        type: gauge
+        help: This attribute is used to identify a chassis - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.1
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsClusterMonitoringNodeDescr
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.2
+        type: DisplayString
+        help: This attribute is used to describe the chassis/cluster node information - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.2
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeCurrentTotalSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.3
+        type: gauge
+        help: Node total session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.3
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeMaxTotalSession
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.4
+        type: gauge
+        help: Node max session possible. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.4
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeSessionCreationPerSecond
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.5
+        type: counter
+        help: Node average session created in last 96 seconds. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.5
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeSessCreationPerSecIPv4
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.6
+        type: counter
+        help: Node average IPv4 session created in last 96 seconds. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.6
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeSessCreationPerSecIPv6
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.7
+        type: counter
+        help: Node average IPv6 session created in last 96 seconds. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.7
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeCurrentTotalSessIPv4
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.8
+        type: gauge
+        help: Node total IPv4 session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.8
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsNodeCurrentTotalSessIPv6
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.9
+        type: gauge
+        help: Node total IPv6 session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.4.1.9
+        indexes:
+          - labelname: jnxJsClusterMonitoringNodeIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringTotalSessIPv4
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.5
+        type: gauge
+        help: System level total IPv4 session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.5
+      - name: jnxJsSPUMonitoringTotalSessIPv6
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.6
+        type: gauge
+        help: System level total IPv6 session in use. - 1.3.6.1.4.1.2636.3.39.1.12.1.6
+      - name: jnxJsSPUMonitoringSPUThreadIndex
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.1
+        type: gauge
+        help: Thread index on an SPU. - 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.1
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+          - labelname: jnxJsSPUMonitoringSPUThreadIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringSPUThreadLastMinUsage
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.2
+        type: gauge
+        help: Thread utilization of last minute. - 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.2
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+          - labelname: jnxJsSPUMonitoringSPUThreadIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringSPUThreadLastHourUsage
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.3
+        type: gauge
+        help: Thread utilization of last hour. - 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.3
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+          - labelname: jnxJsSPUMonitoringSPUThreadIndex
+            type: gauge
+      - name: jnxJsSPUMonitoringSPUThreadLastDayUsage
+        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.4
+        type: gauge
+        help: Thread utilization of last day. - 1.3.6.1.4.1.2636.3.39.1.12.1.7.1.4
+        indexes:
+          - labelname: jnxJsSPUMonitoringIndex
+            type: gauge
+          - labelname: jnxJsSPUMonitoringSPUThreadIndex
+            type: gauge
