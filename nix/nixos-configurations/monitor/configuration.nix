@@ -107,6 +107,7 @@ in
       enable = true;
       configuration = {
         server.http_listen_port = 3100;
+        server.http_listen_address = "0.0.0.0";
         auth_enabled = false;
 
         ingester = {
@@ -116,14 +117,13 @@ in
               kvstore = {
                 store = "inmemory";
               };
-              replication_factor = 2;
+              replication_factor = 1;
             };
           };
           chunk_idle_period = "2h";
           max_chunk_age = "2h";
           chunk_target_size = 1000000;
           chunk_retain_period = "31s";
-          # max_transfer_retries = 1;
         };
 
         schema_config = {
@@ -154,10 +154,6 @@ in
           reject_old_samples_max_age = "169h";
         };
 
-        chunk_store_config = {
-          # max_look_back_period = "1s";
-        };
-
         table_manager = {
           retention_deletes_enabled = false;
           retention_period = "1s";
@@ -165,7 +161,6 @@ in
 
         compactor = {
           working_directory = "/var/lib/loki";
-          # shared_store = "filesystem";
           compactor_ring = {
             kvstore = {
               store = "inmemory";
@@ -190,33 +185,27 @@ in
           url = "http://127.0.0.1:3100/loki/api/v1/push";
         }];
         scrape_configs = [{
-          job_name = "journal";
-          journal = {
-            max_age = "12h";
-            labels = {
-              job = "systemd-journal";
-              host = "pihole";
-            };
-          };
-          relabel_configs = [{
-            source_labels = [ "__journal__systemd_unit" ];
-            target_label = "unit";
+          job_name = "nginx-access";
+          static_configs = {
+            static_configs = [{
+              targets = [ "localhost" ];
+              labels = {
+                __path__ = "/var/log/nginx/access.log";
+                job = "nginx-access";
+              };
+            }];
           }];
-        }];
+        };
       };
     };
     
     nginx = {
       enable = false;
-      # TODO: TLS enabled
-      # Good example enable TLS, but would like to keep it out of the /nix/store
-      # ref: https://github.com/NixOS/nixpkgs/blob/c6fd903606866634312e40cceb2caee8c0c9243f/nixos/tests/custom-ca.nix#L80
-      virtualHosts."${hostname}" = {
+      virtualHosts."grafana" = {
         default = true;
-        # ACME wont work for us on the private network
         enableACME = false;
         locations."/" = {
-          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
+          proxyPass = "http://localhost:3000";
           proxyWebsockets = true;
         };
       };
