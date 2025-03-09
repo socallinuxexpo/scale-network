@@ -568,7 +568,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "pools": [
                     {"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}
                 ],
-                "option-data": [{"name": "routers", "data": str(vlan["ipv4router"])}],
+                "option-data": [
+                    {"name": "routers", "data": str(vlan["ipv4router"])},
+                    {"name": "domain-search", "data": "scale.lan"},
+                ],
             }
             # lower lease times for the APs
             if vlan["name"] in ["cfInfra", "exInfra"]:
@@ -603,6 +606,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "pools": [
                     {"pool": vlan["ipv6dhcpStart"] + " - " + vlan["ipv6dhcpEnd"]}
                 ],
+                "option-data": [{"name": "domain-search", "data": "scale.lan"}],
             }
             # lower lease times for the APs
             if vlan["name"] in ["cfInfra", "exInfra"]:
