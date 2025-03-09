@@ -35,7 +35,7 @@ in
     virtualisation.oci-containers = {
       containers.scale-signs = {
         ports = [ "8080:80" ];
-        image = "sarcasticadmin/scale-signs:2309424 ";
+        image = "sarcasticadmin/scale-signs:8f6ed2f ";
       };
     };
 
