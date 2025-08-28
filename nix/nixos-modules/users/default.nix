@@ -13,5 +13,6 @@
     ./rob.nix
     ./root.nix
     ./ruebenramirez.nix
+    ./samuel.nix
   ];
 }
