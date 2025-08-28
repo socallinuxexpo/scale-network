@@ -141,6 +141,7 @@ in
         environment = {
           systemPackages = with pkgs; [
             ldns
+            dig
           ];
         };
       };
@@ -168,6 +169,8 @@ in
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true coreexpo)\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true coreexpo)\"")
     '';
 
   interactive.nodes =
