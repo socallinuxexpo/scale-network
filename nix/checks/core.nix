@@ -128,6 +128,7 @@ in
                 DHCP = "yes";
                 IPv6AcceptRA = true;
                 IPv6PrivacyExtensions = false;
+                UseDomains = true; # so dhcp client uses search domain
               };
               ipv6AcceptRAConfig = {
                 UseAutonomousPrefix = false;
