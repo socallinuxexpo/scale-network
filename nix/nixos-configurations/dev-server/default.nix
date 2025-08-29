@@ -395,14 +395,14 @@
               ];
               routes = [
                 {
-                  routeConfig.Destination = "10.0.0.0/8";
-                  routeConfig.Gateway = "10.0.3.1";
-                  routeConfig.GatewayOnLink = true;
+                  Destination = "10.0.0.0/8";
+                  Gateway = "10.0.3.1";
+                  GatewayOnLink = true;
                 }
                 {
-                  routeConfig.Destination = "2001:470:f026::/48";
-                  routeConfig.Gateway = "2001:470:f026:103::1";
-                  routeConfig.GatewayOnLink = true;
+                  Destination = "2001:470:f026::/48";
+                  Gateway = "2001:470:f026:103::1";
+                  GatewayOnLink = true;
                 }
               ];
             };
