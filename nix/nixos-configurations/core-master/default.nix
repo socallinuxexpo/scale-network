@@ -61,8 +61,8 @@
               # block service that depend on network-online.target until route is avail
               linkConfig.RequiredForOnline = "routable";
               routes = [
-                { routeConfig.Gateway = "10.128.3.1"; }
-                { routeConfig.Gateway = "2001:470:f026:503::1"; }
+                { Gateway = "10.128.3.1"; }
+                { Gateway = "2001:470:f026:503::1"; }
               ];
             };
             "10-lan-eno2" = {
