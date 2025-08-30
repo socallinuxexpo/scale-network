@@ -56,7 +56,12 @@ in
       usbutils
       unixtools.nettools
       wget
-      ((vim_configurable.override { }).customize {
+    ];
+
+    programs.vim = {
+      enable = true;
+      defaultEditor = true;
+      package = (pkgs.vim_configurable.override { }).customize {
         name = "vim";
         # Install plugins for syntax highlighting of nix files
         vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
@@ -71,12 +76,7 @@ in
           " Disable mouse
           set mouse-=a
         '';
-      })
-    ];
-
-    # Purge nano from being the default
-    environment.variables = {
-      EDITOR = "vim";
+      };
     };
 
     # set 24h military time

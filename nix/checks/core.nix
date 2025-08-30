@@ -179,7 +179,6 @@ in
       interactiveDefaults = hostPort: {
         services.openssh.enable = true;
         services.openssh.settings.PermitRootLogin = mkForce "yes";
-        users.extraUsers.root.initialPassword = "";
         systemd.network.networks."01-eth0" = {
           name = "eth0";
           enable = true;
