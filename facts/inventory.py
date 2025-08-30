@@ -459,6 +459,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                         [x["ipv4"] for x in servers if x["role"] == "core"]
                     ),
                 },
+                {"name": "domain-search", "data": "scale.lan"},
             ],
             "option-def": [
                 {
@@ -527,6 +528,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                         [x["ipv6"] for x in servers if x["role"] == "core"]
                     ),
                 },
+                {"name": "domain-search", "data": "scale.lan"},
             ],
             "option-def": [],
             "reservations-global": True,
@@ -568,7 +570,9 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "pools": [
                     {"pool": vlan["ipv4dhcpStart"] + " - " + vlan["ipv4dhcpEnd"]}
                 ],
-                "option-data": [{"name": "routers", "data": str(vlan["ipv4router"])}],
+                "option-data": [
+                    {"name": "routers", "data": str(vlan["ipv4router"])},
+                ],
             }
             # lower lease times for the APs
             if vlan["name"] in ["cfInfra", "exInfra"]:

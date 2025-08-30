@@ -128,6 +128,7 @@ in
                 DHCP = "yes";
                 IPv6AcceptRA = true;
                 IPv6PrivacyExtensions = false;
+                UseDomains = true; # so dhcp client uses search domain
               };
               ipv6AcceptRAConfig = {
                 UseAutonomousPrefix = false;
@@ -140,6 +141,7 @@ in
         environment = {
           systemPackages = with pkgs; [
             ldns
+            dig
           ];
         };
       };
@@ -156,6 +158,7 @@ in
       start_all()
       router.wait_for_unit("radvd.service")
       coremaster.wait_for_unit("ntpd.service")
+      coremaster.wait_for_unit("bind.service")
       coremaster.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
       coremaster.succeed("named-checkconf ${nodes.coremaster.config.services.bind.configFile}")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
@@ -167,6 +170,8 @@ in
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan A)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z coreexpo.scale.lan AAAA)\"")
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true coreexpo)\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true coreexpo)\"")
     '';
 
   interactive.nodes =
