@@ -237,32 +237,8 @@
             };
           };
           networks = {
-            "20-eno1" = {
-              matchConfig.Name = "eno1";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno2" = {
-              matchConfig.Name = "eno2";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno3" = {
-              matchConfig.Name = "eno3";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno4" = {
-              matchConfig.Name = "eno4";
+            "20-X722-quad-nic" = {
+              matchConfig.Driver = "i40e";
               networkConfig = {
                 Bond = "bond0";
                 LLDP = true;
