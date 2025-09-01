@@ -99,7 +99,7 @@ let
 
     zone "." IN {
       type hint;
-      file "${./named.root}";
+      file "${pkgs.dns-root-data}/root.hints";
     };
 
 
