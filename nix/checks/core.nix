@@ -78,14 +78,20 @@ in
           inherit inputs;
         };
         imports = [
-          ../nixos-configurations/core-master/configuration.nix
           inputs.self.nixosModules.default
         ];
 
-        scale-network.facts = lib.mkForce {
-          ipv4 = "${coremasterAddr.ipv4}/24";
-          ipv6 = "${coremasterAddr.ipv6}/64";
-          eth = "eth1";
+        scale-network = {
+          # we are testing these the services from core
+          services.keaMaster.enable = true;
+          services.bindMaster.enable = true;
+          services.ntp.enable = true;
+
+          facts = lib.mkForce {
+            ipv4 = "${coremasterAddr.ipv4}/24";
+            ipv6 = "${coremasterAddr.ipv6}/64";
+            eth = "eth1";
+          };
         };
 
         virtualisation.vlans = [ 1 ];
@@ -179,7 +185,6 @@ in
       interactiveDefaults = hostPort: {
         services.openssh.enable = true;
         services.openssh.settings.PermitRootLogin = mkForce "yes";
-        users.extraUsers.root.initialPassword = "";
         systemd.network.networks."01-eth0" = {
           name = "eth0";
           enable = true;

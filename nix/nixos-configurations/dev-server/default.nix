@@ -1,5 +1,5 @@
 {
-  release = "2405";
+  release = "unstable";
 
   modules =
     {
@@ -237,32 +237,8 @@
             };
           };
           networks = {
-            "20-eno1" = {
-              matchConfig.Name = "eno1";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno2" = {
-              matchConfig.Name = "eno2";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno3" = {
-              matchConfig.Name = "eno3";
-              networkConfig = {
-                Bond = "bond0";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-            };
-            "20-eno4" = {
-              matchConfig.Name = "eno4";
+            "20-X722-quad-nic" = {
+              matchConfig.Driver = "i40e";
               networkConfig = {
                 Bond = "bond0";
                 LLDP = true;
@@ -395,14 +371,14 @@
               ];
               routes = [
                 {
-                  routeConfig.Destination = "10.0.0.0/8";
-                  routeConfig.Gateway = "10.0.3.1";
-                  routeConfig.GatewayOnLink = true;
+                  Destination = "10.0.0.0/8";
+                  Gateway = "10.0.3.1";
+                  GatewayOnLink = true;
                 }
                 {
-                  routeConfig.Destination = "2001:470:f026::/48";
-                  routeConfig.Gateway = "2001:470:f026:103::1";
-                  routeConfig.GatewayOnLink = true;
+                  Destination = "2001:470:f026::/48";
+                  Gateway = "2001:470:f026:103::1";
+                  GatewayOnLink = true;
                 }
               ];
             };
