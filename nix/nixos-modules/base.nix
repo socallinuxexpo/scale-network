@@ -54,7 +54,7 @@ in
       tcpdump
       tmux
       usbutils
-      unixtools.nettools
+      nettools
       wget
     ];
 

@@ -90,6 +90,7 @@ in
     };
   };
   networking = {
+    networkmanager.enable = lib.mkForce false;
     useDHCP = false;
     # Make sure that dhcpcd doesnt timeout when interfaces are down
     # ref: https://nixos.org/manual/nixos/stable/options.html#opt-networking.dhcpcd.wait
