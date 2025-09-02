@@ -41,7 +41,7 @@ Parts list:
 1. Raspberry Pi - Any model should do just make sure the image being flashed matches the architecture
 1. Raspberry Pi Power Adapter - Will need to modify
 1. Relay - Currently using [these from Amazon](https://www.amazon.com/gp/product/B07PNB86R7)
-1. AP Board - Currently only have this working for WNDR-3700v2 and WNDR-3800\[CH\]
+1. AP Board - Currently only have this working for WNDR-3700v2 and WNDR-3800[CH]
 
 Wiring:
 

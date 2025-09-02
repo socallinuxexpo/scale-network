@@ -125,7 +125,7 @@ the secrets directory.
 
 ## config/switchtypes
 
-This file defines the name and type of each switch. It is a  tab delimeted file (tab8
+This file defines the name and type of each switch. It is a tab delimeted file (tab8
 formatting preferred) containing many fields, including the following:
 
 ```
@@ -196,7 +196,7 @@ networks.
 
 ## config/types/<name>
 
-These files contain the configuration information for each type of switch. They are  tab
+These files contain the configuration information for each type of switch. They are tab
 delimited (tab8 formatting preferred).
 
 Configuration elements include:
@@ -327,7 +327,7 @@ Push updated configurations to a subset of switches by name (live at the show):
 1. Determine the serial port device name on your computer. The examples in this
    section will use __/dev/ttyS6__ as the serial port.
 
-1. Connect switch management ethernet (next to console port)  directly to the computer running
+1. Connect switch management ethernet (next to console port) directly to the computer running
    these scripts.
 
 1. Configure the computer's ethernet port to an address other than 192.168.255.76 on the 192.168.255.0/24
