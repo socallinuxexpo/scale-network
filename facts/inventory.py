@@ -528,6 +528,23 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                         [x["ipv6"] for x in servers if x["role"] == "core"]
                     ),
                 },
+                {
+                    # option 56 which deprecates option 31 (RFC 4075)
+                    # https://www.rfc-editor.org/rfc/rfc5908
+                    # this option itself is empty but has associated sub-options (1-3)
+                    "name": "ntp-server",
+                },
+                {
+                    # option 56 requires at least one sub-option
+                    # https://kea.readthedocs.io/en/kea-3.0.0/arm/dhcp6-srv.html#ntp-server-suboptions
+                    # either name or code is sufficient to identify the sub-option but prefer to be explicit
+                    "name": "ntp-server-address",
+                    "code": 1,
+                    "space": "v6-ntp-server-suboptions",
+                    "data": ",".join(
+                        [x["ipv6"] for x in servers if x["role"] == "core"]
+                    ),
+                },
                 {"name": "domain-search", "data": "scale.lan"},
             ],
             "option-def": [],
