@@ -28,4 +28,3 @@ SCaLE happens once a year but the team has ongoing projects and prep year round.
 If you are interesting in volunteering please request to join our mailing list:
 https://lists.linuxfests.org/cgi-bin/mailman/listinfo/tech
 
-For more information checkout: [CONTRIBUTING](./CONTRIBUTING.md)
