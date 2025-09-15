@@ -148,6 +148,7 @@ in
           systemPackages = with pkgs; [
             ldns
             dig
+            scale-network.dhcptest
           ];
         };
       };
@@ -181,6 +182,10 @@ in
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
       client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true coreexpo)\"")
       client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true coreexpo)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 6 --print-only 6)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 15 --print-only 15)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 42 --print-only 42)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 119 --print-only 119)\"")
     '';
 
   interactive.nodes =
