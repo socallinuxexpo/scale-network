@@ -170,6 +170,7 @@ in
       coremaster.succeed("named-checkconf ${nodes.coremaster.services.bind.configFile}")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
       client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
+      client1.wait_until_succeeds("ping -c 5 coreexpo")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${routerAddr.ipv4}")
       # ensure that we got the correct prefix and suffix on dhcpv6
       client1.wait_until_succeeds("ip addr show dev eth1 | grep inet6 | grep ${chomp}:d8c")
