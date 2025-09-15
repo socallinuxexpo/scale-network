@@ -18,6 +18,8 @@ in
 {
   name = "core";
 
+  globalTimeout = 120;
+
   nodes = {
     # temporary router since we do not have the junipers for ipv6 router advertisement
     router =
