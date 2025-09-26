@@ -18,6 +18,8 @@ in
 {
   name = "core";
 
+  globalTimeout = 120;
+
   nodes = {
     # temporary router since we do not have the junipers for ipv6 router advertisement
     router =
@@ -148,6 +150,7 @@ in
           systemPackages = with pkgs; [
             ldns
             dig
+            scale-network.dhcptest
           ];
         };
       };
@@ -170,6 +173,7 @@ in
       coremaster.succeed("named-checkconf ${nodes.coremaster.services.bind.configFile}")
       client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
       client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
+      client1.wait_until_succeeds("ping -c 5 coreexpo")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${routerAddr.ipv4}")
       # ensure that we got the correct prefix and suffix on dhcpv6
       client1.wait_until_succeeds("ip addr show dev eth1 | grep inet6 | grep ${chomp}:d8c")
@@ -180,6 +184,10 @@ in
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
       client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true coreexpo)\"")
       client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true coreexpo)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 6 --print-only 6)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 15 --print-only 15)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 42 --print-only 42)\"")
+      client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 119 --print-only 119)\"")
     '';
 
   interactive.nodes =

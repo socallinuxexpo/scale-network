@@ -459,6 +459,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                         [x["ipv4"] for x in servers if x["role"] == "core"]
                     ),
                 },
+                {"name": "domain-name", "data": "scale.lan"},
                 {"name": "domain-search", "data": "scale.lan"},
             ],
             "option-def": [
