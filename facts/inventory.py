@@ -12,6 +12,7 @@ import os
 import re
 import sys
 import jinja2
+import pandas
 
 
 def getfilelines(filename, header=False, directory="./", building=None):
@@ -312,30 +313,36 @@ def populateaps(apsfile, apusefile):
     return aps
 
 
-def populatepis(pisfile):
-    """populate the PI list from a PIs file"""
+def populatepis(pis_file, piuse_file):
+    """Populate the PI list from pis.csv and piuse.csv files"""
+    pis_df = pandas.read_csv(pis_file)
+    piuse_df = pandas.read_csv(piuse_file)
+
+    pis_df.columns = pis_df.columns.str.strip()
+    piuse_df.columns = piuse_df.columns.str.strip()
+
+    merged_df = piuse_df.merge(
+        pis_df, left_on="serial", right_on="name", suffixes=("", "_pi")
+    )
+
+    merged_df["ipv6"] = (
+        "2001:470:f026:" + merged_df["ip"].astype(str) + ":" + merged_df["eui64 suffix"]
+    )
+
     pis = []
-    flines = getfilelines(pisfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # Let's bail if we have an invalid number of columns
-        if len(elems) < 2:
-            continue
-        ipaddr = elems[1].rstrip()
-        # Let's bail we ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
+    for _, row in merged_df.iterrows():
+        ipaddr = row["ipv6"]
+        pi_name = row["name"].lower()
+
         pis.append(
             {
-                "name": elems[0].lower(),
+                "name": pi_name,
                 "ipv6": ipaddr,
                 "ipv6ptr": ip6toptr(ipaddr),
-                "fqdn": elems[0].lower() + ".scale.lan",
+                "fqdn": pi_name + ".scale.lan",
             }
         )
+
     return pis
 
 
@@ -747,7 +754,8 @@ def main():
     routersfile = "../facts/routers/routerlist.csv"
     apsfile = "../facts/aps/aps.csv"
     apusefile = "../facts/aps/apuse.csv"
-    pisfile = "../facts/pi/pilist.csv"
+    pifile = "../facts/pi/pis.csv"
+    piusefile = "../facts/pi/piuse.csv"
 
     # populate the device type lists
     vlans = populatevlans(swconfigdir, vlansfile)
@@ -755,7 +763,7 @@ def main():
     servers = populateservers(serversfile, vlans)
     routers = populaterouters(routersfile)
     aps = populateaps(apsfile, apusefile)
-    pis = populatepis(pisfile)
+    pis = populatepis(pifile, piusefile)
 
     subcomm = sys.argv[1]
     outputdir = sys.argv[2]
