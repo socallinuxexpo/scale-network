@@ -16,6 +16,7 @@ inputs.nixpkgs.lib.genAttrs
             pylint
             ipdb
             jinja2
+            pandas
           ]
         ))
       ];
