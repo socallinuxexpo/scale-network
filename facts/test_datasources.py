@@ -67,9 +67,9 @@ def test_piuse_csv():
         "header": True,
         "count": 3,
         "cols": [
-            ds.isuntested,
-            ds.isuntested,
-            ds.isuntested,
+            ds.isvalidhostname,
+            ds.is_valid_asset_id,
+            ds.is_valid_pi_vlan,
         ],
     }
     result, err = ds.test_csvfile(meta)

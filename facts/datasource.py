@@ -139,6 +139,17 @@ def isvalidwifi5chan(chan):
     }
 
 
+def is_valid_pi_vlan(vlan):
+    """test for valid PI vlan"""
+    # we currently constrain PI use to 3 existing vlans
+    # this can be extended later as needed
+    return isint(vlan) and int(vlan) in {
+        107,
+        110,
+        507,
+    }
+
+
 def isint(val):
     """test for integer"""
     return val.isdigit()
