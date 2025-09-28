@@ -9,6 +9,7 @@ inputs: {
         ./time.nix
         ./services
         ./users
+        ./routers
       ];
     };
 }
