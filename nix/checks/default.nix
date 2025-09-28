@@ -70,6 +70,7 @@ genAttrs
                 pylint
                 pytest
                 jinja2
+                pandas
               ]
             )
           );
