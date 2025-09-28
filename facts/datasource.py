@@ -27,6 +27,13 @@ def isvalidhostname(hostname):
     return False
 
 
+def is_valid_asset_id(asset_id):
+    """
+    test for valid asset ID, which has the same constraints as a hostname
+    """
+    return isvalidhostname(asset_id)
+
+
 def isvalidmodel(model):
     """
     test for valid switch model (enumerated)

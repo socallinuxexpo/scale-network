@@ -322,7 +322,7 @@ def populatepis(pis_file, piuse_file):
     piuse_df.columns = piuse_df.columns.str.strip()
 
     merged_df = piuse_df.merge(
-        pis_df, left_on="serial", right_on="name", suffixes=("", "_pi")
+        pis_df, left_on="serial", right_on="serial", suffixes=("", "_pi")
     )
 
     merged_df["ipv6"] = (

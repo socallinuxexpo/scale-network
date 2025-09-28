@@ -51,7 +51,7 @@ def test_pis_csv():
         "header": True,
         "count": 3,
         "cols": [
-            ds.isuntested,
+            ds.is_valid_asset_id,
             ds.isvalidmac,
             ds.isuntested,
         ],
