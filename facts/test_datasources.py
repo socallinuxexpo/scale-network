@@ -53,7 +53,7 @@ def test_pis_csv():
         "cols": [
             ds.is_valid_asset_id,
             ds.isvalidmac,
-            ds.isuntested,
+            ds.is_valid_v6_suffix,
         ],
     }
     result, err = ds.test_csvfile(meta)

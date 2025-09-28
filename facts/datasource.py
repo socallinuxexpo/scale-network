@@ -60,6 +60,19 @@ def isvalidip(addr):
     return True
 
 
+def is_valid_v6_suffix(suffix):
+    """
+    test for valid v6 suffix
+    """
+    pattern = r"^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*$"
+
+    if not re.match(pattern, suffix):
+        return False
+
+    groups = suffix.split(":")
+    return all(group and len(group) <= 4 for group in groups)
+
+
 def isvalidsubnet(subnet):
     """test for valid v4 or v6 subnet"""
     try:
