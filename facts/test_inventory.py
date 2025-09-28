@@ -21,8 +21,16 @@ def test_getfilelineshdr():
             ],
         ],
         [
-            "testdata/testpilist.csv",
-            ["pieb1d1c,2001:470:f325:107:efcf:2f67:f127:ba26\n"],
+            "testdata/testpiuse.csv",
+            [
+                "pi-expo6,pi4-022,110\n",
+            ],
+        ],
+        [
+            "testdata/testpis.csv",
+            [
+                "pi4-022,dc:a6:32:41:88:f4,dea6:32ff:fe41:88f4\n",
+            ],
         ],
         ["testdata/testrouterlist.csv", ["br-mdf-01,2001:470:f325:103::2\n"]],
         [
@@ -503,20 +511,23 @@ def test_populatepis():
     """test cases for the populatepis() function"""
     cases = [
         [
-            "./testdata/testpilist.csv",
+            "./testdata/testpis.csv",
+            "./testdata/testpiuse.csv",
             [
                 {
-                    "name": "pieb1d1c",
-                    "fqdn": "pieb1d1c.scale.lan",
-                    "ipv6": "2001:470:f325:107:efcf:2f67:f127:ba26",
+                    "name": "pi-expo6",
+                    "fqdn": "pi-expo6.scale.lan",
+                    "ipv6": "2001:470:f026:110:dea6:32ff:fe41:88f4",
                     # pylint: disable=line-too-long
-                    "ipv6ptr": "6.2.a.b.7.2.1.f.7.6.f.2.f.c.f.e.7.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
+                    "ipv6ptr": "4.f.8.8.1.4.e.f.f.f.2.3.6.a.e.d.0.1.1.0.6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa",
                 }
             ],
         ]
     ]
-    for filename, pis in cases:
-        assert inventory.populatepis(filename) == pis, filename
+    for pisfilename, piusefilename, pis in cases:
+        assert inventory.populatepis(pisfilename, piusefilename) == pis, (
+            f"{pisfilename} {piusefilename}"
+        )
 
 
 def test_populateservers():
