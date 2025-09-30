@@ -27,6 +27,13 @@ def isvalidhostname(hostname):
     return False
 
 
+def is_valid_asset_id(asset_id):
+    """
+    test for valid asset ID, which has the same constraints as a hostname
+    """
+    return isvalidhostname(asset_id)
+
+
 def isvalidmodel(model):
     """
     test for valid switch model (enumerated)
@@ -51,6 +58,19 @@ def isvalidip(addr):
     except ValueError:
         return False
     return True
+
+
+def is_valid_v6_suffix(suffix):
+    """
+    test for valid v6 suffix
+    """
+    pattern = r"^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*$"
+
+    if not re.match(pattern, suffix):
+        return False
+
+    groups = suffix.split(":")
+    return all(group and len(group) <= 4 for group in groups)
 
 
 def isvalidsubnet(subnet):
@@ -116,6 +136,17 @@ def isvalidwifi5chan(chan):
         169,
         173,
         177,
+    }
+
+
+def is_valid_pi_vlan(vlan):
+    """test for valid PI vlan"""
+    # we currently constrain PI use to 3 existing vlans
+    # this can be extended later as needed
+    return isint(vlan) and int(vlan) in {
+        107,
+        110,
+        507,
     }
 
 

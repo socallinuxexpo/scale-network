@@ -44,13 +44,33 @@ def test_aps_csv():
     assert result, err
 
 
-def test_pilist_csv():
-    """test pilist.csv"""
+def test_pis_csv():
+    """test pis.csv"""
     meta = {
-        "file": "./pi/pilist.csv",
+        "file": "./pi/pis.csv",
         "header": True,
-        "count": 2,
-        "cols": [ds.isvalidhostname, ds.isvalidip],
+        "count": 3,
+        "cols": [
+            ds.is_valid_asset_id,
+            ds.isvalidmac,
+            ds.is_valid_v6_suffix,
+        ],
+    }
+    result, err = ds.test_csvfile(meta)
+    assert result, err
+
+
+def test_piuse_csv():
+    """test piuse.csv"""
+    meta = {
+        "file": "./pi/piuse.csv",
+        "header": True,
+        "count": 3,
+        "cols": [
+            ds.isvalidhostname,
+            ds.is_valid_asset_id,
+            ds.is_valid_pi_vlan,
+        ],
     }
     result, err = ds.test_csvfile(meta)
     assert result, err

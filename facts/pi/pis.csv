@@ -1,4 +1,4 @@
-name,mac,eui64 suffix
+serial,mac,eui64 suffix
 pi4-001,dc:a6:32:41:79:6a,dea6:32ff:fe41:796a
 pi4-002,dc:a6:32:41:88:a3,dea6:32ff:fe41:88a3
 pi4-003,dc:a6:32:41:43:5b,dea6:32ff:fe41:435b

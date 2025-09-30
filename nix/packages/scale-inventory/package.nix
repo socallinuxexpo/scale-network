@@ -3,7 +3,7 @@
   copyPathsToStore,
   lib,
   python3,
-  python310Packages,
+  python313Packages,
 }:
 let
   local_manifests = copyPathsToStore [
@@ -17,7 +17,8 @@ stdenvNoCC.mkDerivation {
 
   propagatedBuildInputs = [
     python3
-    python310Packages.jinja2
+    python313Packages.jinja2
+    python313Packages.pandas
   ];
 
   buildCommand = ''
