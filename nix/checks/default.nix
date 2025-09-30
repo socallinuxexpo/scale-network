@@ -56,6 +56,8 @@ genAttrs
     in
     {
       core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs lib; });
+      routers = pkgs.testers.runNixOSTest (import ./routers.nix { inherit inputs lib; });
+      router-border = pkgs.testers.runNixOSTest (import ./router-border.nix { inherit inputs lib; });
       loghost = pkgs.testers.runNixOSTest (import ./loghost.nix { inherit inputs; });
       monitor = pkgs.testers.runNixOSTest (import ./monitor.nix { inherit inputs; });
       # impure test and needs to pull container
