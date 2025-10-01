@@ -62,7 +62,13 @@ in
         {
           job_name = "ap";
           static_configs = builtins.fromJSON (
-            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom.json"
+            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom-aps.json"
+          );
+        }
+        {
+          job_name = "pi";
+          static_configs = builtins.fromJSON (
+            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom-pis.json"
           );
         }
         {
