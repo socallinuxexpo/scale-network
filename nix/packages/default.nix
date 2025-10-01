@@ -7,6 +7,7 @@ inputs.nixpkgs.lib.genAttrs
   (system: {
     inherit (inputs.self.legacyPackages.${system}.scale-network)
       dhcptest
+      mac2eui64
       makeDhcpd
       massflash
       scaleInventory
