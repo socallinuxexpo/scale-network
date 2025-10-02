@@ -30,6 +30,7 @@ inputs.nixpkgs.lib.genAttrs
         tio
         screen
         glibcLocales
+        scale-network.mac2eui64
       ];
 
       openwrtSub = with pkgs; [
