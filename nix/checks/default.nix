@@ -6,7 +6,7 @@ let
     ;
 
   inherit (lib.attrsets)
-    genAttrs
+    mapAttrs
     ;
 
   inherit (lib.fileset)
@@ -44,109 +44,98 @@ let
     ];
   };
 in
-genAttrs
-  [
-    "x86_64-linux"
-    "aarch64-linux"
-  ]
-  (
-    system:
+mapAttrs (system: pkgs: {
+  core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs lib; });
+  routers = pkgs.testers.runNixOSTest (import ./routers.nix { inherit inputs lib; });
+  router-border = pkgs.testers.runNixOSTest (import ./router-border.nix { inherit inputs lib; });
+  loghost = pkgs.testers.runNixOSTest (import ./loghost.nix { inherit inputs; });
+  monitor = pkgs.testers.runNixOSTest (import ./monitor.nix { inherit inputs; });
+  # impure test and needs to pull container
+  #signs = pkgs.testers.runNixOSTest (import ./signs.nix { inherit inputs; });
+  wasgeht = pkgs.testers.runNixOSTest (import ./wasgeht.nix { inherit inputs; });
+
+  pytest-facts =
     let
-      pkgs = inputs.self.legacyPackages.${system};
-    in
-    {
-      core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs lib; });
-      routers = pkgs.testers.runNixOSTest (import ./routers.nix { inherit inputs lib; });
-      router-border = pkgs.testers.runNixOSTest (import ./router-border.nix { inherit inputs lib; });
-      loghost = pkgs.testers.runNixOSTest (import ./loghost.nix { inherit inputs; });
-      monitor = pkgs.testers.runNixOSTest (import ./monitor.nix { inherit inputs; });
-      # impure test and needs to pull container
-      #signs = pkgs.testers.runNixOSTest (import ./signs.nix { inherit inputs; });
-      wasgeht = pkgs.testers.runNixOSTest (import ./wasgeht.nix { inherit inputs; });
-
-      pytest-facts =
-        let
-          testPython = (
-            pkgs.python3.withPackages (
-              pythonPackages: with pythonPackages; [
-                pylint
-                pytest
-                jinja2
-                pandas
-              ]
-            )
-          );
-        in
-        (pkgs.runCommand "pytest-facts"
-          {
-            src = factsSrc;
-            buildInputs = [ testPython ];
-          }
-          ''
-            cd $src/facts
-            pylint --persistent n *.py
-            pytest -vv -p no:cacheprovider
-            touch $out
-          ''
-        );
-
-      duplicates-facts = (
-        pkgs.runCommand "duplicates-facts"
-          {
-            src = factsSrc;
-            buildInputs = [ pkgs.fish ];
-          }
-          ''
-            cd $src/facts
-            fish --no-config test_duplicates.fish
-            touch $out
-          ''
+      testPython = (
+        pkgs.python3.withPackages (
+          pythonPackages: with pythonPackages; [
+            pylint
+            pytest
+            jinja2
+            pandas
+          ]
+        )
       );
+    in
+    (pkgs.runCommand "pytest-facts"
+      {
+        src = factsSrc;
+        buildInputs = [ testPython ];
+      }
+      ''
+        cd $src/facts
+        pylint --persistent n *.py
+        pytest -vv -p no:cacheprovider
+        touch $out
+      ''
+    );
 
-      perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
-        pname = "perl-switches";
-        version = "0.1.0";
+  duplicates-facts = (
+    pkgs.runCommand "duplicates-facts"
+      {
+        src = factsSrc;
+        buildInputs = [ pkgs.fish ];
+      }
+      ''
+        cd $src/facts
+        fish --no-config test_duplicates.fish
+        touch $out
+      ''
+  );
 
-        src = switchConfigurationSrc;
+  perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
+    pname = "perl-switches";
+    version = "0.1.0";
 
-        nativeBuildInputs = with pkgs; [
-          gnumake
-          perl
-        ];
+    src = switchConfigurationSrc;
 
-        buildPhase = ''
-          cd switch-configuration
-          make .lint
-          make .build-switch-configs
-        '';
+    nativeBuildInputs = with pkgs; [
+      gnumake
+      perl
+    ];
 
-        installPhase = ''
-          touch $out
-        '';
-      });
+    buildPhase = ''
+      cd switch-configuration
+      make .lint
+      make .build-switch-configs
+    '';
 
-      openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
-        pname = "openwrt-golden";
-        version = "0.1.0";
+    installPhase = ''
+      touch $out
+    '';
+  });
 
-        src = openwrtSrc;
+  openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
+    pname = "openwrt-golden";
+    version = "0.1.0";
 
-        buildInputs = [
-          pkgs.diffutils
-          pkgs.gomplate
-        ];
+    src = openwrtSrc;
 
-        buildPhase = ''
-          cd tests/unit/openwrt
-          mkdir -p $out/tmp/ath79
-        '';
+    buildInputs = [
+      pkgs.diffutils
+      pkgs.gomplate
+    ];
 
-        installPhase = ''
-          ./test.sh -t ath79 -o $out
-        '';
-      });
+    buildPhase = ''
+      cd tests/unit/openwrt
+      mkdir -p $out/tmp/ath79
+    '';
 
-      formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
+    installPhase = ''
+      ./test.sh -t ath79 -o $out
+    '';
+  });
 
-    }
-  )
+  formatting = inputs.self.formatterModule.${system}.config.build.check inputs.self;
+
+}) inputs.self.legacyPackages

@@ -1,87 +1,96 @@
 inputs:
-inputs.nixpkgs.lib.genAttrs
-  [
-    "x86_64-linux"
-    "aarch64-linux"
-  ]
-  (
-    system:
-    let
-      pkgs = inputs.self.legacyPackages.${system};
+let
 
-      scalePython = [
-        (pkgs.python3.withPackages (
-          ps: with ps; [
-            pytest
-            pylint
-            ipdb
-            jinja2
-            pandas
-          ]
-        ))
-      ];
+  inherit (inputs.nixpkgs)
+    lib
+    ;
 
-      global = with pkgs; [
-        bash
-        curl
-        fish
-        git
-        jq
-        tio
-        screen
-        glibcLocales
-        scale-network.mac2eui64
-      ];
+  inherit (lib.attrsets)
+    mapAttrs
+    ;
 
-      openwrtSub = with pkgs; [
-        dnsmasq
-        expect
-        gomplate
-        magic-wormhole
-        tftp-hpa
-        nettools
-        unixtools.ping
-        iperf3
-        ncurses
-        ncurses.dev
-        pkg-config
-        gcc
-        stdenv
-        scale-network.makeDhcpd
-        scale-network.serverspec
-      ];
+  inherit (lib.trivial)
+    const
+    ;
 
-      networkSub = with pkgs; [
-        perl
-        perlPackages.libnet
-        perlPackages.Expect
-        perlPackages.TermReadKey
-        perlPackages.NetSFTPForeign
-        scale-network.perlNetArp
-        scale-network.perlNetInterface
-        scale-network.perlNetPing
-        ghostscript
-      ];
-    in
-    {
-      scalePython = pkgs.mkShellNoCC {
-        packages = scalePython;
-      };
+in
+mapAttrs (const (
+  pkgs:
+  let
 
-      global = pkgs.mkShellNoCC {
-        packages = global;
-      };
+    scalePython = [
+      (pkgs.python3.withPackages (
+        ps: with ps; [
+          pytest
+          pylint
+          ipdb
+          jinja2
+          pandas
+        ]
+      ))
+    ];
 
-      openwrtSub = pkgs.mkShellNoCC {
-        packages = openwrtSub;
-      };
+    global = with pkgs; [
+      bash
+      curl
+      fish
+      git
+      jq
+      tio
+      screen
+      glibcLocales
+      scale-network.mac2eui64
+    ];
 
-      networkSub = pkgs.mkShellNoCC {
-        packages = networkSub;
-      };
+    openwrtSub = with pkgs; [
+      dnsmasq
+      expect
+      gomplate
+      magic-wormhole
+      tftp-hpa
+      nettools
+      unixtools.ping
+      iperf3
+      ncurses
+      ncurses.dev
+      pkg-config
+      gcc
+      stdenv
+      scale-network.makeDhcpd
+      scale-network.serverspec
+    ];
 
-      default = pkgs.mkShellNoCC {
-        packages = (scalePython ++ global ++ openwrtSub ++ networkSub);
-      };
-    }
-  )
+    networkSub = with pkgs; [
+      perl
+      perlPackages.libnet
+      perlPackages.Expect
+      perlPackages.TermReadKey
+      perlPackages.NetSFTPForeign
+      scale-network.perlNetArp
+      scale-network.perlNetInterface
+      scale-network.perlNetPing
+      ghostscript
+    ];
+  in
+  {
+    scalePython = pkgs.mkShellNoCC {
+      packages = scalePython;
+    };
+
+    global = pkgs.mkShellNoCC {
+      packages = global;
+    };
+
+    openwrtSub = pkgs.mkShellNoCC {
+      packages = openwrtSub;
+    };
+
+    networkSub = pkgs.mkShellNoCC {
+      packages = networkSub;
+    };
+
+    default = pkgs.mkShellNoCC {
+      packages = (scalePython ++ global ++ openwrtSub ++ networkSub);
+    };
+  }
+)) inputs.self.legacyPackages
