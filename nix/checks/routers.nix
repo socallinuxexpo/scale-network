@@ -19,8 +19,11 @@
           3 # border <-> expo
         ];
         scale-network = {
+          base.enable = true;
           router.border.enable = true;
+          services.frr2.enable = true;
         };
+        networking.firewall.enable = false;
       };
     conference =
       { lib, ... }:
@@ -36,8 +39,11 @@
           4 # conference <-> expo
         ];
         scale-network = {
+          base.enable = true;
           router.conference.enable = true;
+          services.frr.enable = true;
         };
+        networking.firewall.enable = false;
       };
     expo =
       { lib, ... }:
@@ -53,8 +59,10 @@
           4 # conference <-> expo
         ];
         scale-network = {
+          base.enable = true;
           router.expo.enable = true;
         };
+        networking.firewall.enable = false;
       };
   };
 
