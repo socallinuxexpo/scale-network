@@ -1,15 +1,27 @@
-inputs: {
+inputs:
+let
+
+  inherit (inputs.nixpkgs)
+    lib
+    ;
+
+  inherit (lib.filesystem)
+    listFilesRecursive
+    ;
+
+  inherit (lib.lists)
+    filter
+    ;
+
+  inherit (lib.strings)
+    hasSuffix
+    ;
+
+in
+{
   default =
     { ... }:
     {
-      imports = [
-        ./base.nix
-        ./facts.nix
-        ./libvirt.nix
-        ./time.nix
-        ./services
-        ./users
-        ./routers
-      ];
+      imports = filter (hasSuffix ".nix") (filter (path: path != ./default.nix) (listFilesRecursive ./.));
     };
 }
