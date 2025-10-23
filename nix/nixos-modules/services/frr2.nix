@@ -18,6 +18,7 @@ in
   options.scale-network.services.frr2.enable = mkEnableOption "SCaLE network FRR daemon";
 
   config = mkIf cfg.enable {
+
     services.frr = {
 
       ospfd.enable = true;
@@ -26,22 +27,28 @@ in
       ];
 
       config = ''
+        router-id 10.1.1.1
         interface eth1
          ip address 10.1.1.1/24
-         ip ospf priority 0
+         ip ospf network broadcast
         exit
         !
         interface eth2
          ip address 10.1.2.1/24
-         ip ospf priority 0
         exit
         !
         router ospf
-         network 10.1.1.0/24 area 0
+         network 10.0.0.0/8 area 0
+         redistribute connected
         exit
         !
       '';
 
     };
+
+    systemd.tmpfiles.rules = [
+      "d /lib/frr 0700 frr frr -"
+    ];
+
   };
 }
