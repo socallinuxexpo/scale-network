@@ -38,7 +38,7 @@ in
         exit
         !
         interface eth2
-         ip address 10.1.3.2/24
+         ip address 10.1.3.1/24
          ip ospf passive
         exit
         !
