@@ -31,6 +31,8 @@ in
         interface eth1
          ip address 10.1.1.2/24
          ip ospf network broadcast
+         ip ospf hello-interval 1
+         ip ospf dead-interval 3
         exit
         !
         interface eth2
@@ -40,6 +42,11 @@ in
         router ospf
          network 10.0.0.0/8 area 0
          redistribute connected
+         timers throttle spf 50 100 5000
+         timers lsa min-arrival 50
+         timers throttle lsa all 50 100 5000
+         fast-reroute enable
+         fast-reroute keep-all-paths
         exit
         !
       '';
