@@ -28,6 +28,8 @@ in
 
       config = ''
         router-id 10.1.1.2
+        interface eth0
+         ip ospf passive
         interface eth1
          ip address 10.1.1.2/24
          ip ospf network broadcast
@@ -37,6 +39,7 @@ in
         !
         interface eth2
          ip address 10.1.3.2/24
+         ip ospf passive
         exit
         !
         router ospf
