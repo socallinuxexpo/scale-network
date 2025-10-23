@@ -86,4 +86,6 @@
       expo.succeed("ping -c 5 10.1.2.1")
       expo.succeed("ping -c 5 10.1.3.2")
     '';
+
+  interactive.sshBackdoor.enable = true;
 }
