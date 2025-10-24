@@ -20,6 +20,10 @@ let
     composeManyExtensions
     ;
 
+  inherit (lib.lists)
+    remove
+    ;
+
   inherit (inputs.self.library)
     attrNamesKebabToCamel
     kebabToCamel
@@ -34,6 +38,9 @@ let
         scale-network = prev.scale-network or { } // {
           "${kebabToCamel dir}" = final.callPackage ../packages/${dir}/package.nix { };
         };
+        frr = prev.frr.overrideAttrs (old: {
+          configureFlags = remove "--localstatedir=/run/frr" old.configureFlags ++ [ "--localstatedir=/var" ];
+        });
       }
     )
   );
