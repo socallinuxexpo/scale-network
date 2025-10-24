@@ -55,10 +55,5 @@ in
       '';
 
     };
-
-    systemd.tmpfiles.rules = [
-      "d /lib/frr 0700 frr frr -"
-    ];
-
   };
 }
