@@ -195,6 +195,8 @@ in
       interactiveDefaults = hostPort: {
         services.openssh.enable = true;
         services.openssh.settings.PermitRootLogin = mkForce "yes";
+        services.openssh.settings.PermitEmptyPasswords = mkForce "yes";
+        security.pam.services.sshd.allowNullPassword = true;
         systemd.network.networks."01-eth0" = {
           name = "eth0";
           enable = true;
