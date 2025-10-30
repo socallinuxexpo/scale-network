@@ -31,8 +31,8 @@ in
         "10.1.2.3/24"
       ];
     };
-    # Physical link to expo
-    systemd.network.networks."10-expo" = {
+    # Physical link to conference
+    systemd.network.networks."10-cf" = {
       matchConfig.Name = "eth2";
       networkConfig.DHCP = false;
       address = [

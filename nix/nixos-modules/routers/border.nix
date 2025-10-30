@@ -32,7 +32,7 @@ in
       networkConfig.DHCP = true;
     };
     # Physical link to conference center
-    systemd.network.networks."10-expo" = {
+    systemd.network.networks."10-cf" = {
       matchConfig.Name = "eth1";
       networkConfig.DHCP = false;
       address = [
@@ -40,7 +40,7 @@ in
       ];
     };
     # Physical link to expo hall
-    systemd.network.networks."10-cf" = {
+    systemd.network.networks."10-expo" = {
       matchConfig.Name = "eth2";
       networkConfig.DHCP = false;
       address = [
