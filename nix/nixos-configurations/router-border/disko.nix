@@ -1,10 +1,9 @@
-# TODO Setup real disk config
 {
   disko.devices = {
     disk = {
       one = {
         type = "disk";
-        device = "/dev/disk/by-path/pci-0000:10:00.0-scsi-0:0:10:0";
+        device = "/dev/disk/by-path/pci-0000:0f:00.0-nvme-1";
         content = {
           type = "gpt";
           partitions = {
@@ -29,7 +28,7 @@
       };
       two = {
         type = "disk";
-        device = "/dev/disk/by-path/pci-0000:10:00.0-scsi-0:0:9:0";
+        device = "/dev/disk/by-path/pci-0000:12:00.0-nvme-1";
         content = {
           type = "gpt";
           partitions = {
