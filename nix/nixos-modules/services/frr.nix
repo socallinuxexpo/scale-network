@@ -58,8 +58,9 @@ in
          timers throttle spf 50 100 5000
          timers lsa min-arrival 50
          timers throttle lsa all 50 100 5000
-         fast-reroute enable
-         fast-reroute keep-all-paths
+         fast-reroute per-prefix
+           enable
+           keep-all-paths
         exit
       '';
     };
