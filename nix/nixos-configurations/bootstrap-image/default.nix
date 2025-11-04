@@ -7,9 +7,6 @@
       pkgs,
       ...
     }:
-    let
-      mybootstrap = pkgs.writeShellScriptBin "mybootstrap" (builtins.readFile ./bootstrap.sh);
-    in
     {
       imports = [
         "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
@@ -60,7 +57,6 @@
           efibootmgr
           gptfdisk
           screen
-          mybootstrap
         ];
 
         services.openssh = {
