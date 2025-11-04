@@ -43,7 +43,12 @@
           enable = true;
           networks = {
             "10-lan" = {
-              matchConfig.Name = "eno1";
+              matchConfig.Type = "ether";
+              enable = true;
+              networkConfig.DHCP = "yes";
+            };
+            "10-wlan" = {
+              matchConfig.Type = "wlan";
               enable = true;
               networkConfig.DHCP = "yes";
             };
@@ -63,7 +68,6 @@
           enable = true;
           openFirewall = true;
         };
-
       };
     };
 }
