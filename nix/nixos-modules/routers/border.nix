@@ -51,9 +51,12 @@ in
     systemd.network.networks."10-cffw" = {
       matchConfig.Name = "eth3";
       networkConfig.DHCP = false;
+      address = [
+        "172.16.1.1/24"
+      ];
     };
 
-    networking.nftables.rulesetFile = "";
+    networking.nftables.ruleset = "";
 
     system.stateVersion = "25.11";
   };

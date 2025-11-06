@@ -22,7 +22,7 @@
         };
 
         nixpkgs.hostPlatform = "x86_64-linux";
-        networking.hostName = "router-border";
+        networking.hostName = "router-conf";
         # make friend eth names based on paths from lspci
         services.udev.extraRules = ''
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
@@ -57,12 +57,12 @@
               };
               linkConfig.RequiredForOnline = "no";
             };
-            # Physical link to conference center
+            # Physical link to border
             "10-cf" = {
               matchConfig.Name = "fiber0";
               networkConfig.DHCP = false;
               address = [
-                "10.1.1.1/24"
+                "10.1.1.2/24"
               ];
             };
             # Physical link to expo
@@ -70,7 +70,7 @@
               matchConfig.Name = "fiber1";
               networkConfig.DHCP = false;
               address = [
-                "10.1.2.1/24"
+                "10.1.3.2/24"
               ];
             };
           };

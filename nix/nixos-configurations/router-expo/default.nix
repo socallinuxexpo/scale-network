@@ -20,9 +20,30 @@
           "net.ipv4.conf.all.forwarding" = true;
           "net.ipv6.conf.all.forwarding" = true;
         };
+        networking.nftables.enable = true;
+        networking.nftables.ruleset = ''
+           table ip nat {
+            chain PREROUTING {
+              type nat hook prerouting priority dstnat; policy accept;
+            }
+
+            chain INPUT {
+              type nat hook input priority 100; policy accept;
+            }
+
+            chain OUTPUT {
+              type nat hook output priority -100; policy accept;
+            }
+
+            chain POSTROUTING {
+              type nat hook postrouting priority srcnat; policy accept;
+              oifname "copper0" ip daddr 0.0.0.0/0 counter masquerade
+            }
+          }
+        '';
 
         nixpkgs.hostPlatform = "x86_64-linux";
-        networking.hostName = "router-border";
+        networking.hostName = "router-expo";
         # make friend eth names based on paths from lspci
         services.udev.extraRules = ''
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
@@ -57,20 +78,20 @@
               };
               linkConfig.RequiredForOnline = "no";
             };
-            # Physical link to conference center
+            # Physical link to border
             "10-cf" = {
               matchConfig.Name = "fiber0";
               networkConfig.DHCP = false;
               address = [
-                "10.1.1.1/24"
+                "10.1.2.3/24"
               ];
             };
-            # Physical link to expo
+            # Physical link to conference
             "10-expo" = {
               matchConfig.Name = "fiber1";
               networkConfig.DHCP = false;
               address = [
-                "10.1.2.1/24"
+                "10.1.3.3/24"
               ];
             };
           };

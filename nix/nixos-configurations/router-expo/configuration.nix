@@ -5,7 +5,7 @@
   scale-network = {
     base.enable = true;
     services.frr.enable = true;
-    services.frr.router-id = "10.1.1.1";
+    services.frr.router-id = "10.1.2.3";
     services.frr.broadcast-interface = [
       "fiber0"
       "fiber1"

@@ -6,7 +6,10 @@
 
   nodes = {
     border =
-      { ... }:
+      {
+        pkgs,
+        ...
+      }:
       {
         _module.args = {
           inherit inputs;
@@ -17,6 +20,7 @@
         virtualisation.vlans = [
           2 # border <-> conference
           3 # border <-> expo
+          10 # NAT
         ];
         scale-network = {
           base.enable = true;
@@ -31,7 +35,29 @@
             "eth2"
           ];
         };
+        networking.nftables.enable = true;
+        networking.nftables.ruleset = ''
+           table ip nat {
+            chain PREROUTING {
+              type nat hook prerouting priority dstnat; policy accept;
+            }
+
+            chain INPUT {
+              type nat hook input priority 100; policy accept;
+            }
+
+            chain OUTPUT {
+              type nat hook output priority -100; policy accept;
+            }
+
+            chain POSTROUTING {
+              type nat hook postrouting priority srcnat; policy accept;
+              oifname "eth3" ip daddr 0.0.0.0/0 counter masquerade
+            }
+          }
+        '';
         networking.firewall.enable = false;
+
       };
     conference =
       { ... }:
@@ -89,6 +115,31 @@
         };
         networking.firewall.enable = false;
       };
+
+    client =
+      {
+        pkgs,
+        ...
+      }:
+      {
+
+        virtualisation.vlans = [
+          10 # NAT
+        ];
+
+        networking.firewall.enable = false;
+
+        networking.useNetworkd = true;
+        systemd.network.networks."10-inet" = {
+          matchConfig.Name = "eth1";
+          networkConfig.DHCP = false;
+          address = [
+            "172.16.1.100/24"
+          ];
+        };
+
+      };
+
   };
 
   testScript =
@@ -98,6 +149,7 @@
       border.wait_for_unit("multi-user.target")
       conference.wait_for_unit("multi-user.target")
       expo.wait_for_unit("multi-user.target")
+      client.wait_for_unit("multi-user.target")
 
       # layer 2
       print("LAYER 2")
@@ -132,6 +184,16 @@
       # expo can reach conference-border link
       expo.succeed("ping -c 5 10.1.1.1")
       expo.succeed("ping -c 5 10.1.1.2")
+
+      # NAT
+      print("NETCAT")
+
+      client.execute("nc -l 1234 -k -v -n 2> netcat.log 1>&2 &", timeout=10)
+      border.succeed("nc -z 172.16.1.100 1234", timeout=10)
+      expo.succeed("nc -z 172.16.1.100 1234", timeout=10)
+      conference.succeed("nc -z 172.16.1.100 1234", timeout=10)
+      client.succeed("cat netcat.log 1>&2", timeout=5)
+      client.succeed("test 3 == $(grep 172.16.1.1 -c netcat.log)", timeout=5)
     '';
 
   interactive.sshBackdoor.enable = true;
