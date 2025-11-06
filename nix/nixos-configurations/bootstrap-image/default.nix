@@ -3,10 +3,16 @@
 
   modules =
     {
+      lib,
       modulesPath,
       pkgs,
       ...
     }:
+    let
+      inherit (lib.modules)
+        mkForce
+        ;
+    in
     {
       imports = [
         "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
@@ -36,6 +42,12 @@
         networking = {
           useNetworkd = true;
           useDHCP = false;
+          # disabled by default but since were pulling in:
+          # installer/cd-dvd/installation-cd-minimal.nix
+          #
+          # nm will also get an IP address if left alone
+          # had attributes: secondary dynamic noprefixroute
+          networkmanager.enable = mkForce false;
           firewall.enable = true;
         };
 
