@@ -15,6 +15,12 @@
       ];
 
       config = {
+
+        boot.kernel.sysctl = {
+          "net.ipv4.conf.all.forwarding" = true;
+          "net.ipv6.conf.all.forwarding" = true;
+        };
+
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-conf";
         # make friend eth names based on paths from lspci

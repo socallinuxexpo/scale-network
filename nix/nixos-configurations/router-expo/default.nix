@@ -15,6 +15,12 @@
       ];
 
       config = {
+
+        boot.kernel.sysctl = {
+          "net.ipv4.conf.all.forwarding" = true;
+          "net.ipv6.conf.all.forwarding" = true;
+        };
+
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-expo";
         # make friend eth names based on paths from lspci
@@ -53,20 +59,20 @@
             };
             # Physical link to border
             "10-cf" = {
-	      matchConfig.Name = "fiber0";
-	      networkConfig.DHCP = false;
-	      address = [
-		"10.1.2.3/24"
-	      ];
-	    };
+              matchConfig.Name = "fiber0";
+              networkConfig.DHCP = false;
+              address = [
+                "10.1.2.3/24"
+              ];
+            };
             # Physical link to conference
             "10-expo" = {
-	      matchConfig.Name = "fiber1";
-	      networkConfig.DHCP = false;
-	      address = [
-		"10.1.3.3/24"
-	      ];
-	    };
+              matchConfig.Name = "fiber1";
+              networkConfig.DHCP = false;
+              address = [
+                "10.1.3.3/24"
+              ];
+            };
           };
         };
       };
