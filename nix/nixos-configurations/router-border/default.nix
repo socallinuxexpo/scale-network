@@ -79,6 +79,18 @@
               };
               linkConfig.RequiredForOnline = "no";
             };
+            # temporary for testing at various sites
+            # will be static for show
+            "10-nat-dhcp" = {
+              matchConfig.Name = "copper0";
+              enable = true;
+              networkConfig = {
+                DHCP = "yes";
+                LLDP = true;
+                EmitLLDP = true;
+              };
+              linkConfig.RequiredForOnline = "no";
+            };
             # Physical link to conference center
             "10-cf" = {
               matchConfig.Name = "fiber0";
