@@ -20,27 +20,6 @@
           "net.ipv4.conf.all.forwarding" = true;
           "net.ipv6.conf.all.forwarding" = true;
         };
-        networking.nftables.enable = true;
-        networking.nftables.ruleset = ''
-           table ip nat {
-            chain PREROUTING {
-              type nat hook prerouting priority dstnat; policy accept;
-            }
-
-            chain INPUT {
-              type nat hook input priority 100; policy accept;
-            }
-
-            chain OUTPUT {
-              type nat hook output priority -100; policy accept;
-            }
-
-            chain POSTROUTING {
-              type nat hook postrouting priority srcnat; policy accept;
-              oifname "copper0" ip daddr 0.0.0.0/0 counter masquerade
-            }
-          }
-        '';
 
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-expo";
