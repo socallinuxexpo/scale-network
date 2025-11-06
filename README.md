@@ -20,7 +20,7 @@
 - [TESTING](./tests/README.md)
 - [KERMIT](./.kermit/README.md)
 - [RELEASE](./RELEASE.md)
-- [PI](./pi/README.md)
+- [PI](https://github.com/socallinuxexpo/scale-kiosk)
 - [PRE CONF CHECKLIST](./docs/checklists/PRECONF-CHECKLIST.md)
 
 ## Contributing
