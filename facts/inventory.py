@@ -362,24 +362,23 @@ def roomalias(name):
 
 def populateservers(serversfile, vlans):
     """populate the server list from a servers file"""
+    servers_df = pandas.read_csv(serversfile)
+    servers_df.columns.str.strip()
     servers = []
-    flines = getfilelines(serversfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # let's bail if we have an invalid number of columns
-        if len(elems) < 5:
-            continue
-        ipv6 = elems[2]
-        ipv4 = elems[3]
+
+    for _, row in servers_df.iterrows():
+        name = row["name"]
+        aliases = serveralias(name)
+        ipv6 = row["ipv6"]
+        ipv4 = row["ipv4"]
+
         # let's bail if either ip is invalid, which also skips
         # unused server entries as well (where ip is blank)
         if not isvalidip(ipv6) or not isvalidip(ipv4):
             continue
-        serverrole = elems[4].rstrip()
+
         vlan = ""
+        building = ""
         for vln in vlans:
             if ipv6.find(vln["ipv6prefix"]) == 0:
                 vlan = vln["name"]
@@ -387,17 +386,17 @@ def populateservers(serversfile, vlans):
 
         servers.append(
             {
-                "name": elems[0],
-                "macaddress": elems[1],
-                "role": serverrole,
+                "name": name,
+                "macaddress": row["mac-address"],
+                "role": row["role"],
                 "ipv6": ipv6,
                 "ipv6ptr": ip6toptr(ipv6),
                 "ipv4": ipv4,
                 "ipv4ptr": ip4toptr(ipv4),
                 "vlan": vlan,
-                "fqdn": elems[0] + ".scale.lan",
+                "fqdn": name + ".scale.lan",
                 "building": building,
-                "aliases": serveralias(elems[0]),
+                "aliases": aliases,
             }
         )
     return servers
