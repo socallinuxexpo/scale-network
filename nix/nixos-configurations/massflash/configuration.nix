@@ -142,6 +142,12 @@ in
     };
     kea = {
       dhcp4 = {
+        extraArgs = [
+          # Disable Kea's "security checks". Without this, Kea refuses to run
+          # the script we've configured to run via libdhcp_run_script.so
+          # because it's not in the "supported path".
+          "-X"
+        ];
         enable = true;
         configFile =
           pkgs.writeText "keaconfig" # json
