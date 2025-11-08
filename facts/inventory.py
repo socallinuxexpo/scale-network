@@ -241,28 +241,23 @@ def populateswitches(switchesfile):
 
 def populaterouters(routersfile):
     """populate the router list"""
+    routers_df = pandas.read_csv(routersfile)
+    routers_df.columns.str.strip()
     routers = []
-    flines = getfilelines(routersfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # Let's bail if we have an invalid number of columns
-        if len(elems) < 2:
-            continue
-        ipaddr = elems[1].rstrip()
-        # Let's bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
+
+    for _, row in routers_df.iterrows():
+        name = row["name"].lower()
+        ipv6 = row["ipv6"]
+
         routers.append(
             {
-                "name": elems[0].lower(),
-                "ipv6": ipaddr,
-                "ipv6ptr": ip6toptr(ipaddr),
-                "fqdn": elems[0].lower() + ".scale.lan",
+                "name": name,
+                "ipv6": ipv6,
+                "ipv6ptr": ip6toptr(ipv6),
+                "fqdn": name + ".scale.lan",
             }
         )
+
     return routers
 
 
