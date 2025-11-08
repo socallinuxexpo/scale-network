@@ -266,49 +266,34 @@ def populaterouters(routersfile):
     return routers
 
 
-def populateaps(apsfile, apusefile):
+def populateaps(aps_file, apuse_file):
     """populate the AP list from an APs files"""
-    apsdict = {}
-    for row in getfilelines(apsfile, header=True):
-        row = row.strip().split(",")
-        apsdict[row[0]] = row[1:]
+    aps_df = pandas.read_csv(aps_file)
+    apuse_df = pandas.read_csv(apuse_file)
 
-    apusedict = {}
-    for row in getfilelines(apusefile, header=True):
-        row = row.strip().split(",")
-        # serial must be our primary key
-        apusedict[row[1]] = [row[0]] + row[2:]
+    aps_df.columns = aps_df.columns.str.strip()
+    apuse_df.columns = apuse_df.columns.str.strip()
 
-    result = {}
-    for d in (apsdict, apusedict):
-        for key, value in d.items():
-            # merge two files based on serial primary key
-            result.setdefault(key, []).extend(value)
+    merged_df = apuse_df.merge(
+        aps_df, left_on="serial", right_on="serial", suffixes=("", "_ap")
+    )
 
     aps = []
-    # Example of values in result
-    # key: n8t-0054
-    # values: c4:04:15:ad:a3:93,unknown-2,10.128.3.249,6,36,0,0,50,50
-    for key, elems in result.items():
-        try:
-            ipaddr = elems[2]
-        except IndexError:
-            ipaddr = None
+    for _, row in merged_df.iterrows():
+        name = row["name"].lower()
+        ipv4 = row["ipv4"]
 
-        # Lets bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
         aps.append(
             {
-                "name": elems[1].lower(),
-                "mac": elems[0],
-                "ipv4": ipaddr,
-                "ipv4ptr": ip4toptr(ipaddr),
-                "wifi2": elems[3],
-                "wifi5": elems[4],
-                "configver": elems[5],
-                "fqdn": elems[1].lower() + ".scale.lan",
-                "aliases": [key],
+                "name": name,
+                "mac": row["mac"],
+                "ipv4": ipv4,
+                "ipv4ptr": ip4toptr(ipv4),
+                "wifi2": str(row["2.4Ghz_chan"]),
+                "wifi5": str(row["5Ghz_chan"]),
+                "configver": str(row["config_ver"]),
+                "fqdn": name + ".scale.lan",
+                "aliases": [row["serial"].lower()],
             }
         )
     return aps
