@@ -143,34 +143,48 @@ in
     kea = {
       dhcp4 = {
         enable = true;
-        configFile = pkgs.writeText "keaconfig" ''
-          {
+        configFile =
+          pkgs.writeText "keaconfig" # json
+            ''
+              {
                 "Dhcp4": {
-                "interfaces-config": {
-                    "interfaces": [ "flash0.503" ],
+                  "interfaces-config": {
+                    "interfaces": [
+                      "flash0.503"
+                    ],
                     "dhcp-socket-type": "raw"
-                },
-                "valid-lifetime": 600,
-                "renew-timer": 300,
-                "rebind-timer": 400,
-                "subnet4": [{
-                   "subnet": "192.168.252.0/22",
-                   "pools": [ { "pool": "192.168.252.50-192.168.254.254" } ]
-                }],
-                "loggers": [{
-                    "name": "*",
-                    "severity": "DEBUG"
-                }],
-                "hooks-libraries": [{
-                          "library": "${pkgs.kea}/lib/kea/hooks/libdhcp_run_script.so",
-                          "parameters": {
-                              "name": "${pkgs.scale-network.massflash}/bin/massflash",
-                              "sync": false
+                  },
+                  "valid-lifetime": 600,
+                  "renew-timer": 300,
+                  "rebind-timer": 400,
+                  "subnet4": [
+                    {
+                      "subnet": "192.168.252.0/22",
+                      "pools": [
+                        {
+                          "pool": "192.168.252.50-192.168.254.254"
                         }
-                }]
+                      ]
+                    }
+                  ],
+                  "loggers": [
+                    {
+                      "name": "*",
+                      "severity": "DEBUG"
+                    }
+                  ],
+                  "hooks-libraries": [
+                    {
+                      "library": "${pkgs.kea}/lib/kea/hooks/libdhcp_run_script.so",
+                      "parameters": {
+                        "name": "${pkgs.scale-network.massflash}/bin/massflash",
+                        "sync": false
+                      }
+                    }
+                  ]
                 }
-          }
-        '';
+              }
+            '';
       };
     };
   };
