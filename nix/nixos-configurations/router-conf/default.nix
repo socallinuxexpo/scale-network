@@ -22,7 +22,6 @@
         };
 
         nixpkgs.hostPlatform = "x86_64-linux";
-        networking.hostName = "router-conf";
         # make friend eth names based on paths from lspci
         services.udev.extraRules = ''
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
