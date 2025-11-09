@@ -159,6 +159,7 @@ in
                   "rebind-timer": 400,
                   "subnet4": [
                     {
+                      "id": 1921682520,
                       "subnet": "192.168.252.0/22",
                       "pools": [
                         {
