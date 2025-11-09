@@ -30,10 +30,7 @@ in
           Kind = "bridge";
           Name = "br0";
         };
-        extraConfig = ''
-          [Bridge]
-          VLANFiltering=1
-        '';
+        bridgeConfig.VLANFiltering = true;
       };
 
       flash = {
@@ -57,35 +54,25 @@ in
     };
     # Nice example: https://github.com/NixOS/nixpkgs/issues/16230#issuecomment-272331072
     networks = {
-      # Requires a match to automatically bring up the interface
-      br0.extraConfig = ''
-        [Match]
-        Name=br0
-      '';
-      flash0.extraConfig = ''
-        [Match]
-        Name=flash0
+      br0 = {
+        matchConfig.Name = "br0";
+      };
 
-        [Network]
-        VLAN=flash0.503
-      '';
-      flash503.extraConfig = ''
-        [Match]
-        Name=flash0.503
+      flash0 = {
+        matchConfig.Name = "flash0";
+        networkConfig.VLAN = "flash0.503";
+      };
 
-        [Network]
-        Address=192.168.252.1/22
-      '';
-      flash1.extraConfig = ''
-        [Match]
-        Name=flash1
+      flash503 = {
+        matchConfig.Name = "flash0.503";
+        networkConfig.Address = "192.168.252.1/22";
+      };
 
-        [Network]
-        Bridge=br0
-
-        [BridgeVLAN]
-        VLAN=503
-      '';
+      flash1 = {
+        matchConfig.Name = "flash1";
+        networkConfig.Bridge = "br0";
+        bridgeVLANs = [ { VLAN = 503; } ];
+      };
     };
   };
   networking = {
