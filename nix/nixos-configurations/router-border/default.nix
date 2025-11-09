@@ -21,6 +21,11 @@
           "net.ipv6.conf.all.forwarding" = true;
         };
 
+        # verify: modinfo -p ixgbe
+        boot.extraModprobeConfig = ''
+          options ixgbe allow_unsupported_sfp=1,1
+        '';
+
         networking.nftables.enable = true;
         networking.nftables.ruleset = ''
            table ip nat {

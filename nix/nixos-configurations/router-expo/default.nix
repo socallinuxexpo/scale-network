@@ -21,6 +21,11 @@
           "net.ipv6.conf.all.forwarding" = true;
         };
 
+        # verify: modinfo -p ixgbe
+        boot.extraModprobeConfig = ''
+          options ixgbe allow_unsupported_sfp=1,1
+        '';
+
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-expo";
         # make friend eth names based on paths from lspci
