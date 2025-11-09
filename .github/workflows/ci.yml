@@ -26,5 +26,5 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix build -L .#massflash
-      - run: nix build -L .#scaleInventory
+      - run: nix build -L .#scale-inventory
       - run: nix build -L .#serverspec
