@@ -7,8 +7,8 @@
 }:
 let
   local_manifests = copyPathsToStore [
-    ../../../switch-configuration
-    ../../../facts
+    ../../../../../switch-configuration
+    ../../../../../facts
   ];
 in
 stdenvNoCC.mkDerivation {
