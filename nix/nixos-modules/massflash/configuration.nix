@@ -112,6 +112,7 @@ in
           git
           kea
           scale-network.massflash
+          scale-network.massflash-generate-persist
           unixtools.ping
           tmux
           vim
