@@ -27,6 +27,9 @@ in
       experimental-features = nix-command flakes
     '';
 
+    # Enable deployments by non-root user.
+    nix.settings.trusted-users = [ "@wheel" ];
+
     environment.systemPackages = with pkgs; [
       bc
       binutils
