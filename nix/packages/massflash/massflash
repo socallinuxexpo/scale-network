@@ -7,13 +7,13 @@ hook=$1
 case $hook in
   leases4_committed)
     echo "lease4_committed"
-    echo $QUERY4_REMOTE_ADDR
+    echo "$QUERY4_REMOTE_ADDR"
     exit 0;;
   lease4_renew)
-    echo $hook
+    echo "$hook"
     if [ "$QUERY4_TYPE" != "DHCPREQUEST" ]; then exit 0; fi;;
   *)
-    echo $hook
+    echo "$hook"
     exit 0
 esac
 
@@ -23,7 +23,8 @@ host="$LEASE4_ADDRESS"
 
 config_file="/etc/massflash.conf"
 
-. $config_file
+# shellcheck source=/dev/null
+source "$config_file"
 
 state_dir="${state_dir:-/tmp/massflash}"
 ssh_user="${ssh_user:-root}"
@@ -41,31 +42,31 @@ sleep 20
 # Concat the arch and a string (eventually will be flash .bin)
 #puts [format "hello%s" $arch]
 #set archb "hello"
-ap_type=$(ssh -i $state_dir/id_priv -p $ssh_port \
+ap_type=$(ssh -i "$state_dir/id_priv" -p "$ssh_port" \
   -o KexAlgorithms=ecdh-sha2-nistp521 \
   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  $ssh_user@$host "cat /etc/board.json | jq -r .model.id | cut -d',' -f2")
+  "$ssh_user@$host" "cat /etc/board.json | jq -r .model.id | cut -d',' -f2")
 
-[ -z "ap_type" ] && echo "/etc/board.json type not parsed" && exit 1
+[ -z "$ap_type" ] && echo "/etc/board.json type not parsed" && exit 1
 
-scp -O -P $ssh_port \
-  -i $state_dir/id_priv \
+scp -O -P "$ssh_port" \
+  -i "$state_dir/id_priv" \
   -o KexAlgorithms=ecdh-sha2-nistp521 \
   -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-  "$state_dir/$ap_type/flash.bin" $ssh_user@$host:/tmp/
+  "$state_dir/$ap_type/flash.bin" "$ssh_user@$host:/tmp/"
 
 echo "scp good!"
 
 if [[ "$ap_type" == "one" ]]; then
-  ssh -i $state_dir/id_priv -p $ssh_port -t \
+  ssh -i "$state_dir/id_priv" -p "$ssh_port" -t \
     -o KexAlgorithms=ecdh-sha2-nistp521 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-    $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then echo 255 > /sys/class/leds/amber\:lan/brightness; else sysupgrade -n -v /tmp/flash.bin; fi"
+    "$ssh_user@$host" "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then echo 255 > /sys/class/leds/amber\:lan/brightness; else sysupgrade -n -v /tmp/flash.bin; fi"
 else
-  ssh -i $state_dir/id_priv -p $ssh_port -t \
+  ssh -i "$state_dir/id_priv" -p "$ssh_port" -t \
     -o KexAlgorithms=ecdh-sha2-nistp521 \
     -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
-    $ssh_user@$host "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
+    "$ssh_user@$host" "grep $flash_sha /etc/scale-release; if \[ \$? == 0 \]; then poweroff; else sysupgrade -n -v /tmp/flash.bin; fi"
 fi
 
 echo "Done with $host"
