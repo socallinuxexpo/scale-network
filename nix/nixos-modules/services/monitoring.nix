@@ -23,7 +23,7 @@ let
 
   unfilteredList = (
     builtins.split "\n" (
-      builtins.readFile "${pkgs.scale-network.scaleInventory}/config/all-network-devices"
+      builtins.readFile "${pkgs.scale-network.scale-inventory}/config/all-network-devices"
     )
   );
   filteredList = (builtins.filter (line: line != [ ] && line != "") unfilteredList);
@@ -62,13 +62,13 @@ in
         {
           job_name = "ap";
           static_configs = builtins.fromJSON (
-            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom-aps.json"
+            builtins.readFile "${pkgs.scale-network.scale-inventory}/config/prom-aps.json"
           );
         }
         {
           job_name = "pi";
           static_configs = builtins.fromJSON (
-            builtins.readFile "${pkgs.scale-network.scaleInventory}/config/prom-pis.json"
+            builtins.readFile "${pkgs.scale-network.scale-inventory}/config/prom-pis.json"
           );
         }
         {

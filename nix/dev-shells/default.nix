@@ -56,7 +56,7 @@ mapAttrs (const (
       pkg-config
       gcc
       stdenv
-      scale-network.makeDhcpd
+      scale-network.make-dhcpd
       scale-network.serverspec
     ];
 
@@ -66,9 +66,9 @@ mapAttrs (const (
       perlPackages.Expect
       perlPackages.TermReadKey
       perlPackages.NetSFTPForeign
-      scale-network.perlNetArp
-      scale-network.perlNetInterface
-      scale-network.perlNetPing
+      scale-network.perl-net-arp
+      scale-network.perl-net-interface
+      scale-network.perl-net-ping
       ghostscript
     ];
   in
