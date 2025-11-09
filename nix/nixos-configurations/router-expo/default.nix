@@ -44,6 +44,8 @@
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.3", NAME="copper3"
         '';
 
+        networking.firewall.enable = false;
+
         # must be disabled if using systemd.network
         networking.useDHCP = false;
 
