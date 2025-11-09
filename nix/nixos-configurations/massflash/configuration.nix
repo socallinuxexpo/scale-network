@@ -58,6 +58,11 @@ in
     };
     # Nice example: https://github.com/NixOS/nixpkgs/issues/16230#issuecomment-272331072
     networks = {
+      "10-wlan" = {
+        matchConfig.Type = "wlan";
+        networkConfig.DHCP = "yes";
+      };
+
       br0 = {
         matchConfig.Name = "br0";
       };
@@ -92,9 +97,8 @@ in
     wireless = {
       enable = true;
       userControlled.enable = true;
+      allowAuxiliaryImperativeNetworks = true;
     };
-
-    interfaces.wlp3s0.useDHCP = true;
   };
 
   # root user doesnt need credentials for massflash liveCD
@@ -185,5 +189,4 @@ in
       };
     };
   };
-
 }

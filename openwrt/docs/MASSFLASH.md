@@ -25,13 +25,10 @@ Setup wifi:
 ~$ sudo systemctl start wpa_supplicant
 ```
 
-Add wireless config directly to `/var/run/wpa_supplicant/wpa_supplicant.conf`
+Add wireless config:
 
 ```
-network={
-  ssid="<name>"
-  psk="<password>"
-}
+wpa_passphrase <SSID> <password> | sudo tee /etc/wpa_supplicant.conf
 ```
 
 Trigger a reloading of config:
