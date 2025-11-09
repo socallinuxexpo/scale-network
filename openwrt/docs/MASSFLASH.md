@@ -3,15 +3,29 @@
 ## Overview
 
 Leverages `openwrt/scripts/massflash` and `kea` to provide a way to flash openwrt APs with new images prior to the
-scale conference
+scale conference.
 
 ## Prereqs
 
-Build the `massflash` livecd:
+We have nixos configurations defined for both x86 and Raspberry Pi.
+
+### x86
+
+Build the livecd:
 
 ```
-~$ nix build ".#nixosConfigurations.x86_64-linux.massflash.config.system.build.isoImage"
+$ nix build .#nixosConfigurations.massflashX86.config.system.build.isoImage
 ```
+
+### Raspberry Pi
+
+Build a Raspberry Pi image:
+
+```
+$ nix build .#nixosConfigurations.massflashPi.config.system.build.sdImage
+```
+
+## Next steps
 
 Connect the flashing interface to the bridge:
 
@@ -31,13 +45,13 @@ Add wireless config:
 wpa_passphrase <SSID> <password> | sudo tee /etc/wpa_supplicant.conf
 ```
 
-Trigger a reloading of config:
+Trigger a reload:
 
 ```
 ~$ wpa_cli reconfigure
 ```
 
-Create the dir layout expected for flashing:
+Create the directory layout expected for flashing:
 
 ```
 ~$ mkdir -p /persist/massflash
@@ -55,9 +69,9 @@ wndr3800ch/flash.bin
 
 ## Known issues
 
-- DHCP client requests are duplicated on AP startup. Its not uncommon to see this in the logs but there is no issue with this happening.
+- DHCP client requests are duplicated on AP startup. You may see this in the logs, but there is no issue with this happening.
   In the future it might be a good idea to investigate to see why the interfaces are yoyo'ing at boot and sending multiple requests.
-- `massflash` assumes its being called by kea script plugin. The following arg is passed to the `massflash` script and environment variables
+- `massflash` assumes it's being called by kea script plugin. The following arg is passed to the `massflash` script and environment variables
   are assumed to be present:
 
 ```
