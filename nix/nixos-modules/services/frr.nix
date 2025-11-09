@@ -53,6 +53,7 @@ in
       type = types.str;
       default = ''
         router ospf
+         passive-interface default
          network 10.0.0.0/8 area 0
          redistribute connected
          timers throttle spf 50 100 5000
@@ -92,6 +93,7 @@ in
           broadcast-interface-config = concatStringsSep "\n" (
             map (x: ''
               interface ${x}
+               no ip ospf passive
                ip ospf network broadcast
                ip ospf hello-interval 1
                ip ospf dead-interval 3
