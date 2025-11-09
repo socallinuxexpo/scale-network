@@ -36,12 +36,6 @@ in
       type = types.str;
     };
 
-    passive-interfaces = mkOption {
-      description = "Passive OSPF Interfaces";
-      type = types.listOf types.str;
-      default = [ "eth0" ];
-    };
-
     broadcast-interface = mkOption {
       description = "Broadcast Interface";
       type = types.listOf types.str;
@@ -82,14 +76,6 @@ in
 
           router-id-config = "router-id ${cfg.router-id}";
 
-          passive-interfaces-config = concatStringsSep "\n" (
-            map (x: ''
-              interface ${x}
-                ip ospf passive
-              exit
-            '') cfg.passive-interfaces
-          );
-
           broadcast-interface-config = concatStringsSep "\n" (
             map (x: ''
               interface ${x}
@@ -104,7 +90,6 @@ in
         in
         concatStringsSep "\n" [
           router-id-config
-          passive-interfaces-config
           broadcast-interface-config
           cfg.routing-config
         ];
