@@ -24,6 +24,10 @@ in
 
   systemd.network = {
     enable = true;
+
+    # "Online" is an ill-defined term: <https://systemd.io/NETWORK_ONLINE/>.
+    wait-online.enable = false;
+
     netdevs = {
       br0 = {
         netdevConfig = {
