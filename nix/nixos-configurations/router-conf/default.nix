@@ -69,6 +69,10 @@
               address = [
                 "10.1.1.2/24"
               ];
+              linkConfig.RequiredForOnline = "routable";
+              routes = [
+                { Gateway = "10.1.1.1"; }
+              ];
             };
             # Physical link to expo
             "10-expo" = {
