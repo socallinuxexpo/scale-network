@@ -69,6 +69,10 @@
               address = [
                 "10.1.2.3/24"
               ];
+              linkConfig.RequiredForOnline = "routable";
+              routes = [
+                { Gateway = "10.1.2.1"; }
+              ];
             };
             # Physical link to conference
             "10-expo" = {
