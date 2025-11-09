@@ -13,7 +13,7 @@ let
 in
 stdenvNoCC.mkDerivation {
 
-  name = "scaleInventory";
+  name = "scale-inventory";
 
   propagatedBuildInputs = [
     python3

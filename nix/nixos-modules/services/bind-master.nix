@@ -37,7 +37,7 @@ let
                         IN    NS      coreexpo.scale.lan.
                         IN    NS      coreconf.scale.lan.
       ''
-      (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.scale.lan.records")
+      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.scale.lan.records")
     ]
   );
   named10Rev = pkgs.writeText "named-10.rev" (
@@ -55,7 +55,7 @@ let
                         IN NS      coreexpo.scale.lan.
                         IN NS      coreconf.scale.lan.
       ''
-      (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv4.arpa.records")
+      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv4.arpa.records")
     ]
   );
   named2001Rev = pkgs.writeText "named-2001.470.f026-48.rev" (
@@ -73,7 +73,7 @@ let
                         IN NS      coreexpo.scale.lan.
                         IN NS      coreconf.scale.lan.
       ''
-      (builtins.readFile "${pkgs.scale-network.scaleInventory}/config/db.ipv6.arpa.records")
+      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv6.arpa.records")
     ]
   );
   namedConf = pkgs.writeText "named.conf" ''

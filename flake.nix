@@ -5,6 +5,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
     disko.url = "github:nix-community/disko";
     nixpkgs-2505.url = "github:NixOS/nixpkgs";
+    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.follows = "nixpkgs-unstable";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";

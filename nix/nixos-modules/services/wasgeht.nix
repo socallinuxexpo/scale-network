@@ -43,7 +43,7 @@ in
 
     hostFile = mkOption {
       type = types.str;
-      default = "${pkgs.scale-network.scaleInventory}/config/scale-wasgeht-config.json";
+      default = "${pkgs.scale-network.scale-inventory}/config/scale-wasgeht-config.json";
     };
 
     logLevel = mkOption {

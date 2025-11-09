@@ -16,7 +16,7 @@ let
     mkDefault
     ;
 
-  inherit (inputs.self.library)
+  inherit (inputs.self.library.strings)
     kebabToCamel
     ;
 in
