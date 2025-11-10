@@ -34,6 +34,52 @@ def getfilelines(filename, header=False, directory="./", building=None):
     return lines
 
 
+def make_vlan(vlan_config):
+    """
+    Makes a vlan dictionary from a VLAN config:
+    {
+        'id': 105,
+        'name': 'hiAV',
+        'v6cidr': '2001:470:f026:105::/64',
+        'v4cidr': '10.0.5.0/24',
+        'description': 'Audio Visual Network (DHCP Helper to AV server)',
+        'building': 'Conference',
+    }
+    """
+    ipv6 = vlan_config["v6cidr"].split("/")
+    ipv6prefix = ipv6[0]
+    ipv6bitmask = ipv6[1]
+    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
+    ipv4 = vlan_config["v4cidr"].split("/")
+    ipv4prefix = ipv4[0]
+    ipv4bitmask = ipv4[1]
+    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
+    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
+    vlanid = vlan_config["id"]
+    if not vlanid.isdigit():
+        return None
+    return {
+        "name": vlan_config["name"],
+        "id": vlanid,
+        "ipv6prefix": ipv6prefix,
+        "ipv6bitmask": ipv6bitmask,
+        "ipv4prefix": ipv4prefix,
+        "ipv4bitmask": ipv4bitmask,
+        "building": vlan_config["building"],
+        "description": vlan_config["description"].rstrip(),
+        "ipv6dhcpStart": ipv6dhcp[0],
+        "ipv6dhcpEnd": ipv6dhcp[1],
+        "ipv4dhcpStart": ipv4dhcp[0],
+        "ipv4dhcpEnd": ipv4dhcp[1],
+        "ipv4router": ipv4dhcp[2],
+        "ipv4netmask": ipv4netmask,
+        "ipv6dns1": "",
+        "ipv6dns2": "",
+        "ipv4dns1": "",
+        "ipv4dns2": "",
+    }
+
+
 def makevlan(line, building):
     """Makes a vlan dictionary from VLAN directive line"""
     elems = re.split(r"\t+", line)
