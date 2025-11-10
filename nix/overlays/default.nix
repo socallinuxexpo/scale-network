@@ -7,7 +7,7 @@ let
     attrValues
     ;
 
-  inherit (inputs.nixpkgs-unstable)
+  inherit (inputs.nixpkgs-lib)
     lib
     ;
 
