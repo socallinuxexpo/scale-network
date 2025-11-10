@@ -21,6 +21,33 @@
           "net.ipv6.conf.all.forwarding" = true;
         };
 
+        # verify: modinfo -p ixgbe
+        boot.extraModprobeConfig = ''
+          options ixgbe allow_unsupported_sfp=1,1
+        '';
+
+        networking.nftables.enable = true;
+        networking.nftables.ruleset = ''
+           table ip nat {
+            chain PREROUTING {
+              type nat hook prerouting priority dstnat; policy accept;
+            }
+
+            chain INPUT {
+              type nat hook input priority 100; policy accept;
+            }
+
+            chain OUTPUT {
+              type nat hook output priority -100; policy accept;
+            }
+
+            chain POSTROUTING {
+              type nat hook postrouting priority srcnat; policy accept;
+              oifname "copper0" ip daddr 0.0.0.0/0 counter masquerade
+            }
+          }
+        '';
+
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-border";
         # make friend eth names based on paths from lspci
@@ -49,6 +76,18 @@
             # Keep this for troubleshooting
             "10-backdoor" = {
               matchConfig.Name = "backdoor0";
+              enable = true;
+              networkConfig = {
+                DHCP = "yes";
+                LLDP = true;
+                EmitLLDP = true;
+              };
+              linkConfig.RequiredForOnline = "no";
+            };
+            # temporary for testing at various sites
+            # will be static for show
+            "10-nat-dhcp" = {
+              matchConfig.Name = "copper0";
               enable = true;
               networkConfig = {
                 DHCP = "yes";

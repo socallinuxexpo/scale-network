@@ -27,9 +27,6 @@
           router.border.enable = true;
           services.frr.enable = true;
           services.frr.router-id = "10.1.1.1";
-          services.frr.passive-interfaces = [
-            "eth0"
-          ];
           services.frr.broadcast-interface = [
             "eth1"
             "eth2"
@@ -77,9 +74,6 @@
           router.conference.enable = true;
           services.frr.enable = true;
           services.frr.router-id = "10.1.1.2";
-          services.frr.passive-interfaces = [
-            "eth0"
-          ];
           services.frr.broadcast-interface = [
             "eth1"
             "eth2"
@@ -105,9 +99,6 @@
           router.expo.enable = true;
           services.frr.enable = true;
           services.frr.router-id = "10.1.2.3";
-          services.frr.passive-interfaces = [
-            "eth0"
-          ];
           services.frr.broadcast-interface = [
             "eth1"
             "eth2"

@@ -21,6 +21,11 @@
           "net.ipv6.conf.all.forwarding" = true;
         };
 
+        # verify: modinfo -p ixgbe
+        boot.extraModprobeConfig = ''
+          options ixgbe allow_unsupported_sfp=1,1
+        '';
+
         nixpkgs.hostPlatform = "x86_64-linux";
         networking.hostName = "router-conf";
         # make friend eth names based on paths from lspci
@@ -38,6 +43,8 @@
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.2", NAME="copper2"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.3", NAME="copper3"
         '';
+
+        networking.firewall.enable = false;
 
         # must be disabled if using systemd.network
         networking.useDHCP = false;
@@ -63,6 +70,10 @@
               networkConfig.DHCP = false;
               address = [
                 "10.1.1.2/24"
+              ];
+              linkConfig.RequiredForOnline = "routable";
+              routes = [
+                { Gateway = "10.1.1.1"; }
               ];
             };
             # Physical link to expo
