@@ -50,10 +50,12 @@ in
          passive-interface default
          network 10.0.0.0/8 area 0
          redistribute connected
+         redistribute static
         exit
         router ospf6
          passive-interface default
          redistribute connected
+         redistribute static
         exit
       '';
     };
