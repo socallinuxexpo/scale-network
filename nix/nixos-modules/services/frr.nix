@@ -50,6 +50,12 @@ in
          passive-interface default
          network 10.0.0.0/8 area 0
          redistribute connected
+         redistribute static
+        exit
+        router ospf6
+         passive-interface default
+         redistribute connected
+         redistribute static
         exit
       '';
     };
@@ -77,6 +83,10 @@ in
                ip ospf network broadcast
                ip ospf hello-interval 1
                ip ospf dead-interval 3
+               no ipv6 ospf6 passive
+               ipv6 ospf6 network broadcast
+               ipv6 ospf6 hello-interval 1
+               ipv6 ospf6 dead-interval 3
               exit
             '') cfg.broadcast-interface
           );
