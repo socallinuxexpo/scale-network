@@ -33,6 +33,52 @@ def getfilelines(filename, header=False, directory="./", building=None):
     return lines
 
 
+def make_vlan(vlan_config):
+    """
+    Makes a vlan dictionary from a VLAN config:
+    {
+        'id': 105,
+        'name': 'hiAV',
+        'v6cidr': '2001:470:f026:105::/64',
+        'v4cidr': '10.0.5.0/24',
+        'description': 'Audio Visual Network (DHCP Helper to AV server)',
+        'building': 'Conference',
+    }
+    """
+    ipv6 = vlan_config["v6cidr"].split("/")
+    ipv6prefix = ipv6[0]
+    ipv6bitmask = ipv6[1]
+    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
+    ipv4 = vlan_config["v4cidr"].split("/")
+    ipv4prefix = ipv4[0]
+    ipv4bitmask = ipv4[1]
+    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
+    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
+    vlanid = vlan_config["id"]
+    if not vlanid.isdigit():
+        return None
+    return {
+        "name": vlan_config["name"],
+        "id": vlanid,
+        "ipv6prefix": ipv6prefix,
+        "ipv6bitmask": ipv6bitmask,
+        "ipv4prefix": ipv4prefix,
+        "ipv4bitmask": ipv4bitmask,
+        "building": vlan_config["building"],
+        "description": vlan_config["description"].rstrip(),
+        "ipv6dhcpStart": ipv6dhcp[0],
+        "ipv6dhcpEnd": ipv6dhcp[1],
+        "ipv4dhcpStart": ipv4dhcp[0],
+        "ipv4dhcpEnd": ipv4dhcp[1],
+        "ipv4router": ipv4dhcp[2],
+        "ipv4netmask": ipv4netmask,
+        "ipv6dns1": "",
+        "ipv6dns2": "",
+        "ipv4dns1": "",
+        "ipv4dns2": "",
+    }
+
+
 def makevlan(line, building):
     """Makes a vlan dictionary from VLAN directive line"""
     elems = re.split(r"\t+", line)
@@ -240,74 +286,54 @@ def populateswitches(switchesfile):
 
 def populaterouters(routersfile):
     """populate the router list"""
+    routers_df = pandas.read_csv(routersfile)
+    routers_df.columns.str.strip()
     routers = []
-    flines = getfilelines(routersfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # Let's bail if we have an invalid number of columns
-        if len(elems) < 2:
-            continue
-        ipaddr = elems[1].rstrip()
-        # Let's bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
+
+    for _, row in routers_df.iterrows():
+        name = row["name"].lower()
+        ipv6 = row["ipv6"]
+
         routers.append(
             {
-                "name": elems[0].lower(),
-                "ipv6": ipaddr,
-                "ipv6ptr": ip6toptr(ipaddr),
-                "fqdn": elems[0].lower() + ".scale.lan",
+                "name": name,
+                "ipv6": ipv6,
+                "ipv6ptr": ip6toptr(ipv6),
+                "fqdn": name + ".scale.lan",
             }
         )
+
     return routers
 
 
-def populateaps(apsfile, apusefile):
+def populateaps(aps_file, apuse_file):
     """populate the AP list from an APs files"""
-    apsdict = {}
-    for row in getfilelines(apsfile, header=True):
-        row = row.strip().split(",")
-        apsdict[row[0]] = row[1:]
+    aps_df = pandas.read_csv(aps_file)
+    apuse_df = pandas.read_csv(apuse_file)
 
-    apusedict = {}
-    for row in getfilelines(apusefile, header=True):
-        row = row.strip().split(",")
-        # serial must be our primary key
-        apusedict[row[1]] = [row[0]] + row[2:]
+    aps_df.columns = aps_df.columns.str.strip()
+    apuse_df.columns = apuse_df.columns.str.strip()
 
-    result = {}
-    for d in (apsdict, apusedict):
-        for key, value in d.items():
-            # merge two files based on serial primary key
-            result.setdefault(key, []).extend(value)
+    merged_df = apuse_df.merge(
+        aps_df, left_on="serial", right_on="serial", suffixes=("", "_ap")
+    )
 
     aps = []
-    # Example of values in result
-    # key: n8t-0054
-    # values: c4:04:15:ad:a3:93,unknown-2,10.128.3.249,6,36,0,0,50,50
-    for key, elems in result.items():
-        try:
-            ipaddr = elems[2]
-        except IndexError:
-            ipaddr = None
+    for _, row in merged_df.iterrows():
+        name = row["name"].lower()
+        ipv4 = row["ipv4"]
 
-        # Lets bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
         aps.append(
             {
-                "name": elems[1].lower(),
-                "mac": elems[0],
-                "ipv4": ipaddr,
-                "ipv4ptr": ip4toptr(ipaddr),
-                "wifi2": elems[3],
-                "wifi5": elems[4],
-                "configver": elems[5],
-                "fqdn": elems[1].lower() + ".scale.lan",
-                "aliases": [key],
+                "name": name,
+                "mac": row["mac"],
+                "ipv4": ipv4,
+                "ipv4ptr": ip4toptr(ipv4),
+                "wifi2": str(row["2.4Ghz_chan"]),
+                "wifi5": str(row["5Ghz_chan"]),
+                "configver": str(row["config_ver"]),
+                "fqdn": name + ".scale.lan",
+                "aliases": [row["serial"].lower()],
             }
         )
     return aps
@@ -381,24 +407,23 @@ def roomalias(name):
 
 def populateservers(serversfile, vlans):
     """populate the server list from a servers file"""
+    servers_df = pandas.read_csv(serversfile)
+    servers_df.columns.str.strip()
     servers = []
-    flines = getfilelines(serversfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # let's bail if we have an invalid number of columns
-        if len(elems) < 5:
-            continue
-        ipv6 = elems[2]
-        ipv4 = elems[3]
+
+    for _, row in servers_df.iterrows():
+        name = row["name"]
+        aliases = serveralias(name)
+        ipv6 = row["ipv6"]
+        ipv4 = row["ipv4"]
+
         # let's bail if either ip is invalid, which also skips
         # unused server entries as well (where ip is blank)
         if not isvalidip(ipv6) or not isvalidip(ipv4):
             continue
-        serverrole = elems[4].rstrip()
+
         vlan = ""
+        building = ""
         for vln in vlans:
             if ipv6.find(vln["ipv6prefix"]) == 0:
                 vlan = vln["name"]
@@ -406,17 +431,17 @@ def populateservers(serversfile, vlans):
 
         servers.append(
             {
-                "name": elems[0],
-                "macaddress": elems[1],
-                "role": serverrole,
+                "name": name,
+                "macaddress": row["mac-address"],
+                "role": row["role"],
                 "ipv6": ipv6,
                 "ipv6ptr": ip6toptr(ipv6),
                 "ipv4": ipv4,
                 "ipv4ptr": ip4toptr(ipv4),
                 "vlan": vlan,
-                "fqdn": elems[0] + ".scale.lan",
+                "fqdn": name + ".scale.lan",
                 "building": building,
-                "aliases": serveralias(elems[0]),
+                "aliases": aliases,
             }
         )
     return servers
