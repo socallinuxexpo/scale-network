@@ -8,12 +8,12 @@
     }:
     {
       imports = [
-        "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
-        ./configuration.nix
+        "${modulesPath}/installer/sd-card/sd-image-aarch64-installer.nix"
       ];
 
       config = {
-        nixpkgs.hostPlatform = "x86_64-linux";
+        nixpkgs.hostPlatform = "aarch64-linux";
+        scale-network.massflash.enable = true;
 
         scale-network = {
           base.enable = true;
@@ -28,7 +28,6 @@
           users.root.enable = true;
           users.ruebenramirez.enable = true;
         };
-
       };
     };
 }
