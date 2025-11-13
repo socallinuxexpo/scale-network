@@ -20,6 +20,7 @@ mapAttrs (const (pkgs: {
     mac2eui64
     make-dhcpd
     massflash
+    massflash-generate-persist
     scale-inventory
     serverspec
     perl-net-arp

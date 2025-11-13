@@ -51,21 +51,14 @@ Trigger a reload:
 ~$ wpa_cli reconfigure
 ```
 
-Create the directory layout expected for flashing:
+Create the directory layout expected for flashing. (You might want to run
+this on your personal machine and copy this to the massflash machine via USB):
 
 ```
-~$ mkdir -p /persist/massflash
+$ nix run .#massflash-generate-persist -- [id_priv] /persist/massflash
 ```
 
-Under `/persist/massflash`:
-
-```
-flash_sha # commit hash used to build latest openwrt images
-id_priv # private key used to log into the APs
-wndr3700-v2/flash.bin # dir for this model of ap and its sysupgrade.bin
-wndr3800/flash.bin
-wndr3800ch/flash.bin
-```
+Where `id_priv` is a path to the private key used to log into the APs.
 
 ## Known issues
 
