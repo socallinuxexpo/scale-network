@@ -19,8 +19,9 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Get all NixOS configurations
         id: nixosconfigsget
+        # get all nixosConfigurations except for massflashPi since its aarch64
         run: |
-          nixosconfignames=$(nix eval .\#nixosConfigurations --apply builtins.attrNames --json)
+          nixosconfignames=$(nix eval .\#nixosConfigurations --apply builtins.attrNames --json | jq -c '. - ["massflashPi"]')
           echo "$nixosconfignames"
           echo "nixosconfignames=$nixosconfignames" >> $GITHUB_OUTPUT
   nixos_configs_build:
