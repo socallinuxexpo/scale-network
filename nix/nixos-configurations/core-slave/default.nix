@@ -28,14 +28,12 @@
           eth = "virbr0";
         };
 
-        networking.hostName = "coreslave";
-
         # disable legacy networking bits as recommended by:
         #  https://github.com/NixOS/nixpkgs/issues/10001#issuecomment-905532069
         #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
         networking = {
           extraHosts = ''
-            10.0.3.20 coreexpo.scale.lan
+            10.0.3.20 core-slave.scale.lan
           '';
         };
 
