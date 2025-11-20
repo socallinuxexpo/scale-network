@@ -1,386 +1,222 @@
-## Last changed: 2024-03-12 19:58:57 UTC
-version 22.4R3.25;
-system {
-    host-name br-mdf-01;
-    root-authentication {
-        encrypted-password "$6$SqiCb9s1$HZ2cP5mI13JyVzL6ak9BkYd29D8H59E0qdxtnNMQrKrUUhy3pjxngpOpBJr6oPO5AWnqq7cP1fsiMBheNToir0";
-    }
-    login {
-        user dlang {
-            uid 2002;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFyz75cUD5pMz7bWdNVc9pLZ9QNS+scMMHHbVvZ060tYlbD2YS1FuIXcyisKYLr29/3O+/ciKOIcw/Q2pzsxgL8mO0ATJzwtvtyhWIcMhJBZNR2jbPwIeKp7Z5NBk8fMDRpWI6i9saLLMr9XtZ2B9RLewIqAAZs0vujJKauaLWVYVFQwkkqKL0WIGP/7fCf1BUHz3vrA1fQDwzhCMayNUBtYwzXtk1Cc0alSLvs1AiqEBWr/n+sduhyUERlFVgvATsH0j1AnLbESathqX4DIatVdHdkAkNaiOAWbguqLDtUiJqcU+eahPFJTeDpLqp6KNP5ZfOr2EQwXZt5mhACjHP davidlang@T470-op-07";
-            }
-        }
-        user kyle {
-            uid 2003;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoQAOVBAEF/HANG4eWBZ6eSoL+7RLpVTMdYC4SZTX5cQqAuxhC3QUEW0ol64eka8/6MELe7Q0UlQ7gH1GpGlB01fGYAJyb0rjVauaS4UisRrZVrP/kLH1TcOJz/AZVQQiOp/XJUCM/KIaTvTUUaadgwPeTunsofzkXQm0WKI1Zqmzs2kj3Q2Tt6P253JvsjOxUV1s7S/oRLiBO9YGkdyCnxJwY7ulgsC9MyvopPsxSm8ta+OQfApQZOoo6T38vq2JrG41bzRlHzn5Bc1Elzkzj1bViX4gnbwooCuw60BjGkunv1bpQclM81jyWUNZ+0rUc/1Id3kFWMQhT5BBcaODoNh0JD62B01iFqovSseOCMDTHvDB497DPGQmQnyb+fMfPHYlx2T3zThMUz40je9h3IniOLnvBTfoAdqwqRsJD6JZ4G/CBcrY11kCzJg5W3I8jAhLs7o90lOGVaL23DvcRMAmIT33B2BHXcUyIF45CYcJYxDuTBn1TlkXoWRF4tWE9v9YPMqYDzLQAplgMK4GRUZA4nJ+JGzzvQz6AcgiTe1YRWO3TjVfqapLTTU6vlvsefI6swyjJW5U5VmqncNQqSiaI8YQIkTCkrTKPtKX4zfj0xa/KoSObnxigsgii11lK6YgS5WbZTnSUH8xJDLjifXKA1XIRbR6Q+YhTbvF1mw==";
-            }
-        }
-        user owen {
-            uid 2004;
-            class super-user;
-            authentication {
-                ssh-rsa "1024 35 114870125079119497064743730551404181721672323637756765961033342070324890531075442741038312582198068761882520928459647324479322148555144455780494777680624949377326717543633178036569565385043021169776538604325865960174754107961471683552906040905706631227199019520404589625948590225853880518583702852911526808117 owen@owen.delong.sj.ca.us";
-                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
-            }
-        }
-        user rob {
-            uid 2005;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBP0XP83nOtxnsGJ7AG+FuT7dbAEO8BrIHlPbhCGhKjFKcq8g6LWa0htx3iwHJB2VfasIVSqWAC7SwX81XfSTwpvNSNVXvrIcMNdYOpEBHx5W94iVP2ooVVsGIeK/M+Eu9toiHebtVFT45hQ8VO5DwqbG6xPgEp1PmLsPhyBwP0LyC8Q4tA2ttftC6/fJa6fa1G54c7D/euIhZnyM/ovcpYfNYTlarX/yLJoYaOEk5ByYJPYnpQtm2GQX8CdT/U14nDtJ/VjzW8kP/R6+ZsmGpxBrWp2Mn03LjL4CzTSN3cbE2CAKKSjkIcaaoohRZS+JXnxm5+TXF/6QmN0MPU3SSThKWIzOhzfMrLqOu6hsw16x9lF1eJreUZr/WysWOswM4WNoffBv6mKvVsMR8Z8tgERR8+sIxUaoVOfChR9wRoD5lcNnVxrC6rcF+rBxeY4JiPS3zpyamwteyR0n2YspT9Dl0MlZb4cWml2aBnvYk0TmoCC3eGs+2/wssL4s+64TiFC8WkK7U7RW0eYODwPJQbzNGZBjcsVlKD4whs5cNGlgjkZJzTdFt49EwIKmFnSd9Ly/NY3zhByFS/MN3Mj9I2AqMRZ/i4iT72gATE9aLle1xViGxjK7bHmHT2H1yqQhJ5bMcorpDzSZyTkyBTDDnOgh8tM+tBG204kYywQW/RQ==";
-            }
-        }
-    }
-    services {
-        ssh {
-            protocol-version v2;
-            sftp-server;
-        }
-        netconf {
-            ssh;
-        }
-    }
-    name-server {
-        8.8.8.8;
-        8.8.4.4;
-    }
-    syslog {
-        archive size 100k files 3;
-        user * {
-            any emergency;
-        }
-        host loghost {
-            any any;
-        }
-        file interactive-commands {
-            interactive-commands any;
-        }
-        file messages {
-            any notice;
-            authorization info;
-        }
-    }
-    max-configurations-on-flash 5;
-    max-configuration-rollbacks 5;
-    license {
-        autoupdate {
-            url https://ae1.juniper.net/junos/key_retrieval;
-        }
-    }
-}
-security {
-    alg {
-        dns disable;
-        ftp disable;
-        h323 disable;
-        mgcp disable;
-        msrpc disable;
-        sunrpc disable;
-        rsh disable;
-        rtsp disable;
-        sccp disable;
-        sip disable;
-        sql disable;
-        talk disable;
-        tftp disable;
-        pptp disable;
-    }
-    forwarding-options {
-        family {
-            inet6 {
-                mode packet-based;
-            }
-        }
-    }
-    flow {
-        allow-dns-reply;
-        tcp-session {
-            no-syn-check;
-            no-syn-check-in-tunnel;
-            no-sequence-check;
-        }
-    }
-    nat {
-        source {
-            rule-set interface-nat {
-                from zone trust;
-                to zone untrust;
-                rule nat {
-                    match {
-                        source-address [ 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 ];
-                    }
-                    then {
-                        source-nat {
-                            interface;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    policies {
-        from-zone trust to-zone trust {
-            policy allow-all {
-                match {
-                    source-address any;
-                    destination-address any;
-                    application any;
-                }
-                then {
-                    permit;
-                }
-            }
-        }
-        default-policy {
-            permit-all;
-        }
-    }
-    zones {
-        security-zone trust {
-            host-inbound-traffic {
-                system-services {
-                    any-service;
-                }
-                protocols {
-                    all;
-                }
-            }
-            interfaces {
-                irb.103;
-                irb.104;
-                irb.900;
-            }
-        }
-        security-zone untrust {
-            host-inbound-traffic {
-                system-services {
-                    ping;
-                    traceroute;
-                    ssh;
-                }
-            }
-            interfaces {
-                irb.999;
-                ip-0/0/0.0;
-            }
-        }
-    }
-}
-interfaces {
-    ge-0/0/0 {
-        description "Link to ex-mdf-01";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exInfra exMDF ];
-                }
-            }
-        }
-    }
-    ip-0/0/0 {
-        unit 0 {
-            description "HE IPv6 Tunnel Broker";
-            point-to-point;
-            tunnel {
-                source 12.157.195.99;
-                destination 66.220.18.42;
-                path-mtu-discovery;
-            }
-            family inet6 {
-                mtu 1420;
-                address 2001:470:c:3d::2/64;
-            }
-        }
-    }
-    ge-0/0/1 {
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exInfra exMDF ];
-                }
-            }
-        }
-    }
-    ge-0/0/2 {
-        description "Internet Link for Akamai Cluster";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode access;
-                vlan {
-                    members ATT;
-                }
-            }
-        }
-    }
-    ge-0/0/3 {
-        description "Not in Use";
-        unit 0 {
-            family ethernet-switching;
-        }
-    }
-    ge-0/0/4 {
-        description "Not in Use";
-        unit 0 {
-            family ethernet-switching;
-        }
-    }
-    ge-0/0/5 {
-        description "Physical uplink to convention center (PSAV/Cogent)";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode access;
-                vlan {
-                    members ATT;
-                }
-            }
-        }
-    }
-    ge-0/0/6 {
-        unit 0 {
-            family ethernet-switching;
-        }
-    }
-    ge-0/0/7 {
-        description "Trunk Expo to Conference Center";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ MDF_LINK HAM_BRIDGE ];
-                }
-            }
-        }
-    }
-    irb {
-        unit 103 {
-            family inet {
-                address 10.0.3.2/24;
-            }
-            family inet6 {
-                address 2001:470:f026:103::2/64;
-            }
-        }
-        unit 104 {
-            family inet {
-                address 10.0.4.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:104::1/64 {
-                    primary;
-                    preferred;
-                }
-                address 2001:470:f026:104::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 900 {
-            description "IP Link between buildings";
-            family inet {
-                address 172.20.0.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:8000::1/64;
-            }
-        }
-        unit 999 {
-            description "Linternet Link to PCOC/Encore/AT&T";
-            family inet {
-                address 12.157.195.99/28;
-            }
-        }
-    }
-}
-snmp {
-    community Junitux {
-        authorization read-only;
-        clients {
-            2001:470:f026:103::/64;
-            2001:470:f026:503::/64;
-        }
-    }
-}
-policy-options {
-    policy-statement DEFAULT-ORIGINATE-v4 {
-        from {
-            protocol static;
-            route-filter 0.0.0.0/0 exact;
-        }
-        then accept;
-    }
-    policy-statement DEFAULT-ORIGINATE-v6 {
-        from {
-            route-filter ::/0 exact;
-        }
-        then accept;
-    }
-}
-vlans {
-    ATT {
-        description "Internet link to Cogent (PSAV)";
-        vlan-id 999;
-        l3-interface irb.999;
-    }
-    HAM_BRIDGE {
-        description "Link between N6S station and Ham Booth in Expo";
-        vlan-id 950;
-    }
-    MDF_LINK {
-        description "Link between MDF in Conference and Expo Centers";
-        vlan-id 900;
-        l3-interface irb.900;
-    }
-    exInfra {
-        description "Infrastructure Network";
-        vlan-id 103;
-        l3-interface irb.103;
-    }
-    exMDF {
-        description "IP Layer 3 Link between Border Router and Expo MDF Router";
-        vlan-id 104;
-        l3-interface irb.104;
-    }
-}
-protocols {
-    ospf {
-        area 0.0.0.0 {
-            interface irb.104;
-            interface irb.900;
-            interface irb.103;
-        }
-        export DEFAULT-ORIGINATE-v4;
-    }
-    ospf3 {
-        area 0.0.0.0 {
-            interface irb.104;
-            interface irb.900;
-            interface irb.103;
-        }
-        export DEFAULT-ORIGINATE-v6;
-    }
-    l2-learning {
-        global-mode switching;
-    }
-    lldp {
-        enable;
-        interface all;
-    }
-    lldp-med;
-}
-routing-options {
-    rib inet6.0 {
-        static {
-            route ::/0 next-hop 2001:470:c:3d::1;
-        }
-    }
-    static {
-        route 0.0.0.0/0 next-hop 12.157.195.97;
-    }
-}
+set version 23.4R2-S3.9
+set system host-name br-mdf-01
+set system root-authentication encrypted-password "$SHA"
+set system login user admin uid 2000
+set system login user admin class super-user
+set system login user admin authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnRaYbdYsnVqTZNRpXxgK1LlEk9QWa/JwaYAbOZFXiC scale19x-04032022"
+set system login user admin2 uid 2006
+set system login user admin2 class super-user
+set system login user admin2 authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5RX5BeD3WfsYvOlvjX1RhBhQiEHtPRut0c+8PlRbU8 scale22x-02022025"
+set system login user carlyn uid 2007
+set system login user carlyn class super-user
+set system login user carlyn authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAS6QGttw0MBR9UKWfiO3dDp7J/MQdAfpkRQ2hO5oATv carlyn.lee@gmail.com"
+set system login user conjones uid 2008
+set system login user conjones class super-user
+set system login user conjones authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA0JyiGQCbLtjVoi72VA0pR4GjvKqL2JeiqbsxLndZvn conjones@nixtop"
+set system login user danny uid 2009
+set system login user danny class super-user
+set system login user danny authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/mloyevy5Qdvl4ngNRZ4xIwL2GGvg10XEF/oKrx6VE conniedarin@Connies-MacBook-Pro.local"
+set system login user djacu uid 2010
+set system login user djacu class super-user
+set system login user djacu authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOFxaAICX/8f0YSTVL52MrvmGRV9EArQOmUhIgmdwt8o djacu@malachite"
+set system login user dlang uid 2002
+set system login user dlang class super-user
+set system login user dlang authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCtTtJZOyg/9/hbP6IuCyjpA1L0SqMR6wWOU8uJaoa3YlN2sqUkIGne1WYc+4jR+0F2uusDQ1Beb2a9Z0XGxP7nkEIGc5ontC6R/ZUHGf8axz5LXGk9VESR6sMdOjeotSYWwcuj6kPqa0XNXy0nG08dhe8Y+QkjiDQRhjMka4OOmcjMtRAjJyfhROEMpFM18M4Fh3+8j36TatzQQWO6wZ408dQYIc6ShleVfVCvEn5fZ0lm3BRe0UW3wfNs9qupk89VrfUWAEYqvh2uSz9SJBEkGAumreu6ASq7rfPC2DyI60vIT4uaRsqSzfQyT9o1n4v8WmgUKp4kRfZ+T8jWFoUXhj82+2WCCxUlq8D1SRcXDI1OQhHNmH7okorw7TgKJPdM0f96tvgdviH3As6xP/GdnEup8HL0nqKSX8dbRggS9xvmr5SKqGN8QSrclJ+cCsUOWRctgGasf7m+Q6XFNF/8LG6wbqBxxw7TLMLkjVdppHAFoewoBau5cRKGQ++G+BU= dlang@dlang-mobile"
+set system login user dlang authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqPnzsYPKyURdnUpZx1nt9RFQjaz9q7m5wh525Crsho dlang@dlang-mobile"
+set system login user gene uid 2011
+set system login user gene class super-user
+set system login user gene authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBjigwV0KnnaTnFmKjjvnULa5X+hvsy2FAlu+lUUY59f gene@rainbow-planet"
+set system login user jimd uid 2012
+set system login user jimd class super-user
+set system login user jimd authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEw39EeFaPgkOHaeV14d/m38YrCrxSycX1dfsPYs6epe jimd@scale"
+set system login user jjung uid 2013
+set system login user jjung class super-user
+set system login user jjung authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBt5bQ9fv3vUDOFyYu2k3K2zn0hQmuyHTZF0TRPHt8bX Jeff_J"
+set system login user kylerisse uid 2014
+set system login user kylerisse class super-user
+set system login user kylerisse authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKX8NM1OQECwhNTQE0qAm422uq9L0i0Y/hvPPc4tHIOX kylerisse"
+set system login user owen uid 2004
+set system login user owen class super-user
+set system login user owen authentication ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com"
+set system login user rhamel uid 2015
+set system login user rhamel class super-user
+set system login user rhamel authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVZ7n1EOezedsbphq5atGtHm11xeGpLZBzEbgV7eZdb Ryan Hamel - SCALE"
+set system login user rhamel authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWB23n74TJIPF7QtPrzosSYDbGWX6NvB2tn3aQodcAf Ryan Hamel - SCALE - Work MBP"
+set system login user rob uid 2005
+set system login user rob class super-user
+set system login user rob authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq sarcasticadmin"
+set system login user steveb uid 2016
+set system login user steveb class super-user
+set system login user steveb authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUeOWNKOfE8kr/i076oG7oSp9CyhI/7I7kw0U2omWN1S7UEZoV/42DYnyakemHIp4Jyg0/Yk88oM+GtQWZYwnbJDETOY7xjA0btfpFoKYHY7TU4crsdTkE2qkekaa9plYRYQi4mZ/hl0/3Qkd+y2lLUzvEFa3RHv3JYMUi5ijv4mscXqSlBwIngX6l1pU7Wz6hexxa8YdKql17UF3oFwcqLLpnvTHmbI415f/EJNy+LSuXD1Au/ajLQbgdrDaOBNFKuyTjFd1VX0LrT+SD0MwwyT0I8vPU5E2WSkhBw6y932gDTFfmtwtDRrsJjz6w6y32cs0pns0miugLWrxwrWvC2tjzhS+QmCxrR00FK6jPHC/sHv21OVh93fyd9USAu6TCbkQ/FzCzqKbfEInoYAR+RaVeePXik5KvBqFqfUt0MMycVXj+XzHjpRAduG9aFA315Bu5k6w45m473BcFgHgq4/FVn88ImfPddXLtyJZN9oHorpI9bhQhMAopGAFyxuI+VjaP11mhylrjm+3+Q87gXPqvN0he9VPDvz/P30Id1S6me5rpsoiYilhFx8xxwiga4kjVQlXmC/NzlldM86dOIMr0PtGh5kGOe3X5ePKkjfstXnvvFfFeqiqUPp40jfX+Ocs68ozFR4PRDUWSqVrPgYVPOMViTH8BHKh1vcAEGQ== steve@loot5a"
+set system services netconf ssh
+set system services ssh protocol-version v2
+set system services ssh sftp-server
+set system internet-options tcp-mss 1280
+deactivate system internet-options tcp-mss
+set system name-server 8.8.8.8
+set system name-server 8.8.4.4
+set system syslog archive size 100k
+set system syslog archive files 3
+set system syslog user * any emergency
+set system syslog host loghost any any
+set system syslog file interactive-commands interactive-commands any
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system max-configurations-on-flash 5
+set system max-configuration-rollbacks 5
+set system archival configuration transfer-on-commit
+set system archival configuration archive-sites "scp://configs@irkutsk.delong.com:/home/configs/juniper-configuration-files/scale-br-mdf-01.config" password "$9$IoIElv-dsg4JYgFn6Cu0yreWX-ZGiq.fZUjH.mTQcylKX-goJDHmGDAu1Ile"
+set system license autoupdate url https://ae1.juniper.net/junos/key_retrieval
+set security ssh-known-hosts host irkutsk.delong.com,2620:0:930::200:4 ecdsa-sha2-nistp256-key AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD7kU4ZvORceL8cW9AKJ7yxM8h/9qnmmq2RPVna/4tIwiNbKxZvPZZRc0/sKxpBAd+ccC2R+l4YcAGlkCUr0b3g=
+set security ssh-known-hosts host irkutsk.delong.com,192.159.10.4 ecdsa-sha2-nistp256-key AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD7kU4ZvORceL8cW9AKJ7yxM8h/9qnmmq2RPVna/4tIwiNbKxZvPZZRc0/sKxpBAd+ccC2R+l4YcAGlkCUr0b3g=
+set security alg dns disable
+set security alg ftp disable
+set security alg h323 disable
+set security alg mgcp disable
+set security alg msrpc disable
+set security alg sunrpc disable
+set security alg rsh disable
+set security alg rtsp disable
+set security alg sccp disable
+set security alg sip disable
+set security alg sql disable
+set security alg talk disable
+set security alg tftp disable
+set security alg pptp disable
+set security forwarding-options family inet6 mode flow-based
+set security flow allow-dns-reply
+set security flow tcp-mss all-tcp mss 1280
+deactivate security flow tcp-mss
+set security nat source rule-set interface-nat from zone trust
+set security nat source rule-set interface-nat to zone untrust
+set security nat source rule-set interface-nat rule nat match source-address 10.0.0.0/8
+set security nat source rule-set interface-nat rule nat match source-address 172.16.0.0/12
+set security nat source rule-set interface-nat rule nat match source-address 192.168.0.0/16
+set security nat source rule-set interface-nat rule nat then source-nat interface
+set security policies from-zone trust to-zone trust policy allow-all match source-address any
+set security policies from-zone trust to-zone trust policy allow-all match destination-address any
+set security policies from-zone trust to-zone trust policy allow-all match application any
+set security policies from-zone trust to-zone trust policy allow-all then permit
+set security policies default-policy permit-all
+set security zones security-zone trust host-inbound-traffic system-services any-service
+set security zones security-zone trust host-inbound-traffic protocols all
+set security zones security-zone trust interfaces irb.103
+set security zones security-zone trust interfaces irb.104
+set security zones security-zone trust interfaces irb.900
+set security zones security-zone untrust host-inbound-traffic system-services ping
+set security zones security-zone untrust host-inbound-traffic system-services traceroute
+set security zones security-zone untrust host-inbound-traffic system-services ssh
+set security zones security-zone untrust interfaces irb.999
+set security zones security-zone untrust interfaces ip-0/0/0.0
+set interfaces ge-0/0/0 description "Link to ex-mdf-01"
+set interfaces ge-0/0/0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members exInfra
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members exMDF
+set interfaces ip-0/0/0 unit 0 description "HE IPv6 Tunnel Broker"
+set interfaces ip-0/0/0 unit 0 point-to-point
+set interfaces ip-0/0/0 unit 0 tunnel source 12.157.195.98
+set interfaces ip-0/0/0 unit 0 tunnel destination 66.220.18.42
+set interfaces ip-0/0/0 unit 0 tunnel path-mtu-discovery
+set interfaces ip-0/0/0 unit 0 family inet6 mtu 1420
+set interfaces ip-0/0/0 unit 0 family inet6 filter output to-internet6
+set interfaces ip-0/0/0 unit 0 family inet6 address 2001:470:c:3d::2/64
+set interfaces ge-0/0/1 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/1 unit 0 family ethernet-switching vlan members exInfra
+set interfaces ge-0/0/1 unit 0 family ethernet-switching vlan members exMDF
+set interfaces ge-0/0/2 description "Not in Use"
+set interfaces ge-0/0/2 unit 0 family ethernet-switching
+set interfaces ge-0/0/3 description "Not in Use"
+set interfaces ge-0/0/3 unit 0 family ethernet-switching
+set interfaces ge-0/0/4 description "Not in Use"
+set interfaces ge-0/0/4 unit 0 family ethernet-switching
+set interfaces ge-0/0/5 description "Physical uplink to convention center (PSAV/Cogent)"
+set interfaces ge-0/0/5 unit 0 family ethernet-switching interface-mode access
+set interfaces ge-0/0/5 unit 0 family ethernet-switching vlan members ATT
+set interfaces ge-0/0/7 description "Trunk Expo to Conference Center"
+set interfaces ge-0/0/7 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/7 unit 0 family ethernet-switching vlan members MDF_LINK
+set interfaces ge-0/0/7 unit 0 family ethernet-switching vlan members HAM_BRIDGE
+set interfaces irb unit 103 family inet address 10.0.3.2/24
+set interfaces irb unit 103 family inet6 address 2001:470:f026:103::2/64
+set interfaces irb unit 104 family inet address 10.0.4.1/24
+set interfaces irb unit 104 family inet6 address 2001:470:f026:104::1/64 primary
+set interfaces irb unit 104 family inet6 address 2001:470:f026:104::1/64 preferred
+set interfaces irb unit 104 family inet6 address 2001:470:f026:104::/64 eui-64
+set interfaces irb unit 900 description "IP Link between buildings"
+set interfaces irb unit 900 family inet filter input b2b-comms-v4
+deactivate interfaces irb unit 900 family inet filter
+set interfaces irb unit 900 family inet address 172.20.0.1/24
+set interfaces irb unit 900 family inet6 filter input b2b-comms-v6
+deactivate interfaces irb unit 900 family inet6 filter
+set interfaces irb unit 900 family inet6 address 2001:470:f026:8000::1/64
+set interfaces irb unit 999 description "Linternet Link to PCOC/Encore/AT&T"
+set interfaces irb unit 999 family inet filter input from-internet4
+set interfaces irb unit 999 family inet filter output to-internet4
+set interfaces irb unit 999 family inet address 12.157.195.98/28
+set snmp community Junitux authorization read-only
+set snmp community Junitux clients 2001:470:f026:103::/64
+set snmp community Junitux clients 2001:470:f026:503::/64
+set policy-options prefix-list lan-aggregate-v4 10.0.0.0/8
+set policy-options prefix-list lan-aggregate-v6 2001:470:f026::/48
+set policy-options policy-statement DEFAULT-ORIGINATE-v4 from protocol static
+set policy-options policy-statement DEFAULT-ORIGINATE-v4 from route-filter 0.0.0.0/0 exact
+set policy-options policy-statement DEFAULT-ORIGINATE-v4 then accept
+set policy-options policy-statement DEFAULT-ORIGINATE-v6 from route-filter ::/0 exact
+set policy-options policy-statement DEFAULT-ORIGINATE-v6 then accept
+set firewall family inet filter b2b-comms-v4 term b2b-pkt from source-prefix-list lan-aggregate-v4
+set firewall family inet filter b2b-comms-v4 term b2b-pkt from destination-prefix-list lan-aggregate-v4
+set firewall family inet filter b2b-comms-v4 term b2b-pkt then packet-mode
+set firewall family inet filter b2b-comms-v4 term b2b-pkt then accept
+set firewall family inet filter b2b-comms-v4 term allow-all then accept
+set firewall family inet filter from-internet4 term v6-tun-pkt from protocol 41
+set firewall family inet filter from-internet4 term v6-tun-pkt then packet-mode
+set firewall family inet filter from-internet4 term drop-ssh from protocol tcp
+set firewall family inet filter from-internet4 term drop-ssh from destination-port ssh
+set firewall family inet filter from-internet4 term drop-ssh from interface irb.999
+set firewall family inet filter from-internet4 term drop-ssh then discard
+set firewall family inet filter from-internet4 term default-allow then accept
+set firewall family inet filter to-internet4 term v6-tun-pkt from protocol 41
+set firewall family inet filter to-internet4 term v6-tun-pkt then packet-mode
+set firewall family inet filter to-internet4 term disable-quic from protocol udp
+set firewall family inet filter to-internet4 term disable-quic from destination-port http
+set firewall family inet filter to-internet4 term disable-quic from destination-port https
+set firewall family inet filter to-internet4 term disable-quic then reject
+set firewall family inet filter to-internet4 term default then accept
+set firewall family inet6 filter b2b-comms-v6 term b2b-pkt from source-prefix-list lan-aggregate-v6
+set firewall family inet6 filter b2b-comms-v6 term b2b-pkt from destination-prefix-list lan-aggregate-v6
+set firewall family inet6 filter b2b-comms-v6 term b2b-pkt then packet-mode
+set firewall family inet6 filter b2b-comms-v6 term b2b-pkt then accept
+set firewall family inet6 filter b2b-comms-v6 term allow-all then accept
+set firewall family inet6 filter to-internet6 term disable-quic from next-header udp
+set firewall family inet6 filter to-internet6 term disable-quic from destination-port http
+set firewall family inet6 filter to-internet6 term disable-quic from destination-port https
+set firewall family inet6 filter to-internet6 term disable-quic then reject
+set firewall family inet6 filter to-internet6 term default then accept
+set vlans ATT description "Internet link to Cogent (PSAV)"
+set vlans ATT vlan-id 999
+set vlans ATT l3-interface irb.999
+set vlans HAM_BRIDGE description "Link between N6S station and Ham Booth in Expo"
+set vlans HAM_BRIDGE vlan-id 950
+set vlans MDF_LINK description "Link between MDF in Conference and Expo Centers"
+set vlans MDF_LINK vlan-id 900
+set vlans MDF_LINK l3-interface irb.900
+set vlans exInfra description "Infrastructure Network"
+set vlans exInfra vlan-id 103
+set vlans exInfra l3-interface irb.103
+set vlans exMDF description "IP Layer 3 Link between Border Router and Expo MDF Router"
+set vlans exMDF vlan-id 104
+set vlans exMDF l3-interface irb.104
+set protocols ospf area 0.0.0.0 interface irb.104
+set protocols ospf area 0.0.0.0 interface irb.900
+set protocols ospf area 0.0.0.0 interface irb.103
+set protocols ospf export DEFAULT-ORIGINATE-v4
+set protocols ospf3 area 0.0.0.0 interface irb.104
+set protocols ospf3 area 0.0.0.0 interface irb.900
+set protocols ospf3 area 0.0.0.0 interface irb.103
+set protocols ospf3 export DEFAULT-ORIGINATE-v6
+set protocols l2-learning global-mode switching
+set protocols lldp enable
+set protocols lldp interface all
+set protocols lldp-med
+set routing-options rib inet6.0 static route ::/0 next-hop 2001:470:c:3d::1
+set routing-options static route 0.0.0.0/0 next-hop 12.157.195.97

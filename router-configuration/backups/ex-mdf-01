@@ -1,666 +1,331 @@
-## Last changed: 2024-03-17 20:32:47 UTC
-version 22.4R3.25;
-system {
-    host-name ex-mdf-01;
-    root-authentication {
-        encrypted-password "$5$ZWKDX7so$FUcBBq69dZ3tFs9JLAOHGhY9GL8nD.r4ITsymtKGv59";
-    }
-    login {
-        user dlang {
-            uid 2002;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFyz75cUD5pMz7bWdNVc9pLZ9QNS+scMMHHbVvZ060tYlbD2YS1FuIXcyisKYLr29/3O+/ciKOIcw/Q2pzsxgL8mO0ATJzwtvtyhWIcMhJBZNR2jbPwIeKp7Z5NBk8fMDRpWI6i9saLLMr9XtZ2B9RLewIqAAZs0vujJKauaLWVYVFQwkkqKL0WIGP/7fCf1BUHz3vrA1fQDwzhCMayNUBtYwzXtk1Cc0alSLvs1AiqEBWr/n+sduhyUERlFVgvATsH0j1AnLbESathqX4DIatVdHdkAkNaiOAWbguqLDtUiJqcU+eahPFJTeDpLqp6KNP5ZfOr2EQwXZt5mhACjHP davidlang@T470-op-07";
-            }
-        }
-        user kyle {
-            uid 2003;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoQAOVBAEF/HANG4eWBZ6eSoL+7RLpVTMdYC4SZTX5cQqAuxhC3QUEW0ol64eka8/6MELe7Q0UlQ7gH1GpGlB01fGYAJyb0rjVauaS4UisRrZVrP/kLH1TcOJz/AZVQQiOp/XJUCM/KIaTvTUUaadgwPeTunsofzkXQm0WKI1Zqmzs2kj3Q2Tt6P253JvsjOxUV1s7S/oRLiBO9YGkdyCnxJwY7ulgsC9MyvopPsxSm8ta+OQfApQZOoo6T38vq2JrG41bzRlHzn5Bc1Elzkzj1bViX4gnbwooCuw60BjGkunv1bpQclM81jyWUNZ+0rUc/1Id3kFWMQhT5BBcaODoNh0JD62B01iFqovSseOCMDTHvDB497DPGQmQnyb+fMfPHYlx2T3zThMUz40je9h3IniOLnvBTfoAdqwqRsJD6JZ4G/CBcrY11kCzJg5W3I8jAhLs7o90lOGVaL23DvcRMAmIT33B2BHXcUyIF45CYcJYxDuTBn1TlkXoWRF4tWE9v9YPMqYDzLQAplgMK4GRUZA4nJ+JGzzvQz6AcgiTe1YRWO3TjVfqapLTTU6vlvsefI6swyjJW5U5VmqncNQqSiaI8YQIkTCkrTKPtKX4zfj0xa/KoSObnxigsgii11lK6YgS5WbZTnSUH8xJDLjifXKA1XIRbR6Q+YhTbvF1mw==";
-            }
-        }
-        user owen {
-            uid 2004;
-            class super-user;
-            authentication {
-                ssh-rsa "1024 35 114870125079119497064743730551404181721672323637756765961033342070324890531075442741038312582198068761882520928459647324479322148555144455780494777680624949377326717543633178036569565385043021169776538604325865960174754107961471683552906040905706631227199019520404589625948590225853880518583702852911526808117 owen@owen.delong.sj.ca.us";
-                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
-            }
-        }
-        user rob {
-            uid 2005;
-            class super-user;
-            authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBP0XP83nOtxnsGJ7AG+FuT7dbAEO8BrIHlPbhCGhKjFKcq8g6LWa0htx3iwHJB2VfasIVSqWAC7SwX81XfSTwpvNSNVXvrIcMNdYOpEBHx5W94iVP2ooVVsGIeK/M+Eu9toiHebtVFT45hQ8VO5DwqbG6xPgEp1PmLsPhyBwP0LyC8Q4tA2ttftC6/fJa6fa1G54c7D/euIhZnyM/ovcpYfNYTlarX/yLJoYaOEk5ByYJPYnpQtm2GQX8CdT/U14nDtJ/VjzW8kP/R6+ZsmGpxBrWp2Mn03LjL4CzTSN3cbE2CAKKSjkIcaaoohRZS+JXnxm5+TXF/6QmN0MPU3SSThKWIzOhzfMrLqOu6hsw16x9lF1eJreUZr/WysWOswM4WNoffBv6mKvVsMR8Z8tgERR8+sIxUaoVOfChR9wRoD5lcNnVxrC6rcF+rBxeY4JiPS3zpyamwteyR0n2YspT9Dl0MlZb4cWml2aBnvYk0TmoCC3eGs+2/wssL4s+64TiFC8WkK7U7RW0eYODwPJQbzNGZBjcsVlKD4whs5cNGlgjkZJzTdFt49EwIKmFnSd9Ly/NY3zhByFS/MN3Mj9I2AqMRZ/i4iT72gATE9aLle1xViGxjK7bHmHT2H1yqQhJ5bMcorpDzSZyTkyBTDDnOgh8tM+tBG204kYywQW/RQ==";
-            }
-        }
-    }
-    services {
-        ssh {
-            protocol-version v2;
-            sftp-server;
-        }
-        netconf {
-            ssh;
-        }
-    }
-    name-server {
-        8.8.8.8;
-        8.8.4.4;
-    }
-    syslog {
-        archive size 100k files 3;
-        user * {
-            any emergency;
-        }
-        host loghost {
-            any any;
-        }
-        file interactive-commands {
-            interactive-commands any;
-        }
-        file messages {
-            any notice;
-            authorization info;
-        }
-    }
-    max-configurations-on-flash 5;
-    max-configuration-rollbacks 5;
-    license {
-        autoupdate {
-            url https://ae1.juniper.net/junos/key_retrieval;
-        }
-    }
-}
-security {
-    alg {
-        dns disable;
-        ftp disable;
-        h323 disable;
-        mgcp disable;
-        msrpc disable;
-        sunrpc disable;
-        rsh disable;
-        rtsp disable;
-        sccp disable;
-        sip disable;
-        sql disable;
-        talk disable;
-        tftp disable;
-        pptp disable;
-    }
-    forwarding-options {
-        family {
-            inet6 {
-                mode packet-based;
-            }
-            mpls {
-                mode packet-based;
-            }
-        }
-    }
-    flow {
-        allow-dns-reply;
-        tcp-session {
-            no-syn-check;
-            no-syn-check-in-tunnel;
-            no-sequence-check;
-        }
-    }
-}
-interfaces {
-    ge-0/0/0 {
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exInfra exMDF ];
-                }
-            }
-        }
-    }
-    ge-0/0/1 {
-        description "Trunk to IDF-4 (Show Floor IDF)";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
-                }
-            }
-        }
-    }
-    ge-0/0/2 {
-        description "Trunk to IDF-5 (Catwalk IDF)";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
-                }
-            }
-        }
-    }
-    ge-0/0/3 {
-        description "Akamai Cache IPv6 interface";
-        unit 0 {
-            family ethernet-switching;
-        }
-    }
-    ge-0/0/4 {
-        unit 0 {
-            family ethernet-switching {
-                interface-mode access;
-                vlan {
-                    members exAVLAN;
-                }
-            }
-        }
-    }
-    ge-0/0/5 {
-        description "Infra VLAN Access -- Main Server";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode access;
-                vlan {
-                    members exInfra;
-                }
-            }
-        }
-    }
-    ge-0/0/6 {
-        description "Trunk to NE-IDF";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
-                }
-            }
-        }
-    }
-    ge-0/0/7 {
-        description "Trunk to NW-IDF";
-        unit 0 {
-            family ethernet-switching {
-                interface-mode trunk;
-                vlan {
-                    members [ exSCALE-SLOW exSCALE-FAST exSpeaker exInfra exMDF exAVLAN exSigns exStaff exRegistration vendor_backbone exVmVendor ];
-                }
-            }
-        }
-    }
-    irb {
-        unit 100 {
-            description exSCALE-SLOW;
-            family inet {
-                address 10.0.128.1/21;
-            }
-            family inet6 {
-                address 2001:470:f026:100::1/64;
-                address 2001:470:f026:100::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 101 {
-            description exSCALE-FAST;
-            family inet {
-                address 10.0.136.1/21;
-            }
-            family inet6 {
-                address 2001:470:f026:101::1/64;
-                address 2001:470:f026:101::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 102 {
-            description exSpeaker;
-            family inet {
-                address 10.0.2.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:102::1/64;
-                address 2001:470:f026:102::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 103 {
-            description exInfra;
-            family inet {
-                address 10.0.3.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:103::/64 {
-                    eui-64;
-                }
-                address 2001:470:f026:103::1/64;
-            }
-        }
-        unit 104 {
-            description exMDF;
-            family inet {
-                address 10.0.4.2/24;
-            }
-            family inet6 {
-                address 2001:470:f026:104::2/64;
-            }
-        }
-        unit 105 {
-            description exAVLAN;
-            family inet {
-                address 10.0.5.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:105::1/64;
-                address 2001:470:f026:105::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 107 {
-            description exSigns;
-            family inet6 {
-                address 2001:470:f026:107::1/64;
-                address 2001:470:f026:107::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 108 {
-            description exStaff;
-            family inet {
-                address 10.0.8.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:108::1/64;
-                address 2001:470:f026:108::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 110 {
-            description exRegistration;
-            family inet {
-                address 10.0.10.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:110::1/64;
-                address 2001:470:f026:110::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 111 {
-            description exAkamai;
-            family inet6 {
-                address 2001:470:f026:111::1/64;
-                address 2001:470:f026:111::/64 {
-                    eui-64;
-                }
-            }
-        }
-        unit 112 {
-            description "exVmVendor (SODA)";
-            family inet {
-                address 10.0.112.1/24;
-            }
-            family inet6 {
-                address 2001:470:f026:112::1/64;
-                address 2001:470:f026:112::/64 {
-                    eui-64;
-                }
-            }
-        }
-        inactive: unit 200 {
-            description "VLANs 200-398 are on Expo switches and not directly routed here.";
-        }
-        unit 499 {
-            description vendor_backbone;
-            family inet {
-                address 10.1.0.1/24;
-            }
-        }
-    }
-}
-snmp {
-    community Junitux {
-        authorization read-only;
-        clients {
-            2001:470:f026:103::/64;
-            2001:470:f026:503::/64;
-        }
-    }
-}
-forwarding-options {
-    dhcp-relay {
-        dhcpv6 {
-            group AV {
-                active-server-group AV;
-                interface irb.105;
-            }
-            group all {
-                interface irb.100;
-                interface irb.101;
-                interface irb.102;
-                interface irb.103;
-                interface irb.104;
-                interface irb.107;
-                interface irb.108;
-                interface irb.110;
-                interface irb.112;
-                interface irb.200;
-                interface irb.300;
-            }
-            server-group {
-                AV {
-                    2001:470:f026:105::10;
-                }
-                Conference {
-                    2001:470:f026:503::5;
-                }
-                Expo {
-                    2001:470:f026:103::5;
-                }
-            }
-            active-server-group Expo;
-        }
-        server-group {
-            AV {
-                10.0.5.10;
-            }
-            Conference {
-                10.128.3.5;
-            }
-            Expo {
-                10.0.3.5;
-            }
-        }
-        active-server-group Expo;
-        group AV {
-            active-server-group AV;
-            interface irb.105;
-        }
-        group all {
-            interface irb.100;
-            interface irb.101;
-            interface irb.102;
-            interface irb.103;
-            interface irb.104;
-            interface irb.107;
-            interface irb.108;
-            interface irb.110;
-            interface irb.112;
-            interface irb.200;
-            interface irb.300;
-        }
-    }
-}
-policy-options {
-    policy-statement ospf-export-policy {
-        term static-to-ospf {
-            from protocol static;
-            then accept;
-        }
-    }
-}
-vlans {
-    exAVLAN {
-        description "AV Network";
-        vlan-id 105;
-        l3-interface irb.105;
-    }
-    exAkamai {
-        description "Akamai Cache IPv6 Network";
-        vlan-id 111;
-        l3-interface irb.111;
-    }
-    exInfra {
-        description "Infrastructure Network";
-        vlan-id 103;
-        l3-interface irb.103;
-    }
-    exMDF {
-        description "Link to Border Router";
-        vlan-id 104;
-        l3-interface irb.104;
-    }
-    exRegistration {
-        description "Registration Network";
-        vlan-id 110;
-        l3-interface irb.110;
-    }
-    exSCALE-FAST {
-        description "5G Wireless Network in Expo Center";
-        vlan-id 101;
-        l3-interface irb.101;
-    }
-    exSCALE-SLOW {
-        description "2.4G Wireless Network in Expo Center";
-        vlan-id 100;
-        l3-interface irb.100;
-    }
-    exSigns {
-        description "Signs Network";
-        vlan-id 107;
-        l3-interface irb.107;
-    }
-    exSpeaker {
-        description "Speaker Network";
-        vlan-id 102;
-        l3-interface irb.102;
-    }
-    exStaff {
-        description "Staff Wireless Network";
-        vlan-id 108;
-        l3-interface irb.108;
-    }
-    exVmVendor {
-        description "exVmVendor (SODA Machine)";
-        vlan-id 112;
-        l3-interface irb.112;
-    }
-    vendor_backbone {
-        description "Vendor Backbone VLAN";
-        vlan-id 499;
-        l3-interface irb.499;
-    }
-}
-protocols {
-    router-advertisement {
-        interface irb.100 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:100::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.101 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:101::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.102 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:102::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.103 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:103::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.104 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:104::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.105 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:105::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.107 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:107::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.108 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:108::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.110 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:110::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.111 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:111::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.200 {
-            other-stateful-configuration;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:200::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-        interface irb.300 {
-            other-stateful-configuration;
-            solicit-router-advertisement-unicast;
-            dns-server-address 2001:470:f026:103::5;
-            dns-server-address 2001:470:f026:503::5;
-            prefix 2001:470:f026:300::/64 {
-                on-link;
-                autonomous;
-            }
-        }
-    }
-    ospf {
-        area 0.0.0.0 {
-            interface irb.103;
-            interface irb.104;
-            interface irb.100 {
-                passive;
-            }
-            interface irb.101 {
-                passive;
-            }
-            interface irb.102 {
-                passive;
-            }
-            interface irb.105 {
-                passive;
-            }
-            interface irb.107 {
-                passive;
-            }
-            interface irb.108 {
-                passive;
-            }
-            interface irb.110 {
-                passive;
-            }
-            interface irb.499;
-            interface irb.112 {
-                passive;
-            }
-        }
-        export ospf-export-policy;
-    }
-    ospf3 {
-        area 0.0.0.0 {
-            interface irb.100 {
-                passive;
-            }
-            interface irb.101 {
-                passive;
-            }
-            interface irb.102 {
-                passive;
-            }
-            interface irb.103;
-            interface irb.104;
-            interface irb.105 {
-                passive;
-            }
-            interface irb.107 {
-                passive;
-            }
-            interface irb.108 {
-                passive;
-            }
-            interface irb.110 {
-                passive;
-            }
-            interface irb.499;
-            interface irb.112 {
-                passive;
-            }
-        }
-        export ospf-export-policy;
-    }
-    l2-learning {
-        global-mode switching;
-    }
-    lldp {
-        enable;
-        interface all;
-    }
-    lldp-med;
-}
-routing-options {
-    rib inet6.0 {
-        static {
-            route 2001:470:f026:50da::/64 next-hop 2001:470:f026:112::2;
-        }
-    }
-    static {
-        route 10.0.144.0/20 next-hop 10.0.112.2;
-    }
-}
+set version 23.4R2-S3.9
+set system host-name cf-mdf-01
+set system root-authentication encrypted-password "$SHA"
+set system login user admin uid 2000
+set system login user admin class super-user
+set system login user admin authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnRaYbdYsnVqTZNRpXxgK1LlEk9QWa/JwaYAbOZFXiC scale19x-04032022"
+set system login user admin2 uid 2001
+set system login user admin2 class super-user
+set system login user admin2 authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5RX5BeD3WfsYvOlvjX1RhBhQiEHtPRut0c+8PlRbU8 scale22x-02022025"
+set system login user carlyn uid 2006
+set system login user carlyn class super-user
+set system login user carlyn authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAS6QGttw0MBR9UKWfiO3dDp7J/MQdAfpkRQ2hO5oATv carlyn.lee@gmail.com"
+set system login user conjones uid 2007
+set system login user conjones class super-user
+set system login user conjones authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA0JyiGQCbLtjVoi72VA0pR4GjvKqL2JeiqbsxLndZvn conjones@nixtop"
+set system login user danny uid 2008
+set system login user danny class super-user
+set system login user danny authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/mloyevy5Qdvl4ngNRZ4xIwL2GGvg10XEF/oKrx6VE conniedarin@Connies-MacBook-Pro.local"
+set system login user djacu uid 2009
+set system login user djacu class super-user
+set system login user djacu authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOFxaAICX/8f0YSTVL52MrvmGRV9EArQOmUhIgmdwt8o djacu@malachite"
+set system login user dlang uid 2002
+set system login user dlang class super-user
+set system login user dlang authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCtTtJZOyg/9/hbP6IuCyjpA1L0SqMR6wWOU8uJaoa3YlN2sqUkIGne1WYc+4jR+0F2uusDQ1Beb2a9Z0XGxP7nkEIGc5ontC6R/ZUHGf8axz5LXGk9VESR6sMdOjeotSYWwcuj6kPqa0XNXy0nG08dhe8Y+QkjiDQRhjMka4OOmcjMtRAjJyfhROEMpFM18M4Fh3+8j36TatzQQWO6wZ408dQYIc6ShleVfVCvEn5fZ0lm3BRe0UW3wfNs9qupk89VrfUWAEYqvh2uSz9SJBEkGAumreu6ASq7rfPC2DyI60vIT4uaRsqSzfQyT9o1n4v8WmgUKp4kRfZ+T8jWFoUXhj82+2WCCxUlq8D1SRcXDI1OQhHNmH7okorw7TgKJPdM0f96tvgdviH3As6xP/GdnEup8HL0nqKSX8dbRggS9xvmr5SKqGN8QSrclJ+cCsUOWRctgGasf7m+Q6XFNF/8LG6wbqBxxw7TLMLkjVdppHAFoewoBau5cRKGQ++G+BU= dlang@dlang-mobile"
+set system login user dlang authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqPnzsYPKyURdnUpZx1nt9RFQjaz9q7m5wh525Crsho dlang@dlang-mobile"
+set system login user gene uid 2010
+set system login user gene class super-user
+set system login user gene authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBjigwV0KnnaTnFmKjjvnULa5X+hvsy2FAlu+lUUY59f gene@rainbow-planet"
+set system login user jimd uid 2011
+set system login user jimd class super-user
+set system login user jimd authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEw39EeFaPgkOHaeV14d/m38YrCrxSycX1dfsPYs6epe jimd@scale"
+set system login user jjung uid 2012
+set system login user jjung class super-user
+set system login user jjung authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBt5bQ9fv3vUDOFyYu2k3K2zn0hQmuyHTZF0TRPHt8bX Jeff_J"
+set system login user kylerisse uid 2013
+set system login user kylerisse class super-user
+set system login user kylerisse authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKX8NM1OQECwhNTQE0qAm422uq9L0i0Y/hvPPc4tHIOX kylerisse"
+set system login user owen uid 2004
+set system login user owen class super-user
+set system login user owen authentication ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com"
+set system login user rhamel uid 2014
+set system login user rhamel class super-user
+set system login user rhamel authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVZ7n1EOezedsbphq5atGtHm11xeGpLZBzEbgV7eZdb Ryan Hamel - SCALE"
+set system login user rhamel authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWB23n74TJIPF7QtPrzosSYDbGWX6NvB2tn3aQodcAf Ryan Hamel - SCALE - Work MBP"
+set system login user rob uid 2005
+set system login user rob class super-user
+set system login user rob authentication ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq sarcasticadmin"
+set system login user steveb uid 2015
+set system login user steveb class super-user
+set system login user steveb authentication ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUeOWNKOfE8kr/i076oG7oSp9CyhI/7I7kw0U2omWN1S7UEZoV/42DYnyakemHIp4Jyg0/Yk88oM+GtQWZYwnbJDETOY7xjA0btfpFoKYHY7TU4crsdTkE2qkekaa9plYRYQi4mZ/hl0/3Qkd+y2lLUzvEFa3RHv3JYMUi5ijv4mscXqSlBwIngX6l1pU7Wz6hexxa8YdKql17UF3oFwcqLLpnvTHmbI415f/EJNy+LSuXD1Au/ajLQbgdrDaOBNFKuyTjFd1VX0LrT+SD0MwwyT0I8vPU5E2WSkhBw6y932gDTFfmtwtDRrsJjz6w6y32cs0pns0miugLWrxwrWvC2tjzhS+QmCxrR00FK6jPHC/sHv21OVh93fyd9USAu6TCbkQ/FzCzqKbfEInoYAR+RaVeePXik5KvBqFqfUt0MMycVXj+XzHjpRAduG9aFA315Bu5k6w45m473BcFgHgq4/FVn88ImfPddXLtyJZN9oHorpI9bhQhMAopGAFyxuI+VjaP11mhylrjm+3+Q87gXPqvN0he9VPDvz/P30Id1S6me5rpsoiYilhFx8xxwiga4kjVQlXmC/NzlldM86dOIMr0PtGh5kGOe3X5ePKkjfstXnvvFfFeqiqUPp40jfX+Ocs68ozFR4PRDUWSqVrPgYVPOMViTH8BHKh1vcAEGQ== steve@loot5a"
+set system services netconf ssh
+set system services ssh protocol-version v2
+set system services ssh sftp-server
+set system name-server 8.8.8.8
+set system name-server 8.8.4.4
+set system syslog archive size 100k
+set system syslog archive files 3
+set system syslog user * any emergency
+set system syslog host loghost any any
+set system syslog file interactive-commands interactive-commands any
+set system syslog file messages any notice
+set system syslog file messages authorization info
+set system max-configurations-on-flash 5
+set system max-configuration-rollbacks 5
+set system license autoupdate url https://ae1.juniper.net/junos/key_retrieval
+set security alg dns disable
+set security alg ftp disable
+set security alg h323 disable
+set security alg mgcp disable
+set security alg msrpc disable
+set security alg sunrpc disable
+set security alg rsh disable
+set security alg rtsp disable
+set security alg sccp disable
+set security alg sip disable
+set security alg sql disable
+set security alg talk disable
+set security alg tftp disable
+set security alg pptp disable
+set security forwarding-options family inet6 mode packet-based
+set security forwarding-options family mpls mode packet-based
+set security flow allow-dns-reply
+set security flow tcp-session no-syn-check
+set security flow tcp-session no-syn-check-in-tunnel
+set security flow tcp-session no-sequence-check
+set interfaces ge-0/0/0 description "Trunk to cfIDF switch"
+set interfaces ge-0/0/0 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfInfra
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members HAM_BRIDGE
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfAVLAN
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfCTF
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfDWCC
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfHam_N6S
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfNOC
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfSCALE-FAST
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfSCALE-SLOW
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfSigns
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfSpeaker
+set interfaces ge-0/0/0 unit 0 family ethernet-switching vlan members cfStaff
+set interfaces ge-0/0/1 unit 0 family ethernet-switching
+set interfaces ge-0/0/2 unit 0 family ethernet-switching
+set interfaces ge-0/0/3 unit 0 family ethernet-switching
+set interfaces ge-0/0/4 unit 0 family ethernet-switching
+set interfaces ge-0/0/5 unit 0 family ethernet-switching
+set interfaces ge-0/0/6 unit 0 family ethernet-switching
+set interfaces ge-0/0/7 description "Trunk Expo to Conference Center"
+set interfaces ge-0/0/7 unit 0 family ethernet-switching interface-mode trunk
+set interfaces ge-0/0/7 unit 0 family ethernet-switching vlan members MDF_LINK
+set interfaces ge-0/0/7 unit 0 family ethernet-switching vlan members HAM_BRIDGE
+set interfaces irb unit 500 description "cfSCALE-SLOW 2.4G WiFi Network"
+set interfaces irb unit 500 family inet address 10.128.128.1/21
+set interfaces irb unit 500 family inet6 address 2001:470:f026:500::/64 eui-64
+set interfaces irb unit 500 family inet6 address 2001:470:f026:500::1/64 primary
+set interfaces irb unit 500 family inet6 address 2001:470:f026:500::1/64 preferred
+set interfaces irb unit 501 description "cfSCALE-FAST 5G WiFi Network"
+set interfaces irb unit 501 family inet address 10.128.136.1/21
+set interfaces irb unit 501 family inet6 address 2001:470:f026:501::1/64
+set interfaces irb unit 501 family inet6 address 2001:470:f026:501::/64 eui-64
+set interfaces irb unit 502 description "cfSpeaker Speaker Network"
+set interfaces irb unit 502 family inet address 10.128.2.1/24
+set interfaces irb unit 502 family inet6 address 2001:470:f026:502::1/64
+set interfaces irb unit 502 family inet6 address 2001:470:f026:502::/64 eui-64
+set interfaces irb unit 503 family inet address 10.128.3.1/24
+set interfaces irb unit 503 family inet6 address 2001:470:f026:503::1/64
+set interfaces irb unit 503 family inet6 address 2001:470:f026:503::/64 eui-64
+set interfaces irb unit 504 description "cfCTF Capture the Flag"
+set interfaces irb unit 504 family inet filter input ctf-to-internet
+set interfaces irb unit 504 family inet filter output ctf-from-internet
+set interfaces irb unit 504 family inet address 10.128.4.1/24
+set interfaces irb unit 504 family inet6 filter input ctf-to-internet6
+set interfaces irb unit 504 family inet6 filter output ctf-from-internet6
+set interfaces irb unit 504 family inet6 address 2001:470:f026:504::1/64
+set interfaces irb unit 504 family inet6 address 2001:470:f026:504::/64 eui-64
+set interfaces irb unit 505 description "cfAVLAN Audio Visual VLAN"
+set interfaces irb unit 505 family inet address 10.128.5.1/24
+set interfaces irb unit 505 family inet6 address 2001:470:f026:505::1/64
+set interfaces irb unit 505 family inet6 address 2001:470:f026:505::/64 eui-64
+set interfaces irb unit 506 description "cfNOC -- Network Operations Center"
+set interfaces irb unit 506 family inet address 10.128.6.1/24
+set interfaces irb unit 506 family inet6 address 2001:470:f026:506::1/64
+set interfaces irb unit 506 family inet6 address 2001:470:f026:506::/64 eui-64
+set interfaces irb unit 507 description "cfSigns -- Sign Network"
+set interfaces irb unit 507 family inet address 10.128.7.1/24
+set interfaces irb unit 507 family inet6 address 2001:470:f026:507::1/64
+set interfaces irb unit 507 family inet6 address 2001:470:f026:507::/64 eui-64
+set interfaces irb unit 508 description "cfStaff -- Staff Wifi Network"
+set interfaces irb unit 508 family inet address 10.128.8.1/24
+set interfaces irb unit 508 family inet6 address 2001:470:f026:508::1/64
+set interfaces irb unit 508 family inet6 address 2001:470:f026:508::/64 eui-64
+set interfaces irb unit 509 description "HAM Radio station in Conference Center;"
+set interfaces irb unit 509 family inet address 10.128.9.1/24
+set interfaces irb unit 509 family inet6 address 2001:470:f026:509::1/64
+set interfaces irb unit 509 family inet6 address 2001:470:f026:509::/64 eui-64
+set interfaces irb unit 600 description "Zach's Distributed Wifi Capability Collector;"
+set interfaces irb unit 600 family inet address 10.128.100.1/24
+set interfaces irb unit 600 family inet6 address 2001:470:f026:600::1/64
+set interfaces irb unit 600 family inet6 address 2001:470:f026:600::/64 eui-64
+set interfaces irb unit 900 description "IP Link between buildings"
+set interfaces irb unit 900 family inet address 172.20.0.2/24
+set interfaces irb unit 900 family inet6 address 2001:470:f026:8000::2/64
+set snmp community Junitux authorization read-only
+set snmp community Junitux clients 2001:470:f026:103::/64
+set snmp community Junitux clients 2001:470:f026:503::/64
+set forwarding-options dhcp-relay dhcpv6 group AV active-server-group AV
+set forwarding-options dhcp-relay dhcpv6 group AV interface irb.505
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.500
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.501
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.502
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.503
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.504
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.506
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.507
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.508
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.509
+set forwarding-options dhcp-relay dhcpv6 group all interface irb.600
+set forwarding-options dhcp-relay dhcpv6 server-group AV 2001:470:f026:105::10
+set forwarding-options dhcp-relay dhcpv6 server-group Conference 2001:470:f026:503::20
+set forwarding-options dhcp-relay dhcpv6 server-group Expo 2001:470:f026:103::20
+set forwarding-options dhcp-relay dhcpv6 active-server-group Conference
+set forwarding-options dhcp-relay server-group AV 10.0.5.10
+set forwarding-options dhcp-relay server-group Conference 10.128.3.20
+set forwarding-options dhcp-relay server-group Expo 10.0.3.20
+set forwarding-options dhcp-relay active-server-group Conference
+set forwarding-options dhcp-relay group AV active-server-group AV
+set forwarding-options dhcp-relay group AV interface irb.505
+set forwarding-options dhcp-relay group all interface irb.500
+set forwarding-options dhcp-relay group all interface irb.501
+set forwarding-options dhcp-relay group all interface irb.502
+set forwarding-options dhcp-relay group all interface irb.503
+set forwarding-options dhcp-relay group all interface irb.504
+set forwarding-options dhcp-relay group all interface irb.506
+set forwarding-options dhcp-relay group all interface irb.507
+set forwarding-options dhcp-relay group all interface irb.508
+set forwarding-options dhcp-relay group all interface irb.509
+set forwarding-options dhcp-relay group all interface irb.600
+set firewall family inet filter ctf-from-internet term block_appliance from destination-address 10.128.4.8/29
+set firewall family inet filter ctf-from-internet term block_appliance then discard
+set firewall family inet filter ctf-from-internet term allow_everything_else then accept
+set firewall family inet filter ctf-to-internet term block_appliance from source-address 10.128.4.8/29
+set firewall family inet filter ctf-to-internet term block_appliance then discard
+set firewall family inet filter ctf-to-internet term allow_everything_else then accept
+set firewall family inet6 filter ctf-from-internet6 term block_appliance from destination-address 2001:470:f026:504::8/125
+set firewall family inet6 filter ctf-from-internet6 term block_appliance then discard
+set firewall family inet6 filter ctf-from-internet6 term allow_everything_else then accept
+set firewall family inet6 filter ctf-to-internet6 term block_appliance from source-address 2001:470:f026:504::8/125
+set firewall family inet6 filter ctf-to-internet6 term block_appliance then discard
+set firewall family inet6 filter ctf-to-internet6 term allow_everything_else then accept
+set vlans HAM_BRIDGE description "Link between N6S station and Ham Booth in Expo"
+set vlans HAM_BRIDGE vlan-id 950
+set vlans MDF_LINK description "Link between MDF in Conference and Expo Centers"
+set vlans MDF_LINK vlan-id 900
+set vlans MDF_LINK l3-interface irb.900
+set vlans cfAVLAN description "AV Network"
+set vlans cfAVLAN vlan-id 505
+set vlans cfAVLAN l3-interface irb.505
+set vlans cfCTF description "Capture the Flag VLAN"
+set vlans cfCTF vlan-id 504
+set vlans cfCTF l3-interface irb.504
+set vlans cfDWCC description "Zach's Distributed WiFi capability collector"
+set vlans cfDWCC vlan-id 600
+set vlans cfDWCC l3-interface irb.600
+set vlans cfHam_N6S description "HAM radio station in Conference Center"
+set vlans cfHam_N6S vlan-id 509
+set vlans cfHam_N6S l3-interface irb.509
+set vlans cfInfra description "Infrastructure Network"
+set vlans cfInfra vlan-id 503
+set vlans cfInfra l3-interface irb.503
+set vlans cfNOC description "Staff Wireless Network"
+set vlans cfNOC vlan-id 506
+set vlans cfNOC l3-interface irb.506
+set vlans cfSCALE-FAST description "5G Wireless Network in Expo Center"
+set vlans cfSCALE-FAST vlan-id 501
+set vlans cfSCALE-FAST l3-interface irb.501
+set vlans cfSCALE-SLOW description "2.4G Wireless Network in Expo Center"
+set vlans cfSCALE-SLOW vlan-id 500
+set vlans cfSCALE-SLOW l3-interface irb.500
+set vlans cfSigns description "Signs Network"
+set vlans cfSigns vlan-id 507
+set vlans cfSigns l3-interface irb.507
+set vlans cfSpeaker description "Speaker Network"
+set vlans cfSpeaker vlan-id 502
+set vlans cfSpeaker l3-interface irb.502
+set vlans cfStaff description "Staff Wireless Network"
+set vlans cfStaff vlan-id 508
+set vlans cfStaff l3-interface irb.508
+set protocols router-advertisement interface irb.503 other-stateful-configuration
+set protocols router-advertisement interface irb.503 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.503 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.503 prefix 2001:470:f026:503::/64 on-link
+set protocols router-advertisement interface irb.503 prefix 2001:470:f026:503::/64 autonomous
+set protocols router-advertisement interface irb.500 other-stateful-configuration
+set protocols router-advertisement interface irb.500 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.500 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.500 prefix 2001:470:f026:500::/64 on-link
+set protocols router-advertisement interface irb.500 prefix 2001:470:f026:500::/64 autonomous
+deactivate protocols router-advertisement interface irb.500
+set protocols router-advertisement interface irb.501 other-stateful-configuration
+set protocols router-advertisement interface irb.501 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.501 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.501 prefix 2001:470:f026:501::/64 on-link
+set protocols router-advertisement interface irb.501 prefix 2001:470:f026:501::/64 autonomous
+deactivate protocols router-advertisement interface irb.501
+set protocols router-advertisement interface irb.502 other-stateful-configuration
+set protocols router-advertisement interface irb.502 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.502 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.502 prefix 2001:470:f026:502::/64 on-link
+set protocols router-advertisement interface irb.502 prefix 2001:470:f026:502::/64 autonomous
+set protocols router-advertisement interface irb.504 other-stateful-configuration
+set protocols router-advertisement interface irb.504 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.504 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.504 prefix 2001:470:f026:504::/64 on-link
+set protocols router-advertisement interface irb.504 prefix 2001:470:f026:504::/64 autonomous
+set protocols router-advertisement interface irb.505 other-stateful-configuration
+set protocols router-advertisement interface irb.505 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.505 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.505 prefix 2001:470:f026:505::/64 on-link
+set protocols router-advertisement interface irb.505 prefix 2001:470:f026:505::/64 autonomous
+set protocols router-advertisement interface irb.506 other-stateful-configuration
+set protocols router-advertisement interface irb.506 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.506 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.506 prefix 2001:470:f026:506::/64 on-link
+set protocols router-advertisement interface irb.506 prefix 2001:470:f026:506::/64 autonomous
+set protocols router-advertisement interface irb.507 managed-configuration
+set protocols router-advertisement interface irb.507 other-stateful-configuration
+set protocols router-advertisement interface irb.507 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.507 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.507 prefix 2001:470:f026:507::/64 on-link
+set protocols router-advertisement interface irb.507 prefix 2001:470:f026:507::/64 autonomous
+set protocols router-advertisement interface irb.508 other-stateful-configuration
+set protocols router-advertisement interface irb.508 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.508 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.508 prefix 2001:470:f026:508::/64 on-link
+set protocols router-advertisement interface irb.508 prefix 2001:470:f026:508::/64 autonomous
+set protocols router-advertisement interface irb.509 other-stateful-configuration
+set protocols router-advertisement interface irb.509 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.509 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.509 prefix 2001:470:f026:509::/64 on-link
+set protocols router-advertisement interface irb.509 prefix 2001:470:f026:509::/64 autonomous
+set protocols router-advertisement interface irb.600 other-stateful-configuration
+set protocols router-advertisement interface irb.600 dns-server-address 2001:470:f026:503::20
+set protocols router-advertisement interface irb.600 dns-server-address 2001:470:f026:103::20
+set protocols router-advertisement interface irb.600 prefix 2001:470:f026:600::/64 on-link
+set protocols router-advertisement interface irb.600 prefix 2001:470:f026:600::/64 autonomous
+set protocols ospf area 0.0.0.0 interface irb.900
+set protocols ospf area 0.0.0.0 interface irb.503
+set protocols ospf area 0.0.0.0 interface irb.500
+set protocols ospf area 0.0.0.0 interface irb.501
+set protocols ospf area 0.0.0.0 interface irb.502
+set protocols ospf area 0.0.0.0 interface irb.504
+set protocols ospf area 0.0.0.0 interface irb.505
+set protocols ospf area 0.0.0.0 interface irb.506
+set protocols ospf area 0.0.0.0 interface irb.507
+set protocols ospf area 0.0.0.0 interface irb.508
+set protocols ospf area 0.0.0.0 interface irb.509
+set protocols ospf area 0.0.0.0 interface irb.600
+set protocols ospf3 area 0.0.0.0 interface irb.900
+set protocols ospf3 area 0.0.0.0 interface irb.503
+set protocols ospf3 area 0.0.0.0 interface irb.500
+set protocols ospf3 area 0.0.0.0 interface irb.501
+set protocols ospf3 area 0.0.0.0 interface irb.502
+set protocols ospf3 area 0.0.0.0 interface irb.504
+set protocols ospf3 area 0.0.0.0 interface irb.505
+set protocols ospf3 area 0.0.0.0 interface irb.506
+set protocols ospf3 area 0.0.0.0 interface irb.507
+set protocols ospf3 area 0.0.0.0 interface irb.508
+set protocols ospf3 area 0.0.0.0 interface irb.509
+set protocols ospf3 area 0.0.0.0 interface irb.600
+set protocols l2-learning global-mode switching
+set protocols lldp enable
+set protocols lldp interface all
+set protocols lldp-med
