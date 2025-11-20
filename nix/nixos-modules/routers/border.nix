@@ -27,12 +27,19 @@ in
     };
 
     systemd.network = {
-      netdevs = { 
+      netdevs = {
         "2-bridge10" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge10";
           };
+        };
+        "2-vlan10" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "vlan10";
+            };
+           vlanConfig.Id = 10;
         };
       };
     };
@@ -40,6 +47,15 @@ in
     # Physical link to conference center
     systemd.network.networks."10-cf" = {
       matchConfig.Name = "eth1";
+      networkConfig = {
+        Bridge = "bridge10";
+      };
+      vlan = [
+        "vlan10" # DC management vlan
+      ];
+    };
+    systemd.network.networks."40-vlan10" = {
+      matchConfig.Name = "vlan10";
       networkConfig = {
         Bridge = "bridge10";
       };
