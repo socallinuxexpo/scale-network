@@ -26,15 +26,29 @@ in
       "net.ipv6.conf.all.forwarding" = true;
     };
 
-    # Physical link to Internet
-    systemd.network.networks."10-inet" = {
-      matchConfig.Name = "eth0";
-      networkConfig.DHCP = true;
+    systemd.network = {
+      netdevs = { 
+        "2-bridge10" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge10";
+          };
+        };
+      };
     };
+
     # Physical link to conference center
     systemd.network.networks."10-cf" = {
       matchConfig.Name = "eth1";
-      networkConfig.DHCP = false;
+      networkConfig = {
+        Bridge = "bridge10";
+      };
+    };
+    systemd.network.networks."50-bridge10" = {
+      matchConfig.Name = "bridge10";
+      networkConfig = {
+        DHCP = false;
+      };
       address = [
         "10.1.1.1/24"
       ];
