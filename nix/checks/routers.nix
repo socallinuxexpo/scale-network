@@ -22,6 +22,12 @@
           3 # border <-> expo
           10 # NAT
         ];
+
+        services.udev.extraRules = ''
+          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:00:0b.0", NAME="fiber0"
+          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:00:0c.0", NAME="fiber1"
+        '';
+
         scale-network = {
           base.enable = true;
           router.border.enable = true;
