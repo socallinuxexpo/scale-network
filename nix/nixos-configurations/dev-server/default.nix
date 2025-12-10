@@ -436,7 +436,7 @@
 
         networking = {
           extraHosts = ''
-            10.0.3.20 coreexpo.scale.lan
+            10.0.3.20 core-slave.scale.lan
           '';
         };
 

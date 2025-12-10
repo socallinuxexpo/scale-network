@@ -85,7 +85,6 @@ in
       # Make sure that dhcpcd doesnt timeout when interfaces are down
       # ref: https://nixos.org/manual/nixos/stable/options.html#opt-networking.dhcpcd.wait
       dhcpcd.wait = "background";
-      hostName = "massflash";
 
       # Assuming wifi device name
       # TODO: fix to make agnositic like flash0

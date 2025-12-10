@@ -1,37 +1,35 @@
 inputs:
 let
-  inherit (builtins)
-    readDir
+
+  inherit (inputs.nixpkgs-lib)
+    lib
     ;
 
-  inherit (inputs.nixpkgs-unstable) lib;
-
   inherit (lib.attrsets)
-    filterAttrs
-    mapAttrs'
-    nameValuePair
+    genAttrs
     ;
 
   inherit (lib.modules)
     mkDefault
     ;
 
-  inherit (inputs.self.library.strings)
-    kebabToCamel
+  inherit (inputs.self.library.path)
+    getDirectoryNames
     ;
+
 in
-mapAttrs' (
-  hostDirectory: _:
-  nameValuePair (kebabToCamel hostDirectory) (
+genAttrs (getDirectoryNames ./.) (
+  host:
+  (
     let
-      inherit (import ./${hostDirectory}) release modules;
+      inherit (import ./${host}) release modules;
     in
     inputs."nixpkgs-${release}".lib.nixosSystem {
       modules = [
         (
           { ... }:
           {
-            networking.hostName = mkDefault hostDirectory;
+            networking.hostName = mkDefault host;
             nixpkgs.overlays = [ inputs.self.overlays.default ];
           }
         )
@@ -45,4 +43,4 @@ mapAttrs' (
       };
     }
   )
-) (filterAttrs (_: fileType: fileType == "directory") (readDir ./.))
+)

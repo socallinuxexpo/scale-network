@@ -11,6 +11,7 @@ import math
 import os
 import re
 import sys
+
 import jinja2
 import pandas
 
@@ -350,14 +351,14 @@ def serveralias(name):
     """generate aliases for servers. Rendered as CNAMES"""
     payload = []
     match name.lower():
-        case "coreexpo":
+        case "core-slave":
             payload = [
-                "coreslave",
+                "coreexpo",
                 "ntpexpo",
             ]
-        case "coreconf":
+        case "core-master":
             payload = [
-                "coremaster",
+                "coreconf",
                 "loghost",
                 "monitoring",
                 "ntpconf",
