@@ -49,7 +49,7 @@
         '';
 
         nixpkgs.hostPlatform = "x86_64-linux";
-        # make friend eth names based on paths from lspci
+        # make friend eth names based on paths from lspci -D
         services.udev.extraRules = ''
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:11:00.0", NAME="backdoor0"
