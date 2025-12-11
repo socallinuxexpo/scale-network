@@ -185,6 +185,54 @@ def test_makevlan():
         assert inventory.makevlan(line, "Conference") == vlan, line
 
 
+def test_make_vlan():
+    """test case for make_vlan()"""
+    cases = [
+        [
+            {
+                "id": "504",
+                "name": "cfCTF",
+                "v6cidr": "2001:470:f325:504::/64",
+                "v4cidr": "10.128.4.0/24",
+                "description": "Capture the Flag",
+                "building": "Conference",
+            },
+            {
+                "name": "cfCTF",
+                "id": "504",
+                "ipv6prefix": "2001:470:f325:504::",
+                "ipv6bitmask": "64",
+                "ipv4prefix": "10.128.4.0",
+                "ipv4bitmask": "24",
+                "building": "Conference",
+                "description": "Capture the Flag",
+                "ipv6dhcpStart": "2001:470:f325:504:d8c::1",
+                "ipv6dhcpEnd": "2001:470:f325:504:d8c::800",
+                "ipv4dhcpStart": "10.128.4.80",
+                "ipv4dhcpEnd": "10.128.4.254",
+                "ipv4router": "10.128.4.1",
+                "ipv4netmask": "255.255.255.0",
+                "ipv6dns1": "",
+                "ipv6dns2": "",
+                "ipv4dns1": "",
+                "ipv4dns2": "",
+            },
+        ],
+        [
+            {
+                "id": "ABC",
+                "name": "BadVLAN",
+                "v6cidr": "2001:470:f325:504::/64",
+                "v4cidr": "10.128.4.0/24",
+                "description": "Bad VLAN",
+            },
+            None,
+        ],
+    ]
+    for config, vlan in cases:
+        assert inventory.make_vlan(config) == vlan, config
+
+
 def test_bitmasktonetmask():
     """test cases for the bitmasktonetmask() function"""
     cases = [
