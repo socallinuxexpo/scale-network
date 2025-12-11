@@ -28,7 +28,7 @@
           services.frr.enable = true;
           services.frr.router-id = "10.1.1.1";
           services.frr.broadcast-interface = [
-            "eth1"
+            "bridge10"
             "eth2"
           ];
         };
