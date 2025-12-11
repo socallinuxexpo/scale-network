@@ -132,6 +132,11 @@ in
         }
       }
     '';
+    scale-network = {
+      services.frr.enable = true;
+      services.frr.router-id = "10.1.1.1";
+      services.frr.broadcast-interface = cfg.broadcastInterfaces;
+    };
 
     system.stateVersion = "25.11";
   };

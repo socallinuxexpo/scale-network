@@ -34,12 +34,6 @@
               "eth3"
             ];
           };
-          services.frr.enable = true;
-          services.frr.router-id = "10.1.1.1";
-          services.frr.broadcast-interface = [
-            "eth2"
-            "eth3"
-          ];
         };
       };
     conference =
