@@ -18,49 +18,29 @@
           inputs.self.nixosModules.default
         ];
         virtualisation.vlans = [
+          10 # NAT
           2 # border <-> conference
           3 # border <-> expo
-          10 # NAT
         ];
-
-        services.udev.extraRules = ''
-          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:00:0b.0", NAME="fiber0"
-          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:00:0c.0", NAME="fiber1"
-        '';
 
         scale-network = {
           base.enable = true;
-          router.border.enable = true;
+          router.border = {
+            enable = true;
+            staticWANEnable = true;
+            WANInterface = "eth1";
+            broadcastInterfaces = [
+              "eth2"
+              "eth3"
+            ];
+          };
           services.frr.enable = true;
           services.frr.router-id = "10.1.1.1";
           services.frr.broadcast-interface = [
-            "eth1"
             "eth2"
+            "eth3"
           ];
         };
-        networking.nftables.enable = true;
-        networking.nftables.ruleset = ''
-           table ip nat {
-            chain PREROUTING {
-              type nat hook prerouting priority dstnat; policy accept;
-            }
-
-            chain INPUT {
-              type nat hook input priority 100; policy accept;
-            }
-
-            chain OUTPUT {
-              type nat hook output priority -100; policy accept;
-            }
-
-            chain POSTROUTING {
-              type nat hook postrouting priority srcnat; policy accept;
-              oifname "eth3" ip daddr 0.0.0.0/0 counter masquerade
-            }
-          }
-        '';
-        networking.firewall.enable = false;
-
       };
     conference =
       { ... }:
