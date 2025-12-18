@@ -71,13 +71,11 @@
         ];
         scale-network = {
           base.enable = true;
-          router.expo.enable = true;
-          services.frr.enable = true;
-          services.frr.router-id = "10.1.2.3";
-          services.frr.broadcast-interface = [
-            "eth1"
-            "eth2"
-          ];
+          router.expo = {
+            enable = true;
+            frrBorderInterface = "eth1";
+            frrConferenceInterface = "eth2";
+          };
         };
         networking.firewall.enable = false;
       };
