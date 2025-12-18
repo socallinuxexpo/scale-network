@@ -16,39 +16,13 @@
 
       config = {
 
-        boot.kernel.sysctl = {
-          "net.ipv4.conf.all.forwarding" = true;
-          "net.ipv6.conf.all.forwarding" = true;
-        };
-
         # verify: modinfo -p ixgbe
         boot.extraModprobeConfig = ''
           options ixgbe allow_unsupported_sfp=1,1
         '';
 
-        networking.nftables.enable = true;
-        networking.nftables.ruleset = ''
-           table ip nat {
-            chain PREROUTING {
-              type nat hook prerouting priority dstnat; policy accept;
-            }
-
-            chain INPUT {
-              type nat hook input priority 100; policy accept;
-            }
-
-            chain OUTPUT {
-              type nat hook output priority -100; policy accept;
-            }
-
-            chain POSTROUTING {
-              type nat hook postrouting priority srcnat; policy accept;
-              oifname "copper0" ip daddr 0.0.0.0/0 counter masquerade
-            }
-          }
-        '';
-
         nixpkgs.hostPlatform = "x86_64-linux";
+
         # make friend eth names based on paths from lspci -D
         services.udev.extraRules = ''
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
@@ -65,12 +39,7 @@
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.3", NAME="copper3"
         '';
 
-        # must be disabled if using systemd.network
-        networking.useDHCP = false;
-
         systemd.network = {
-          enable = true;
-
           networks = {
             # Keep this for troubleshooting
             "10-backdoor" = {
@@ -82,34 +51,6 @@
                 EmitLLDP = true;
               };
               linkConfig.RequiredForOnline = "no";
-            };
-            # temporary for testing at various sites
-            # will be static for show
-            "10-nat-dhcp" = {
-              matchConfig.Name = "copper0";
-              enable = true;
-              networkConfig = {
-                DHCP = "yes";
-                LLDP = true;
-                EmitLLDP = true;
-              };
-              linkConfig.RequiredForOnline = "no";
-            };
-            # Physical link to conference center
-            "10-cf" = {
-              matchConfig.Name = "fiber0";
-              networkConfig.DHCP = false;
-              address = [
-                "10.1.1.1/24"
-              ];
-            };
-            # Physical link to expo
-            "10-expo" = {
-              matchConfig.Name = "fiber1";
-              networkConfig.DHCP = false;
-              address = [
-                "10.1.2.1/24"
-              ];
             };
           };
         };
