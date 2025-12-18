@@ -16,11 +16,6 @@
 
       config = {
 
-        boot.kernel.sysctl = {
-          "net.ipv4.conf.all.forwarding" = true;
-          "net.ipv6.conf.all.forwarding" = true;
-        };
-
         # verify: modinfo -p ixgbe
         boot.extraModprobeConfig = ''
           options ixgbe allow_unsupported_sfp=1,1
@@ -43,14 +38,7 @@
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.3", NAME="copper3"
         '';
 
-        networking.firewall.enable = false;
-
-        # must be disabled if using systemd.network
-        networking.useDHCP = false;
-
         systemd.network = {
-          enable = true;
-
           networks = {
             # Keep this for troubleshooting
             "10-backdoor" = {
@@ -62,26 +50,6 @@
                 EmitLLDP = true;
               };
               linkConfig.RequiredForOnline = "no";
-            };
-            # Physical link to border
-            "10-cf" = {
-              matchConfig.Name = "fiber0";
-              networkConfig.DHCP = false;
-              address = [
-                "10.1.2.3/24"
-              ];
-              linkConfig.RequiredForOnline = "routable";
-              routes = [
-                { Gateway = "10.1.2.1"; }
-              ];
-            };
-            # Physical link to conference
-            "10-expo" = {
-              matchConfig.Name = "fiber1";
-              networkConfig.DHCP = false;
-              address = [
-                "10.1.3.3/24"
-              ];
             };
           };
         };
