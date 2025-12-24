@@ -21,7 +21,7 @@ jobs:
         id: nixosconfigsget
         # get all nixosConfigurations except for massflashPi since its aarch64
         run: |
-          nixosconfignames=$(nix eval .\#nixosConfigurations --apply builtins.attrNames --json | jq -c '. - ["massflashPi"]')
+          nixosconfignames=$(nix eval .\#nixosConfigurations --apply builtins.attrNames --json | jq -c '. - ["massflash-pi"]')
           echo "$nixosconfignames"
           echo "nixosconfignames=$nixosconfignames" >> $GITHUB_OUTPUT
   nixos_configs_build:
