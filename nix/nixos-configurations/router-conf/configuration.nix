@@ -4,12 +4,11 @@
 {
   scale-network = {
     base.enable = true;
-    services.frr.enable = true;
-    services.frr.router-id = "10.1.1.2";
-    services.frr.broadcast-interface = [
-      "fiber0"
-      "fiber1"
-    ];
+    router.conference = {
+      enable = true;
+      frrBorderInterface = "fiber0";
+      frrExpoInterface = "fiber1";
+    };
     services.ssh.enable = true;
 
     users.conjones.enable = true;

@@ -18,43 +18,21 @@
           inputs.self.nixosModules.default
         ];
         virtualisation.vlans = [
+          10 # NAT
           2 # border <-> conference
           3 # border <-> expo
-          10 # NAT
         ];
+
         scale-network = {
           base.enable = true;
-          router.border.enable = true;
-          services.frr.enable = true;
-          services.frr.router-id = "10.1.1.1";
-          services.frr.broadcast-interface = [
-            "eth1"
-            "eth2"
-          ];
+          router.border = {
+            enable = true;
+            staticWANEnable = true;
+            WANInterface = "eth1";
+            frrConferenceInterface = "eth2";
+            frrExpoInterface = "eth3";
+          };
         };
-        networking.nftables.enable = true;
-        networking.nftables.ruleset = ''
-           table ip nat {
-            chain PREROUTING {
-              type nat hook prerouting priority dstnat; policy accept;
-            }
-
-            chain INPUT {
-              type nat hook input priority 100; policy accept;
-            }
-
-            chain OUTPUT {
-              type nat hook output priority -100; policy accept;
-            }
-
-            chain POSTROUTING {
-              type nat hook postrouting priority srcnat; policy accept;
-              oifname "eth3" ip daddr 0.0.0.0/0 counter masquerade
-            }
-          }
-        '';
-        networking.firewall.enable = false;
-
       };
     conference =
       { ... }:
@@ -71,15 +49,12 @@
         ];
         scale-network = {
           base.enable = true;
-          router.conference.enable = true;
-          services.frr.enable = true;
-          services.frr.router-id = "10.1.1.2";
-          services.frr.broadcast-interface = [
-            "eth1"
-            "eth2"
-          ];
+          router.conference = {
+            enable = true;
+            frrBorderInterface = "eth1";
+            frrExpoInterface = "eth2";
+          };
         };
-        networking.firewall.enable = false;
       };
     expo =
       { ... }:
@@ -96,13 +71,11 @@
         ];
         scale-network = {
           base.enable = true;
-          router.expo.enable = true;
-          services.frr.enable = true;
-          services.frr.router-id = "10.1.2.3";
-          services.frr.broadcast-interface = [
-            "eth1"
-            "eth2"
-          ];
+          router.expo = {
+            enable = true;
+            frrBorderInterface = "eth1";
+            frrConferenceInterface = "eth2";
+          };
         };
         networking.firewall.enable = false;
       };
