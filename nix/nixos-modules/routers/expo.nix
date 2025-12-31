@@ -49,10 +49,67 @@ in
 
     systemd.network = {
       enable = true;
+      netdevs = {
+        "25-bridge901" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge901";
+          };
+        };
+        "25-vlan901" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan901";
+          };
+          vlanConfig.Id = 901;
+        };
+        "20-bridge902" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge902";
+          };
+        };
+        "20-vlan902" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan902";
+          };
+          vlanConfig.Id = 902;
+        };
+      };
       networks = {
-        # Physical link to border
-        "10-border" = {
+        "30-border" = {
           matchConfig.Name = cfg.frrBorderInterface;
+          networkConfig = {
+            LinkLocalAddressing = "no";
+          };
+          vlan = [
+            "vlan901"
+          ];
+        };
+        "30-cf" = {
+          matchConfig.Name = cfg.frrConferenceInterface;
+          networkConfig = {
+            LinkLocalAddressing = "no";
+          };
+          vlan = [
+            "vlan902"
+          ];
+        };
+        "40-vlan901" = {
+          matchConfig.Name = "vlan901";
+          networkConfig = {
+            Bridge = "bridge901";
+          };
+        };
+        "40-vlan902" = {
+          matchConfig.Name = "vlan902";
+          networkConfig = {
+            Bridge = "bridge902";
+          };
+        };
+        "50-bridge901" = {
+          matchConfig.Name = "bridge901";
           networkConfig.DHCP = false;
           address = [
             "10.1.2.3/24"
@@ -62,9 +119,8 @@ in
             { Gateway = "10.1.2.1"; }
           ];
         };
-        # Physical link to conference
-        "10-cf" = {
-          matchConfig.Name = cfg.frrConferenceInterface;
+        "50-bridge902" = {
+          matchConfig.Name = "bridge902";
           networkConfig.DHCP = false;
           address = [
             "10.1.3.3/24"
@@ -79,8 +135,8 @@ in
       services.frr.enable = true;
       services.frr.router-id = "10.1.2.3";
       services.frr.broadcast-interface = [
-        cfg.frrBorderInterface
-        cfg.frrConferenceInterface
+        "bridge901"
+        "bridge902"
       ];
     };
   };
