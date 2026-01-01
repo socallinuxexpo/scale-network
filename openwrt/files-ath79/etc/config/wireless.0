@@ -1,24 +1,24 @@
 {{range (datasource "openwrt").wireless.radios }}
 config wifi-device '{{.name}}'
-	option type '{{.type}}'
-	option hwmode '{{.hwmode}}'
-	option path '{{.path}}'
-	option htmode '{{.htmode}}'
-	option channel '{{.channel}}'
-	option txpower '{{.txpower}}'
-	option country 'US'
+        option type '{{.type}}'
+        option hwmode '{{.hwmode}}'
+        option path '{{.path}}'
+        option htmode '{{.htmode}}'
+        option channel '{{.channel}}'
+        option txpower '{{.txpower}}'
+        option country 'US'
 {{end}}
 
 {{range $index, $element := (datasource "openwrt").wireless.radios}}
 {{- range .networks}}
 config wifi-iface '{{.interface}}_{{$element.name}}'
-	option device '{{$element.name}}'
+        option device '{{$element.name}}'
         option ssid '{{.ssid}}'
-	option mode 'ap'
-	option network '{{.interface}}'
-	option encryption 'psk2'
-	option key '{{.password}}'
-	option disabled '{{.disabled}}'
-	option isolate '1'
+        option mode 'ap'
+        option network '{{.interface}}'
+        option encryption 'psk2'
+        option key '{{.password}}'
+        option disabled '{{.disabled}}'
+        option isolate '1'
 {{end}}
 {{- end}}
