@@ -26,5 +26,5 @@ config led 'led_usb'
 config led 'led_wps'
         option name 'WPS for build ID'
 	option 'sysfs' 'netgear:green:wps'
-        option default '1'
+        option default '0'
 

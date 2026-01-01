@@ -1,4 +1,4 @@
-# ar71xx
+# ath79
 
 ## Flashing
 
