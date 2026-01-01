@@ -19,5 +19,6 @@ config wifi-iface '{{.interface}}_{{$element.name}}'
 	option encryption 'psk2'
 	option key '{{.password}}'
 	option disabled '{{.disabled}}'
+	option isolate '1'
 {{end}}
 {{- end}}
