@@ -14,7 +14,6 @@
 ##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
 ##FIXME## Assumes v6 prefix is a /48 and many code dependencies on this assumption. Safe at least for now.
 
-##FIXME## Add a PS color block to PoE ports
 
 
 package switch_template;
@@ -459,6 +458,8 @@ EOF
 
 sub build_interfaces_from_config
 {
+  ##FIXME## There are lots of assumptions here like all switches being 19" standard rack wide. Now we have to accommodate stupid Micro 12 port switches
+  ##FIXME## Because of short time frame for coding this, it's going to be a hellatious hack.
   ##FIXME## There are a number of places where this subroutine assumes
   ##FIXME## that all interaces are ge-0/0/*
   ##FIXME## There are special excpetions coded for FIBER ports at ge-0/1/[0-3] to partially compensate
@@ -502,11 +503,26 @@ SwitchMapDict begin
 /Left_Port_Edge   0.125 Inch def                % Left edge of first port column
 /Port_Width       0.5625 Inch def               % Width of each port
 /Port_Group_Gap   0.125 Inch def                % Width of gap between port groups
-/Center           7 Inch def                    % Center of box diagram
-/Fiber_Bottom     Even_Bottom Box_Height add 0.1 Inch add def
+EOF
+
+if ($Type =~ /Micro/) # Treat as 12-port micro switch
+{
+  $portmap_PS .= <<EOF;
+/Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add 2 Inch add def % Compute position for left edge of Fiber Ports
+/Fiber_Port_Width 2 Inch def		% Width of SFP Port
+/Center           4.5 Inch def                    % Center of box diagram
+/Fiber_Bottom     Odd_Bottom def
+EOF
+} else {
+  $portmap_PS.= <<EOF;
 /Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add 3 mul Port_Width add def % Compute position for left edge of Fiber Ports
 /Fiber_Port_Width 0.583 Inch def		% Width of SFP Port
+/Center           7 Inch def                    % Center of box diagram
+/Fiber_Bottom     Even_Bottom Box_Height add 0.1 Inch add def
+EOF
+}
 
+$portmap_PS.= <<EOF;
 
 % String for storing port numbers
 /s 3 string def
@@ -1552,7 +1568,6 @@ EOF
         }
     }
 EOF
-##FIXME## Use colors from file
         my $vlinfo=${$VLANS}{$VV_BASE};
         debug(4, "For $cmd $_ -> Vendor $VLID (pulled from $VV_BASE): ".Dumper(@{$vlinfo})."\n");
         debug(5, "Background: ".${$vlinfo}[6]." -> ".Dumper(parse_hex_color(${$vlinfo}[6]))."\n");
@@ -1836,88 +1851,8 @@ sub build_config_from_template
   my $FIREWALL_CONFIG   = ${VENDOR_CONFIGURATION}{"firewall"};
   my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
   my $PROTOCOL_CONFIG   = ${VENDOR_CONFIGURATION}{"protocols"};
-##FIXME## This is a complete hack to deploy QoS without thinking about it
-##FIXME## QoS should be configurable. Worse, we have to hand-hork this to
-##FIXME## avoid applying it to IDF switches
-  my $QOS_CONFIG = <<EOF;
-    family ethernet-switching {
-        filter qos {
-            term wifi {
-                from {
-                    vlan [ cfw-FAST cfw-SLOW cfCTF ];
-                }
-                then {
-                    forwarding-class wifi;
-                    loss-priority high;
-                    policer wifi-cop;
-                }
-            }
-            term av {
-                from {
-                    vlan cfAV;
-                }
-                then {
-                    forwarding-class av;
-                    loss-priority low;
-                    policer av-cop;
-                }
-            }
-            term infra {
-                from {
-                    vlan cfInfra;
-                }
-                then {
-                    forwarding-class infra;
-                    loss-priority low;
-                    policer infra-cop;
-                }
-            }
-            term vendor {
-                from {
-                    vlan vendor_backbone;
-                }
-                then {
-                    forwarding-class vendor;
-                    loss-priority low;
-                    policer vendor-cop;
-                }
-            }
-        }
-    }
-    policer wifi-cop {
-        filter-specific;
-        if-exceeding {
-            bandwidth-limit 10m;
-            burst-size-limit 128k;
-        }
-        then discard;
-    }
-    policer av-cop {
-        filter-specific;
-        if-exceeding {
-            bandwidth-limit 10g;
-            burst-size-limit 2147450880;
-        }                                   
-        then loss-priority high;
-    }
-    policer infra-cop {
-        filter-specific;
-        if-exceeding {
-            bandwidth-limit 1m;
-            burst-size-limit 4m;
-        }
-        then loss-priority high;
-    }
-    policer vendor-cop {
-        filter-specific;
-        if-exceeding {
-            bandwidth-limit 250m;
-            burst-size-limit 100m;
-        }
-        then discard;
-    }
-EOF
-
+  my $QOS_CONFIG        = ''; # Maybe someday we might want to build this. Hopefully
+	                      # I am long gone before it comes to that.
   debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
   my $OUTPUT = <<EOF;
 system {

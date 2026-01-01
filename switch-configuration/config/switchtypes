@@ -67,3 +67,6 @@ BallroomH	49	103	2001:470:f026:103::200:49	exRoom		F.9		??		ex4200-48p	84:18:88:
 Rm208		50	503	2001:470:f026:503::200:50	cfRoom		I.9		??		ex4200-48p	84:18:88:ad:4e:ff
 DONOTUSE	51	103	2001:470:f026:103::200:51	swatch		Z.9		Loud		ex4200-48px	ec:3e:f7:50:58:ff
 RegDesk		52	103	2001:470:f026:103::200:52	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:7f
+MicroProto1	53	103	2001:470:f026:103::200:53	exMicro		C.9		Silent		ex2300-12c	00:00:00:00:00:00
+MicroProto2	54	503	2001:470:f026:503::200:53	cfMicro		I.9		Silent		ex2300-12c	00:00:00:00:00:01
+MicroProto3	55	103	2001:470:f026:103::200:53	exMicro		Z.9		Silent		ex2300-12c	00:00:00:00:00:02
