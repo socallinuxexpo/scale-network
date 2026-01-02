@@ -43,6 +43,10 @@
 
         boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+        # because we still build openwrt with docker its helpful to have this
+        # enabled on the dev-server
+        virtualisation.docker.enable = true;
+
         networking = {
           useNetworkd = true;
           useDHCP = false;
