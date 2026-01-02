@@ -1,0 +1,14 @@
+// Room Switch Template -- All conference rooms Conference Center
+FIBER	ge-0/1/0	cfUplink	-
+FIBER	ge-0/1/1	cfDownlink	-
+TRUNK	ge-0/0/0	cfAP		POE
+TRUNK	ge-0/0/1	cfAP		POE
+TRUNK	ge-0/0/2	cfAP		POE
+TRUNK	ge-0/0/3	cfAP		POE
+TRUNK	ge-0/0/4	cfAP		POE
+TRUNK	ge-0/0/5	cfAP		POE
+TRUNK	ge-0/0/6	cfAP		POE
+VLAN	cfSpkr		1		-
+VLAN	cfAV		3		POE
+VLAN	cfSigns		1		POE
+

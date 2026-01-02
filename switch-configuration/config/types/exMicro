@@ -1,0 +1,14 @@
+// Room Switch Template -- All conference rooms Expo Center
+FIBER	ge-0/1/0	exUplink	-
+FIBER	ge-0/1/1	exDownlink	-
+TRUNK	ge-0/0/0	exAP	POE
+TRUNK	ge-0/0/1	exAP	POE
+TRUNK	ge-0/0/2	exAP	POE
+TRUNK	ge-0/0/3	exAP	POE
+TRUNK	ge-0/0/4	exAP	POE
+TRUNK	ge-0/0/5	exAP	POE
+TRUNK	ge-0/0/6	exAP	POE
+VLAN	exSpkr		1	-
+VLAN	exAV		3	POE
+VLAN	exSigns		1	POE
+
