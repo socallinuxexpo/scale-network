@@ -22,6 +22,7 @@ mapAttrs (const (pkgs: {
     massflash
     massflash-generate-persist
     scale-inventory
+    scale-switch-configs
     serverspec
     perl-net-arp
     perl-net-interface
