@@ -4,10 +4,10 @@
 {
   scale-network = {
     base.enable = true;
-    router.conference = {
+    router.expo = {
       enable = true;
       frrBorderInterface = "fiber0";
-      frrExpoInterface = "fiber1";
+      frrConferenceInterface = "fiber1";
     };
     services.ssh.enable = true;
 
