@@ -6,7 +6,7 @@
     base.enable = true;
     router.border = {
       enable = true;
-      staticWANEnable = false;
+      staticWANEnable = true;
       WANInterface = "copper0";
       frrConferenceInterface = "fiber0";
       frrExpoInterface = "fiber1";
