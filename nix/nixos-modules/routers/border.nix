@@ -161,8 +161,16 @@ in
             matchConfig.Name = cfg.WANInterface;
             networkConfig.DHCP = false;
             address = [
-              "172.16.1.1/24"
+              "104.9.55.33/29"
             ];
+            routes = [
+              {
+                Destination = "0.0.0.0/0";
+                Gateway = "104.9.55.38";
+                GatewayOnLink = true;
+              }
+            ];
+
           };
         })
       ];
