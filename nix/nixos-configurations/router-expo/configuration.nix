@@ -7,7 +7,7 @@
     router.conference = {
       enable = true;
       frrBorderInterface = "fiber0";
-      frrExpoInterface = "fiber1";
+      frrConferenceInterface = "fiber1";
     };
     services.ssh.enable = true;
 
