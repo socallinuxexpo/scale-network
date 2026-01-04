@@ -160,8 +160,16 @@ in
               EmitLLDP = true;
             };
             address = [
-              "172.16.1.1/24"
+              "TBD"
             ];
+            routes = [
+              {
+                Destination = "0.0.0.0/0";
+                Gateway = "TBD";
+                GatewayOnLink = true;
+              }
+            ];
+
           };
         })
         {
