@@ -54,8 +54,52 @@ in
 
     systemd.network = {
       enable = true;
+      netdevs = {
+        # confInfra
+        "20-vlan503" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan503";
+          };
+          vlanConfig.Id = 503;
+        };
+        "25-bridge503" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge503";
+          };
+        };
+      };
       # Physical link to border
       networks = {
+        "30-trunk" = {
+          # TODO probably make this a map of interfaces for trunking
+          matchConfig.Name = "copper0";
+          linkConfig = {
+            RequiredForOnline = "carrier";
+          };
+          networkConfig = {
+            LinkLocalAddressing = "no";
+          };
+          # tag vlan on this link
+          vlan = [
+            "vlan503"
+          ];
+        };
+        "40-vlan503" = {
+          matchConfig.Name = "vlan503";
+          networkConfig = {
+            Bridge = "bridge503";
+          };
+        };
+        "50-bridge503" = {
+          matchConfig.Name = "bridge503";
+          enable = true;
+          address = [
+            "10.128.3.1/24"
+            "2001:470:f026:503::1/64"
+          ];
+        };
         "10-border" = {
           matchConfig.Name = cfg.frrBorderInterface;
           networkConfig.DHCP = false;
