@@ -63,19 +63,76 @@ in
     systemd.network = {
       enable = true;
 
+      netdevs = {
+        "20-bridge900" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge900";
+          };
+        };
+        "20-vlan900" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan900";
+          };
+          vlanConfig.Id = 900;
+        };
+        "25-bridge901" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge901";
+          };
+        };
+        "25-vlan901" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan901";
+          };
+          vlanConfig.Id = 901;
+        };
+      };
       networks = mkMerge [
         {
           # Physical link to conference center
-          "10-cf" = {
+          "30-cf" = {
             matchConfig.Name = cfg.frrConferenceInterface;
+            networkConfig = {
+              LinkLocalAddressing = "no";
+            };
+            vlan = [
+              "vlan900"
+            ];
+          };
+          "30-expo" = {
+            matchConfig.Name = cfg.frrExpoInterface;
+            networkConfig = {
+              LinkLocalAddressing = "no";
+            };
+            vlan = [
+              "vlan901"
+            ];
+          };
+          "40-vlan900" = {
+            matchConfig.Name = "vlan900";
+            networkConfig = {
+              Bridge = "bridge900";
+            };
+          };
+          "40-vlan901" = {
+            matchConfig.Name = "vlan901";
+            networkConfig = {
+              Bridge = "bridge901";
+            };
+          };
+          "50-bridge900" = {
+            matchConfig.Name = "bridge900";
             networkConfig.DHCP = false;
             address = [
               "10.1.1.1/24"
             ];
           };
-          # Physical link to expo
-          "10-expo" = {
-            matchConfig.Name = cfg.frrExpoInterface;
+          "50-bridge901" = {
+            matchConfig.Name = "bridge901";
             networkConfig.DHCP = false;
             address = [
               "10.1.2.1/24"
@@ -135,8 +192,8 @@ in
       services.frr.enable = true;
       services.frr.router-id = "10.1.1.1";
       services.frr.broadcast-interface = [
-        cfg.frrExpoInterface
-        cfg.frrConferenceInterface
+        "bridge900" # cf
+        "bridge901" # expo
       ];
     };
   };
