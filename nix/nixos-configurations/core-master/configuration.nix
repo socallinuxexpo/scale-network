@@ -8,7 +8,7 @@
     services.bindMaster.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
-    services.signs.enable = true;
+    services.signs.enable = false;
     services.monitoring.enable = true;
     services.mrtg.enable = true;
     services.prometheus.enable = true;
