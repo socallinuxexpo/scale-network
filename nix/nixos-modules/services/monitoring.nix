@@ -43,6 +43,7 @@ in {
     networking.firewall.allowedTCPPorts = [
       14250 # tempo-jaeger-grpc
       14268 # tempo-jaeger-thrift-http
+      3000 # grafana-http
       3100 # loki-http
       3200 # mimir-http
       3300 # tempo-http
@@ -229,7 +230,7 @@ in {
         settings = {
           server = {
             domain = cfg.fqdn;
-            http_addr = "127.0.0.1";
+            http_addr = "0.0.0.0";
             http_port = 3000;
           };
         };
