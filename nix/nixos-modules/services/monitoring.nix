@@ -25,7 +25,7 @@
 
   unfilteredList = (
     builtins.split "\n" (
-      builtins.readFile "${pkgs.scale-network.scaleInventory}/config/all-network-devices"
+      builtins.readFile "${pkgs.scale-network.scale-inventory}/config/all-network-devices"
     )
   );
   filteredList = builtins.filter (line: line != [] && line != "") unfilteredList;

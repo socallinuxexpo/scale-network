@@ -32,8 +32,8 @@ To start building:
 
 ```
 # Make sure to mount the git rev-parse --show-toplevel) inside this container
-docker run -v $(git rev-parse --show-toplevel):/home/openwrt/scale-network --rm -it sarcasticadmin/openwrt-build@sha256:3fab43fea9e698bade514af0b84192ec447708c8f24d7c5a5e383464e9c44922  /bin/bash
-cd /home/openwrt/scale-network
+docker run -v $(git rev-parse --show-toplevel):/home/ubuntu/scale-network --rm -it docker.io/sarcasticadmin/openwrt-build@sha256:25ac9d0dd4eeaad1aaaa7c82c09e9ecc103c69224fc55eb9717c4cfb018a5281 /bin/bash
+cd /home/ubuntu/scale-network
 ```
 
 > There is no latest tag so make sure to specify the version (short commit hash)
@@ -45,7 +45,7 @@ Then continue onto whichever image you'd like to build.
 
 ### Image No Templates
 
-Build are done per arch with `TARGET` environment variable (defaults to `TARGET=ar71xx`:
+Build are done per arch with `TARGET` environment variable (defaults to `TARGET=ath79`:
 
 ```sh
 cd ./openwrt
@@ -122,18 +122,18 @@ TARGET=x86 make commonconfig
 At which point you should have a diff in git which can then be tested against a new
 build of the img
 
-#### mt7622-generic.config
+#### mt798x-generic.config
 
-Will use mt7622 as an example but this will work for any other arch we support:
-
-```
-TARGET=mt7622 make config menuconfig
-```
-
-After adding the specific mt7622 arch packages:
+Will use mt798x as an example but this will work for any other arch we support:
 
 ```
-TARGET=mt7622 make targetconfig
+TARGET=mt798x make config menuconfig
+```
+
+After adding the specific mt798x arch packages:
+
+```
+TARGET=mt798x make targetconfig
 ```
 
 ### Update openwrt/opkg
@@ -162,11 +162,11 @@ TARGET=x86 make commonconfig targetconfig
 > This generates the diff of the base config, then we split it out
 > into the common components and last its arch target configs
 
-Repeat this for `TARGET=ar71xx` and `TARGET=mt7622`
+Repeat this for `TARGET=ath79` and `TARGET=mt798x`
 
 ```
-TARGET=mt7622 make config menuconfig
-TARGET=mt7622 make targetconfig
+TARGET=mt798x make config menuconfig
+TARGET=mt798x make targetconfig
 ```
 
 > commonconfig is only generated on x86
@@ -292,10 +292,10 @@ Run `make menuconfig` and change the arch from x86 to target arch:
 ```
 
 ```
-comm -23 <(sort ./.diffconfig) <(sort $(git rev-parse --show-toplevel)/openwrt/configs/common.config) > $(git rev-parse --show-toplevel)/openwrt/configs/mt7622-generic.config
+comm -23 <(sort ./.diffconfig) <(sort $(git rev-parse --show-toplevel)/openwrt/configs/common.config) > $(git rev-parse --show-toplevel)/openwrt/configs/mt798x-generic.config
 ```
 
-> Assuming mt7622 is our target arch
+> Assuming mt798x is our target arch
 
 Thats it now you should have a generic config and a arch specific config going forward. The majority of these steps are taken care of by the Makefile in the `openwrt` dir but in the cases where
 we need to start fresh this has been time consuming to recall.

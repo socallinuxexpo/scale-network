@@ -24,10 +24,10 @@ KEYPATH ?= ../facts/keys/
 GOMPLATE := $(shell command -v gomplate 2> /dev/null)
 CURL := $(shell command -v curl 2> /dev/null)
 
-OPENWRT_VER ?= 3dfd1f69a769bd857061b4856270dfc78e30c610
+OPENWRT_VER ?= 41a1874c700dc0bbf300b5a14abf3ebb90d99859
 # If bumping opkg it needs to be a commit that exists in the fork
 # https://github.com/sarcasticadmin/opkgs
-OPENWRT_PKG_VERSION ?= 38e0f8c7d5c2f69f1603abb99e0fd3886c05f687
+OPENWRT_PKG_VERSION ?= 2db11f3ab40add40e91255e01049aed052b8c3a3
 
 SHORT_VER = $(shell echo $(OPENWRT_VER) | cut -c 1-7)
 IMAGEBUILDER = source-$(TARGET)-$(SHORT_VER)

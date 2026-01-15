@@ -1,43 +1,62 @@
 inputs:
 let
+
+  # inherits
+
   inherit (builtins)
-    attrNames
     attrValues
-    readDir
     ;
 
-  inherit (inputs.nixpkgs-unstable)
+  inherit (inputs.nixpkgs-lib)
     lib
     ;
 
   inherit (lib.attrsets)
-    filterAttrs
     genAttrs
-    mapAttrs'
+    ;
+
+  inherit (lib.filesystem)
+    packagesFromDirectoryRecursive
     ;
 
   inherit (lib.fixedPoints)
     composeManyExtensions
     ;
 
-  inherit (inputs.self.library)
-    attrNamesKebabToCamel
-    kebabToCamel
+  inherit (inputs.self)
+    library
     ;
 
-  getDirectories =
-    path: attrNames (filterAttrs (_: fileType: fileType == "directory") (readDir path));
+  inherit (library.path)
+    getDirectoryNames
+    joinParentToPaths
+    ;
 
-  allLocalPackages = attrNamesKebabToCamel (
-    genAttrs (getDirectories ../packages) (
-      dir: final: prev: {
-        scale-network = prev.scale-network or { } // {
-          "${kebabToCamel dir}" = final.callPackage ../packages/${dir}/package.nix { };
-        };
-      }
+  # overlays
+
+  toplevelOverlays =
+    final: prev:
+    packagesFromDirectoryRecursive {
+      inherit (final) callPackage;
+      inherit (prev) newScope;
+      directory = ../package-sets/top-level;
+    };
+
+  packageOverrides =
+    (
+      parent:
+      (genAttrs (getDirectoryNames parent) (
+        dir:
+        import (
+          joinParentToPaths parent [
+            dir
+            "overlay.nix"
+          ]
+        )
+      ))
     )
-  );
+      ./package-overrides;
 
-  default = composeManyExtensions (attrValues allLocalPackages);
+  default = composeManyExtensions ((attrValues packageOverrides) ++ [ toplevelOverlays ]);
 in
-allLocalPackages // { inherit default; }
+packageOverrides // { inherit default; }

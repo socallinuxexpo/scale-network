@@ -39,15 +39,21 @@ def isvalidmodel(model):
     test for valid switch model (enumerated)
     """
     return model in {
-        "ex4200-48p",
-        "ex4200-48t",
-        "ex4200-24p",
-        "ex4200-24t",
         "ex2200-48p",
         "ex2200-48t",
         "ex2200-24p",
         "ex2200-24t",
+        "ex2300-c-12t",
+        "ex2300-c-12t-vc",
+        "ex2300-c-12p",
+        "ex2300-c-12p-vc",
+        "ex4200-24t",
+        "ex4200-24p",
+        "ex4200-48t",
+        "ex4200-48p",
         "ex4200-48px",
+        "ex4300-48t",
+        "ex4300-48p",
     }
 
 

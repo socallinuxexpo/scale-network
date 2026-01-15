@@ -1,7 +1,7 @@
 inputs:
 let
 
-  inherit (inputs.nixpkgs)
+  inherit (inputs.nixpkgs-lib)
     lib
     ;
 

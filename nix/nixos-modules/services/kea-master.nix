@@ -42,7 +42,7 @@ in
           let
             dhcp4PopulateConfig = pkgs.runCommand "replace" { } ''
               mkdir $out
-              cp ${pkgs.scale-network.scaleInventory}/config/dhcp4-server.conf $TMP/dhcp4-server.conf
+              cp ${pkgs.scale-network.scale-inventory}/config/dhcp4-server.conf $TMP/dhcp4-server.conf
               substituteInPlace "$TMP/dhcp4-server.conf" \
                 --replace-fail '@@INTERFACE@@' '${config.scale-network.facts.eth}'
               cp $TMP/dhcp4-server.conf $out
@@ -56,7 +56,7 @@ in
           let
             dhcp6PopulateConfig = pkgs.runCommand "replace" { } ''
               mkdir $out
-              cp ${pkgs.scale-network.scaleInventory}/config/dhcp6-server.conf $TMP/dhcp6-server.conf
+              cp ${pkgs.scale-network.scale-inventory}/config/dhcp6-server.conf $TMP/dhcp6-server.conf
               substituteInPlace "$TMP/dhcp6-server.conf" \
                 --replace-fail '@@SERVERADDRESS@@' '${builtins.head (lib.splitString "/" config.scale-network.facts.ipv6)}' \
                 --replace-fail '@@INTERFACE@@' '${config.scale-network.facts.eth}'

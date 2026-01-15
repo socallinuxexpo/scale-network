@@ -10,18 +10,16 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  # *sas drivers required for Lenovo System x3650 M5 Machine Type: 8871AC1
   boot.initrd.availableKernelModules = [
     "ehci_pci"
     "ahci"
     "usbhid"
     "usb_storage"
     "sd_mod"
-    "mpt3sas"
-    "megaraid_sas"
   ];
+
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   swapDevices = [ ];

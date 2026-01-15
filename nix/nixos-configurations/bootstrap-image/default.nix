@@ -3,12 +3,15 @@
 
   modules =
     {
+      lib,
       modulesPath,
       pkgs,
       ...
     }:
     let
-      mybootstrap = pkgs.writeShellScriptBin "mybootstrap" (builtins.readFile ./bootstrap.sh);
+      inherit (lib.modules)
+        mkForce
+        ;
     in
     {
       imports = [
@@ -39,6 +42,12 @@
         networking = {
           useNetworkd = true;
           useDHCP = false;
+          # disabled by default but since were pulling in:
+          # installer/cd-dvd/installation-cd-minimal.nix
+          #
+          # nm will also get an IP address if left alone
+          # had attributes: secondary dynamic noprefixroute
+          networkmanager.enable = mkForce false;
           firewall.enable = true;
         };
 
@@ -46,7 +55,12 @@
           enable = true;
           networks = {
             "10-lan" = {
-              matchConfig.Name = "eno1";
+              matchConfig.Type = "ether";
+              enable = true;
+              networkConfig.DHCP = "yes";
+            };
+            "10-wlan" = {
+              matchConfig.Type = "wlan";
               enable = true;
               networkConfig.DHCP = "yes";
             };
@@ -60,14 +74,12 @@
           efibootmgr
           gptfdisk
           screen
-          mybootstrap
         ];
 
         services.openssh = {
           enable = true;
           openFirewall = true;
         };
-
       };
     };
 }

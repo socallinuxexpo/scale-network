@@ -1,0 +1,17 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "massflash-generate-persist"
+dependencies = [
+    "pydantic",
+    "typer",
+]
+dynamic = ["version", "description"]
+
+[project.scripts]
+massflash-generate-persist = "massflash_generate_persist:app"
+
+[tool.setuptools.packages.find]
+where = ["."]

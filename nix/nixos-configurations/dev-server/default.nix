@@ -41,6 +41,12 @@
           experimental-features = nix-command flakes
         '';
 
+        boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+        # because we still build openwrt with docker its helpful to have this
+        # enabled on the dev-server
+        virtualisation.docker.enable = true;
+
         networking = {
           useNetworkd = true;
           useDHCP = false;
@@ -436,7 +442,7 @@
 
         networking = {
           extraHosts = ''
-            10.0.3.20 coreexpo.scale.lan
+            10.0.3.20 core-slave.scale.lan
           '';
         };
 

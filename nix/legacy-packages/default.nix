@@ -1,5 +1,5 @@
 inputs:
-inputs.nixpkgs.lib.genAttrs
+inputs.nixpkgs-lib.lib.genAttrs
   [
     "aarch64-darwin"
     "aarch64-linux"

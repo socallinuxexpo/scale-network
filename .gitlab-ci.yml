@@ -51,6 +51,7 @@ openwrt-3800ch-integ:
     - bundle config set --local path '.bundle'
     - bundle install
     - bash -c 'until nc -zvw 5 192.168.254.100 22; do echo "SSH not ready"; sleep 3; done'
+    - sleep 30
     - bundle exec rake spec TEST_TYPE=openwrt TARGET_HOST=192.168.254.100 | tee ${CI_PROJECT_DIR}/openwrt/work/serverspec.log
     - rm -rf ./.bundle
   artifacts:

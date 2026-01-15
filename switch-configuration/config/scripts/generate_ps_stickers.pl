@@ -7,6 +7,9 @@
 # Currently output is to STDOUT. Might convert to sending to a file later.
 
 # Values for 17" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
+
+##FIXME## Added horrible hacks to manage labels for Micro 12 port switches
+
 my $PageWidth = 20;
 my $PageHeight = 15;
 
@@ -35,7 +38,7 @@ my $PS_Preamble = <<EOF;
 % Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
 /PageWidth { $PageWidth Inch } bind def
 /PageHeight { $PageHeight Inch } bind def
-/StickerWidth { $StickerWidth Inch } bind def
+%/StickerWidth { $StickerWidth Inch } bind def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
 /StickerHeight { $StickerHeight Inch } bind def
 /CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
 << /PageSize [ PageWidth 0.25 Inch add PageHeight $SheetCount mul ] >> setpagedevice
@@ -72,6 +75,7 @@ show_preamble();
 foreach(reverse(sort(@maps)))
 {
   setorigin($map_pos) if ($map_number);	# Don't move the origin for the first map.
+
   embed($_);
   $map_number++;
   $map_pos++;
@@ -126,6 +130,10 @@ EOF
 sub embed
 {
   my $file = shift(@_);
+  my $stickwidth = $StickerWidth;
+  if ($file =~ /Micro/) {
+	  $stickwidth = 9;
+  }
   open INPUT, "<$file" || die("Could not read $file: ");
   foreach(<INPUT>)
   {
@@ -135,6 +143,7 @@ sub embed
   # Draw sticker cut bounding box around sticker with 0.25" radius corners
   print <<EOF;
     gsave
+    /StickerWidth { $stickwidth Inch } bind def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
     0.5 0 0 0 (StickerCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint

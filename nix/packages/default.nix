@@ -1,7 +1,7 @@
 inputs:
 let
 
-  inherit (inputs.nixpkgs)
+  inherit (inputs.nixpkgs-lib)
     lib
     ;
 
@@ -18,12 +18,13 @@ mapAttrs (const (pkgs: {
   inherit (pkgs.scale-network)
     dhcptest
     mac2eui64
-    makeDhcpd
+    make-dhcpd
     massflash
-    scaleInventory
+    massflash-generate-persist
+    scale-inventory
     serverspec
-    perlNetArp
-    perlNetInterface
-    perlNetPing
+    perl-net-arp
+    perl-net-interface
+    perl-net-ping
     ;
 })) inputs.self.legacyPackages
