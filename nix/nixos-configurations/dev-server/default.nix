@@ -47,7 +47,7 @@
         # enabled on the dev-server
         virtualisation.docker.enable = true;
 
-        virtualisation.libvirtd.allowedBridges = [ "bridge103" ];
+        virtualisation.libvirtd.allowedBridges = [ "bridge10" "bridge103" ];
 
         networking = {
           useNetworkd = true;
