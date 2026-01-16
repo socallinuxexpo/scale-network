@@ -51,6 +51,7 @@
           useNetworkd = true;
           useDHCP = false;
           firewall.enable = true;
+          nftables.enable = true;
         };
 
         # ensure non-mgmt interfaces disable accept RA for ipv6
