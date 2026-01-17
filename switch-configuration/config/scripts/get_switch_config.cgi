@@ -49,7 +49,7 @@ get_switchtype("anonymous");
 my @switches = get_switch_by_mac($MAC);
 if (scalar(@switches) < 1)
 {
-    send_abort("No match found for MAC Address: \"$MAC\".");
+    send_abort("No match found for MAC Address: \"$MAC\".", @switches);
 }
 elsif (scalar(@switches) > 1)
 {
@@ -100,9 +100,7 @@ sub parse_query
 	if ($A eq "MAC" || $A eq "CLEAN")
 	{
             my $S = '$'.$A." = \"$V\"";
-            print STDERR "Evaluating \"$S\"\n";
 	    eval($S);
-	    print STDERR "Result: ($A) ($V) ($MAC) ($CLEAN)\n";
 	}
 	else
 	{
