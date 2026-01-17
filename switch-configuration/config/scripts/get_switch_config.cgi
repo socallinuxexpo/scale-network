@@ -100,7 +100,8 @@ sub parse_query
 	if ($A eq "MAC" || $A eq "CLEAN")
 	{
             print STDERR "Evaluating \'\$\'.$A.\" = $V\"\n";
-            eval('$'.$A." = $V");
+            my $S = '$'.$A." = $V";
+	    eval($S);
 	    print STDERR "Result: ($A) ($V) ($MAC) ($CLEAN)\n";
 	}
 	else
