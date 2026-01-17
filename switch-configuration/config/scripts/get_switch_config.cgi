@@ -27,20 +27,20 @@ $QUERY = $ENV{'QUERY_STRING'};
 parse_query($QUERY);
 
 # Step 1: Move current working directory to repo
-chdir("$REPO") || send_abort("Failed to enter repository.");
+chdir("$REPO") || send_abort("Failed to enter repository.", "$!");
 
 # Step 2: Refresh the repo and make sure we are on current master
-system("git checkout master") || send_abort("Failed git checkout.");
-system("git fetch origin master") || send_abort("Failed git fetch.");; 
-system("git reset --hard origin/master") || send_abort("Failed hard reset of git repo to origin/master.");
+system("git checkout master") || send_abort("Failed git checkout.", "$? : $!");
+system("git fetch origin master") || send_abort("Failed git fetch.", "$? : $!");; 
+system("git reset --hard origin/master") || send_abort("Failed hard reset of git repo to origin/master.", "$? : $!");
 
 # Step 3: Build any updated files
-chdir("switch_configuration") || send_abort("Failed to enter switch_configuration directory.");
+chdir("switch_configuration") || send_abort("Failed to enter switch_configuration directory.", "$? : $!");
 if ($CLEAN)
 {
-    system("make clean") || send_abort("Failed specified cleaning process, configuration files may be invalid.");
+    system("make clean") || send_abort("Failed specified cleaning process, configuration files may be invalid.", "$? : $!");
 }
-system("make") || send_abort("Failed make process, configuration files may be invalid.");
+system("make") || send_abort("Failed make process, configuration files may be invalid.", "$? : $!");
 
 # Step 4: identify the switch
 #   load the switch configuration database
@@ -57,7 +57,7 @@ elsif (scalar(@switches) > 1)
 }
 #   Retrieve switch configuration file
 my $file = "$REPO"."/switch_configuration/config/output/".$switch.".conf";
-open(CONFIG, "<$file") || send_abort("Couldn't read configuration file.");
+open(CONFIG, "<$file") || send_abort("Couldn't read configuration file.", "$!");
 send_plain_header();
 foreach(<CONFIG>)
 {
