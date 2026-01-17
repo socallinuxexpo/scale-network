@@ -4,37 +4,33 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 
 # Prereqs
 
-THese instructions are obsolete and there are now additional requirements. Please check in the PODs for the
-PERL scripts in the config/scripts/ directory and in the config/scripts/README.md file.
+For system prerequisites for building switch configurations, check in the POD documentation of the PERL scripts and the README.md file in config/scripts/
 
-Preserved for posterity and no longer particularly relevant.
-
-PERL 5
-Ubuntu instructions
-
-```
-apt-get install libexpect-perl
-apt-get install net-sftp
-apt-get install libnet-arp-perl
-apt-get install libnet-interface-perl
-```
-
-Some scripts have additional dependencies... The POD for each script is the most current information.
-There's also documentation of the scripts in config/scripts/README.md that should be reviewed.
-There are also extensive comments in most of the scripts in that directory. When in doubt, use the source, Luke.
+For Zero Touch Provisioning, look in the README.md file in config/scripts under the heading "Zero Touch Provisioning"
 
 # Firmware
 
-The latest version of the firmware can be downloaded from `dhcp-01.delong.com`
+The approved versions of the switch firmware can be downloaded from `dhcp-01.delong.com` -- This host has been decommissioned and the new location will be on 'scale-ztpserver.delong.com/images'.
+The intent is for firmware to eventually be managed entirely through the ZTP process outside of exceptional circumstances.
 
 ## Models
+
+### EX2300
+
+We are running the following version of `junos':
+- [junos arm32 25.2R1.9](http://scale-ztpserver.delong.com/images/junos-arm-32-25.2R1.9.tgz)
 
 ### EX4200
 
 We are running the following versions of `junos` and its `bootloader`:
 
-- [jloader 12.1R3](http://dhcp-01.delong.com/images/jloader-ex-3242-12.1R3-signed.tgz)
-- [jinstall 15.1R7.9](http://dhcp-01.delong.com/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tgz)
+- [jloader 12.1R3](http://scale-ztpserver.delong.com/images/jloader-ex-3242-12.1R3-signed.tgz)
+- [jinstall 15.1R7.9](http://scale-ztpserver.delong.com/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tgz)
+
+### EX4300
+
+We are running the following version of `junos':
+- [jinstall 21.4R3.15](http://scale-ztpserver.delong.com/images/jinstall-ex-4300-21.4R3.15-signed.tgz)
 
 ### SRX300
 
@@ -47,9 +43,11 @@ We are running the following versions of `junos` on the router:
 Current `SHA256` for the juniper firmware:
 
 ```
+5897f0d74f8ea3cd8a20abdf685e33053d7e6fba7715985be3972995124fc543  junos-arm-32-25.2R1.9.tgz
 e30b55fa1832be8a1227d0a55a1b2654b42e162ea6182253922793f2243d52a9  jloader-ex-3242-12.1R3-signed.tar.gz
 b23864284709b3b9e485628e43f9078075978b341412a79a682857660fb98419  jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
 d3cb75afd0bdd260155337027b74c8218fb700a51da6682e49af8b61ec10ec27  jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz
+420d41cefb2c4d623e246fd7558d184fa0c301de3c08c1aeb629272549faab58  jinstall-ex-4300-21.4R3.15-signed.tgz
 ed6c23a35cd71412cb73c4b7a826db2d8e4c21e7c93c7736dadc6b1b891c98a5  junos-srxsme-24.2R1.17.tgz
 ```
 
@@ -59,11 +57,11 @@ Grab the `SHA256` to check the image validity:
 
 ```
 cd <toimagedir>
-curl -O http://dhcp-01.delong.com/images/SHA256SUMS
+curl -O http://scale-ztpserver.delong.com/images/SHA256SUMS
 shasum -c SHA256SUMS
 ```
 
-Expected output:
+Expected output should be similar to the following:
 
 ```
 % curl -O http://dhcp-01.delong.com/images/SHA256SUMS
@@ -232,17 +230,33 @@ https://docs.google.com/spreadsheets/d/1qbmQh8zbcDD9fi1pmDi-NaYuZ6Y-WcicX4fwMsuY
 
 # Scripts (No User Serviceable Parts inside)
 
-scripts/
+config/scripts/
 
 However, there is documentation of the scripts in scripts/README.md which should be reviewed.
 Also, the comments and POD in the scripts may prove relevant to users of the scripts.
+
+# Makefile (No User Serviceable Parts inside)
+
+Makefile
+
+There is a Makefile in this directory. It contains all of the instructions and recipes needed to build a complete
+set of switch configurations and maps (labels and documentation). There are comments in the Makefile and it's
+mostly pretty straight forward for any developer attempting to follow the process or needing to expand it.
 
 # Standard Operational Procedures
 
 ## How to build a set of switch configurations
 
-The procedure below is replaced with a Makefile now. The rest is preserved for historical
-purposes and troubleshooting in case of an issue with the make process.
+### Use Makefile
+```
+cd <repodir>/switch_configuration
+make
+```
+
+### Manually
+
+The procedure below is replaced with a Makefile now. The rest is preserved for 
+troubleshooting in case of an issue with the make process.
 
 You should be able to go into the switch-configuration directory and simply type 'make'.
 This should generate all of the PDFs, Sticker EPS files, Configuraiton, and Map files
@@ -274,7 +288,7 @@ this by hand is just unnecessarily painful and not very reliable.
 ## Loading configurations onto switches
 
 All config loading is now accomplished using the switch_config_loader script. See scripts/README.md for
-its documentation.
+its documentation. The eventual intent is to render this obsolete through Zero Touch Provisioning.
 
 This should be run from the switch_configration/config directory as scripts/switch_config_loader.
 
@@ -314,7 +328,10 @@ Push updated configurations to a subset of switches by name (live at the show):
 
 ## How to set up a switch initially
 
-##FIXME## This section needs updating and some rework
+1. Connect the computer where these scripts are being run to the switch console (serial)
+
+1. Determine the serial port device name on your computer. The examples in this
+   section will use __/dev/ttyS6__ as the serial port.
 
 1. Restore switch to factory defaults
 
@@ -322,10 +339,9 @@ Push updated configurations to a subset of switches by name (live at the show):
    https://www.juniper.net/documentation/en_US/release-independent/junos/topics/task/configuration/ex-series-switch-default-factory-configuration-reverting.html#jd0e60
    ```
 
-1. Connect the computer where these scripts are being run to the switch console (serial)
+   Summary: Get to the CLI and issue the "request system zeroize" command. 
 
-1. Determine the serial port device name on your computer. The examples in this
-   section will use __/dev/ttyS6__ as the serial port.
+### The steps below apply if you are NOT using Zero Touch Provisioning. If you are using Zero Touch Provisioning, connect the management port to a port with a ZTP capable DHCP server and internet access and once the switch completes the zero-ize process, it should provision itself the rest of the way. (Watching this complete via the console is highly recommended).
 
 1. Connect switch management ethernet (next to console port) directly to the computer running
    these scripts.
@@ -406,11 +422,11 @@ Push updated configurations to a subset of switches by name (live at the show):
 ## To get the configuration for a switch:
 
 1. ```
-    If you haven't already, get a full copy of the repository and build the configuration files.
+    If you haven't already, get a full copy of the repository and built the configuration files.
     A.      Clone the repository
     B.      Get a current copy of the secrets directory from someone.
-    C.      Change to the "switch_configuration/config" directory.
-    D.      Run "scripts/build_switch_configs.pl"
+    C.      Change to the "switch_configuration" directory.
+    D.      Type "make".
    ```
 1. ```
     Check the number on the labels on the switch and find the
