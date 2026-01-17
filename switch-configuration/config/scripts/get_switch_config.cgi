@@ -19,7 +19,7 @@ my $MAC = "";
 my $CLEAN = "";
 
 # Load libraries
-use lib "$REPO/switch_configuration/config/scripts";
+use lib "$REPO/switch-configuration/config/scripts";
 use switch_template;
 
 # Parse the Query String from the web server
