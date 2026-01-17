@@ -99,7 +99,9 @@ sub parse_query
         my ($A, $V) = split('=');
 	if ($A eq "MAC" || $A eq "CLEAN")
 	{
+            print STDERR "Evaluating \'\$\'.$A.\" = $V\"\n";
             eval('$'.$A." = $V");
+	    print STDERR "Result: ($A) ($V) ($MAC) ($CLEAN)\n";
 	}
 	else
 	{
