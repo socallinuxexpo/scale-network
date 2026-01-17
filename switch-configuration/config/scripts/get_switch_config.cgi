@@ -44,6 +44,7 @@ system("make") == 0 || send_abort("Failed make process, configuration files may 
 
 # Step 4: identify the switch
 #   load the switch configuration database
+system("chdir config") == 0 || send_abort("Failed to chdir into config directory.", "$? : $!");
 get_switchtype("anonymous");
 #   Identify switch from MAC address
 my @switches = get_switch_by_mac($MAC);
@@ -79,7 +80,8 @@ sub send_abort
             <H1>ERROR Encountered</H1>
 	    <P>
 EOF
-print join("\n<P>", @_);
+print join("\n            <P>", @_);
+print "\n";
 print <<EOF;
         </BODY>
     </HTML>
