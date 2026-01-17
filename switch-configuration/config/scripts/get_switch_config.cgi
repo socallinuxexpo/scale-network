@@ -117,6 +117,7 @@ sub send_html_header
 {
     print <<EOF;
 Content-type: text/html; charset=iso-8859-1
+
 EOF
 }
 
@@ -125,6 +126,7 @@ sub send_plain_header
 {
     print <<EOF;
 Content-type: text/plain; charset=iso-8859-1
+
 EOF
 }
 
