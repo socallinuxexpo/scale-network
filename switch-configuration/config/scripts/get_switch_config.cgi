@@ -79,7 +79,7 @@ sub send_abort
             <H1>ERROR Encountered</H1>
 	    <P>
 EOF
-print join("\n<P>", @_)
+print join("\n<P>", @_);
 print <<EOF;
         </BODY>
     </HTML>
