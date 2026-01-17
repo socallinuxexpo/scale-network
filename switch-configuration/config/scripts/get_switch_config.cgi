@@ -84,6 +84,7 @@ print <<EOF;
         </BODY>
     </HTML>
 EOF
+exit 1;
 }
 
 # Brute force approach to parsing simple QUERY_STRING from web server. Should use a library and do something more elegant
