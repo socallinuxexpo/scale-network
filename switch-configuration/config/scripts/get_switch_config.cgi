@@ -13,6 +13,7 @@
 BEGIN {
     # Define global varialbes and placeholders
     our $REPO = "/var/www/scale-repo/scale-network";
+    our $DEBUG = 0;
 }
 my $QUERY = "";
 my $MAC = "";
@@ -40,7 +41,7 @@ if ($CLEAN)
 {
     system("make clean") == 0 || send_abort("Failed specified cleaning process, configuration files may be invalid.", "$? : $!");
 }
-system("make") == 0 || send_abort("Failed make process, configuration files may be invalid.", "$? : $!");
+system("make 2>/dev/null >/dev/null") == 0 || send_abort("Failed make process, configuration files may be invalid.", "$? : $!");
 
 # Step 4: identify the switch
 #   load the switch configuration database
