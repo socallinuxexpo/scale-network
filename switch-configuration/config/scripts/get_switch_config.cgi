@@ -95,6 +95,7 @@ sub parse_query
     my @Q = split('&', $QUERY);
     foreach(@Q)
     {
+	my $qs = $_;
         my $A, $V = split('=');
 	if ($A eq "MAC" || $A eq "CLEAN")
 	{
@@ -102,7 +103,7 @@ sub parse_query
 	}
 	else
 	{
-            send_abort("Invalid query. $A ($V)");
+            send_abort("Invalid query. ($QUERY) ($qs) $A ($V)");
 	}
     }
 }
