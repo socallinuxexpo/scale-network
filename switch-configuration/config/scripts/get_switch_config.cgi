@@ -35,7 +35,7 @@ system("git fetch origin master") == 0 || send_abort("Failed git fetch.", "$? : 
 system("git reset --hard origin/master") == 0 || send_abort("Failed hard reset of git repo to origin/master.", "$? : $!");
 
 # Step 3: Build any updated files
-chdir("switch_configuration") || send_abort("Failed to enter switch_configuration directory.", "$? : $!");
+chdir("switch-configuration") || send_abort("Failed to enter switch-configuration directory.", "$? : $!");
 if ($CLEAN)
 {
     system("make clean") == 0 || send_abort("Failed specified cleaning process, configuration files may be invalid.", "$? : $!");
