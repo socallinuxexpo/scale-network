@@ -27,7 +27,8 @@ chdir("$REPO") || send_abort("Failed to enter repository.");
 
 # Step 2: Refresh the repo and make sure we are on current master
 system("git checkout master") || send_abort("Failed git checkout.");
-system("git pull") || send_abort("Failed git pull.");; 
+system("git fetch origin master") || send_abort("Failed git fetch.");; 
+system("git reset --hard origin/master") || send_abort("Failed hard reset of git repo to origin/master.");
 
 # Step 3: Build any updated files
 chdir("switch_configuration") || send_abort("Failed to enter switch_configuration directory.");
