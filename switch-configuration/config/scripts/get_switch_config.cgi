@@ -1,7 +1,4 @@
 #!/usr/bin/env perl
-use lib "$REPO/switch_configuration/config/scripts";
-use "switch_template.pm";
-
 #
 # This script is the server side of the ZTP switch configuratoin process.
 #
@@ -13,10 +10,17 @@ use "switch_template.pm";
 # The script depends on having a copy of the SCALE networking Repository in a known location
 # (/var/www/scale-repo/scale-network).
 
-my $REPO = "/var/www/scale-repo/scale-network";
+BEGIN {
+    # Define global varialbes and placeholders
+    our $REPO = "/var/www/scale-repo/scale-network";
+}
 my $QUERY = "";
 my $MAC = "";
 my $CLEAN = "";
+
+# Load libraries
+use lib "$REPO/switch_configuration/config/scripts";
+use switch_template;
 
 # Parse the Query String from the web server
 $QUERY = $ENV{'QUERY_STRING'}
