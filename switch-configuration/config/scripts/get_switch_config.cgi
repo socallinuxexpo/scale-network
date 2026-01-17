@@ -96,7 +96,7 @@ sub parse_query
     foreach(@Q)
     {
 	my $qs = $_;
-        my $A, $V = split('=');
+        my ($A, $V) = split('=');
 	if ($A eq "MAC" || $A eq "CLEAN")
 	{
             eval('$'.$A." = $V");
