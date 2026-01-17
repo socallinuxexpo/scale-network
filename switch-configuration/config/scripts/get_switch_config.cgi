@@ -23,7 +23,7 @@ use lib "$REPO/switch-configuration/config/scripts";
 use switch_template;
 
 # Parse the Query String from the web server
-$QUERY = $ENV{'QUERY_STRING'}
+$QUERY = $ENV{'QUERY_STRING'};
 parse_query($QUERY);
 
 # Step 1: Move current working directory to repo
