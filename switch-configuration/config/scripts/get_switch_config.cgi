@@ -102,7 +102,7 @@ sub parse_query
 	}
 	else
 	{
-            send_abort("Invalid query.");
+            send_abort("Invalid query. $A ($V)");
 	}
     }
 }
