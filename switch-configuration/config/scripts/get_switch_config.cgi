@@ -57,7 +57,7 @@ elsif (scalar(@switches) > 1)
     send_abort("Error: Multiple matches for MAC Address: \"$MAC\":",@switches);
 }
 #   Retrieve switch configuration file
-my $file = "$REPO"."/switch-configuration/config/output/".$switch.".conf";
+my $file = "$REPO"."/switch-configuration/config/output/".$switches[0].".conf";
 open(CONFIG, "<$file") || send_abort("Couldn't read configuration file.", "$file", "$!");
 send_plain_header();
 foreach(<CONFIG>)
