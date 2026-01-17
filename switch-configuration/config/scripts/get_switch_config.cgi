@@ -58,7 +58,7 @@ elsif (scalar(@switches) > 1)
 }
 #   Retrieve switch configuration file
 my $file = "$REPO"."/switch-configuration/config/output/".$switch.".conf";
-open(CONFIG, "<$file") || send_abort("Couldn't read configuration file.", "$!");
+open(CONFIG, "<$file") || send_abort("Couldn't read configuration file.", "$file", "$!");
 send_plain_header();
 foreach(<CONFIG>)
 {
