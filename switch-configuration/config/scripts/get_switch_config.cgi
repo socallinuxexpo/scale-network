@@ -13,7 +13,6 @@
 BEGIN {
     # Define global varialbes and placeholders
     our $REPO = "/var/www/scale-repo/scale-network";
-    our $DEBUG = 0;
 }
 my $QUERY = "";
 my $MAC = "";
@@ -22,6 +21,7 @@ my $CLEAN = "";
 # Load libraries
 use lib "$REPO/switch-configuration/config/scripts";
 use switch_template;
+set_debug_level(0);
 
 # Parse the Query String from the web server
 $QUERY = $ENV{'QUERY_STRING'};
