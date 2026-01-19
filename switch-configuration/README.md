@@ -10,42 +10,41 @@ For Zero Touch Provisioning, look in the README.md file in config/scripts under 
 
 # Firmware
 
-The approved versions of the switch firmware can be downloaded from `dhcp-01.delong.com` -- This host has been decommissioned and the new location will be on 'scale-ztpserver.delong.com/images'.
+The approved versions of the switch firmware can be downloaded from 'dhcp-01.delong.com` -- This host has been decommissioned and the new location will be on 'scale-ztpserver.delong.com/images'.
 The intent is for firmware to eventually be managed entirely through the ZTP process outside of exceptional circumstances.
 
 ## Models
 
 ### EX2300
 
-We are running the following version of `junos':
+We are running the following version of 'junos':
 - [junos arm32 25.2R1.9](http://scale-ztpserver.delong.com/images/junos-arm-32-25.2R1.9.tgz)
 
 ### EX4200
 
-We are running the following versions of `junos` and its `bootloader`:
+We are running the following versions of 'junos' and its 'bootloader':
 
 - [jloader 12.1R3](http://scale-ztpserver.delong.com/images/jloader-ex-3242-12.1R3-signed.tgz)
 - [jinstall 15.1R7.9](http://scale-ztpserver.delong.com/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tgz)
 
 ### EX4300
 
-We are running the following version of `junos':
+We are running the following version of 'junos':
 - [jinstall 21.4R3.15](http://scale-ztpserver.delong.com/images/jinstall-ex-4300-21.4R3.15-signed.tgz)
 
 ### SRX300
 
-We are running the following versions of `junos` on the router:
+We are running the following versions of 'junos' on the router:
 
 - [junos 24.2R1.17](http://dhcp-01.delong.com/images/junos-srxsme-15.1X49-D120.3-domestic.tgz)
 
 ## Validate
 
-Current `SHA256` for the juniper firmware:
+Current 'SHA256' for the juniper firmware:
 
 ```
 5897f0d74f8ea3cd8a20abdf685e33053d7e6fba7715985be3972995124fc543  junos-arm-32-25.2R1.9.tgz
 e30b55fa1832be8a1227d0a55a1b2654b42e162ea6182253922793f2243d52a9  jloader-ex-3242-12.1R3-signed.tar.gz
-b23864284709b3b9e485628e43f9078075978b341412a79a682857660fb98419  jinstall-ex-4200-15.1R6.7-domestic-signed.tgz
 d3cb75afd0bdd260155337027b74c8218fb700a51da6682e49af8b61ec10ec27  jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz
 420d41cefb2c4d623e246fd7558d184fa0c301de3c08c1aeb629272549faab58  jinstall-ex-4300-21.4R3.15-signed.tgz
 ed6c23a35cd71412cb73c4b7a826db2d8e4c21e7c93c7736dadc6b1b891c98a5  junos-srxsme-24.2R1.17.tgz
@@ -53,10 +52,10 @@ ed6c23a35cd71412cb73c4b7a826db2d8e4c21e7c93c7736dadc6b1b891c98a5  junos-srxsme-2
 
 ### Verification
 
-Grab the `SHA256` to check the image validity:
+Grab the 'SHA256' to check the image validity:
 
 ```
-cd <toimagedir>
+cd &lt;toimagedir&gt;
 curl -O http://scale-ztpserver.delong.com/images/SHA256SUMS
 shasum -c SHA256SUMS
 ```
@@ -112,9 +111,9 @@ This file sets various defaults. All scripts will parse this file first before p
 Any configuration directive not applicable to the parsing script is ignored silently.
 
 ```
-SW_JUNOS	<junos_version>				Default JunOS version for switches
-RT_JUNOS	<junos_version>				Default JunOS version for routers
-rootpw		<encrypted password string>		Root Authentication Password
+SW_JUNOS	&lt;junos_version&gt;				Default JunOS version for switches
+RT_JUNOS	&lt;junos_version&gt;				Default JunOS version for routers
+rootpw		&lt;encrypted password string&gt;		Root Authentication Password
 ```
 
 Note, the actual root password hash has been removed from the repo and lives within the secrets directory.
@@ -138,7 +137,7 @@ See the file itself for the most up to date documentation on these fields.
 
 ## config/vlans
 
-## config/vlans.d/<name>
+## config/vlans.d/&lt;name&gt;
 
 The config/vlans file is the master VLAN configuration file. It may include other files where it
 makes sense to subdivide the configuration (e.g. Conference, Expo, etc.). If so, these files should
@@ -150,30 +149,30 @@ This allows us to more easily switch venues should that become necessary again.
 The syntax of a config/vlans file (either master or within an included file) is as fillows:
 
 ```
-#include <filename>				Include <filename> from vlans.d a la macro substitution
+#include &lt;filename&gt;				Include &lt;filename&gt; from vlans.d a la macro substitution
 
-VLAN <vlan_name> <vlan_number> <prefix6> <prefix4> <comment>
+VLAN &lt;vlan_name&gt; &lt;vlan_number&gt; &lt;prefix6&gt; &lt;prefix4&gt; &lt;comment&gt;
 						Defines a Normal VLAN.
 
-VVRNG 	<template>		<vlan_range>	<prefix6>	<prefix4>	<comment>
+VVRNG 	&lt;template&gt;		&lt;vlan_range&gt;	&lt;prefix6&gt;	&lt;prefix4&gt;	&lt;comment&gt;
 						Defines a range of Booth (Vendor) VLANs.
 
 Note: Only one VVRNG statement is allowed globally, even across all included files. The behavior of multiple
 VVRNG definitions is undefined.
 
-<template> is the prefix for naming the vlans. These will be dynamically assigned from the booth
+&lt;template&gt; is the prefix for naming the vlans. These will be dynamically assigned from the booth
 list file.
 
-<vlan_range> is a hyphen separated range defining the lowest and highest VLAN ID numbers that can be allocated.
+&lt;vlan_range&gt; is a hyphen separated range defining the lowest and highest VLAN ID numbers that can be allocated.
 
-<prefix6> is a shorter than /64 prefix from which /64s will be delegated. It must contain at least as many /64s
-as there are numbers between the low and high specfication in <vlan_range> in BCD notation. That is, if you
+&lt;prefix6&gt; is a shorter than /64 prefix from which /64s will be delegated. It must contain at least as many /64s
+as there are numbers between the low and high specfication in &lt;vlan_range&gt; in BCD notation. That is, if you
 have a range from 200-399 for VLAN ids, then there should be a /55 or shorter IPv6 prefix. Ideally, the numbers
 also line up (e.g. 200-399 VLAN IDs should map to 2001:db8:abcd:0200::/55 which would yield IPv6 networks for
 the VLANs of 2001:db8:abcd:200::/64 through 2001:db8:abcd:399::/64.)
 
-<prefix4> is a shorter than /24 prefix from which /24s will be delegated. It must contain at least as many /24s
-as there are numbers between the low and high specification in <vlan_range>. Since IPv4 numbers cannot possibly
+&lt;prefix4&gt; is a shorter than /24 prefix from which /24s will be delegated. It must contain at least as many /24s
+as there are numbers between the low and high specification in &lt;vlan_range>&gt; Since IPv4 numbers cannot possibly
 represent the full range of VLAN IDs in any human readable form, no attempt is made at matching the numbers.
 In our example above of VLAN IDs in the range 200-399, a /16 is perfect (e.g. 10.1.0.0/16 would map to 10.1.0.0/24
 through 10.1.199.0/24).
@@ -181,7 +180,7 @@ through 10.1.199.0/24).
 Related to this, there is a special vlan vendor_backbone (499) which is the gateway network all of the vendor VLANs are
 routed to on each switch and which is shared amongst the expo switches.
 
-[<directive>] // <text>				Any text after a double slash is considered a comment
+[&lt;directive&gt; // &lt;text&gt;				Any text after a double slash is considered a comment
 						to the end of line.  It is ignored by the parser.
 ```
 
@@ -192,7 +191,7 @@ For other VLANs, they should be set to ::/0 and 0.0.0.0/0, respectively, which w
 flag the parser not to create any L3 interfaces or IP related configuration for these
 networks.
 
-## config/types/<name>
+## config/types/&lt;name&gt;
 
 These files contain the configuration information for each type of switch. They are tab
 delimited (tab8 formatting preferred).
@@ -200,15 +199,15 @@ delimited (tab8 formatting preferred).
 Configuration elements include:
 
 ```
-RSRVD	<number_of_ports>
-VLAN	<vlan_name> <number_of_ports>
-VVLAN	<number_of_ports>
-TRUNK	<port> <vlan_name>[,<vlan_name>...] <trunktype>
-JUNOS	<junos_version>
-FIBER   <port> <vlan_name>[,<vlan_name>...] <trunktype>
+RSRVD	&lt;number_of_ports&gt;
+VLAN	&lt;vlan_name&gt; &lt;number_of_ports&gt;
+VVLAN	&lt;number_of_ports&gt;
+TRUNK	&lt;port&gt; &lt;vlan_name&gt;[,&lt;vlan_name&gt;...] &lt;trunktype&gt;
+JUNOS	&lt;junos_version&gt;
+FIBER   &lt;port&gt; &lt;vlan_name&gt;[,&lt;vlan_name&gt;...] &lt;trunktype&gt;
 ```
 
-## config/routers/{backups,to_push}/<name>
+## config/routers/{backups,to_push}/&lt;name&gt;
 
 These directories contain backups of the routers (backups) and staged configurations to be pushed onto the
 routers (to_push).
@@ -249,7 +248,7 @@ mostly pretty straight forward for any developer attempting to follow the proces
 
 ### Use Makefile
 ```
-cd <repodir>/switch_configuration
+cd &lt;repodir&gt;/switch_configuration
 make
 ```
 
@@ -257,10 +256,6 @@ make
 
 The procedure below is replaced with a Makefile now. The rest is preserved for 
 troubleshooting in case of an issue with the make process.
-
-You should be able to go into the switch-configuration directory and simply type 'make'.
-This should generate all of the PDFs, Sticker EPS files, Configuraiton, and Map files
-needed.
 
 Once the configuration files are all set up (as described above) and you
 have set up authentication parameters as described below, simply run
@@ -275,7 +270,7 @@ If you want to rebuild the configuration file for a single switch or a subset
 of switches, specify their names as arguments on the command line
 
 ```
-scripts/build_switch_configs.pl <switch1>[ <switch2>...]
+scripts/build_switch_configs.pl &lt;switch1&gt; &lt;switch2&gt;
 ```
 
 Note: The above command will only perform the first step in the postscript generation for sticker and PDF files.
@@ -296,7 +291,7 @@ Some quick examples:
 Load miniconfig via the serial port (this is the first step for a new switch or one whose config has been reset (amnesiac)):
 
 ```
-	scripts/switch_config_loader -c miniconfig -t /dev/<serial_port>
+	scripts/switch_config_loader -c miniconfig -t /dev/&lt;serial_port&gt;
 ```
 
 Load the switch with the appropriate configuration based on its me0 MAC address in switchtypes:
@@ -321,10 +316,10 @@ Push updated configurations to all switches live at the show:
 Push updated configurations to a subset of switches by name (live at the show):
 
 ```
-	scripts/switch_config_loader <switch_spec>
+	scripts/switch_config_loader &lt;switch_spec&gt;
 ```
 
-(Where \<switch_spec> is any combination of switch names, group names, etc.)
+(Where &lt;switch_spec&gt; is any combination of switch names, group names, etc.)
 
 ## How to set up a switch initially
 
@@ -359,14 +354,14 @@ Push updated configurations to a subset of switches by name (live at the show):
 1. Run the following command:
 
    ```
-   scripts/switch_config_loader -c miniconfig -t /dev/<serial_port>
+   scripts/switch_config_loader -c miniconfig -t /dev/&lt;serial_port&gt;
    ```
 
    This will default to logging into the switch as root. If you want to use a different username,
    you can add:
 
    ```
-   ... -u <username>
+   ... -u &lt;username&gt;
    ```
 
    to the command line above. It may also be useful to add the '-p' flag to cause the script to prompt
@@ -436,7 +431,7 @@ Push updated configurations to a subset of switches by name (live at the show):
    ```
 1. ```
     The config file will be in the config/output/ directory and
-    will be named <name>.conf. So for switch 27 in our above example,
+    will be named &lt;name&gt;conf. So for switch 27 in our above example,
     it would be "config/output/CTF3.conf".
    ```
 
