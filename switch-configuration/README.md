@@ -6,41 +6,41 @@ configurations, tooling and scripts for the Juniper Switches and Routers running
 
 For system prerequisites for building switch configurations, check in the POD documentation of the PERL scripts and the README.md file in config/scripts/
 
-For Zero Touch Provisioning, look in the README.md file in config/scripts under the heading "Zero Touch Provisioning"
+For Zero Touch Provisioning, look in the README.md file in config/scripts under the heading \"Zero Touch Provisioning\"
 
 # Firmware
 
-The approved versions of the switch firmware can be downloaded from 'dhcp-01.delong.com` -- This host has been decommissioned and the new location will be on 'scale-ztpserver.delong.com/images'.
-The intent is for firmware to eventually be managed entirely through the ZTP process outside of exceptional circumstances.
+Firmware images can be downloaded from \'scale-ztpserver.delong.com/images\'.
+The intent is for firmware to be managed entirely through the ZTP process outside of exceptional circumstances.
 
 ## Models
 
 ### EX2300
 
-We are running the following version of 'junos':
+We are running the following version of \'junos\':
 - [junos arm32 25.2R1.9](http://scale-ztpserver.delong.com/images/junos-arm-32-25.2R1.9.tgz)
 
 ### EX4200
 
-We are running the following versions of 'junos' and its 'bootloader':
+We are running the following versions of \'junos\' and its \'bootloader\':
 
 - [jloader 12.1R3](http://scale-ztpserver.delong.com/images/jloader-ex-3242-12.1R3-signed.tgz)
 - [jinstall 15.1R7.9](http://scale-ztpserver.delong.com/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tgz)
 
 ### EX4300
 
-We are running the following version of 'junos':
+We are running the following version of \'junos\':
 - [jinstall 21.4R3.15](http://scale-ztpserver.delong.com/images/jinstall-ex-4300-21.4R3.15-signed.tgz)
 
 ### SRX300
 
-We are running the following versions of 'junos' on the router:
+We are running the following versions of \'junos\' on the router:
 
 - [junos 24.2R1.17](http://dhcp-01.delong.com/images/junos-srxsme-15.1X49-D120.3-domestic.tgz)
 
 ## Validate
 
-Current 'SHA256' for the juniper firmware:
+Current \'SHA256\' for the juniper firmware:
 
 ```
 5897f0d74f8ea3cd8a20abdf685e33053d7e6fba7715985be3972995124fc543  junos-arm-32-25.2R1.9.tgz
@@ -52,7 +52,7 @@ ed6c23a35cd71412cb73c4b7a826db2d8e4c21e7c93c7736dadc6b1b891c98a5  junos-srxsme-2
 
 ### Verification
 
-Grab the 'SHA256' to check the image validity:
+Grab the \'SHA256\' to check the image validity:
 
 ```
 cd &lt;toimagedir&gt;
@@ -91,17 +91,17 @@ All files have the following features unless expressly stated otherwise:
 		foo \
 		bar
 
-	is parsed as 'foo bar'
+	is parsed as \'foo bar\'
 
 		this \
 		line \
 		is \
 		continued
 
-	is parsed as 'this line is continued'
+	is parsed as \'this line is continued\'
 +	Parser will ignore one whitespace after a comma so that comma separated lists
-	will work equally well with either "foo, bar, blah" or "foo,bar,blah" syntax
-	and also so that ", \" continuation constructs won't create arbitrary whitespace
+	will work equally well with either \"foo, bar, blah\" or \"foo,bar,blah\" syntax
+	and also so that \", \\\" continuation constructs won't create arbitrary whitespace
 	problems.
 ```
 
@@ -213,7 +213,7 @@ These directories contain backups of the routers (backups) and staged configurat
 routers (to_push).
 
 It has been decided not to pursue templated generated configurations for routers because the small number of
-routers and the effort to implement such do not make sense. The routers currently use "bespoke" configurations
+routers and the effort to implement such do not make sense. The routers currently use \"bespoke\" configurations
 that are generated/modified by hand.
 
 Any time a configuration is changed on a router, it should be backed up to the routers/backups directory.
@@ -334,7 +334,7 @@ Push updated configurations to a subset of switches by name (live at the show):
    https://www.juniper.net/documentation/en_US/release-independent/junos/topics/task/configuration/ex-series-switch-default-factory-configuration-reverting.html#jd0e60
    ```
 
-   Summary: Get to the CLI and issue the "request system zeroize" command. 
+   Summary: Get to the CLI and issue the \"request system zeroize\" command. 
 
 ### The steps below apply if you are NOT using Zero Touch Provisioning. If you are using Zero Touch Provisioning, connect the management port to a port with a ZTP capable DHCP server and internet access and once the switch completes the zero-ize process, it should provision itself the rest of the way. (Watching this complete via the console is highly recommended).
 
@@ -364,7 +364,7 @@ Push updated configurations to a subset of switches by name (live at the show):
    ... -u &lt;username&gt;
    ```
 
-   to the command line above. It may also be useful to add the '-p' flag to cause the script to prompt
+   to the command line above. It may also be useful to add the \'-p\' flag to cause the script to prompt
    for the password to use for authentication.
 
    It is possible that in the future, miniconfig will be made available via a zero-touch provisioning
@@ -406,7 +406,7 @@ Push updated configurations to a subset of switches by name (live at the show):
    ```
 
    In the second case (-b), the script will send the power-off command to the switch upon successful completion
-   and you should watch for the "SYS" light (middle LED in the group of 3 to the right of the LCD display) to turn
+   and you should watch for the \"SYS\" light (middle LED in the group of 3 to the right of the LCD display) to turn
    off, indicating that the switch has halted and is ready for power-off. Once this is done, you can move the
    ethernet cable to the management port of the next switch to be loaded and the script will soon install the
    configuration onto that switch. When all switches are complete, simply use Ctrl-C to exit the script.
@@ -420,8 +420,8 @@ Push updated configurations to a subset of switches by name (live at the show):
     If you haven't already, get a full copy of the repository and built the configuration files.
     A.      Clone the repository
     B.      Get a current copy of the secrets directory from someone.
-    C.      Change to the "switch_configuration" directory.
-    D.      Type "make".
+    C.      Change to the \"switch_configuration\" directory.
+    D.      Type \"make\".
    ```
 1. ```
     Check the number on the labels on the switch and find the
@@ -432,7 +432,7 @@ Push updated configurations to a subset of switches by name (live at the show):
 1. ```
     The config file will be in the config/output/ directory and
     will be named &lt;name&gt;conf. So for switch 27 in our above example,
-    it would be "config/output/CTF3.conf".
+    it would be \"config/output/CTF3.conf\".
    ```
 
 ## To replace the configuration on one of last years switches:
@@ -452,10 +452,10 @@ and desperate measures are required.
     Start the cli.
    ```
 1. ```
-    type "edit"
+    type \"edit\"
    ```
 1. ```
-    Type "load override terminal"  
+    Type \"load override terminal\"  
     to enter a mode where you can paste in the new configuration file.
    ```
 1. ```
@@ -470,16 +470,16 @@ and desperate measures are required.
     When done pasting, hit Ctrl-D to exit load mode.
    ```
 1. ```
-    Type "show | compare".
+    Type \"show | compare\".
     A.    Expected output is a diff from last years config. The important
           thing is to make sure the diff looks reasonably sane.
    ```
 1. ```
-    Type "commit and-quit"
+    Type \"commit and-quit\"
     If the configuration fails to commit, ask for assistance.
    ```
 1. ```
-   Type "quit"
+   Type \"quit\"
    You're done with this switch.
    ```
 
