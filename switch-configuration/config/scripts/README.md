@@ -3,6 +3,7 @@
 Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configurations, tooling and scripts
 
 ## Scripts
+
 - Introduction
   -- This directory contains any scripts related to the switch configuration process. This includes scripts and libraries for building the configurations, scripts for buiding the documentary port maps which are used to produce stickers for the tops of the switches as well as reference documents for the cable team, scripts for managing (loading) the various configs on to the switches through various means, and finally scripts related to the "Zero Touch Provisioning" process which we are hoping to adopt in the near future.
 

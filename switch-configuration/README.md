@@ -18,6 +18,7 @@ The intent is for firmware to be managed entirely through the ZTP process outsid
 ### EX2300
 
 We are running the following version of 'junos':
+
 - [junos arm32 25.2R1.9](http://scale-ztpserver.delong.com/images/junos-arm-32-25.2R1.9.tgz)
 
 ### EX4200
@@ -30,6 +31,7 @@ We are running the following versions of 'junos' and its 'bootloader':
 ### EX4300
 
 We are running the following version of 'junos':
+
 - [jinstall 21.4R3.15](http://scale-ztpserver.delong.com/images/jinstall-ex-4300-21.4R3.15-signed.tgz)
 
 ### SRX300
@@ -191,7 +193,7 @@ For other VLANs, they should be set to ::/0 and 0.0.0.0/0, respectively, which w
 flag the parser not to create any L3 interfaces or IP related configuration for these
 networks.
 
-## config/types/&lt;name&gt;
+## config/types/\<name>
 
 These files contain the configuration information for each type of switch. They are tab
 delimited (tab8 formatting preferred).
@@ -247,6 +249,7 @@ mostly pretty straight forward for any developer attempting to follow the proces
 ## How to build a set of switch configurations
 
 ### Use Makefile
+
 ```
 cd &lt;repodir&gt;/switch_configuration
 make
