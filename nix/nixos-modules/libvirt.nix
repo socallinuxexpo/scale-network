@@ -36,6 +36,12 @@ in
       onShutdown = "shutdown";
     };
 
+    # bridge traffic goes directly to the vm instead of through host firewall
+    boot.kernel.sysctl = {
+      "net.bridge.bridge-nf-call-ip6tables" = 0;
+      "net.bridge.bridge-nf-call-iptables" = 0;
+    };
+
     # Add any users in the 'wheel' group to the 'libvirt' group.
     users.groups.libvirt.members = (
       filter (x: elem "wheel" config.users.users."${x}".extraGroups) (attrNames config.users.users)

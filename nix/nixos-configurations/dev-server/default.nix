@@ -47,10 +47,16 @@
         # enabled on the dev-server
         virtualisation.docker.enable = true;
 
+        virtualisation.libvirtd.allowedBridges = [
+          "bridge10"
+          "bridge103"
+        ];
+
         networking = {
           useNetworkd = true;
           useDHCP = false;
           firewall.enable = true;
+          nftables.enable = true;
         };
 
         # ensure non-mgmt interfaces disable accept RA for ipv6
