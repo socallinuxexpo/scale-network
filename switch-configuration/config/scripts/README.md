@@ -20,6 +20,178 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
         ---- In our case, the script is the above specified helper script which will then execute the CGI call to retrieve the switch-specific configuration file and install it.
     1. Once the configuration file is installed, the switch is ready for deployment.
 
+## KEA Templates (for ZTP)
+- The following configuration snippets should be added to the KEA DHCP4 configuration in order to support ZTP:
+```
+# The stanzas below go inside of the "Dhcp4" section
+    # Define all needed DHCP options that are not already built into KEA
+    "option-def": [
+        // DHCP4 General Space
+        {
+            "name":         "vendor-encapsulated-options",
+            "code":         43,
+            "type":         "empty",
+            "encapsulate":  "Juniper-ZTP"
+        },
+        // Juniper ZTP Custom Space
+        {
+            "name":         "image-file-name",
+            "code":         0,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "config-file-name",
+            "code":         1,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "image-file-type",
+            "code":         2,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "transfer-mode",
+            "code":         3,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "alt-image-file-name",
+            "code":         4,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "http-port",
+            "code":         5,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "ftp-timeout",
+            "code":         7,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        },
+        {
+            "name":         "proxyv4-info",
+            "code":         8,
+            "space":        "Juniper-ZTP",
+            "type":         "string",
+            "record-types": "",
+            "array":        false,
+            "encapsulate":  ""
+        }
+    ],
+    # Define client classes and the DHCP information that should be sent to each class
+    # Clients can be a member of more than one class and will receive the superset of
+    # options specified. Collisions in option data should be avoided.
+    "client-classes": [
+        {
+            # This class supports options applicable to ALL models of Juniper ex series switch.
+            # By using the Juniper-ZTP namespace, we tie these options to the above definitions
+            # so that they get properly encoded in the Vendor Specific Options.
+            "name": "Juniper-EX-Series",
+            "test": "substring(option[60].text,0,10) == 'Juniper-ex'",
+            "option-data": [
+                // Juniper ZTP custom options
+                {
+                    "name":         "config-file-name",
+                    "space":        "Juniper-ZTP",
+                    "data":         "config/autoconf.sh"
+                },
+                {
+                    "name":         "transfer-mode",
+                    "space":        "Juniper-ZTP",
+                    "data":         "http"
+                },
+                {
+                    "name":         "http-port",
+                    "space":        "Juniper-ZTP",
+                    "data":         "80"
+                },
+                // General DHCP options
+                {
+                    "name":         "tftp-server-name",
+                    "data":         "scale-ztp.delong.com"
+                },
+                {
+                    "name":         "log-servers",
+                    "data":         "192.159.10.2"
+                },
+                {
+                    "name":         "ntp-servers",
+                    "data":         "209.205.228.50"
+                },
+                {
+                    "name":         "vendor-encapsulated-options"
+                }
+            ]
+        },
+	# Options specific only to the ex2300-c-series switches (not the ex-4200 or ex-4300, for example)
+        # Note use of the same Juniper-ZTP namespace, but unique sub-option(s).
+        {
+            "name": "ex2300-c-series",
+            "test": "substring(option[60].text,0,16)  == 'Juniper-ex2300-c'",
+            "option-data": [
+                {
+                    "name":         "image-file-name",
+                    "space":        "Juniper-ZTP",
+                    "data":         "images/junos-arm-32-25R1.9.tgz"
+                }
+            ]
+        },
+	# Options specific only to the ex-4200-series switches (not the ex2300-c or ex-4300, for example)
+        # Note use of the same Juniper-ZTP namespace, but unique sub-option(s).
+        {
+            "name": "ex4200-series",
+            "test": "substring(option[60].text,0,14) == 'Juniper-ex4200'",
+            "option-data": [
+                {
+                    "name":         "image-file-name",
+                    "space":        "Juniper-ZTP",
+                    "data":         "images/jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz"
+                }
+            ]
+        },
+        # Options specific to the ex-4300 series switches
+        {
+            "name": "ex4300-series",
+            "test": "substring(option[60].text,0,14) == 'Juniper-ex4300'",
+            "option-data": [
+                {
+                    "name":         "image-file-name",
+                    "space":        "Juniper-ZTP",
+                    "data":         "images/jinstall-ex-4300-21.4R3.15-signed.tgz"
+                }
+            ]
+        }
+    ]
+```
 ## Scripts
 
 - Introduction
