@@ -67,6 +67,9 @@ BallroomH	49	103	2001:470:f026:103::200:49	exRoom		F.9		??		ex4200-48p	84:18:88:
 Rm208		50	503	2001:470:f026:503::200:50	cfRoom		I.9		??		ex4200-48p	84:18:88:ad:4e:ff
 DONOTUSE	51	103	2001:470:f026:103::200:51	swatch		Z.9		Loud		ex4200-48px	ec:3e:f7:50:58:ff
 RegDesk		52	103	2001:470:f026:103::200:52	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:7f
-MicroProto1	53	103	2001:470:f026:103::200:53	exMicro		C.9		Silent		ex2300-c-12p	00:00:00:00:00:00
-MicroProto2	54	503	2001:470:f026:503::200:53	cfMicro		I.9		Silent		ex2300-c-12p	00:00:00:00:00:01
-MicroProto3	55	103	2001:470:f026:103::200:53	exMicro		Z.9		Silent		ex2300-c-12p	00:00:00:00:00:02
+proto1		53	103	2001:470:f026:103::200:53	exIDF		F.1		Loud		ex4300-48p	58:00:bb:4a:59:e0
+proto2		54	503	2001:470:f026:503::200:54	cfIDF		I.1		Loud		ex4300-48p	38:4f:49:a0:5f:40
+proto3		55	103	2001:470:f026:103::200:55	Booth		W.9		Loud		ex4300-48p	f0:4b:3a:96:32:00
+MicroProto1	56	103	2001:470:f026:103::200:56	exMicro		C.9		Silent		ex2300-c-12p	4c:16:fc:3f:36:03
+MicroProto2	57	503	2001:470:f026:503::200:57	cfMicro		I.9		Silent		ex2300-c-12p	38:4f:49:15:f2:05
+MicroProto3	58	103	2001:470:f026:103::200:58	exMicro		Z.9		Silent		ex2300-c-12p	84:03:28:0b:f0:7a
