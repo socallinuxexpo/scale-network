@@ -3,25 +3,28 @@
 Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configurations, tooling and scripts
 
 ## Zero Touch Provisioning Process
+
 - Introduction
   -- Zero Touch Provisioning is a process by which a switch with no configuration on it at all can be brought to a known, configured state with a pre-defined software version installed on the switch simply by booting the switch with the management interface connected to an access port on a network that is configured to support Zero Touch Provisioning.
   -- Prerequisites
-    --- DHCP Server with an appropriate configuration (see "Kea Template" below)
-    --- Web Server with appropriate JunOS Software images and configuration files or scripts. In our case, we use a multistage process where we first send a helper script (sh) to the device which invokes curl to query a CGI script on the same web server with the MAC address from the switch's management interface (vme) and download and install the actual configuration file. Both the helper script and the CGI script are maintained in this directory, though the helper script needs to be made part of the images directory on the web server and the CGI script has to be placed in the web-server's CGI executable directory.
+  --- DHCP Server with an appropriate configuration (see "Kea Template" below)
+  --- Web Server with appropriate JunOS Software images and configuration files or scripts. In our case, we use a multistage process where we first send a helper script (sh) to the device which invokes curl to query a CGI script on the same web server with the MAC address from the switch's management interface (vme) and download and install the actual configuration file. Both the helper script and the CGI script are maintained in this directory, though the helper script needs to be made part of the images directory on the web server and the CGI script has to be placed in the web-server's CGI executable directory.
   -- User Process
-    1. Connect switch management ethernet interface to appropriate network as described above.
-    1. Connect to the Console port via appropriate serial cable
-    1. If necessary, gain access to the switch and use the "request system zeroize" command to reset the switch to factory defaults. Alternatively, if command line access is impossible, reset the switch through other (hardware, password recovery, etc.) means. Such processes are out of scope for this document.
-    1. Monitor the console as the switch goes through the ZTP process. It should execute the following steps:
-      --- Boot up into an unconfigured state.
-      --- If necessary, download and install the specified firmware and reboot.
-      --- Download the configuration file (script) specified in the DHCP parameters.
-      --- If script, execute the script.
-        ---- In our case, the script is the above specified helper script which will then execute the CGI call to retrieve the switch-specific configuration file and install it.
-    1. Once the configuration file is installed, the switch is ready for deployment.
+  1. Connect switch management ethernet interface to appropriate network as described above.
+  1. Connect to the Console port via appropriate serial cable
+  1. If necessary, gain access to the switch and use the "request system zeroize" command to reset the switch to factory defaults. Alternatively, if command line access is impossible, reset the switch through other (hardware, password recovery, etc.) means. Such processes are out of scope for this document.
+  1. Monitor the console as the switch goes through the ZTP process. It should execute the following steps:
+     --- Boot up into an unconfigured state.
+     --- If necessary, download and install the specified firmware and reboot.
+     --- Download the configuration file (script) specified in the DHCP parameters.
+     --- If script, execute the script.
+     ---- In our case, the script is the above specified helper script which will then execute the CGI call to retrieve the switch-specific configuration file and install it.
+  1. Once the configuration file is installed, the switch is ready for deployment.
 
 ## KEA Templates (for ZTP)
+
 - The following configuration snippets should be added to the KEA DHCP4 configuration in order to support ZTP:
+
 ```
 # The stanzas below go inside of the "Dhcp4" section
     # Define all needed DHCP options that are not already built into KEA
@@ -192,6 +195,7 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
         }
     ]
 ```
+
 ## Scripts
 
 - Introduction
