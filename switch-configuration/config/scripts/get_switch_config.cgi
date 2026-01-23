@@ -48,14 +48,35 @@ system("make 2>/dev/null >/dev/null") == 0 || send_abort("Failed make process, c
 chdir("config") || send_abort("Failed to chdir into config directory.", "$? : $!");
 get_switchtype("anonymous");
 #   Identify switch from MAC address
-my @switches = get_switch_by_mac($MAC);
+#   Unfortunately, Juniper doesn't make this easy. The VME interface doesn't have a consistent MAC address or a consistent offset from the base MAC address.
+#   We can, however, usually get away with the following assumptions:
+#      The base MAC address (or something close enough to it) can be assumed to be the reported MAC address with the last nibble zeroed.
+#        (xx:xx:xx:xx:xx:yy -> xx:xx:xx:xx:xx:y0)
+#      If we search all of the values between 0 and f for that last octet, we are unlikely to hit more than one switch.
+#      If we search all of the values between 0 and f, the first one that hits should be a valid match to our switch.
+#
+# Fuzzy MAC search loop:
+#  Get base MAC address (ish) from MAC
+my @M = split(/:/, $MAC);
+$M[5] =~ s/^(.).$/\1/;
+print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $MAC\n";
+my @switches;
+foreach my $m (0..0xf)
+{
+  my @MM = @M; # Copy the base MAC
+  $MM[5] .= sprintf ("%1x", $m);
+  my $MAC = join(":", @MM);
+  print STDERR "Trying against MAC $MAC\n";
+  print STDERR "get_switch_by_mac($MAC)\n";
+  @switches = get_switch_by_mac($MAC);
+  print STDERR "get_switch_by_mac($MAC) returned \"", join(",", @switches), "\"\n";
+  next if(scalar(@switches) < 1); # Try the next entry.
+  send_abort("Error: Multiple matches for MAC address \"$MAC\":", @switches) if(scalar(@switches) > 1);
+  last;
+}
 if (scalar(@switches) < 1)
 {
     send_abort("No match found for MAC Address: \"$MAC\".", @switches);
-}
-elsif (scalar(@switches) > 1)
-{
-    send_abort("Error: Multiple matches for MAC Address: \"$MAC\":",@switches);
 }
 #   Retrieve switch configuration file
 my $file = "$REPO"."/switch-configuration/config/output/".$switches[0].".conf";
