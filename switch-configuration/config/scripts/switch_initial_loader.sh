@@ -22,6 +22,7 @@
 #
 # Get current vme MAC address
 MAC=`cli show interface vme | sed -n -e 's/^.*Current address: \(.*\), Hardware.*/\1/p'`
+BRANCH='master'
 
 # Verify I can reach scale-ztpserver.delong.com
 ping -J4 -c 1 -i 1 scale-ztpserver.delong.com
@@ -32,7 +33,10 @@ if [ $result ne 0 ]; then
 fi
 
 # Download the file to /tmp/config.txt
-curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC"
+if [ -z "$BRANCH" ]; then
+  BRANCH="master"
+fi
+curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC&BRANCH=$BRANCH"
 result=$?
 if [ $result ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."
