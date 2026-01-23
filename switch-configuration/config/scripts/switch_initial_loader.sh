@@ -42,6 +42,13 @@ if [ "$result" -ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."
   exit $result
 fi
+grep '<HTML>' /tmp/config.txt
+result=$?
+if [ "$result" eq 0 ]; then
+  echo "Configuration CGI returned error:"
+  cat /tmp/config.txt | sed -e 's/^/	error: /'
+  exit 256
+fi
 
 # Apply the new configuration
 cat <<EOF | cli
