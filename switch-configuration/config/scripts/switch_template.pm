@@ -468,7 +468,8 @@ sub build_interfaces_from_config
   ##FIXME## Draw boxes around all ports, not just the configured ones
   my $hostname = shift @_;
   # Retrieve Switch Type Information
-  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
+  my $mode_cmd;
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
   my $portmap_PS = "%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 1008 144 % 14\" x 2\"\n%\n".
@@ -825,12 +826,20 @@ EOF
         $port++;
       }
       ##FIXME## Put some sanity checking on fiber interface
+      if ($Model =~ /ex2300/)
+      {
+        $mode_cmd = "interface-mode";
+      }
+      else
+      {
+        $mode_cmd = "port-mode";
+      }
       $OUTPUT .= <<EOF;
     $iface {
         description "$cmd Port ($vlans)";
         unit 0 {
             family ethernet-switching {
-                port-mode trunk;
+                $mode_cmd trunk;
                 vlan members [ $vlans ];
             }
         }
