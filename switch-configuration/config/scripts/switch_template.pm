@@ -932,7 +932,7 @@ EOF
 sub build_l3_from_config
 {
   my $hostname = shift @_;
-  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
   my $OUTPUT = "        # Automatically Generated Layer 3 Configuration ".
                 "for $hostname (MGT: $MgtVL Addr: $IPv6addr Type: $Type\n";
   $OUTPUT .= <<EOF;
@@ -954,8 +954,19 @@ sub build_vlans_from_config
 
   my $OUTPUT;
 
-  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
   my ($VLANS, $VLANS_byname) = build_vlan_hash();
+  my $l3type;
+  if ($Model =~ /ex2300/)
+  {
+    $l3type="irb";
+  }
+  else
+  {
+    $l3type="vlan";
+  }
+
+  debug(9, "L3 Type set to $l3type based on Model $Model\n");
 
   foreach(sort(keys(%{$VLANS})))
   {
@@ -967,7 +978,7 @@ sub build_vlans_from_config
         description "$desc";
         vlan-id $_;
 EOF
-      $OUTPUT .= "        l3-interface vlan.$_;\n" if ($_ eq $MgtVL);
+      $OUTPUT .= "        l3-interface $l3type.$_;\n" if ($_ eq $MgtVL);
       $OUTPUT .= "    }\n";
     }
     else
@@ -1829,6 +1840,16 @@ sub build_config_from_template
   $VV_name_prefix = shift @_;
   my @switchtype = get_switchtype($hostname);
   my $type = $switchtype[4];
+  my $model = $switchtype[8];
+  my $l3type;
+  if ($model =~ /ex2300/)
+  {
+    $l3type = "irb";
+  }
+  else
+  {
+    $l3type = "vlan";
+  }
   
   # Add configuration file fetches here:
   my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
@@ -1935,7 +1956,7 @@ class-of-service {
 }
 interfaces {
 $INTERFACES_PHYSICAL
-    vlan {
+    $l3type {
 $INTERFACES_LAYER3
     }
 }
