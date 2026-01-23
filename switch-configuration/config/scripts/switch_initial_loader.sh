@@ -27,7 +27,7 @@ BRANCH='master'
 # Verify I can reach scale-ztpserver.delong.com
 ping -J4 -c 1 -i 1 scale-ztpserver.delong.com
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Cannot reach provisioning server -- Aborting."
   exit $result
 fi
@@ -38,7 +38,7 @@ if [ -z "$BRANCH" ]; then
 fi
 curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC&BRANCH=$BRANCH"
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."
   exit $result
 fi
@@ -50,7 +50,7 @@ load override /tmp/config.txt
 commit and-quit
 EOF
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Failure loading configuration -- Aborting."
   exit $result
 fi
