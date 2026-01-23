@@ -22,21 +22,32 @@
 #
 # Get current vme MAC address
 MAC=`cli show interface vme | sed -n -e 's/^.*Current address: \(.*\), Hardware.*/\1/p'`
+BRANCH='master'
 
 # Verify I can reach scale-ztpserver.delong.com
 ping -J4 -c 1 -i 1 scale-ztpserver.delong.com
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Cannot reach provisioning server -- Aborting."
   exit $result
 fi
 
 # Download the file to /tmp/config.txt
-curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC"
+if [ -z "$BRANCH" ]; then
+  BRANCH="master"
+fi
+curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC&BRANCH=$BRANCH"
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."
   exit $result
+fi
+grep '<HTML>' /tmp/config.txt
+result=$?
+if [ "$result" eq 0 ]; then
+  echo "Configuration CGI returned error:"
+  cat /tmp/config.txt | sed -e 's/^/	error: /'
+  exit 256
 fi
 
 # Apply the new configuration
@@ -46,7 +57,7 @@ load override /tmp/config.txt
 commit and-quit
 EOF
 result=$?
-if [ $result ne 0 ]; then
+if [ "$result" -ne 0 ]; then
   echo "Failure loading configuration -- Aborting."
   exit $result
 fi

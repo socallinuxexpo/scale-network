@@ -17,6 +17,7 @@ BEGIN {
 my $QUERY = "";
 my $MAC = "";
 my $CLEAN = "";
+my $BRANCH = "master";
 
 # Load libraries
 use lib "$REPO/switch-configuration/config/scripts";
@@ -31,9 +32,9 @@ parse_query($QUERY);
 chdir("$REPO") || send_abort("Failed to enter repository.", "$!");
 
 # Step 2: Refresh the repo and make sure we are on current master
-system("git checkout master >/dev/null") == 0 || send_abort("Failed git checkout.", "$? : $!");
-system("git fetch origin master >/dev/null") == 0 || send_abort("Failed git fetch.", "$? : $!");; 
-system("git reset --hard origin/master >/dev/null") == 0 || send_abort("Failed hard reset of git repo to origin/master.", "$? : $!");
+system("git checkout $BRANCH >/dev/null") == 0 || send_abort("Failed git checkout of $BRANCH.", "$? : $!");
+system("git fetch origin $BRANCH >/dev/null") == 0 || send_abort("Failed git fetch of $BRANCH.", "$? : $!");; 
+system("git reset --hard origin/$BRANCH >/dev/null") == 0 || send_abort("Failed hard reset of git repo to origin/$BRANCH.", "$? : $!");
 
 # Step 3: Build any updated files
 chdir("switch-configuration") || send_abort("Failed to enter switch-configuration directory.", "$? : $!");
@@ -48,14 +49,35 @@ system("make 2>/dev/null >/dev/null") == 0 || send_abort("Failed make process, c
 chdir("config") || send_abort("Failed to chdir into config directory.", "$? : $!");
 get_switchtype("anonymous");
 #   Identify switch from MAC address
-my @switches = get_switch_by_mac($MAC);
+#   Unfortunately, Juniper doesn't make this easy. The VME interface doesn't have a consistent MAC address or a consistent offset from the base MAC address.
+#   We can, however, usually get away with the following assumptions:
+#      The base MAC address (or something close enough to it) can be assumed to be the reported MAC address with the last nibble zeroed.
+#        (xx:xx:xx:xx:xx:yy -> xx:xx:xx:xx:xx:y0)
+#      If we search all of the values between 0 and f for that last octet, we are unlikely to hit more than one switch.
+#      If we search all of the values between 0 and f, the first one that hits should be a valid match to our switch.
+#
+# Fuzzy MAC search loop:
+#  Get base MAC address (ish) from MAC
+my @M = split(/:/, $MAC);
+$M[5] =~ s/^(.).$/\1/;
+print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $MAC\n";
+my @switches;
+foreach my $m (0..0xf)
+{
+  my @MM = @M; # Copy the base MAC
+  $MM[5] .= sprintf ("%1x", $m);
+  my $MAC = join(":", @MM);
+  print STDERR "Trying against MAC $MAC\n";
+  print STDERR "get_switch_by_mac($MAC)\n";
+  @switches = get_switch_by_mac($MAC);
+  print STDERR "get_switch_by_mac($MAC) returned \"", join(",", @switches), "\"\n";
+  next if(scalar(@switches) < 1); # Try the next entry.
+  send_abort("Error: Multiple matches for MAC address \"$MAC\":", @switches) if(scalar(@switches) > 1);
+  last;
+}
 if (scalar(@switches) < 1)
 {
     send_abort("No match found for MAC Address: \"$MAC\".", @switches);
-}
-elsif (scalar(@switches) > 1)
-{
-    send_abort("Error: Multiple matches for MAC Address: \"$MAC\":",@switches);
 }
 #   Retrieve switch configuration file
 my $file = "$REPO"."/switch-configuration/config/output/".$switches[0].".conf";
@@ -100,7 +122,7 @@ sub parse_query
     {
 	my $qs = $_;
         my ($A, $V) = split('=');
-	if ($A eq "MAC" || $A eq "CLEAN")
+	if ($A eq "MAC" || $A eq "CLEAN" || $A eq "BRANCH")
 	{
             my $S = '$'.$A." = \"$V\"";
 	    eval($S);
