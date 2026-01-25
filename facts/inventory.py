@@ -117,43 +117,37 @@ def makevlan(line, building):
     }
 
 
-def genvlans(line, building):
-    """Makes a list of vlan dictionaries from a VVRNG directive"""
+def gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building):
     vlans = []
-    elems = re.split(r"\t+", line)
-    rangeb, rangee = elems[2].split("-")
+    rangeb, rangee = vlan_range.split("-")
+    v6net = ipaddress.ip_network(v6cidr)
+    v4octets = v4cidr.split("/")[0].split(".")
+
     for i in range(int(rangeb), int(rangee) + 1):
-        ipv6prefix = elems[3].split("/")[0][:-1] + str(i) + "::"
-        ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
-        ocs = elems[4].split(".")
-        ocs[1] = str(int(ocs[1]) + math.floor((i - int(rangeb)) / 256))
-        ocs[2] = str(((i - int(rangeb)) % 256))
-        ip4prefix = ocs[0] + "." + ocs[1] + "." + ocs[2] + ".0"
-        # Get dhcp ranges and router address
-        ipv4dhcp = dhcp4ranges(ip4prefix, 24)
-        ipv4netmask = bitmasktonetmask(24)
-        vlans.append(
-            {
-                "name": elems[1] + str(i),
-                "id": i,
-                "ipv6prefix": ipv6prefix,
-                "ipv6bitmask": 64,
-                "ipv4prefix": ip4prefix,
-                "ipv4bitmask": 24,
-                "building": building,
-                "description": "Dyanmic vlan " + str(i),
-                "ipv6dhcpStart": ipv6dhcp[0],
-                "ipv6dhcpEnd": ipv6dhcp[1],
-                "ipv4dhcpStart": ipv4dhcp[0],
-                "ipv4dhcpEnd": ipv4dhcp[1],
-                "ipv4router": ipv4dhcp[2],
-                "ipv4netmask": ipv4netmask,
-                "ipv6dns1": "",
-                "ipv6dns2": "",
-                "ipv4dns1": "",
-                "ipv4dns2": "",
-            }
-        )
+        # we prefix v6 /64s with the base + decimal value of the vlan
+        # even though this doesn't match the hex value, easier for eyes
+        v6base = str(v6net.network_address).rstrip(":")
+        v6prefix = f"{v6base}:{i}::"
+
+        # we prefix v4 /24s as an offset of the base
+        offset = i - int(rangeb)
+        octet1 = v4octets[0]
+        octet2 = str(int(v4octets[1]) + math.floor(offset / 256))
+        octet3 = str(offset % 256)
+        v4prefix = f"{octet1}.{octet2}.{octet3}.0"
+
+        vlan_config = {
+            "id": str(i),
+            "name": f"{nameprefix}{str(i)}",
+            "v6cidr": f"{v6prefix}/64",
+            "v4cidr": f"{v4prefix}/24",
+            "description": f"Dynamic vlan {i}",
+            "building": building,
+        }
+        new_vlan = make_vlan(vlan_config)
+        if new_vlan is not None:
+            vlans.append(new_vlan)
+
     return vlans
 
 
@@ -191,7 +185,9 @@ def populatevlans(vlansdirectory, vlansfile):
         elif directive == "VVRNG":
             line = current[0]
             building = current[1]
-            vlans = vlans + genvlans(line, building)
+            # temporary, pre-pandas
+            elems = re.split(r"\t+", line)
+            vlans = vlans + gen_vlans(elems[2], elems[1], elems[3], elems[4], building)
         todo.remove(current)
     return vlans
 

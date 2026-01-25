@@ -251,21 +251,25 @@ def test_bitmasktonetmask():
         assert inventory.bitmasktonetmask(bitmask) == netmask, bitmask
 
 
-def test_genvlans():
-    """test cases for the genvlans() function"""
+def test_gen_vlans():
+    """test cases for the gen_vlans() function"""
     cases = [
         [
-            "VVRNG\ttest_vlan_\t\t200-201\t2001:470:f325::/48\t10.2.0.0/15\tdynamic vlan",
+            "200-201",  # vlan_range
+            "test_vlan_",  # nameprefix
+            "2001:470:f325::/48",  # v6cidr
+            "10.2.0.0/15",  # v4cidr
+            "Expo",  # building
             [
                 {
                     "name": "test_vlan_200",
-                    "id": 200,
+                    "id": "200",
                     "ipv6prefix": "2001:470:f325:200::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.0.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 200",
+                    "description": "Dynamic vlan 200",
                     "ipv6dhcpStart": "2001:470:f325:200:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:200:d8c::800",
                     "ipv4dhcpStart": "10.2.0.80",
@@ -279,13 +283,13 @@ def test_genvlans():
                 },
                 {
                     "name": "test_vlan_201",
-                    "id": 201,
+                    "id": "201",
                     "ipv6prefix": "2001:470:f325:201::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.1.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 201",
+                    "description": "Dynamic vlan 201",
                     "ipv6dhcpStart": "2001:470:f325:201:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:201:d8c::800",
                     "ipv4dhcpStart": "10.2.1.80",
@@ -300,8 +304,9 @@ def test_genvlans():
             ],
         ]
     ]
-    for line, vlans in cases:
-        assert inventory.genvlans(line, "Expo") == vlans, line
+    for vlan_range, nameprefix, v6cidr, v4cidr, building, expected in cases:
+        result = inventory.gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building)
+        assert result == expected, f"range={vlan_range}"
 
 
 def test_ip4toptr():
@@ -382,13 +387,13 @@ def test_populatevlans():
                 },
                 {
                     "name": "vendor_vlan_200",
-                    "id": 200,
+                    "id": "200",
                     "ipv6prefix": "2001:470:f325:200::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.0.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 200",
+                    "description": "Dynamic vlan 200",
                     "ipv6dhcpStart": "2001:470:f325:200:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:200:d8c::800",
                     "ipv4dhcpStart": "10.2.0.80",
@@ -402,13 +407,13 @@ def test_populatevlans():
                 },
                 {
                     "name": "vendor_vlan_201",
-                    "id": 201,
+                    "id": "201",
                     "ipv6prefix": "2001:470:f325:201::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.1.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 201",
+                    "description": "Dynamic vlan 201",
                     "ipv6dhcpStart": "2001:470:f325:201:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:201:d8c::800",
                     "ipv4dhcpStart": "10.2.1.80",
