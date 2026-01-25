@@ -80,43 +80,6 @@ def make_vlan(vlan_config):
     }
 
 
-def makevlan(line, building):
-    """Makes a vlan dictionary from VLAN directive line"""
-    elems = re.split(r"\t+", line)
-    ipv6 = elems[3].split("/")
-    ipv6prefix = ipv6[0]
-    ipv6bitmask = ipv6[1]
-    ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
-    ipv4 = elems[4].split("/")
-    ipv4prefix = ipv4[0]
-    ipv4bitmask = ipv4[1]
-    ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
-    ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
-    vlanid = elems[2]
-    if not vlanid.isdigit():
-        return None
-    return {
-        "name": elems[1],
-        "id": vlanid,
-        "ipv6prefix": ipv6prefix,
-        "ipv6bitmask": ipv6bitmask,
-        "ipv4prefix": ipv4prefix,
-        "ipv4bitmask": ipv4bitmask,
-        "building": building,
-        "description": elems[5].rstrip(),
-        "ipv6dhcpStart": ipv6dhcp[0],
-        "ipv6dhcpEnd": ipv6dhcp[1],
-        "ipv4dhcpStart": ipv4dhcp[0],
-        "ipv4dhcpEnd": ipv4dhcp[1],
-        "ipv4router": ipv4dhcp[2],
-        "ipv4netmask": ipv4netmask,
-        "ipv6dns1": "",
-        "ipv6dns2": "",
-        "ipv4dns1": "",
-        "ipv4dns2": "",
-    }
-
-
 def gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building):
     vlans = []
     rangeb, rangee = vlan_range.split("-")
@@ -179,7 +142,19 @@ def populatevlans(vlansdirectory, vlansfile):
         elif directive == "VLAN":
             line = current[0]
             building = current[1]
-            newvlan = makevlan(line, building)
+
+            # temporary, pre-pandas
+            elems = re.split(r"\t+", line)
+            vlan_config = {
+                "id": elems[2],
+                "name": elems[1],
+                "v6cidr": elems[3],
+                "v4cidr": elems[4],
+                "description": elems[5].rstrip(),
+                "building": building,
+            }
+
+            newvlan = make_vlan(vlan_config)
             if newvlan is not None:
                 vlans.append(newvlan)
         elif directive == "VVRNG":

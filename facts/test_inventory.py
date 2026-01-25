@@ -153,38 +153,6 @@ def test_dhcp4ranges():
         )
 
 
-def test_makevlan():
-    """test cases for the makevlan() function"""
-    cases = [
-        [
-            "VLAN\tcfCTF\t\t504\t2001:470:f325:504::/64\t10.128.4.0/24\tCapture the Flag",
-            {
-                "name": "cfCTF",
-                "id": "504",
-                "ipv6prefix": "2001:470:f325:504::",
-                "ipv6bitmask": "64",
-                "ipv4prefix": "10.128.4.0",
-                "ipv4bitmask": "24",
-                "building": "Conference",
-                "description": "Capture the Flag",
-                "ipv6dhcpStart": "2001:470:f325:504:d8c::1",
-                "ipv6dhcpEnd": "2001:470:f325:504:d8c::800",
-                "ipv4dhcpStart": "10.128.4.80",
-                "ipv4dhcpEnd": "10.128.4.254",
-                "ipv4router": "10.128.4.1",
-                "ipv4netmask": "255.255.255.0",
-                "ipv6dns1": "",
-                "ipv6dns2": "",
-                "ipv4dns1": "",
-                "ipv4dns2": "",
-            },
-        ],
-        ["VLAN\tBadVLAN\t\tABC\t2001:470:f325:504::/64\t10.128.4.0/24\tBad VLAN", None],
-    ]
-    for line, vlan in cases:
-        assert inventory.makevlan(line, "Conference") == vlan, line
-
-
 def test_make_vlan():
     """test case for make_vlan()"""
     cases = [
