@@ -1,0 +1,19 @@
+name: Issue Form
+description: Create a report for an issue
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is the issue?
+      placeholder: Issue description here
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: AC
+      description: List of expected outcomes that resolve the issue
+      placeholder: AC text here
+    validations:
+      required: true
