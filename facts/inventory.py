@@ -214,6 +214,51 @@ def load_vlan_file(vlansdirectory, filename, building=None, seen=None):
     return pandas.DataFrame()
 
 
+def populate_vlans(vlansdirectory, vlansfile):
+    """Populate the vlan list from a vlans directory and file."""
+
+    # Load all vlan data into a single DataFrame
+    df = load_vlan_file(vlansdirectory, vlansfile)
+
+    if df.empty:
+        return []
+
+    vlans = []
+
+    # Process VLAN rows
+    vlan_rows = df[df["directive"] == "VLAN"]
+    for _, row in vlan_rows.iterrows():
+        vlan_config = {
+            "id": row["id"],
+            "name": row["name"],
+            "v6cidr": row["v6cidr"],
+            "v4cidr": row["v4cidr"],
+            "description": row["description"],
+            "building": row["building"],
+        }
+        newvlan = make_vlan(vlan_config)
+        if newvlan is not None:
+            vlans.append(newvlan)
+
+    # Process VVRNG rows
+    vvrng_rows = df[df["directive"] == "VVRNG"]
+    for _, row in vvrng_rows.iterrows():
+        vlans.extend(
+            gen_vlans(
+                row["range"],
+                row["template"],
+                row["v6cidr"],
+                row["v4cidr"],
+                row["building"],
+            )
+        )
+
+    # Sort by id
+    vlans.sort(key=lambda v: int(v["id"]))
+
+    return vlans
+
+
 def populatevlans(vlansdirectory, vlansfile):
     """populate the vlan list from a vlans diretory and file"""
     vlans = []
@@ -866,7 +911,7 @@ def main():
     piusefile = "../facts/pi/piuse.csv"
 
     # populate the device type lists
-    vlans = populatevlans(swconfigdir, vlansfile)
+    vlans = populate_vlans(swconfigdir, vlansfile)
     switches = populateswitches(switchesfile)
     servers = populateservers(serversfile, vlans)
     routers = populaterouters(routersfile)
