@@ -326,9 +326,9 @@ def test_roomalias():
         assert inventory.roomalias(name) == aliases, name
 
 
-def test_populatevlans():
+def test_populate_vlans():
     # pylint: disable=line-too-long
-    """test cases for the populatevlans() function"""
+    """test cases for the populate_vlans() function"""
     cases = [
         [
             ["./testdata/", "testvlans"],
@@ -438,7 +438,7 @@ def test_populatevlans():
     ]
     for case, vlans in cases:
         swconfigdir, vlansfile = case
-        assert inventory.populatevlans(swconfigdir, vlansfile) == vlans, case
+        assert inventory.populate_vlans(swconfigdir, vlansfile) == vlans, case
 
 
 def test_populateswitches():
