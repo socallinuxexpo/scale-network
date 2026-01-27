@@ -76,6 +76,8 @@ require Exporter;
 
 @Export = qw(
       detect_switch,
+      Login,
+      attach,
       override_switch,
       wait_offline,
     );
@@ -95,7 +97,6 @@ use Net::Interface;
 use Time::HiRes qw/usleep/;
 use Carp;
 
-my $JDEVICE;
 
 =pod
 
@@ -121,7 +122,7 @@ Creates a new Loader object
 
 BEGIN
 {
-        $Loader::VERSION = '1.0';
+        $Loader::VERSION = '2.0';
         $Loader::line_dely = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
         $Loader::ping = new Net::Ping;
         $Loader::SSH = "/usr/bin/ssh"; # Net::SSH::Perl will be hard to integrate, skipping for now.
@@ -295,7 +296,7 @@ sub detect_switch
       next if ($arp eq "unknown");
       last if $arp;
     }
-    die("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
+    croak("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
     
     print "Looking for MAC $arp in switchtypes table...";
     my @switchname = get_switch_by_mac($arp);
@@ -346,6 +347,67 @@ sub sftp_progress
     my($sftp, $data, $offset, $size) = @_;
     #print STDERR "\t\tsftp_progress got sftp=$sftp, data=$data, offset=$offset, size=$size\n";
     print "Config: $offset / $size bytes |". "#" x int(($offset*1.0/$size*1.0) * 100.0) ."|\r";
+}
+
+=pod
+
+=over
+
+=item
+
+attach($target)
+
+=over
+
+This function will create a new Expect object and return it after connecting to
+the specified target. Handles both serial (/dev/) targets and SSH (ip address or
+hostname) targets.
+
+=over
+
+=item
+
+$target contains the IP address or /dev/<name> to use to connect to $switch
+
+=back
+
+A successful return from this function will be an Expect object attached to
+the intended target. Failure will return undef. Severre errors will croak().
+
+=back
+
+=back
+
+=cut
+
+sub attach
+{
+  my $target = shift @_;
+  my $JUNIPER = expect->new();
+  $JUNIPER->raw_pty(1);
+  if ($target =~ /^\/dev\//)
+  {
+    my $JDEVICE;
+    # Send configuration via expect directly (skip $SWITCH_COMMANDS)
+    open $JDEVICE, "+<$target" || croak("attach: Failed to open $target\n");
+    print STDERR "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";
+    push @messages, "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";
+    $JDEVICE->autoflush(1);
+    print STDERR "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
+    push @messages,  "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
+    $JUNIPER = Expect->init($JDEVICE);
+    print STDERR "Serial parameters are:\n";
+    print STDERR `stty -F $target -a`;
+  }
+  else
+  {
+    print "Attempting to launch SSH to $target using $JUNIPER\n";
+    $JUNIPER->debug(3);
+    print "Attempting spawn ssh (-l) (".$self->{"DefaultUser"}.") ($target)\n";
+    $JUNIPER->spawn($Loader::SSH, "-l", $self->{"DefaultUser"}, $target);
+    print "Spawn resulted in $JUNIPER\n";
+  }
+  return($JUNIPER);
 }
 
 =pod
@@ -442,23 +504,12 @@ sub override_switch
     }
     print STDERR "Sending configuration file ($config_file) to $Name\n";
     push @messages, "Sending configuration file ($config_file) to $Name\n";
-    my $JUNIPER = Expect->new();
+    my $JUNIPER = $self->attach($target) ||
+	croak("Failed to connect to $target, attach returned undef.\n");
     my ($pos, $err, $matched, $before, $after);
-    $JUNIPER->raw_pty(1);
     if ($target =~ /^\/dev\//)
     {
-	my $JDEVICE;
-        # Send configuration via expect directly (skip $SWITCH_COMMANDS)
-	open $JDEVICE, "+<$target" || croak("Failed to open $target for $Name\n");
-	print STDERR "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
-	push @messages, "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
-	$JDEVICE->autoflush(1);
         open CONFIG, "<$config_file" || croak("Couldn't open $config_file for $Name: $!\n");
-	print STDERR "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
-	push @messages,  "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
-	$JUNIPER = Expect->init($JDEVICE);
-	print STDERR "Serial parameters are:\n";
-	print STDERR `stty -F $target -a`;
         $self->Login($JUNIPER);
         $self->Edit($JUNIPER);
 	#$JUNIPER->send("load override terminal\n");
@@ -514,14 +565,9 @@ sub override_switch
 	print STDERR "SFTP Put $config_file\n";
 	push @messages, "SFTP Put $config_file\n";
         $sftp->put("$config_file", "/tmp/new_config.conf") ||
-                croak("Failed to send config to $target ($Name)\n");;
+                croak("Failed to send config to $target ($Name)\n");
         print "\n\n";
         print STDERR "Activating...\n";
-	print "Attempting to launch SSH to $target using $JUNIPER\n";
-	$JUNIPER->debug(3);
-	print "Attempting spawn ssh (-l) (".$self->{"DefaultUser"}.") ($target)\n";
-        $JUNIPER->spawn($Loader::SSH, "-l", $self->{"DefaultUser"}, $target);
-	print "Spawn resulted in $JUNIPER\n";
         $self->Login($JUNIPER);    # Get to the CLI prompt
         $self->Edit($JUNIPER);     # Transition from CLI to Edit Mode
 	#$JUNIPER->send("load override /tmp/new_config.conf\n");
@@ -644,6 +690,14 @@ sub override_switch
 
 =item
 
+$Loader->send_command($expect_object)
+
+=pod
+
+=over
+
+=item
+
 $Loader->Login($expect_object)
 
 =over
@@ -659,7 +713,7 @@ It does account for "%" (Root logged into shell), ">" (expected logged in), "ogi
 state will likely trigger it's error response, which will send a newline to the switch in hopes of getting
 something it understands.
 
-Will die() on most serious errors. Does not provide a return value.
+Will croak() on most serious errors. Does not provide a return value.
 
 =back
 
@@ -721,7 +775,7 @@ sub Login
         }
         elsif ($matched =~ /REMOTE HOST IDENTIFICATION/)
         {
-          die("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
+          croak("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
         }
         # Handle prompt for host key not recognized
         elsif ($matched =~ /continue connecting/)
@@ -784,7 +838,7 @@ Edit($expect_object)
 
 Requires an Expect object as an argument. Expect Object should be a logged in switch ready
 to accept CLI commands. In the correct entry state, at exit, the switch will be in edit
-mode. An incorrect entry state will likely produce a die() result.
+mode. An incorrect entry state will likely produce a croak() result.
 
 Does not return a value.
 
@@ -803,7 +857,7 @@ sub Edit
         '# ');
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
-    die("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
+    croak("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
     return;
 }
 
