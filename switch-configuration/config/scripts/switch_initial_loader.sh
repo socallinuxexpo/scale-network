@@ -61,6 +61,32 @@ if [ "$result" -ne 0 ]; then
   echo "Failure loading configuration -- Aborting."
   exit $result
 fi
+echo "Review the following for potential errors:"
+cat /var/log/script_output
+echo "End of script output"
+
+# Additional sanity checks to see if the configuration loaded properly.
+HOSTNAME=`grep '^\s+host-name' /tmp/config.txt | sed -e 's/^.*name \(.*\);$/\1/'`
+IHN=`hostname`
+if [ "$HOSTNAME" != "$IHN" ]; then
+  echo "Hostnames (Configured: $HOSTNAME, Installed: $IHN) don't match, possible config error."
+  exit 1
+fi
+LOAD=`grep '^load complete' /var/log/script_output`
+if [ "$LOAD" != "load complete" ]; then
+  echo "At end of load, got message \"$LOAD\", possible config errors."
+  exit 2
+fi
+CHECK=`grep 'configuration check' /var/log/script_output`
+if [ "$CHECK" != "configuration check succeeds" ]
+  echo "Configuration check reported \"$CHECK\" instead of success, possible config errors."
+  exit 3
+fi
+COMMIT=`grep 'commit complete' /var/log/script_output`
+if [ "$COMMIT" != "commit complete" ]; then
+  echo "Commit reported \"$COMMIT\" instead of success, possible config errors."
+  exit 4
+fi
 
 # Indicate success to the ZTP process
 exit 0;

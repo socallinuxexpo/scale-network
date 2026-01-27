@@ -32,9 +32,37 @@ parse_query($QUERY);
 chdir("$REPO") || send_abort("Failed to enter repository.", "$!");
 
 # Step 2: Refresh the repo and make sure we are on current master
-system("git checkout $BRANCH >/dev/null") == 0 || send_abort("Failed git checkout of $BRANCH.", "$? : $!");
-system("git fetch origin $BRANCH >/dev/null") == 0 || send_abort("Failed git fetch of $BRANCH.", "$? : $!");; 
-system("git reset --hard origin/$BRANCH >/dev/null") == 0 || send_abort("Failed hard reset of git repo to origin/$BRANCH.", "$? : $!");
+my $git_success = 0;
+my $git_retries = 0;
+my $abort_string = "";
+until ($git_success > 0 || $git_retries > 3)
+{
+  $git_success = 1;
+  $git_retries++;
+  unless(system("git checkout $BRANCH >/dev/null") == 0)
+  {
+    $abort_string .= "Retry: $git_retries" . join("\n", "Failed git checkout of $BRANCH.", "$? : $!");
+    $git_success = 0;
+  }
+  unless(system("git fetch origin $BRANCH >/dev/null") == 0)
+  {
+    $abort_string .= join("\n", "Failed git fetch of $BRANCH.", "$? : $!");
+    $git_success = 0;
+  }
+  unless(system("git reset --hard origin/$BRANCH >/dev/null") == 0)
+  {
+    $abort_string .= join("\n", "Failed hard reset of git repo to origin/$BRANCH.", "$? : $!");
+    $git_success = 0;
+  }
+}
+unless($git_success)
+{
+  send_abort($abort_string);
+}
+else
+{
+  print STDERR "Potential git issues: $abort_string\n";
+}
 
 # Step 3: Build any updated files
 chdir("switch-configuration") || send_abort("Failed to enter switch-configuration directory.", "$? : $!");

@@ -14,6 +14,8 @@
 ##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
 ##FIXME## Assumes v6 prefix is a /48 and many code dependencies on this assumption. Safe at least for now.
 
+##FIXME## ethernet-switching-options must be removed for 2300s
+
 
 
 package switch_template;
@@ -469,6 +471,15 @@ sub build_interfaces_from_config
   my $hostname = shift @_;
   # Retrieve Switch Type Information
   my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
+  my $ETHER_SWITCHING_OPTIONS = <<EOF;
+ethernet-switching-options {
+    storm-control {
+        interface all;       
+    }
+}
+EOF
+  $ETHER_SWITCHING_OPTIONS = "" if ($Model =~ /ex2300/);
+  
   my $mode_cmd;
   my $OUTPUT = "# Generated interface configuration for $hostname ".
 			"(Type: $Type)\n";
@@ -911,12 +922,20 @@ EOF
           $count--;
           $port++;
       }
+      if ($Model =~ /ex2300/)
+      {
+        $mode_cmd = "interface-mode";
+      }
+      else
+      {
+        $mode_cmd = "port-mode";
+      }
       $OUTPUT .= <<EOF;
     interface-range $vlan {
         description "VLAN $vlan Interfaces";
         unit 0 {
             family ethernet-switching {
-                port-mode access;
+                $mode_cmd access;
                 vlan members $vlan;
             }
         }
@@ -935,7 +954,7 @@ EOF
       $port += $count;
     }
   }
-  return($OUTPUT, \@POEPORTS, $portmap_PS);
+  return($OUTPUT, \@POEPORTS, $portmap_PS, $ETHER_SWITCHING_OPTIONS);
 }
 
 sub build_l3_from_config
@@ -1863,7 +1882,7 @@ sub build_config_from_template
   # Add configuration file fetches here:
   my $TRUNK_MACROS = build_trunktypes_from_config($hostname);
   my $USER_AUTHENTICATION = build_users_from_auth();
-  my ($INTERFACES_PHYSICAL, $POE_PORTS, $portmap) = build_interfaces_from_config($hostname);
+  my ($INTERFACES_PHYSICAL, $POE_PORTS, $portmap, $ETHER_SWITCHING_OPTIONS) = build_interfaces_from_config($hostname);
   my $POE_CONFIG = build_poe_from_portlist(@{$POE_PORTS});
   my $VLAN_CONFIGURATION = build_vlans_from_config($hostname);
   my ($vcfg, $portmap_vendor) = build_vendor_from_config($hostname);
@@ -1985,7 +2004,11 @@ protocols {
     igmp-snooping {
         vlan all;
     }
-    rstp;
+    rstp {
+        traceoptions {
+            all-failures;
+        }
+    }
     lldp {
         interface all;
         port-id-subtype interface-name;
@@ -2002,11 +2025,7 @@ $OUTPUT .= $QOS_CONFIG if ($type !~ /idf$/i);
 $OUTPUT .= <<EOF;
 $FIREWALL_CONFIG
 }
-ethernet-switching-options {
-    storm-control {
-        interface all;
-    }
-}
+$ETHER_SWITCHING_OPTIONS
 vlans {
 $VLAN_CONFIGURATION
 }
