@@ -16,24 +16,6 @@ import jinja2
 import pandas
 
 
-def getfilelines(filename, header=False, directory="./", building=None):
-    """returns the contents of a file as lines
-    omits the top line for git beautification if the header boolean is set to true
-    takes optional directory flag to support parsing of vlans files
-    takes optional building flag used for vlan parsing, otherwise is None"""
-    fhandle = open(directory + filename, "r")
-    lines = fhandle.readlines()
-    fhandle.close()
-    if header:
-        lines = lines[1:]
-    if building is not None:
-        newlines = []
-        for line in lines:
-            newlines.append([line, building])
-        lines = newlines
-    return lines
-
-
 def make_vlan(vlan_config):
     """
     Makes a vlan dictionary from a VLAN config:
