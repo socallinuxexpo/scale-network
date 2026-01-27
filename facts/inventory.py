@@ -259,59 +259,6 @@ def populate_vlans(vlansdirectory, vlansfile):
     return vlans
 
 
-def populatevlans(vlansdirectory, vlansfile):
-    """populate the vlan list from a vlans diretory and file"""
-    vlans = []
-    # seed root file
-    todo = [["#include\t" + vlansfile + "\tno_building"]]
-    # This loop is pretty complex, should look into simplifying at some point
-    while len(todo) > 0:
-        current = todo[0]
-        elems = re.split(r"^\t+|\s+", current[0])
-        directive = elems[0]
-
-        # We dont care about bridge vlan types since they wont require dhcp or dns
-        if elems[1] == "vlans.d/Bridged":
-            todo.remove(current)
-            continue
-        # we support 3 directives (#include, VLAN, VVRNG), everything else
-        # is considered a comment and we silently drop it and continue
-        if directive == "#include":
-            filename = elems[1]
-            building = re.split(r"/", filename)[
-                -1
-            ]  # the filename sans path is the building
-            todo = todo + getfilelines(
-                filename, directory=vlansdirectory, building=building
-            )
-        elif directive == "VLAN":
-            line = current[0]
-            building = current[1]
-
-            # temporary, pre-pandas
-            elems = re.split(r"\t+", line)
-            vlan_config = {
-                "id": elems[2],
-                "name": elems[1],
-                "v6cidr": elems[3],
-                "v4cidr": elems[4],
-                "description": elems[5].rstrip(),
-                "building": building,
-            }
-
-            newvlan = make_vlan(vlan_config)
-            if newvlan is not None:
-                vlans.append(newvlan)
-        elif directive == "VVRNG":
-            line = current[0]
-            building = current[1]
-            # temporary, pre-pandas
-            elems = re.split(r"\t+", line)
-            vlans = vlans + gen_vlans(elems[2], elems[1], elems[3], elems[4], building)
-        todo.remove(current)
-    return vlans
-
-
 def isvalidip(addr):
     """check an ipv4 or ipv6 address for validity"""
     try:
