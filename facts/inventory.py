@@ -114,6 +114,106 @@ def gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building):
     return vlans
 
 
+def load_vlan_file(vlansdirectory, filename, building=None, seen=None):
+    """
+    Recursively load a vlans file and all its includes into a DataFrame.
+    """
+    if seen is None:
+        seen = set()
+
+    # Prevent infinite loops
+    if filename in seen:
+        return pandas.DataFrame()
+    seen.add(filename)
+
+    # Derive building from filename (last path component)
+    if building is None:
+        building = filename.split("/")[-1]
+
+    # Skip Bridged entirely
+    if building == "Bridged":
+        return pandas.DataFrame()
+
+    filepath = vlansdirectory + filename
+
+    with open(filepath, "r") as f:
+        lines = f.readlines()
+
+    rows = []
+    child_dfs = []
+
+    for line in lines:
+        # Use the SAME regex as original code
+        parts = re.split(r"^\t+|\s+", line)
+
+        # Filter out empty strings from split
+        parts = [p for p in parts if p]
+
+        if not parts:
+            continue
+
+        directive = parts[0]
+
+        # Skip comments
+        if directive.startswith("//"):
+            continue
+
+        if directive == "#include":
+            include_file = parts[1]
+            child_building = include_file.split("/")[-1]
+            child_df = load_vlan_file(
+                vlansdirectory, include_file, child_building, seen
+            )
+            child_dfs.append(child_df)
+
+        elif directive == "VLAN":
+            # For VLAN/VVRNG, we need to re-split on tabs only to get proper columns
+            # because the original makevlan/genvlans use tab splitting
+            tab_parts = re.split(r"\t+", line)
+            if len(tab_parts) >= 6:
+                rows.append(
+                    {
+                        "directive": "VLAN",
+                        "name": tab_parts[1],
+                        "id": tab_parts[2],
+                        "v6cidr": tab_parts[3],
+                        "v4cidr": tab_parts[4],
+                        "description": tab_parts[5].rstrip()
+                        if len(tab_parts) > 5
+                        else "",
+                        "building": building,
+                        "raw_line": line,  # Keep for debugging
+                    }
+                )
+
+        elif directive == "VVRNG":
+            tab_parts = re.split(r"\t+", line)
+            if len(tab_parts) >= 5:
+                rows.append(
+                    {
+                        "directive": "VVRNG",
+                        "template": tab_parts[1],
+                        "range": tab_parts[2],
+                        "v6cidr": tab_parts[3],
+                        "v4cidr": tab_parts[4],
+                        "description": tab_parts[5].rstrip()
+                        if len(tab_parts) > 5
+                        else "",
+                        "building": building,
+                    }
+                )
+
+    # Build DataFrame
+    this_df = pandas.DataFrame(rows) if rows else pandas.DataFrame()
+
+    # Concatenate with children
+    all_dfs = [this_df] + [df for df in child_dfs if not df.empty]
+
+    if all_dfs and any(not df.empty for df in all_dfs):
+        return pandas.concat(all_dfs, ignore_index=True)
+    return pandas.DataFrame()
+
+
 def populatevlans(vlansdirectory, vlansfile):
     """populate the vlan list from a vlans diretory and file"""
     vlans = []
