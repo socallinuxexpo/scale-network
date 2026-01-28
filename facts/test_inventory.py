@@ -6,101 +6,6 @@ Tests for inventory.py
 import inventory
 
 
-def test_getfilelineshdr():
-    """test cases for getfilelines() with header no building"""
-    cases = [
-        [
-            "testdata/testaps.csv",
-            ["n7a-0093,e0:46:9a:5a:c0:36\n", "n8c-0002,2c:b0:5d:7f:63:72\n"],
-        ],
-        [
-            "testdata/testapuse.csv",
-            [
-                "101-a,n7a-0093,10.128.3.150,6,36,0,0,50,50\n",
-                "101-b,n8c-0002,10.128.3.151,1,165,0,0,50,50\n",
-            ],
-        ],
-        [
-            "testdata/testpiuse.csv",
-            [
-                "pi-expo6,pi4-022,110\n",
-            ],
-        ],
-        [
-            "testdata/testpis.csv",
-            [
-                "pi4-022,dc:a6:32:41:88:f4,dea6:32ff:fe41:88f4\n",
-            ],
-        ],
-        ["testdata/testrouterlist.csv", ["br-mdf-01,2001:470:f325:103::2\n"]],
-        [
-            "testdata/testserverlist.csv",
-            [
-                "server1,4c:72:b9:7c:41:17,2001:470:f325:503::5,10.128.3.5,core\n",
-                "server2,4c:72:b9:7c:40:ec,,,\n",
-            ],
-        ],
-    ]
-    for filename, lines in cases:
-        assert inventory.getfilelines(filename, header=True) == lines, filename
-
-
-def test_getfilelinesnobldg():
-    """test cases for getfilelines() no header no building"""
-    cases = [
-        [
-            "testdata/testvlans",
-            [
-                "// Expo Center -- VLANS 100-499\n",
-                "#include dir.d/Expo\n",
-                "\n",
-                "// Conference Center -- VLANS 500-899\n",
-                "#include dir.d/Conference\n",
-                "\n",
-            ],
-        ]
-    ]
-    for filename, lines in cases:
-        assert inventory.getfilelines(filename) == lines, filename
-
-
-def test_getfilelinesbldg():
-    # pylint: disable=line-too-long
-    """test cases for the getfilelines() no header with building"""
-    cases = [
-        [
-            "Conference",
-            [
-                "//\tConference\tCenter\t--\tVLANS\t500-899\n",
-                "VLAN\tcfSCALE-SLOW	\t500\t2001:470:f325:500::/64\t10.128.128.0/21\t2.4G Wireless Network in Conference Center\n",
-                "VLAN\tcfSigns\t\t\t507\t2001:470:f325:507::/64	0.0.0.0/0\tSigns network (Conference Center) IPv6 Only\n",
-                "//510-599 not used\n",
-            ],
-        ],
-        [
-            "Expo",
-            [
-                "// Expo Center -- VLANS 100-499\n",
-                "VLAN\texSCALE-SLOW\t\t100\t2001:470:f325:100::/64\t10.0.128.0/21\t2.4G Wireless Network in Expo Center\n",
-                "//106 not used\n",
-                "//112 through 199 not used\n",
-                "//200 through 499 Vendors\n",
-                "//200-498 are dynamically generated from Booth information file as Vendor VLANs.\n",
-                "//The difference is that these VLAN interfaces will also be built with firewall filters to prevent access to other\n",
-                "//VLANs (vendor_vlan <-> internet only)\n",
-                "VVRNG\tvendor_vlan_\t\t200-201\t2001:470:f325::/48\t10.2.0.0/15\tDynamically allocated and named booth VLANs\n",
-                "//499 is reserved for the Vendor backbone VLAN between the Expo switches and the routers.\n",
-            ],
-        ],
-    ]
-    for filename, caseslines in cases:
-        filelines = inventory.getfilelines(
-            filename, directory="./testdata/dir.d/", building="testbuilding"
-        )
-        for i, line in enumerate(caseslines):
-            assert filelines[i] == [line, "testbuilding"], line
-
-
 def test_dhcp6ranges():
     """test cases for the dhcp6ranges() function"""
     cases = [
@@ -153,11 +58,18 @@ def test_dhcp4ranges():
         )
 
 
-def test_makevlan():
-    """test cases for the makevlan() function"""
+def test_make_vlan():
+    """test case for make_vlan()"""
     cases = [
         [
-            "VLAN\tcfCTF\t\t504\t2001:470:f325:504::/64\t10.128.4.0/24\tCapture the Flag",
+            {
+                "id": "504",
+                "name": "cfCTF",
+                "v6cidr": "2001:470:f325:504::/64",
+                "v4cidr": "10.128.4.0/24",
+                "description": "Capture the Flag",
+                "building": "Conference",
+            },
             {
                 "name": "cfCTF",
                 "id": "504",
@@ -179,10 +91,19 @@ def test_makevlan():
                 "ipv4dns2": "",
             },
         ],
-        ["VLAN\tBadVLAN\t\tABC\t2001:470:f325:504::/64\t10.128.4.0/24\tBad VLAN", None],
+        [
+            {
+                "id": "ABC",
+                "name": "BadVLAN",
+                "v6cidr": "2001:470:f325:504::/64",
+                "v4cidr": "10.128.4.0/24",
+                "description": "Bad VLAN",
+            },
+            None,
+        ],
     ]
-    for line, vlan in cases:
-        assert inventory.makevlan(line, "Conference") == vlan, line
+    for config, vlan in cases:
+        assert inventory.make_vlan(config) == vlan, config
 
 
 def test_bitmasktonetmask():
@@ -203,21 +124,25 @@ def test_bitmasktonetmask():
         assert inventory.bitmasktonetmask(bitmask) == netmask, bitmask
 
 
-def test_genvlans():
-    """test cases for the genvlans() function"""
+def test_gen_vlans():
+    """test cases for the gen_vlans() function"""
     cases = [
         [
-            "VVRNG\ttest_vlan_\t\t200-201\t2001:470:f325::/48\t10.2.0.0/15\tdynamic vlan",
+            "200-201",  # vlan_range
+            "test_vlan_",  # nameprefix
+            "2001:470:f325::/48",  # v6cidr
+            "10.2.0.0/15",  # v4cidr
+            "Expo",  # building
             [
                 {
                     "name": "test_vlan_200",
-                    "id": 200,
+                    "id": "200",
                     "ipv6prefix": "2001:470:f325:200::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.0.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 200",
+                    "description": "Dynamic vlan 200",
                     "ipv6dhcpStart": "2001:470:f325:200:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:200:d8c::800",
                     "ipv4dhcpStart": "10.2.0.80",
@@ -231,13 +156,13 @@ def test_genvlans():
                 },
                 {
                     "name": "test_vlan_201",
-                    "id": 201,
+                    "id": "201",
                     "ipv6prefix": "2001:470:f325:201::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.1.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 201",
+                    "description": "Dynamic vlan 201",
                     "ipv6dhcpStart": "2001:470:f325:201:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:201:d8c::800",
                     "ipv4dhcpStart": "10.2.1.80",
@@ -252,8 +177,9 @@ def test_genvlans():
             ],
         ]
     ]
-    for line, vlans in cases:
-        assert inventory.genvlans(line, "Expo") == vlans, line
+    for vlan_range, nameprefix, v6cidr, v4cidr, building, expected in cases:
+        result = inventory.gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building)
+        assert result == expected, f"range={vlan_range}"
 
 
 def test_ip4toptr():
@@ -305,9 +231,9 @@ def test_roomalias():
         assert inventory.roomalias(name) == aliases, name
 
 
-def test_populatevlans():
+def test_populate_vlans():
     # pylint: disable=line-too-long
-    """test cases for the populatevlans() function"""
+    """test cases for the populate_vlans() function"""
     cases = [
         [
             ["./testdata/", "testvlans"],
@@ -334,13 +260,13 @@ def test_populatevlans():
                 },
                 {
                     "name": "vendor_vlan_200",
-                    "id": 200,
+                    "id": "200",
                     "ipv6prefix": "2001:470:f325:200::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.0.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 200",
+                    "description": "Dynamic vlan 200",
                     "ipv6dhcpStart": "2001:470:f325:200:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:200:d8c::800",
                     "ipv4dhcpStart": "10.2.0.80",
@@ -354,13 +280,13 @@ def test_populatevlans():
                 },
                 {
                     "name": "vendor_vlan_201",
-                    "id": 201,
+                    "id": "201",
                     "ipv6prefix": "2001:470:f325:201::",
-                    "ipv6bitmask": 64,
+                    "ipv6bitmask": "64",
                     "ipv4prefix": "10.2.1.0",
-                    "ipv4bitmask": 24,
+                    "ipv4bitmask": "24",
                     "building": "Expo",
-                    "description": "Dyanmic vlan 201",
+                    "description": "Dynamic vlan 201",
                     "ipv6dhcpStart": "2001:470:f325:201:d8c::1",
                     "ipv6dhcpEnd": "2001:470:f325:201:d8c::800",
                     "ipv4dhcpStart": "10.2.1.80",
@@ -417,7 +343,7 @@ def test_populatevlans():
     ]
     for case, vlans in cases:
         swconfigdir, vlansfile = case
-        assert inventory.populatevlans(swconfigdir, vlansfile) == vlans, case
+        assert inventory.populate_vlans(swconfigdir, vlansfile) == vlans, case
 
 
 def test_populateswitches():

@@ -16,48 +16,39 @@ import jinja2
 import pandas
 
 
-def getfilelines(filename, header=False, directory="./", building=None):
-    """returns the contents of a file as lines
-    omits the top line for git beautification if the header boolean is set to true
-    takes optional directory flag to support parsing of vlans files
-    takes optional building flag used for vlan parsing, otherwise is None"""
-    fhandle = open(directory + filename, "r")
-    lines = fhandle.readlines()
-    fhandle.close()
-    if header:
-        lines = lines[1:]
-    if building is not None:
-        newlines = []
-        for line in lines:
-            newlines.append([line, building])
-        lines = newlines
-    return lines
-
-
-def makevlan(line, building):
-    """Makes a vlan dictionary from VLAN directive line"""
-    elems = re.split(r"\t+", line)
-    ipv6 = elems[3].split("/")
+def make_vlan(vlan_config):
+    """
+    Makes a vlan dictionary from a VLAN config:
+    {
+        'id': 105,
+        'name': 'hiAV',
+        'v6cidr': '2001:470:f026:105::/64',
+        'v4cidr': '10.0.5.0/24',
+        'description': 'Audio Visual Network (DHCP Helper to AV server)',
+        'building': 'Conference',
+    }
+    """
+    ipv6 = vlan_config["v6cidr"].split("/")
     ipv6prefix = ipv6[0]
     ipv6bitmask = ipv6[1]
     ipv6dhcp = dhcp6ranges(ipv6prefix, int(ipv6bitmask))
-    ipv4 = elems[4].split("/")
+    ipv4 = vlan_config["v4cidr"].split("/")
     ipv4prefix = ipv4[0]
     ipv4bitmask = ipv4[1]
     ipv4dhcp = dhcp4ranges(ipv4prefix, int(ipv4bitmask))
     ipv4netmask = bitmasktonetmask(int(ipv4bitmask))
-    vlanid = elems[2]
+    vlanid = vlan_config["id"]
     if not vlanid.isdigit():
         return None
     return {
-        "name": elems[1],
+        "name": vlan_config["name"],
         "id": vlanid,
         "ipv6prefix": ipv6prefix,
         "ipv6bitmask": ipv6bitmask,
         "ipv4prefix": ipv4prefix,
         "ipv4bitmask": ipv4bitmask,
-        "building": building,
-        "description": elems[5].rstrip(),
+        "building": vlan_config["building"],
+        "description": vlan_config["description"].rstrip(),
         "ipv6dhcpStart": ipv6dhcp[0],
         "ipv6dhcpEnd": ipv6dhcp[1],
         "ipv4dhcpStart": ipv4dhcp[0],
@@ -71,82 +62,182 @@ def makevlan(line, building):
     }
 
 
-def genvlans(line, building):
-    """Makes a list of vlan dictionaries from a VVRNG directive"""
+def gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building):
     vlans = []
-    elems = re.split(r"\t+", line)
-    rangeb, rangee = elems[2].split("-")
+    rangeb, rangee = vlan_range.split("-")
+    v6net = ipaddress.ip_network(v6cidr)
+    v4octets = v4cidr.split("/")[0].split(".")
+
     for i in range(int(rangeb), int(rangee) + 1):
-        ipv6prefix = elems[3].split("/")[0][:-1] + str(i) + "::"
-        ipv6dhcp = dhcp6ranges(ipv6prefix, 64)
-        ocs = elems[4].split(".")
-        ocs[1] = str(int(ocs[1]) + math.floor((i - int(rangeb)) / 256))
-        ocs[2] = str(((i - int(rangeb)) % 256))
-        ip4prefix = ocs[0] + "." + ocs[1] + "." + ocs[2] + ".0"
-        # Get dhcp ranges and router address
-        ipv4dhcp = dhcp4ranges(ip4prefix, 24)
-        ipv4netmask = bitmasktonetmask(24)
-        vlans.append(
-            {
-                "name": elems[1] + str(i),
-                "id": i,
-                "ipv6prefix": ipv6prefix,
-                "ipv6bitmask": 64,
-                "ipv4prefix": ip4prefix,
-                "ipv4bitmask": 24,
-                "building": building,
-                "description": "Dyanmic vlan " + str(i),
-                "ipv6dhcpStart": ipv6dhcp[0],
-                "ipv6dhcpEnd": ipv6dhcp[1],
-                "ipv4dhcpStart": ipv4dhcp[0],
-                "ipv4dhcpEnd": ipv4dhcp[1],
-                "ipv4router": ipv4dhcp[2],
-                "ipv4netmask": ipv4netmask,
-                "ipv6dns1": "",
-                "ipv6dns2": "",
-                "ipv4dns1": "",
-                "ipv4dns2": "",
-            }
-        )
+        # we prefix v6 /64s with the base + decimal value of the vlan
+        # even though this doesn't match the hex value, easier for eyes
+        v6base = str(v6net.network_address).rstrip(":")
+        v6prefix = f"{v6base}:{i}::"
+
+        # we prefix v4 /24s as an offset of the base
+        offset = i - int(rangeb)
+        octet1 = v4octets[0]
+        octet2 = str(int(v4octets[1]) + math.floor(offset / 256))
+        octet3 = str(offset % 256)
+        v4prefix = f"{octet1}.{octet2}.{octet3}.0"
+
+        vlan_config = {
+            "id": str(i),
+            "name": f"{nameprefix}{str(i)}",
+            "v6cidr": f"{v6prefix}/64",
+            "v4cidr": f"{v4prefix}/24",
+            "description": f"Dynamic vlan {i}",
+            "building": building,
+        }
+        new_vlan = make_vlan(vlan_config)
+        if new_vlan is not None:
+            vlans.append(new_vlan)
+
     return vlans
 
 
-def populatevlans(vlansdirectory, vlansfile):
-    """populate the vlan list from a vlans diretory and file"""
-    vlans = []
-    # seed root file
-    todo = [["#include\t" + vlansfile + "\tno_building"]]
-    # This loop is pretty complex, should look into simplifying at some point
-    while len(todo) > 0:
-        current = todo[0]
-        elems = re.split(r"^\t+|\s+", current[0])
-        directive = elems[0]
+def load_vlan_file(vlansdirectory, filename, building=None, seen=None):
+    """
+    Recursively load a vlans file and all its includes into a DataFrame.
+    """
+    if seen is None:
+        seen = set()
 
-        # We dont care about bridge vlan types since they wont require dhcp or dns
-        if elems[1] == "vlans.d/Bridged":
-            todo.remove(current)
+    # Prevent infinite loops
+    if filename in seen:
+        return pandas.DataFrame()
+    seen.add(filename)
+
+    # Derive building from filename (last path component)
+    if building is None:
+        building = filename.split("/")[-1]
+
+    # Skip Bridged entirely
+    if building == "Bridged":
+        return pandas.DataFrame()
+
+    filepath = vlansdirectory + filename
+
+    with open(filepath, "r") as f:
+        lines = f.readlines()
+
+    rows = []
+    child_dfs = []
+
+    for line in lines:
+        # Use the SAME regex as original code
+        parts = re.split(r"^\t+|\s+", line)
+
+        # Filter out empty strings from split
+        parts = [p for p in parts if p]
+
+        if not parts:
             continue
-        # we support 3 directives (#include, VLAN, VVRNG), everything else
-        # is considered a comment and we silently drop it and continue
+
+        directive = parts[0]
+
+        # Skip comments
+        if directive.startswith("//"):
+            continue
+
         if directive == "#include":
-            filename = elems[1]
-            building = re.split(r"/", filename)[
-                -1
-            ]  # the filename sans path is the building
-            todo = todo + getfilelines(
-                filename, directory=vlansdirectory, building=building
+            include_file = parts[1]
+            child_building = include_file.split("/")[-1]
+            child_df = load_vlan_file(
+                vlansdirectory, include_file, child_building, seen
             )
+            child_dfs.append(child_df)
+
         elif directive == "VLAN":
-            line = current[0]
-            building = current[1]
-            newvlan = makevlan(line, building)
-            if newvlan is not None:
-                vlans.append(newvlan)
+            # For VLAN/VVRNG, we need to re-split on tabs only to get proper columns
+            # because the original makevlan/genvlans use tab splitting
+            tab_parts = re.split(r"\t+", line)
+            if len(tab_parts) >= 6:
+                rows.append(
+                    {
+                        "directive": "VLAN",
+                        "name": tab_parts[1],
+                        "id": tab_parts[2],
+                        "v6cidr": tab_parts[3],
+                        "v4cidr": tab_parts[4],
+                        "description": tab_parts[5].rstrip()
+                        if len(tab_parts) > 5
+                        else "",
+                        "building": building,
+                        "raw_line": line,  # Keep for debugging
+                    }
+                )
+
         elif directive == "VVRNG":
-            line = current[0]
-            building = current[1]
-            vlans = vlans + genvlans(line, building)
-        todo.remove(current)
+            tab_parts = re.split(r"\t+", line)
+            if len(tab_parts) >= 5:
+                rows.append(
+                    {
+                        "directive": "VVRNG",
+                        "template": tab_parts[1],
+                        "range": tab_parts[2],
+                        "v6cidr": tab_parts[3],
+                        "v4cidr": tab_parts[4],
+                        "description": tab_parts[5].rstrip()
+                        if len(tab_parts) > 5
+                        else "",
+                        "building": building,
+                    }
+                )
+
+    # Build DataFrame
+    this_df = pandas.DataFrame(rows) if rows else pandas.DataFrame()
+
+    # Concatenate with children
+    all_dfs = [this_df] + [df for df in child_dfs if not df.empty]
+
+    if all_dfs and any(not df.empty for df in all_dfs):
+        return pandas.concat(all_dfs, ignore_index=True)
+    return pandas.DataFrame()
+
+
+def populate_vlans(vlansdirectory, vlansfile):
+    """Populate the vlan list from a vlans directory and file."""
+
+    # Load all vlan data into a single DataFrame
+    df = load_vlan_file(vlansdirectory, vlansfile)
+
+    if df.empty:
+        return []
+
+    vlans = []
+
+    # Process VLAN rows
+    vlan_rows = df[df["directive"] == "VLAN"]
+    for _, row in vlan_rows.iterrows():
+        vlan_config = {
+            "id": row["id"],
+            "name": row["name"],
+            "v6cidr": row["v6cidr"],
+            "v4cidr": row["v4cidr"],
+            "description": row["description"],
+            "building": row["building"],
+        }
+        newvlan = make_vlan(vlan_config)
+        if newvlan is not None:
+            vlans.append(newvlan)
+
+    # Process VVRNG rows
+    vvrng_rows = df[df["directive"] == "VVRNG"]
+    for _, row in vvrng_rows.iterrows():
+        vlans.extend(
+            gen_vlans(
+                row["range"],
+                row["template"],
+                row["v6cidr"],
+                row["v4cidr"],
+                row["building"],
+            )
+        )
+
+    # Sort by id
+    vlans.sort(key=lambda v: int(v["id"]))
+
     return vlans
 
 
@@ -241,74 +332,54 @@ def populateswitches(switchesfile):
 
 def populaterouters(routersfile):
     """populate the router list"""
+    routers_df = pandas.read_csv(routersfile)
+    routers_df.columns.str.strip()
     routers = []
-    flines = getfilelines(routersfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # Let's bail if we have an invalid number of columns
-        if len(elems) < 2:
-            continue
-        ipaddr = elems[1].rstrip()
-        # Let's bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
+
+    for _, row in routers_df.iterrows():
+        name = row["name"].lower()
+        ipv6 = row["ipv6"]
+
         routers.append(
             {
-                "name": elems[0].lower(),
-                "ipv6": ipaddr,
-                "ipv6ptr": ip6toptr(ipaddr),
-                "fqdn": elems[0].lower() + ".scale.lan",
+                "name": name,
+                "ipv6": ipv6,
+                "ipv6ptr": ip6toptr(ipv6),
+                "fqdn": name + ".scale.lan",
             }
         )
+
     return routers
 
 
-def populateaps(apsfile, apusefile):
+def populateaps(aps_file, apuse_file):
     """populate the AP list from an APs files"""
-    apsdict = {}
-    for row in getfilelines(apsfile, header=True):
-        row = row.strip().split(",")
-        apsdict[row[0]] = row[1:]
+    aps_df = pandas.read_csv(aps_file)
+    apuse_df = pandas.read_csv(apuse_file)
 
-    apusedict = {}
-    for row in getfilelines(apusefile, header=True):
-        row = row.strip().split(",")
-        # serial must be our primary key
-        apusedict[row[1]] = [row[0]] + row[2:]
+    aps_df.columns = aps_df.columns.str.strip()
+    apuse_df.columns = apuse_df.columns.str.strip()
 
-    result = {}
-    for d in (apsdict, apusedict):
-        for key, value in d.items():
-            # merge two files based on serial primary key
-            result.setdefault(key, []).extend(value)
+    merged_df = apuse_df.merge(
+        aps_df, left_on="serial", right_on="serial", suffixes=("", "_ap")
+    )
 
     aps = []
-    # Example of values in result
-    # key: n8t-0054
-    # values: c4:04:15:ad:a3:93,unknown-2,10.128.3.249,6,36,0,0,50,50
-    for key, elems in result.items():
-        try:
-            ipaddr = elems[2]
-        except IndexError:
-            ipaddr = None
+    for _, row in merged_df.iterrows():
+        name = row["name"].lower()
+        ipv4 = row["ipv4"]
 
-        # Lets bail if ip address is invalid
-        if not isvalidip(ipaddr):
-            continue
         aps.append(
             {
-                "name": elems[1].lower(),
-                "mac": elems[0],
-                "ipv4": ipaddr,
-                "ipv4ptr": ip4toptr(ipaddr),
-                "wifi2": elems[3],
-                "wifi5": elems[4],
-                "configver": elems[5],
-                "fqdn": elems[1].lower() + ".scale.lan",
-                "aliases": [key],
+                "name": name,
+                "mac": row["mac"],
+                "ipv4": ipv4,
+                "ipv4ptr": ip4toptr(ipv4),
+                "wifi2": str(row["2.4Ghz_chan"]),
+                "wifi5": str(row["5Ghz_chan"]),
+                "configver": str(row["config_ver"]),
+                "fqdn": name + ".scale.lan",
+                "aliases": [row["serial"].lower()],
             }
         )
     return aps
@@ -382,24 +453,23 @@ def roomalias(name):
 
 def populateservers(serversfile, vlans):
     """populate the server list from a servers file"""
+    servers_df = pandas.read_csv(serversfile)
+    servers_df.columns.str.strip()
     servers = []
-    flines = getfilelines(serversfile, header=True)
-    for line in flines:
-        # Lets bail if this line is a comment
-        if line[0] == "/" or line[0] == "#" or line[0] == "\n":
-            continue
-        elems = re.split(",", line)
-        # let's bail if we have an invalid number of columns
-        if len(elems) < 5:
-            continue
-        ipv6 = elems[2]
-        ipv4 = elems[3]
+
+    for _, row in servers_df.iterrows():
+        name = row["name"]
+        aliases = serveralias(name)
+        ipv6 = row["ipv6"]
+        ipv4 = row["ipv4"]
+
         # let's bail if either ip is invalid, which also skips
         # unused server entries as well (where ip is blank)
         if not isvalidip(ipv6) or not isvalidip(ipv4):
             continue
-        serverrole = elems[4].rstrip()
+
         vlan = ""
+        building = ""
         for vln in vlans:
             if ipv6.find(vln["ipv6prefix"]) == 0:
                 vlan = vln["name"]
@@ -407,17 +477,17 @@ def populateservers(serversfile, vlans):
 
         servers.append(
             {
-                "name": elems[0],
-                "macaddress": elems[1],
-                "role": serverrole,
+                "name": name,
+                "macaddress": row["mac-address"],
+                "role": row["role"],
                 "ipv6": ipv6,
                 "ipv6ptr": ip6toptr(ipv6),
                 "ipv4": ipv4,
                 "ipv4ptr": ip4toptr(ipv4),
                 "vlan": vlan,
-                "fqdn": elems[0] + ".scale.lan",
+                "fqdn": name + ".scale.lan",
                 "building": building,
-                "aliases": serveralias(elems[0]),
+                "aliases": aliases,
             }
         )
     return servers
@@ -770,7 +840,7 @@ def main():
     piusefile = "../facts/pi/piuse.csv"
 
     # populate the device type lists
-    vlans = populatevlans(swconfigdir, vlansfile)
+    vlans = populate_vlans(swconfigdir, vlansfile)
     switches = populateswitches(switchesfile)
     servers = populateservers(serversfile, vlans)
     routers = populaterouters(routersfile)
