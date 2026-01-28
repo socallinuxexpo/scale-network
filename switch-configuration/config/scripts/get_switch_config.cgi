@@ -27,6 +27,10 @@ set_debug_level(0);
 # Parse the Query String from the web server
 $QUERY = $ENV{'QUERY_STRING'};
 parse_query($QUERY);
+if ( -z "$BRANCH" ); then
+{
+  $BRANCH="master";
+}
 
 # Step 1: Move current working directory to repo
 chdir("$REPO") || send_abort("Failed to enter repository.", "$!");
