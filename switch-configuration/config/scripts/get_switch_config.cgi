@@ -27,7 +27,7 @@ set_debug_level(0);
 # Parse the Query String from the web server
 $QUERY = $ENV{'QUERY_STRING'};
 parse_query($QUERY);
-if ( -z "$BRANCH" ); then
+if ( -z "$BRANCH" )
 {
   $BRANCH="master";
 }
