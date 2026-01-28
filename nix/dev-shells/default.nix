@@ -33,7 +33,6 @@ mapAttrs (const (
     global = with pkgs; [
       bash
       curl
-      fish
       git
       jq
       tio
