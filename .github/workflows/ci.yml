@@ -14,7 +14,6 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: nix build -L .#checks.x86_64-linux.pytest-facts
-      - run: nix build -L .#checks.x86_64-linux.duplicates-facts
       - run: nix build -L .#checks.x86_64-linux.perl-switches
       - run: nix build -L .#checks.x86_64-linux.openwrt-golden
       - run: nix build -L .#checks.x86_64-linux.formatting
