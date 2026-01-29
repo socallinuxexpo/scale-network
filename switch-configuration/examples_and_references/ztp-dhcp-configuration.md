@@ -92,7 +92,7 @@ options are set in the model-specific class (at the moment, strictly the vendor-
 
 ### Kea Configuration Examples from our current implementation
 
-- Kea DHCP Options that aren't coded into KEA by defaut must be specified with an Option Definition ("option-def" array). We use the following
+- Kea DHCP Options that aren't coded into KEA by default must be specified with an Option Definition ("option-def") array. We use the following
   option definitions currently:
 
 ```
