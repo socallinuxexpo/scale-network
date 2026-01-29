@@ -8,7 +8,7 @@
 # 1. Get the current MAC address for the vme interface.
 # 2. Verify that the switch has an IP address on the vme interface and can
 #    connect to the scale-ztpserver.delong.com host to download information.
-# 3. Use curl to download the switch configuration into /tmp from a CGI script
+# 3. Use fetch to download the switch configuration into /tmp from a CGI script
 #    which will ultimately use the MAC address to determine which configuration
 #    file to send and send that file as a text/plain document via HTTP. The
 #    URL will be:r
@@ -36,7 +36,7 @@ fi
 if [ -z "$BRANCH" ]; then
   BRANCH="master"
 fi
-curl -o /tmp/config.txt "http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=$MAC&BRANCH=$BRANCH"
+fetch -o /tmp/config.txt 'http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC='"$MAC"'&BRANCH='"$BRANCH"
 result=$?
 if [ "$result" -ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."

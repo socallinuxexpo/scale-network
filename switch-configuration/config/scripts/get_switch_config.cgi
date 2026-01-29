@@ -27,6 +27,10 @@ set_debug_level(0);
 # Parse the Query String from the web server
 $QUERY = $ENV{'QUERY_STRING'};
 parse_query($QUERY);
+if ( -z "$BRANCH" )
+{
+  $BRANCH="master";
+}
 
 # Step 1: Move current working directory to repo
 chdir("$REPO") || send_abort("Failed to enter repository.", "$!");
@@ -58,10 +62,11 @@ until ($git_success > 0 || $git_retries > 3)
 unless($git_success)
 {
   send_abort($abort_string);
+  print STDERR "Potential git issues: $abort_string\n";
 }
 else
 {
-  print STDERR "Potential git issues: $abort_string\n";
+  print STDERR "git success: $git_success ($git_retries) ($abort_string)\n";
 }
 
 # Step 3: Build any updated files
