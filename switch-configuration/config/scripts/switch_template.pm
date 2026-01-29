@@ -1956,6 +1956,10 @@ chassis {
         link-down ignore;
         }
     }
+EOF
+if ($model =~ /ex4200/)
+{
+  $OUTPUT .= <<EOF;
     fpc 0 {
 	pic 1 {
             sfpplus {
@@ -1963,6 +1967,9 @@ chassis {
             }
         }
     }
+EOF
+}
+$OUTPUT .= <<EOF;
 }
 snmp {
     community Junitux {
@@ -2005,7 +2012,8 @@ protocols {
     }
     rstp {
         traceoptions {
-            all-failures;
+            file rstp-log;
+            flag all-failures;
         }
     }
     lldp {
