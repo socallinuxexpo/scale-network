@@ -14,7 +14,6 @@
 ##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
 ##FIXME## Assumes v6 prefix is a /48 and many code dependencies on this assumption. Safe at least for now.
 
-##FIXME## ethernet-switching-options must be removed for 2300s
 
 
 
@@ -478,7 +477,7 @@ ethernet-switching-options {
     }
 }
 EOF
-  $ETHER_SWITCHING_OPTIONS = "" if ($Model =~ /ex2300/);
+  $ETHER_SWITCHING_OPTIONS = "" if ($Model !~ /ex4200/);
   
   my $mode_cmd;
   my $OUTPUT = "# Generated interface configuration for $hostname ".
@@ -837,7 +836,7 @@ EOF
         $port++;
       }
       ##FIXME## Put some sanity checking on fiber interface
-      if ($Model =~ /ex2300/)
+      if ($Model !~ /ex4200/)
       {
         $mode_cmd = "interface-mode";
       }
@@ -922,7 +921,7 @@ EOF
           $count--;
           $port++;
       }
-      if ($Model =~ /ex2300/)
+      if ($Model !~ /ex4200/)
       {
         $mode_cmd = "interface-mode";
       }
@@ -985,7 +984,7 @@ sub build_vlans_from_config
   my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
   my ($VLANS, $VLANS_byname) = build_vlan_hash();
   my $l3type;
-  if ($Model =~ /ex2300/)
+  if ($Model !~ /ex4200/)
   {
     $l3type="irb";
   }
@@ -1870,7 +1869,7 @@ sub build_config_from_template
   my $type = $switchtype[4];
   my $model = $switchtype[8];
   my $l3type;
-  if ($model =~ /ex2300/)
+  if ($model !~ /ex4200/)
   {
     $l3type = "irb";
   }
