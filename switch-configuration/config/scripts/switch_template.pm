@@ -724,7 +724,7 @@ EOF
   debug(9, "$hostname: type: $Type, received ", $#{$switchtype},
       " lines of config\n");
   $OUTPUT .= <<EOF;
-    me-0 {
+    vme {
         unit 0 {
             family inet {
                     address 192.168.255.76/24;
