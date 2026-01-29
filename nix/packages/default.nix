@@ -17,6 +17,7 @@ in
 mapAttrs (const (pkgs: {
   inherit (pkgs.scale-network)
     dhcptest
+    isc-dhcp
     mac2eui64
     make-dhcpd
     massflash
