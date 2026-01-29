@@ -1651,10 +1651,19 @@ EOF
 #	context: vlans { <here> }
         debug(5, "Name_prefix: x$VV_name_prefix"."x VLID: x$VLID"."x\n");
         my $vv_name = $VV_name_prefix.$VLID;
-            $VV_vlans .= <<EOF;
+        my $l3type;
+        if ($Model !~ /ex4200/)
+        {
+          $l3type = "irb";
+        }
+        else
+        {
+          $l3type = "vlan";
+        }
+        $VV_vlans .= <<EOF;
     $vv_name {
         vlan-id $VLID
-        l3-interface vlan.$VLID;
+        l3-interface $l3type.$VLID;
     }
 EOF
 #	"vlans_l3"    -> $VV_vlans_l3,
