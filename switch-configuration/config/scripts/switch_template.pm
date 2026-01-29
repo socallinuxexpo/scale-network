@@ -63,46 +63,46 @@ our @EXPORT = qw(
 
 
 my %colormap = (
-	"AP" => {
-		'bgred'		=> 0,
-		'bggreen'	=> 0.25,
-		'bgblue'	=> 0.25,
+        "AP" => {
+                'bgred'		=> 0,
+                'bggreen'	=> 0.25,
+                'bgblue'	=> 0.25,
                 'fgred'		=> 0.75,
                 'fggreen'	=> 0.75,
                 'fgblue'	=> 0.75,
-		},
-	"Uplink" => {
-		'bgred'		=> 0,
-		'bggreen'	=> 0.25,
-		'bgblue'	=> 0,
+                },
+        "Uplink" => {
+                'bgred'		=> 0,
+                'bggreen'	=> 0.25,
+                'bgblue'	=> 0,
                 'fgred'		=> 0.75,
                 'fggreen'	=> 0.75,
                 'fgblue'	=> 0.75,
-		},
-	"Downlink" => {
-		'bgred'		=> 0.25,
-		'bggreen'	=> 0.25,
-		'bgblue'	=> 0,
+                },
+        "Downlink" => {
+                'bgred'		=> 0.25,
+                'bggreen'	=> 0.25,
+                'bgblue'	=> 0,
                 'fgred'		=> 0.75,
                 'fggreen'	=> 0.75,
                 'fgblue'	=> 0.75,
-		},
-	"MassFlash" => {
-		'bgred'		=> 0.25,
-		'bggreen'	=> 0,
-		'bgblue'	=> 0.25,
+                },
+        "MassFlash" => {
+                'bgred'		=> 0.25,
+                'bggreen'	=> 0,
+                'bgblue'	=> 0.25,
                 'fgred'		=> 1,
                 'fggreen'	=> 1,
                 'fgblue'	=> 1,
-		},
-	"Unknown" => {
-		'bgred'		=> 0.25,
-		'bggreen'	=> 0,
-		'bgblue'	=> 0,
+                },
+        "Unknown" => {
+                'bgred'		=> 0.25,
+                'bggreen'	=> 0,
+                'bgblue'	=> 0,
                 'fgred'		=> 0.75,
                 'fggreen'	=> 0.75,
                 'fgblue'	=> 0.75,
-		},
+                },
 );
 sub BEGIN
 {
@@ -231,7 +231,7 @@ sub get_prefix
   if (@OUTPUT != 1)
   {
     die("ERROR: more than one entry in ipv6_prefix file.\n".
-	" File must contain a single IPv6 prefix on one line and otherwise be empty.\n");
+        " File must contain a single IPv6 prefix on one line and otherwise be empty.\n");
   }
   chomp(@OUTPUT);
   my ($prefix,$pfxlen) = split(/\//, $OUTPUT[0]);
@@ -312,10 +312,10 @@ sub get_switchtype
     my $switchtypes = read_config_file("switchtypes");
     foreach(@{$switchtypes})
     {
-      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel, $model, $mgmtMAC) = split(/\t+/, $_);
+      my ($Name, $Num, $MgtVL, $IPv6Addr, $Type, $hierarchy, $noiselevel, $Model, $mgmtMAC) = split(/\t+/, $_);
       my ($group, $level) = split(/\./, $hierarchy);
       debug(9,"switchtypes->$Name = ($Num, $MgtVL, $IPv6Addr, $Type, $group, $level)\n");
-      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level, $noiselevel, $model, $mgmtMAC ];
+      $Switchtypes{$Name} = [ $Num, $MgtVL, $IPv6Addr, $Type, $group, $level, $noiselevel, $Model, $mgmtMAC ];
       # Build cache of groups
       debug(5, "Adding $Name to group $group at level $level\n");
       if (!defined($Switchgroups{$group}))
@@ -752,7 +752,7 @@ EOF
     {
       if ($cmd =~ /^TRUNK$/ || $cmd =~ /^VLAN$/)
       {
-	my $i=0;
+        my $i=0;
         foreach(@tokens)
         {
           debug(9, "Token[$i] = \"$tokens[$i]\"\n");
@@ -770,13 +770,28 @@ EOF
       while ($portcount)
       {
         debug(9, "\t\tPort ge-0/0/$port\n");
-        $OUTPUT .= <<EOF;
+        if ($Model =~ /ex4200/)
+        {
+          $OUTPUT.= <<EOF;
     inactive: ge-0/0/$port {
         unit 0 {
             family ethernet-switching;
         }
     }
 EOF
+        }
+        else
+        {
+          $OUTPUT .= <<EOF;
+    inactive: ge-0/0/$port {
+        unit 0 {
+            family ethernet-switching {
+                storm-control default;
+            }
+        }
+    }
+EOF
+        }
         $portmap_PS .= <<EOF;
 $POE 1 1 1 (UNUSED) 0.5 0 0.5 $port DrawPort
 EOF
@@ -851,6 +866,14 @@ EOF
             family ethernet-switching {
                 $mode_cmd trunk;
                 vlan members [ $vlans ];
+EOF
+        if ($Model !~ /ex4200/)
+        {
+          $OUTPUT .= <<EOF;
+                storm-control default;
+EOF
+        }
+        $OUTPUT .= <<EOF;
             }
         }
     }
@@ -875,7 +898,7 @@ EOF
       {
         # Fiber ports are special in the map
         my ($first, $second, $portnum) = split(/\//, $iface);
-	print STDERR "REACHED DrawFiberPort IF statement\n";
+        print STDERR "REACHED DrawFiberPort IF statement\n";
         $portmap_PS .= <<EOF;
 false 0 0 0 (FIBER) 0 1 1 $portnum DrawFiberPort
 EOF
@@ -1359,7 +1382,7 @@ sub VV_init_firewall
                     accept;
                 }
           }
-	  term ipv6_icmp_basics {
+          term ipv6_icmp_basics {
               from {
                   destination-address {
                         ${PREFIX}::/48
@@ -1416,7 +1439,7 @@ sub VV_init_firewall
             }
         }
         filter only_from_internet6 {
-	  term ipv6_icmp_basics {
+          term ipv6_icmp_basics {
               from {
                   icmp-type [ neighbor-solicit neighbor-advertisement router-advertisement packet-too-big time-exceeded ];
               }
@@ -1489,7 +1512,7 @@ sub build_vendor_from_config
   my $hostname = shift @_;
   debug(5, "Building Vendor VLANs for $hostname\n");
   # Retrieve Switch Type Information
-  my ($Name, $Number, $MgtVL, $IPv6addr, $Type) = get_switchtype($hostname);
+  my ($Name, $Number, $MgtVL, $IPv6addr, $Type, $Group, $Level, $Noiselevel, $Model, $MgtMAC) = get_switchtype($hostname);
   
   my $port = 0;
   # Read Type file and produce interface configuration
@@ -1602,10 +1625,19 @@ EOF
                 vlan {
                     members $myvlan;
                 }
+EOF
+        if ($Model !~ /ex4200/)
+        {
+          $VV_interfaces .= <<EOF;
+                storm-control default;
+EOF
+        }
+        $VV_interfaces .= <<EOF;
             }
         }
     }
 EOF
+
         my $vlinfo=${$VLANS}{$VV_BASE};
         debug(4, "For $cmd $_ -> Vendor $VLID (pulled from $VV_BASE): ".Dumper(@{$vlinfo})."\n");
         debug(5, "Background: ".${$vlinfo}[6]." -> ".Dumper(parse_hex_color(${$vlinfo}[6]))."\n");
@@ -1693,7 +1725,6 @@ EOF
   # Hack for Hilton (SCaLE 19x)
   #my $active_srv_grp = ($MgtVL < 500) ? "Hilton" : "Conference";
   $VV_dhcp = <<EOF;
-forwarding-options {
     dhcp-relay {
         dhcpv6 {
             group vendors {
@@ -1761,7 +1792,6 @@ EOF
   $VV_dhcp .= <<EOF;
         }
     }
-}
 EOF
 
 #    "protocols"    -> $VV_protocols
@@ -1867,9 +1897,9 @@ sub build_config_from_template
   $VV_name_prefix = shift @_;
   my @switchtype = get_switchtype($hostname);
   my $type = $switchtype[4];
-  my $model = $switchtype[8];
+  my $Model = $switchtype[8];
   my $l3type;
-  if ($model !~ /ex4200/)
+  if ($Model !~ /ex4200/)
   {
     $l3type = "irb";
   }
@@ -1900,7 +1930,7 @@ sub build_config_from_template
   my $DHCP_CONFIG       = ${VENDOR_CONFIGURATION}{"dhcp"};
   my $PROTOCOL_CONFIG   = ${VENDOR_CONFIGURATION}{"protocols"};
   my $QOS_CONFIG        = ''; # Maybe someday we might want to build this. Hopefully
-	                      # I am long gone before it comes to that.
+                              # I am long gone before it comes to that.
   debug(5, "Final IPv4 Gateway = \n".$IPV4_DEFGW."\n<end>\n");
   my $OUTPUT = <<EOF;
 system {
@@ -1957,11 +1987,11 @@ chassis {
         }
     }
 EOF
-if ($model =~ /ex4200/)
+if ($Model =~ /ex4200/)
 {
   $OUTPUT .= <<EOF;
     fpc 0 {
-	pic 1 {
+        pic 1 {
             sfpplus {
                 pic-mode 1g;
             }
@@ -1994,7 +2024,19 @@ $INTERFACES_PHYSICAL
 $INTERFACES_LAYER3
     }
 }
+forwarding-options {
 $DHCP_CONFIG
+EOF
+if ($Model !~ /ex4200/)
+{
+  $OUTPUT .= <<EOF;
+    storm-control-profiles default {
+        all;
+    }
+EOF
+}
+$OUTPUT .= <<EOF;
+}
 routing-options {
     $IPV4_DEFGW
     rib inet6.0 {
