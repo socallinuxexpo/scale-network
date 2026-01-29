@@ -44,7 +44,7 @@ if [ "$result" -ne 0 ]; then
 fi
 grep '<HTML>' /tmp/config.txt
 result=$?
-if [ "$result" eq 0 ]; then
+if [ "$result" -eq 0 ]; then
   echo "Configuration CGI returned error:"
   cat /tmp/config.txt | sed -e 's/^/	error: /'
   exit 256
