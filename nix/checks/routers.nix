@@ -49,6 +49,15 @@
         ];
         scale-network = {
           base.enable = true;
+          # Temp for testing
+          services.dhcp4-relay."tech" = {
+            enable = true;
+            listenInterfaces = [
+              "eth1"
+              "eth2"
+            ];
+            dhcpServerIps = [ "192.168.1.1" ];
+          };
           router.conference = {
             enable = true;
             frrBorderInterface = "eth1";
