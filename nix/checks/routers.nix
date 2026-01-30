@@ -77,7 +77,6 @@
             frrConferenceInterface = "eth2";
           };
         };
-        networking.firewall.enable = false;
       };
 
     client =

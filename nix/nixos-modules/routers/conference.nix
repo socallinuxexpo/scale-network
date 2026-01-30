@@ -41,16 +41,20 @@ in
   };
 
   config = mkIf cfg.enable {
-    networking.useNetworkd = true;
+
+    networking = {
+      useNetworkd = true;
+      useDHCP = false;
+      firewall.enable = true;
+      nftables.enable = true;
+    };
+
     systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
 
     boot.kernel.sysctl = {
       "net.ipv4.conf.all.forwarding" = true;
       "net.ipv6.conf.all.forwarding" = true;
     };
-
-    # must be disabled if using systemd.network
-    networking.useDHCP = false;
 
     systemd.network = {
       enable = true;
@@ -73,8 +77,6 @@ in
         };
       };
     };
-
-    networking.firewall.enable = false;
 
     scale-network = {
       services.frr.enable = true;
