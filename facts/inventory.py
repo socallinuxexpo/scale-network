@@ -518,6 +518,107 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 "service-sockets-max-retries": 5,
                 "service-sockets-retry-wait-time": 5000,
             },
+            "client-classes": [
+                {
+                    "name": "Juniper-EX-Series",
+                    "test": "substring(option[60].text,0,10) == 'Juniper-ex'",
+                    "option-data": [
+                        #    Unfortunately the Juniper-ZTP suboptions must be set in each class
+                        #    // Juniper ZTP custom options
+                        #    {
+                        #        "name":         "config-file-name",
+                        #        "space":        "Juniper-ZTP",
+                        #        "data":         "images/switch_initial_loader.sh"
+                        #    },
+                        #    {
+                        #        "name":         "transfer-mode",
+                        #        "space":        "Juniper-ZTP",
+                        #        "data":         "http"
+                        #    },
+                        #    {
+                        #        "name":         "http-port",
+                        #        "space":        "Juniper-ZTP",
+                        #        "data":         "80"
+                        #    },
+                        {"name": "tftp-server-name", "data": "192.159.10.49"},
+                        {
+                            "name": "boot-file-name",
+                            "data": "/images/switch_initial_loader.sh",
+                        },
+                        {"name": "log-servers", "data": "192.159.10.2"},
+                        {"name": "ntp-servers", "data": "209.205.228.50"},
+                    ],
+                },
+                {
+                    "name": "ex2300-c-series",
+                    "test": "substring(option[60].text,0,16)  == 'Juniper-ex2300-c'",
+                    "option-data": [
+                        {"name": "vendor-encapsulated-options"},
+                        {
+                            "name": "config-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/switch_initial_loader.sh",
+                        },
+                        {
+                            "name": "transfer-mode",
+                            "space": "Juniper-ZTP",
+                            "data": "http",
+                        },
+                        {"name": "http-port", "space": "Juniper-ZTP", "data": "80"},
+                        {
+                            "name": "image-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/junos-arm-32-25.2R1.9.tgz",
+                        },
+                    ],
+                },
+                {
+                    "name": "ex4200-series",
+                    "test": "substring(option[60].text,0,14) == 'Juniper-ex4200'",
+                    "option-data": [
+                        {"name": "vendor-encapsulated-options"},
+                        {
+                            "name": "config-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/switch_initial_loader.sh",
+                        },
+                        {
+                            "name": "transfer-mode",
+                            "space": "Juniper-ZTP",
+                            "data": "http",
+                        },
+                        {"name": "http-port", "space": "Juniper-ZTP", "data": "80"},
+                        {
+                            "name": "image-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz",
+                        },
+                    ],
+                },
+                {
+                    "name": "ex4300-series",
+                    "test": "substring(option[60].text,0,14) == 'Juniper-ex4300'",
+                    "option-data": [
+                        {"name": "vendor-encapsulated-options"},
+                        {
+                            "name": "config-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/switch_initial_loader.sh",
+                        },
+                        {
+                            "name": "transfer-mode",
+                            "space": "Juniper-ZTP",
+                            "data": "http",
+                        },
+                        {"name": "http-port", "space": "Juniper-ZTP", "data": "80"},
+                        {
+                            "name": "image-file-name",
+                            "space": "Juniper-ZTP",
+                            "data": "/images/jinstall-ex-4300-21.4R3.15-signed.tgz",
+                        },
+                    ],
+                },
+            ],
             # And we specify the type of lease database
             "lease-database": {
                 "type": "memfile",
@@ -566,6 +667,84 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                     "array": False,
                     "record-types": "",
                     "space": "dhcp4",
+                    "encapsulate": "",
+                },
+                {
+                    "name": "vendor-encapsulated-options",
+                    "code": 43,
+                    "type": "empty",
+                    "encapsulate": "Juniper-ZTP",
+                },
+                {
+                    "name": "image-file-name",
+                    "code": 0,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "config-file-name",
+                    "code": 1,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "image-file-type",
+                    "code": 2,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "transfer-mode",
+                    "code": 3,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "alt-image-file-name",
+                    "code": 4,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "http-port",
+                    "code": 5,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "ftp-timeout",
+                    "code": 7,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
+                    "encapsulate": "",
+                },
+                {
+                    "name": "proxyv4-info",
+                    "code": 8,
+                    "space": "Juniper-ZTP",
+                    "type": "string",
+                    "record-types": "",
+                    "array": False,
                     "encapsulate": "",
                 },
             ],
