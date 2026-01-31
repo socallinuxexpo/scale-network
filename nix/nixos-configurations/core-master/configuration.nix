@@ -4,12 +4,12 @@
 
     libvirt.enable = true;
 
+    services.alloy.enable = true;
     services.bindMaster.enable = true;
     services.keaMaster.enable = true;
     services.monitoring.enable = true;
     services.mrtg.enable = false;
     services.ntp.enable = true;
-    services.prometheus.enable = true;
     services.rsyslogd.enable = true;
     services.signs.enable = false;
     services.ssh.enable = true;
