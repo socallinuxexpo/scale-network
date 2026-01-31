@@ -41,6 +41,8 @@ in {
 
   config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [
+      80 # nginx-http (redirects to https)
+      443 # nginx-https
       14250 # tempo-jaeger-grpc
       14268 # tempo-jaeger-thrift-http
       3000 # grafana-http
@@ -230,8 +232,11 @@ in {
         settings = {
           server = {
             domain = cfg.fqdn;
-            http_addr = "0.0.0.0";
+            http_addr = "127.0.0.1";
             http_port = 3000;
+            protocol = "http";
+            root_url = "https://%(domain)s/grafana/";
+            serve_from_sub_path = true;
           };
         };
 
@@ -266,5 +271,51 @@ in {
     systemd.tmpfiles.rules = [
       "d /var/lib/tempo 0755 tempo tempo"
     ];
+
+    systemd.services.monitoring-selfsigned-cert = {
+      description = "Generate self-signed certificate for monitoring";
+      wantedBy = ["multi-user.target"];
+      before = ["nginx.service"];
+      unitConfig = {
+        ConditionPathExists = "!/var/lib/monitoring/ssl/cert.pem";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        mkdir -p /var/lib/monitoring/ssl
+        ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:4096 \
+          -keyout /var/lib/monitoring/ssl/key.pem \
+          -out /var/lib/monitoring/ssl/cert.pem \
+          -days 365 -nodes \
+          -subj "/CN=${cfg.fqdn}"
+        chmod 640 /var/lib/monitoring/ssl/key.pem
+        chown root:nginx /var/lib/monitoring/ssl/key.pem
+      '';
+    };
+
+    services.nginx = {
+      enable = mkDefault true;
+      virtualHosts."${cfg.fqdn}" = {
+        default = true;
+        forceSSL = true;
+        sslCertificate = "/var/lib/monitoring/ssl/cert.pem";
+        sslCertificateKey = "/var/lib/monitoring/ssl/key.pem";
+        locations."/grafana/" = {
+          proxyPass = "http://127.0.0.1:3000/";
+          proxyWebsockets = true;
+        };
+        locations."/loki/" = {
+          proxyPass = "http://127.0.0.1:3100/";
+        };
+        locations."/mimir/" = {
+          proxyPass = "http://127.0.0.1:3200/";
+        };
+        locations."/tempo/" = {
+          proxyPass = "http://127.0.0.1:3300/";
+        };
+      };
+    };
   };
 }
