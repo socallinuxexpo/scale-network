@@ -297,6 +297,7 @@ in {
 
     services.nginx = {
       enable = mkDefault true;
+      recommendedProxySettings = true;
       virtualHosts."${cfg.fqdn}" = {
         default = true;
         forceSSL = true;
