@@ -47,7 +47,7 @@ result=$?
 if [ "$result" -eq 0 ]; then
   echo "Configuration CGI returned error:"
   cat /tmp/config.txt | sed -e 's/^/	error: /'
-  exit 256
+  exit 255
 fi
 
 # Apply the new configuration
