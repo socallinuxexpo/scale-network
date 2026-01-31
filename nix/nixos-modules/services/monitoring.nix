@@ -304,7 +304,7 @@ in {
         sslCertificate = "/var/lib/monitoring/ssl/cert.pem";
         sslCertificateKey = "/var/lib/monitoring/ssl/key.pem";
         locations."/grafana/" = {
-          proxyPass = "http://127.0.0.1:3000/";
+          proxyPass = "http://127.0.0.1:3000";
           proxyWebsockets = true;
         };
         locations."/loki/" = {
