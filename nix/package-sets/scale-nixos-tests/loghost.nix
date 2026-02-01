@@ -7,7 +7,6 @@
       inherit inputs;
     };
     imports = [
-      ../nixos-modules/services/rsyslogd.nix
       inputs.self.nixosModules.default
     ];
     virtualisation.graphics = false;
