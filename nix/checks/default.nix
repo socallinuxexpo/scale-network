@@ -16,15 +16,6 @@ let
 
   # sources
 
-  # Used for derivations where facts is the primary directory.
-  factsSrc = toSource {
-    root = ../..;
-    fileset = unions [
-      ../../facts
-      ../../switch-configuration
-    ];
-  };
-
   # Used for derivations where switch-configuration is the primary directory.
   switchConfigurationSrc = toSource {
     root = ../..;
@@ -53,32 +44,6 @@ mapAttrs (system: pkgs: {
   # impure test and needs to pull container
   #signs = pkgs.testers.runNixOSTest (import ./signs.nix { inherit inputs; });
   wasgeht = pkgs.testers.runNixOSTest (import ./wasgeht.nix { inherit inputs; });
-
-  pytest-facts =
-    let
-      testPython = (
-        pkgs.python3.withPackages (
-          pythonPackages: with pythonPackages; [
-            pylint
-            pytest
-            jinja2
-            pandas
-          ]
-        )
-      );
-    in
-    (pkgs.runCommand "pytest-facts"
-      {
-        src = factsSrc;
-        buildInputs = [ testPython ];
-      }
-      ''
-        cd $src/facts
-        pylint --persistent n *.py
-        pytest -vv -p no:cacheprovider
-        touch $out
-      ''
-    );
 
   perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "perl-switches";
