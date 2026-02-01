@@ -23,6 +23,7 @@ let
 
   inherit (inputs.self)
     legacyPackages
+    legacyPackagesTests
     library
     ;
 
@@ -74,5 +75,9 @@ in
           ]
         ]
       );
+
+  scale-tests = defaultSystems (
+    system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-tests
+  );
 
 }
