@@ -49,6 +49,10 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              dhcpv4Config = {
+                UseGateway = false;
+                UseRoutes = false;
+              };
               linkConfig.RequiredForOnline = "no";
             };
           };
