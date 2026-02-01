@@ -21,6 +21,41 @@ Part of [SCaLE's](https://www.socallinuxexpo.org/) on-site expo network configur
      ---- In our case, the script is the above specified helper script which will then execute the CGI call to retrieve the switch-specific configuration file and install it.
   1. Once the configuration file is installed, the switch is ready for deployment.
 
+-- If the configuration process fails, you can check what happened by reviewing the "/var/log/script_output" file as follows:
+
+```
+root@pd3717350482:RE:0% cat /var/log/script_output 
+PING scale-ztpserver.delong.com (192.159.10.49): 56 data bytes
+64 bytes from 192.159.10.49: icmp_seq=0 ttl=51 time=28.317 ms
+
+--- scale-ztpserver.delong.com ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 28.317/28.317/28.317/0.000 ms
+fetch: http://scale-ztpserver.delong.com/cgi-bin/get_switch_config.cgi?MAC=58:*: size of remote file is not known
+/tmp/config.txt                                        660 kB  660 kBps
+    <HTML>
+Configuration CGI returned error:
+        error:     <HTML>
+        error:         <HEAD>
+        error:             <TITLE>ERROR Page</TITLE>
+        error:         </HEAD>
+        error:         <BODY>
+        error:             <H1>ERROR Encountered</H1>
+        error:      <P>
+        error: No match found for MAC Address: "58:00:bb:4a:2e:c2".
+        error:         </BODY>
+        error:     </HTML>
+                                                                               
+Broadcast Message from root@pd3717350482                                       
+        (no tty) at 23:46 UTC...                                               
+                                                                               
+Auto image Upgrade: Stopped
+```
+
+-- In the above case, the switch MAC address was not listed in the switchtypes file. In general, if an error is detected by the CGI
+script, you will see an HTML formatted error message like the above. If an error is reported in plain text, then it is probably
+an error that occurred on the switch after downloading the configuration file.
+
 ## KEA Templates (for ZTP)
 
 - The following configuration snippets should be added to the KEA DHCP4 configuration in order to support ZTP:
