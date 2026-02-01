@@ -52,6 +52,18 @@ fix (finalLibrary: {
 
   };
 
+  attrsets = {
+
+    removeDirectoriesRecursiveAttrs = flip removeAttrs [
+      "callPackage"
+      "newScope"
+      "overrideScope"
+      "packages"
+      "recurseForDerivations"
+    ];
+
+  };
+
   path = fix (finalPath: {
 
     /**
