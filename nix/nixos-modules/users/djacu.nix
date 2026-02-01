@@ -28,6 +28,7 @@ in
         extraGroups = [ "wheel" ];
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbH7DL3UpeYHm+J3YHJTIsnk/vdo5JgEzwD/Bf1tupp yubikey"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDQA01HeYZvMbIuTu4ePrGCO5GVBpXdrq3IIVUohX3PH root@malachite"
         ];
       };
     };
