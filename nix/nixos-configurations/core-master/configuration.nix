@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   scale-network = {
     base.enable = true;
 

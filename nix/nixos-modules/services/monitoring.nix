@@ -3,22 +3,20 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.scale-network.services.monitoring;
 
-  inherit
-    (lib)
+  inherit (lib)
     types
     ;
 
-  inherit
-    (lib.modules)
+  inherit (lib.modules)
     mkDefault
     mkIf
     ;
 
-  inherit
-    (lib.options)
+  inherit (lib.options)
     mkEnableOption
     mkOption
     ;
@@ -28,8 +26,9 @@
       builtins.readFile "${pkgs.scale-network.scale-inventory}/config/all-network-devices"
     )
   );
-  filteredList = builtins.filter (line: line != [] && line != "") unfilteredList;
-in {
+  filteredList = builtins.filter (line: line != [ ] && line != "") unfilteredList;
+in
+{
   options.scale-network.services.monitoring = {
     enable = mkEnableOption "SCaLE network monitoring server";
     fqdn = mkOption {
@@ -274,8 +273,8 @@ in {
 
     systemd.services.monitoring-selfsigned-cert = {
       description = "Generate self-signed certificate for monitoring";
-      wantedBy = ["multi-user.target"];
-      before = ["nginx.service"];
+      wantedBy = [ "multi-user.target" ];
+      before = [ "nginx.service" ];
       unitConfig = {
         ConditionPathExists = "!/var/lib/monitoring/ssl/cert.pem";
       };

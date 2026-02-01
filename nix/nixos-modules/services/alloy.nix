@@ -3,28 +3,25 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.scale-network.services.alloy;
 
-  inherit
-    (lib)
+  inherit (lib)
     types
     ;
 
-  inherit
-    (lib.modules)
+  inherit (lib.modules)
     mkIf
     ;
 
-  inherit
-    (lib.options)
+  inherit (lib.options)
     mkEnableOption
     mkOption
     mkPackageOption
     ;
 
-  inherit
-    (lib.strings)
+  inherit (lib.strings)
     optionalString
     ;
 
@@ -32,8 +29,12 @@
   alloyConfig = pkgs.writeText "config.alloy" ''
     // Prometheus exporter for host metrics (CPU, memory, disk, network, systemd)
     prometheus.exporter.unix "local" {
-      enable_collectors = [${lib.concatMapStringsSep ", " (c: "\"${c}\"") cfg.nodeExporter.enableCollectors}]
-      disable_collectors = [${lib.concatMapStringsSep ", " (c: "\"${c}\"") cfg.nodeExporter.disableCollectors}]
+      enable_collectors = [${
+        lib.concatMapStringsSep ", " (c: "\"${c}\"") cfg.nodeExporter.enableCollectors
+      }]
+      disable_collectors = [${
+        lib.concatMapStringsSep ", " (c: "\"${c}\"") cfg.nodeExporter.disableCollectors
+      }]
     }
 
     // Scrape the local unix exporter
@@ -48,11 +49,11 @@
       endpoint {
         url = "${cfg.remoteWrite.url}"
         ${optionalString cfg.remoteWrite.basicAuth.enable ''
-      basic_auth {
-        username_file = "${cfg.remoteWrite.basicAuth.usernameFile}"
-        password_file = "${cfg.remoteWrite.basicAuth.passwordFile}"
-      }
-    ''}
+          basic_auth {
+            username_file = "${cfg.remoteWrite.basicAuth.usernameFile}"
+            password_file = "${cfg.remoteWrite.basicAuth.passwordFile}"
+          }
+        ''}
       }
     }
     ${optionalString cfg.loki.enable ''
@@ -78,11 +79,12 @@
       ${cfg.extraConfig}
     ''}
   '';
-in {
+in
+{
   options.scale-network.services.alloy = {
     enable = mkEnableOption "SCaLE network Grafana Alloy agent";
 
-    package = mkPackageOption pkgs "grafana-alloy" {};
+    package = mkPackageOption pkgs "grafana-alloy" { };
 
     httpPort = mkOption {
       type = types.port;
@@ -133,13 +135,13 @@ in {
 
       enableCollectors = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = "List of collectors to enable";
       };
 
       disableCollectors = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = "List of collectors to disable";
       };
     };
@@ -158,7 +160,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    networking.firewall.allowedTCPPorts = [cfg.httpPort];
+    networking.firewall.allowedTCPPorts = [ cfg.httpPort ];
 
     services.alloy = {
       enable = true;
