@@ -22,6 +22,7 @@
     devShells = import ./nix/dev-shells inputs;
     formatter = import ./nix/formatter inputs;
     formatterModule = import ./nix/formatterModule inputs;
+    hydraJobs = import ./nix/hydra-jobs inputs;
     legacyPackages = import ./nix/legacy-packages inputs;
     library = import ./nix/library inputs;
     mixosConfigurations = import ./nix/mixos-configurations inputs;
