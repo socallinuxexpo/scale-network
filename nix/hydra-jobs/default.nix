@@ -2,6 +2,25 @@ inputs:
 
 let
 
+  inherit (inputs.nixpkgs-lib)
+    lib
+    ;
+
+  inherit (lib.attrsets)
+    filterAttrs
+    updateManyAttrsByPath
+    ;
+
+  inherit (lib.lists)
+    init
+    last
+    map
+    ;
+
+  inherit (lib.trivial)
+    pipe
+    ;
+
   inherit (inputs.self)
     legacyPackages
     library
@@ -15,12 +34,45 @@ let
     removeDirectoriesRecursiveAttrs
     ;
 
+  removeByPath =
+    pathList: set:
+    updateManyAttrsByPath [
+      {
+        path = init pathList;
+        update = old: filterAttrs (n: v: n != (last pathList)) old;
+      }
+    ] set;
+
 in
 
 {
 
-  scale-network = defaultSystems (
-    system: removeDirectoriesRecursiveAttrs legacyPackages.${system}.scale-network
-  );
+  scale-network =
+    pipe
+      (defaultSystems (system: removeDirectoriesRecursiveAttrs legacyPackages.${system}.scale-network))
+      (
+        map removeByPath [
+          [
+            "aarch64-darwin"
+            "dhcptest"
+          ]
+          [
+            "aarch64-darwin"
+            "isc-dhcp"
+          ]
+          [
+            "aarch64-linux"
+            "dhcptest"
+          ]
+          [
+            "x86_64-darwin"
+            "dhcptest"
+          ]
+          [
+            "x86_64-darwin"
+            "isc-dhcp"
+          ]
+        ]
+      );
 
 }
