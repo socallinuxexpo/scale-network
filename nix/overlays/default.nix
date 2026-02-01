@@ -71,6 +71,28 @@ let
       )
         ../package-sets/scale-tests
     );
+
+    scale-nixos-tests =
+      let
+        root = ../package-sets/scale-nixos-tests;
+      in
+      {
+
+        core = final.testers.runNixOSTest (import (root + "/core.nix") { inherit inputs lib; });
+
+        loghost = final.testers.runNixOSTest (import (root + "/loghost.nix") { inherit inputs; });
+
+        monitor = final.testers.runNixOSTest (import (root + "/monitor.nix") { inherit inputs; });
+
+        routers = final.testers.runNixOSTest (import (root + "/routers.nix") { inherit inputs; });
+
+        router-border = final.testers.runNixOSTest (
+          import (root + "/router-border.nix") { inherit inputs lib; }
+        );
+
+        wasgeht = final.testers.runNixOSTest (import (root + "/wasgeht.nix") { inherit inputs; });
+
+      };
   };
 
 in
