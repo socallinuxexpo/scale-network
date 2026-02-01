@@ -20,6 +20,7 @@
 
     users.berkhan.enable = true;
     users.conjones.enable = true;
+    users.djacu.enable = true;
     users.dlang.enable = true;
     users.erikreinert.enable = true;
     users.gene.enable = true;

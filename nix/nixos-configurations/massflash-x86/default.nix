@@ -29,6 +29,7 @@
           base.enable = true;
 
           users.berkhan.enable = true;
+          users.djacu.enable = true;
           users.dlang.enable = true;
           users.jsh.enable = true;
           users.kylerisse.enable = true;
