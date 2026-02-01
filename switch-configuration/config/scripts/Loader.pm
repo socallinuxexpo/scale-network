@@ -299,6 +299,55 @@ sub detect_switch
     croak("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
     
     print "Looking for MAC $arp in switchtypes table...";
+    #   Identify switch from MAC address
+    #   Unfortunately, Juniper doesn't make this easy. The VME interface doesn't have a consistent MAC address or a consistent offset from the base MAC address.
+    #   We can, however, usually get away with the following assumptions:
+    #      The base MAC address (or something close enough to it) can be assumed to be the reported MAC address with the last nibble zeroed.
+    #        (xx:xx:xx:xx:xx:yy -> xx:xx:xx:xx:xx:y0)
+    #      If we search all of the values between 0 and f for that last octet, we are unlikely to hit more than one switch.
+    #      If we search all of the values between 0 and f, the first one that hits should be a valid match to our switch.
+    #
+    # Fuzzy MAC search loop:
+    #  Get base MAC address (ish) from MAC
+    my @M = split(/:/, $arp);
+    $M[5] =~ s/^(.).$/\1/;
+    print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $arp\n";
+    my @switches;
+    foreach my $m (0..0xf)
+    {
+      my @MM = @M; # Copy the base MAC
+      $MM[5] .= sprintf ("%1x", $m);
+      my $arp = join(":", @MM);
+      print STDERR "Trying against MAC $arp\n";
+      print STDERR "get_switch_by_mac($arp)\n";
+      @switches = get_switch_by_mac($arp);
+      print STDERR "get_switch_by_mac($arp) returned \"", join(",", @switches), "\"\n";
+      next if(scalar(@switches) < 1); # Try the next entry.
+      send_abort("Error: Multiple matches for MAC address \"$arp\":", @switches) if(scalar(@switches) > 1);
+      last;
+    }
+    if (scalar(@switches) < 1)
+    {
+      my @MM = @M;
+      if ($MM[5] < 0x80)
+      {
+        $MM[5] = "00";
+      {
+      else
+      {
+        $MM[5] = "80";
+      }
+      my $arp = join(":", @MM);
+      print STDERR "Last Ditch attempt against MAC $arp\n";
+      @switches = get_switch_by_mac($arp);
+      print STDERR "get_switch_by_mac($arp) returned \"", join(",", @switches), "\"\n";
+      send_abort("Error: Multiple matches for MAC address \"$arp\":", @switches) if(scalar(@switches) > 1);
+      if (scalar(@switches < 1)
+      {
+        send_abort("No match found for MAC Address: \"$arp\".", @switches);
+      }
+    }
+
     my @switchname = get_switch_by_mac($arp);
     print "Got ", scalar(@switchname), " names back from get_switch_by_mac($arp)\n";
     
