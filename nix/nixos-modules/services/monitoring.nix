@@ -267,6 +267,26 @@ in
       };
     };
 
+    # Enable Alloy for AP metrics scraping
+    scale-network.services.alloy = {
+      enable = true;
+      extraConfig = ''
+        // File-based service discovery for APs
+        discovery.file "aps" {
+          files = ["${pkgs.scale-network.scale-inventory}/config/prom-aps.json"]
+        }
+
+        // Scrape AP node exporter metrics
+        prometheus.scrape "aps" {
+          targets = discovery.file.aps.targets
+          forward_to = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "15s"
+          scrape_timeout = "10s"
+          job_name = "aps"
+        }
+      '';
+    };
+
     systemd.tmpfiles.rules = [
       "d /var/lib/tempo 0755 tempo tempo"
     ];
