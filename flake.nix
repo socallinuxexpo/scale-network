@@ -24,6 +24,7 @@
     formatterModule = import ./nix/formatterModule inputs;
     hydraJobs = import ./nix/hydra-jobs inputs;
     legacyPackages = import ./nix/legacy-packages inputs;
+    legacyPackagesTests = import ./nix/legacy-packages/tests.nix inputs;
     library = import ./nix/library inputs;
     mixosConfigurations = import ./nix/mixos-configurations inputs;
     nixosConfigurations = import ./nix/nixos-configurations inputs;

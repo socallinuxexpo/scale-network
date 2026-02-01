@@ -15,6 +15,10 @@ let
     genAttrs
     ;
 
+  inherit (lib.customisation)
+    makeScope
+    ;
+
   inherit (lib.filesystem)
     packagesFromDirectoryRecursive
     ;
@@ -58,5 +62,16 @@ let
       ./package-overrides;
 
   default = composeManyExtensions ((attrValues packageOverrides) ++ [ toplevelOverlays ]);
+
+  scale-tests = final: prev: {
+    scale-tests = makeScope prev.newScope (
+      (
+        parent: self:
+        genAttrs (getDirectoryNames parent) (name: self.callPackage (parent + "/${name}/package.nix") { })
+      )
+        ../package-sets/scale-tests
+    );
+  };
+
 in
-packageOverrides // { inherit default; }
+packageOverrides // { inherit default scale-tests; }
