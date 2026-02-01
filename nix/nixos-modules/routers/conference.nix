@@ -69,6 +69,20 @@ in
             Name = "bridge503";
           };
         };
+        # conf2.4
+        "20-vlan500" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan500";
+          };
+          vlanConfig.Id = 500;
+        };
+        "25-bridge500" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge500";
+          };
+        };
       };
       # Physical link to border
       networks = {
@@ -83,6 +97,7 @@ in
           };
           # tag vlan on this link
           vlan = [
+            "vlan500"
             "vlan503"
           ];
         };
@@ -98,6 +113,20 @@ in
           address = [
             "10.128.3.1/24"
             "2001:470:f026:503::1/64"
+          ];
+        };
+        "40-vlan500" = {
+          matchConfig.Name = "vlan500";
+          networkConfig = {
+            Bridge = "bridge500";
+          };
+        };
+        "50-bridge500" = {
+          matchConfig.Name = "bridge500";
+          enable = true;
+          address = [
+            "10.128.128.1/21"
+            "2001:470:f026:500::1/64"
           ];
         };
         "10-border" = {
