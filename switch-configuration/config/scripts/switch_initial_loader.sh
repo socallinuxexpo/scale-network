@@ -21,8 +21,10 @@
 #
 #
 # Get current vme MAC address
+cli -c "set chassis display message ZTP-MAC"
 MAC=`cli show interface vme | sed -n -e 's/^.*Current address: \(.*\), Hardware.*/\1/p'`
 BRANCH='master'
+cli -c "set chassis display message ZTP-$MAC"
 
 # Verify I can reach scale-ztpserver.delong.com
 ping -J4 -c 1 -i 1 scale-ztpserver.delong.com
@@ -31,6 +33,7 @@ if [ "$result" -ne 0 ]; then
   echo "Cannot reach provisioning server -- Aborting."
   exit $result
 fi
+cli -c "set chassis display message ZTP-GET-$MAC"
 
 # Download the file to /tmp/config.txt
 if [ -z "$BRANCH" ]; then
@@ -42,15 +45,18 @@ if [ "$result" -ne 0 ]; then
   echo "Failure downloading configuration -- Aborting."
   exit $result
 fi
+cli -c "set chassis display message ZTP-GOT-$MAC"
 grep '<HTML>' /tmp/config.txt
 result=$?
 if [ "$result" -eq 0 ]; then
   echo "Configuration CGI returned error:"
+  cli -c "set chassis display message ZTP-FAIL-$MAC"
   cat /tmp/config.txt | sed -e 's/^/	error: /'
   exit 255
 fi
 
 # Apply the new configuration
+cli -c "set chassis display message ZTP-APPLY-$MAC"
 cat <<EOF | cli
 edit
 load override /tmp/config.txt
@@ -61,6 +67,7 @@ if [ "$result" -ne 0 ]; then
   echo "Failure loading configuration -- Aborting."
   exit $result
 fi
+cli -c "set chassis display message ZTP-VRFY-$MAC"
 echo "Review the following for potential errors:"
 cat /var/log/script_output
 echo "End of script output"
@@ -87,6 +94,7 @@ if [ "$COMMIT" != "commit complete" ]; then
   echo "Commit reported \"$COMMIT\" instead of success, possible config errors."
   exit 4
 fi
+cli -c "set chassis display message ZTP-DONE-$MAC"
 
 # Indicate success to the ZTP process
 exit 0;
