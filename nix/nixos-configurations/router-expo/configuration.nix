@@ -10,7 +10,10 @@
       frrConferenceInterface = "fiber1";
     };
     services.ssh.enable = true;
-
+    services.alloy = {
+      enable = true;
+      remoteWrite.url = "http://10.128.3.20:3200/api/v1/push";
+    };
     users.conjones.enable = true;
     users.djacu.enable = true;
     users.kylerisse.enable = true;
