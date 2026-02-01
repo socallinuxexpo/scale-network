@@ -591,7 +591,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                         {
                             "name": "image-file-name",
                             "space": "Juniper-ZTP",
-                            "data": "/images/jinstall-ex-4200-15.1R7.9-domestic-signed.tar.gz",
+                            "data": "/images/jinstall-ex-4200-15.1R6.7-domestic-signed.tar.gz",
                         },
                     ],
                 },
