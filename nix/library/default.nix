@@ -10,6 +10,7 @@ let
   inherit (lib.attrsets)
     attrNames
     filterAttrs
+    genAttrs
     mapAttrs'
     nameValuePair
     ;
@@ -39,6 +40,17 @@ let
 
 in
 fix (finalLibrary: {
+
+  systems = {
+
+    defaultSystems = genAttrs [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+
+  };
 
   path = fix (finalPath: {
 
