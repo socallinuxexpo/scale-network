@@ -16,15 +16,6 @@ let
 
   # sources
 
-  # Used for derivations where switch-configuration is the primary directory.
-  switchConfigurationSrc = toSource {
-    root = ../..;
-    fileset = unions [
-      ../../facts
-      ../../switch-configuration
-    ];
-  };
-
   # Used for derivations where openwrt is the primary directory.
   openwrtSrc = toSource {
     root = ../..;
@@ -42,28 +33,6 @@ mapAttrs (system: pkgs: {
   loghost = pkgs.testers.runNixOSTest (import ./loghost.nix { inherit inputs; });
   monitor = pkgs.testers.runNixOSTest (import ./monitor.nix { inherit inputs; });
   wasgeht = pkgs.testers.runNixOSTest (import ./wasgeht.nix { inherit inputs; });
-
-  perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
-    pname = "perl-switches";
-    version = "0.1.0";
-
-    src = switchConfigurationSrc;
-
-    nativeBuildInputs = with pkgs; [
-      gnumake
-      perl
-    ];
-
-    buildPhase = ''
-      cd switch-configuration
-      make .lint
-      make .build-switch-configs
-    '';
-
-    installPhase = ''
-      touch $out
-    '';
-  });
 
   openwrt-golden = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "openwrt-golden";
