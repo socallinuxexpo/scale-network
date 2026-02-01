@@ -160,6 +160,13 @@ in
         cfg.frrBorderInterface
         cfg.frrExpoInterface
       ];
+      services.dhcp4-relay."tech" = {
+        enable = true;
+        downstreamInterfaces = [ "bridge500" ];
+        upstreamInterfaces = [ "bridge503" ];
+        dhcpServerIps = [ "10.128.3.20" ];
+      };
     };
+
   };
 }
