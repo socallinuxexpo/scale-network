@@ -1,6 +1,6 @@
 inputs:
 let
-  # inherits
+
   inherit (inputs.nixpkgs-lib)
     lib
     ;
@@ -9,12 +9,6 @@ let
     mapAttrs
     ;
 
-  inherit (lib.fileset)
-    toSource
-    unions
-    ;
-
-  # sources
 in
 mapAttrs (system: pkgs: {
   core = pkgs.testers.runNixOSTest (import ./core.nix { inherit inputs lib; });
