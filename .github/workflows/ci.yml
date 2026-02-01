@@ -13,17 +13,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix build -L .#checks.x86_64-linux.pytest-facts
-      - run: nix build -L .#checks.x86_64-linux.perl-switches
-      - run: nix build -L .#checks.x86_64-linux.openwrt-golden
-      - run: nix build -L .#checks.x86_64-linux.formatting
-  nix_builds:
+      - run: nix flake check -L
+  nix_verify_scale_network:
     name: nix builds
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix build -L .#massflash
-      - run: nix build -L .#scale-inventory
-      - run: nix build -L .#serverspec
+      - run: nix run .#verify-scale-network
