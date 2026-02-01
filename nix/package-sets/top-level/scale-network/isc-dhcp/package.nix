@@ -104,6 +104,6 @@ stdenv.mkDerivation rec {
 
     homepage = "https://www.isc.org/dhcp/";
     license = licenses.mpl20;
-    platforms = platforms.unix;
+    platforms = platforms.linux;
   };
 }
