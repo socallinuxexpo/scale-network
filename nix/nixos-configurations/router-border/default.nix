@@ -20,6 +20,7 @@
         boot.extraModprobeConfig = ''
           options ixgbe allow_unsupported_sfp=1,1
         '';
+        boot.kernelParams = [ "ixgbe" ];
 
         nixpkgs.hostPlatform = "x86_64-linux";
 
