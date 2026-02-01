@@ -12,6 +12,7 @@
     services.ssh.enable = true;
 
     users.conjones.enable = true;
+    users.djacu.enable = true;
     users.kylerisse.enable = true;
     users.owen.enable = true;
     users.rhamel.enable = true;
