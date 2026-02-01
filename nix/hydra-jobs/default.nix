@@ -80,4 +80,8 @@ in
     system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-tests
   );
 
+  scale-nixos-tests = defaultSystems (
+    system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-nixos-tests
+  );
+
 }
