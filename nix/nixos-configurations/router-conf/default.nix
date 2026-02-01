@@ -50,7 +50,7 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
-              dhcpv4Config = {
+              dhcpV4Config = {
                 UseGateway = false;
                 UseRoutes = false;
               };
