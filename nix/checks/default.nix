@@ -80,19 +80,6 @@ mapAttrs (system: pkgs: {
       ''
     );
 
-  duplicates-facts = (
-    pkgs.runCommand "duplicates-facts"
-      {
-        src = factsSrc;
-        buildInputs = [ pkgs.fish ];
-      }
-      ''
-        cd $src/facts
-        fish --no-config test_duplicates.fish
-        touch $out
-      ''
-  );
-
   perl-switches = pkgs.stdenv.mkDerivation (finalAttrs: {
     pname = "perl-switches";
     version = "0.1.0";
