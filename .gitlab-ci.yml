@@ -12,7 +12,7 @@ nix-checks:
   stage: test
   timeout: 10 minutes
   script:
-    - nix flake check -L
+    - nix flake check -L --allow-import-from-derivation
 verify-scale-network:
   tags:
     - nix
