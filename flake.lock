@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "mixos": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770100437,
+        "narHash": "sha256-yBogPMHJe/QKBBmzHfwExxbgmOLq4lt55QQcQQhSmzo=",
+        "owner": "jmbaur",
+        "repo": "mixos",
+        "rev": "da6eb6caeafe006484eea36d54a4b41f2a6b7f51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jmbaur",
+        "repo": "mixos",
+        "type": "github"
+      }
+    },
     "nixpkgs-2511": {
       "locked": {
         "lastModified": 1770136044,
@@ -67,15 +87,40 @@
         "type": "github"
       }
     },
+    "openwrt-one-nix": {
+      "inputs": {
+        "mixos": [
+          "mixos"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769993117,
+        "narHash": "sha256-nBeS79kamwCIJ7vonH6pWrV6IQLRci0fQ4uRt+5rrEU=",
+        "owner": "jmbaur",
+        "repo": "openwrt-one.nix",
+        "rev": "3253207efbaa83e8edad2da083e3cfabc74ba5e3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jmbaur",
+        "repo": "openwrt-one.nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
+        "mixos": "mixos",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
         "nixpkgs-2511": "nixpkgs-2511",
         "nixpkgs-lib": "nixpkgs-lib",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "openwrt-one-nix": "openwrt-one-nix",
         "treefmt-nix": "treefmt-nix"
       }
     },
