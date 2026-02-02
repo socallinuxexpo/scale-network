@@ -20,7 +20,7 @@ switch-configuration/config/output
 switch-configuration/config/switch-maps
 
 # Ignore nix-isms
-result
+result*
 **/*.qcow2
 **/*.nixos-test-history
 
