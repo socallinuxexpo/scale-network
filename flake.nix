@@ -4,7 +4,7 @@
   inputs = {
     disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
     disko.url = "github:nix-community/disko";
-    nixpkgs-2505.url = "github:NixOS/nixpkgs";
+    nixpkgs-2511.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.follows = "nixpkgs-unstable";
