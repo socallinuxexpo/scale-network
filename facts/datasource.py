@@ -225,6 +225,23 @@ def isvalidtype(val):
     return False
 
 
+def is_valid_map_coordinate(val: int | float | str) -> bool:
+    """
+    test for valid map coordinate:
+    must be 0-100 and limited to 2 decimal places.
+    """
+    if isinstance(val, str):
+        try:
+            val = float(val)
+        except ValueError:
+            return False
+
+    if not isinstance(val, (int, float)):
+        return False
+
+    return 0 <= val <= 100 and round(val, 2) == val
+
+
 # =============================================================================
 # Line Preprocessing (matches Perl read_config_file behavior)
 # =============================================================================
