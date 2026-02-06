@@ -38,7 +38,12 @@ let
     options = {
       enable = mkEnableOption "SCaLE dhcp4-relay v4 monitoring service";
 
-      listenInterfaces = mkOption {
+      downstreamInterfaces = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+
+      upstreamInterfaces = mkOption {
         type = types.listOf types.str;
         default = [ ];
       };
@@ -71,7 +76,9 @@ in
 
         serviceConfig = {
           ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -4 -d --no-pid ${
-            concatMapStringsSep " " (x: "-i ${x}") relayCfg.listenInterfaces
+            concatMapStringsSep " " (x: "-id ${x}") relayCfg.downstreamInterfaces
+          } ${
+            concatMapStringsSep " " (x: "-iu ${x}") relayCfg.upstreamInterfaces
           } ${concatStringsSep " " relayCfg.dhcpServerIps}";
           Type = "exec";
           Restart = "always";
