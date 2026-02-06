@@ -18,4 +18,3 @@ openssl passwd -6 newpass
   - https://github.com/socallinuxexpo/scale-network/blob/master/facts/secrets/ar71xx-openwrt-show.yaml
   - https://github.com/socallinuxexpo/scale-network/blob/master/openwrt/files-mt7622/etc/config/wireless.0
 - [ ] Create release: https://github.com/socallinuxexpo/scale-network/blob/master/RELEASE.md
-- [ ] Update scale-signs repo per: https://github.com/socallinuxexpo/scale-signs#yearly-tasks

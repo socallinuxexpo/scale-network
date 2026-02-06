@@ -12,7 +12,6 @@
     services.mrtg.enable = false;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
-    services.signs.enable = false;
     services.ssh.enable = true;
     services.wasgeht.enable = true;
 
