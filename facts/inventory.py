@@ -433,7 +433,6 @@ def serveralias(name):
                 "loghost",
                 "monitoring",
                 "ntpconf",
-                "signs",
             ]
     return payload
 
