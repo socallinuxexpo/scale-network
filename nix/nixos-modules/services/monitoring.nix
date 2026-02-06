@@ -267,7 +267,7 @@ in
       };
     };
 
-    # Enable Alloy for AP metrics scraping
+    # Enable Alloy for AP and switch metrics scraping
     scale-network.services.alloy = {
       enable = true;
       extraConfig = ''
@@ -283,6 +283,26 @@ in
           scrape_interval = "15s"
           scrape_timeout = "10s"
           job_name = "aps"
+        }
+
+        // File-based service discovery for switches (SNMP targets)
+        discovery.file "switches" {
+          files = ["${pkgs.scale-network.scale-inventory}/config/prom-switches.json"]
+        }
+
+        // SNMP exporter for Juniper switches
+        prometheus.exporter.snmp "switches" {
+          config_file = "${./snmp.yml}"
+          targets = discovery.file.switches.targets
+        }
+
+        // Scrape SNMP metrics from switches
+        prometheus.scrape "switches" {
+          targets = prometheus.exporter.snmp.switches.targets
+          forward_to = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "15s"
+          scrape_timeout = "10s"
+          job_name = "switches"
         }
       '';
     };

@@ -906,7 +906,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         f.write(json.dumps(keav6_config, indent=2))
 
 
-def generatepromconfigs(pis, aps, outputdir):
+def generatepromconfigs(switches, pis, aps, outputdir):
     prom_ap_config = [
         {
             "targets": [ap["ipv4"] + ":9100"],
@@ -928,6 +928,17 @@ def generatepromconfigs(pis, aps, outputdir):
 
     with open(f"{outputdir}/prom-pis.json", "w") as f:
         f.write(json.dumps(prom_pi_config, indent=2))
+
+    prom_switch_config = [
+        {
+            "targets": [f"[{switch['ipv6']}]:161"],
+            "labels": {"switch": switch["name"]},
+        }
+        for switch in switches
+    ]
+
+    with open(f"{outputdir}/prom-switches.json", "w") as f:
+        f.write(json.dumps(prom_switch_config, indent=2))
 
 
 def generatezones(switches, routers, pis, aps, servers, outputdir):
@@ -1035,7 +1046,7 @@ def main():
     elif subcomm == "nsd":
         generatezones(switches, routers, pis, aps, servers, outputdir)
     elif subcomm == "prom":
-        generatepromconfigs(pis, aps, outputdir)
+        generatepromconfigs(switches, pis, aps, outputdir)
     elif subcomm == "wasgeht":
         generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
     elif subcomm == "allnet":
@@ -1043,7 +1054,7 @@ def main():
     elif subcomm == "all":
         generatekeaconfig(servers, aps, vlans, outputdir)
         generatezones(switches, routers, pis, aps, servers, outputdir)
-        generatepromconfigs(pis, aps, outputdir)
+        generatepromconfigs(switches, pis, aps, outputdir)
         generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
         generateallnetwork(switches, routers, outputdir)
     elif subcomm == "debug":
