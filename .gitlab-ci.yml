@@ -13,8 +13,14 @@ nix-checks:
   stage: test
   # Takes more than 1 hr to build on gitlab shared runners
   timeout: 1 hour
+  # auto-cancel redundant pipelines feature to cancel a job
+  # before it completes if a new pipeline on the same ref starts for a newer commi
+  interruptible: true
   script:
     - nix flake check
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      interruptible: false
 # This build takes a long time and should be done
 # outside of initial PR CI testing
 openwrt-ar71xx-build:
