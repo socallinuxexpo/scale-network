@@ -8,7 +8,6 @@
     services.bindMaster.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
-    services.signs.enable = true;
     # Turning off monitoring so we dont snmp walk
     services.monitoring.enable = false;
     services.prometheus.enable = true;
