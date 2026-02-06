@@ -21,8 +21,8 @@ def test_apuse_csv():
             ds.isvalidwifi5chan,
             ds.isint,
             ds.isintorempty,
-            ds.isintorempty,
-            ds.isintorempty,
+            ds.is_valid_map_coordinate,
+            ds.is_valid_map_coordinate,
         ],
     }
     result, err = ds.test_csvfile(meta)
