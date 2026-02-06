@@ -93,6 +93,7 @@ let
       directory "/run/named";
       pid-file "/run/named/named.pid";
       allow-recursion { any; };
+      resolver-query-timeout 3;
       dnssec-validation auto;
       max-cache-size 10%;
     };
@@ -114,14 +115,14 @@ let
       file "${named2001Rev}";
       allow-transfer { };
       allow-query { any; };
-      
+
     };
     zone "scale.lan." {
       type master;
       file "${namedScaleLan}";
       allow-transfer { };
       allow-query { any; };
-      
+
     };
 
   '';
