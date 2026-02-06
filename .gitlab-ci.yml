@@ -1,6 +1,10 @@
 #shallow clones to speed up build
 variables:
   GIT_DEPTH: 10
+# auto-cancel redundant pipelines feature to cancel a job
+# before it completes if a new pipeline on the same ref starts for a newer commi
+default:
+  interruptible: true
 # Keep all jobs within these 3 stages
 stages:
   - test
@@ -13,6 +17,9 @@ nix-checks:
   timeout: 10 minutes
   script:
     - nix flake check -L --allow-import-from-derivation
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'master'
+      interruptible: false
 verify-scale-network:
   tags:
     - nix
@@ -20,6 +27,9 @@ verify-scale-network:
   timeout: 20 minutes
   script:
     - nix run .#verify-scale-network
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'master'
+      interruptible: false
 verify-scale-tests:
   tags:
     - nix
@@ -27,13 +37,19 @@ verify-scale-tests:
   timeout: 20 minutes
   script:
     - nix run .#verify-scale-tests
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'master'
+      interruptible: false
 verify-scale-nixos-tests:
   tags:
     - nix
   stage: test
-  timeout: 1 hour
+  timeout: 20 minutes
   script:
     - nix run .#verify-scale-nixos-tests
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'master'
+      interruptible: false
 # This build takes a long time and should be done
 # outside of initial PR CI testing
 openwrt-ar71xx-build:
@@ -53,6 +69,9 @@ openwrt-ar71xx-build:
       - openwrt/build.log
       - openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/
     expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_REF_NAME == 'master'
+      interruptible: false
 openwrt-3800ch-integ:
   variables:
     CI_DEBUG_TRACE: "false"
