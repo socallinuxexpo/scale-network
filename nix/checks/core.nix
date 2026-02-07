@@ -6,7 +6,7 @@ let
     ipv6 = "${prefix}::1";
     ipv4 = "10.0.3.1";
   };
-  coremasterAddr = {
+  coreconfAddr = {
     ipv6 = "${prefix}::20";
     ipv4 = "10.0.3.20";
   };
@@ -73,7 +73,7 @@ in
       };
 
     # node must match hostname for testScript to find it below
-    coremaster =
+    coreconf =
       { lib, ... }:
       {
         _module.args = {
@@ -90,8 +90,8 @@ in
           services.ntp.enable = true;
 
           facts = lib.mkForce {
-            ipv4 = "${coremasterAddr.ipv4}/24";
-            ipv6 = "${coremasterAddr.ipv6}/64";
+            ipv4 = "${coreconfAddr.ipv4}/24";
+            ipv6 = "${coreconfAddr.ipv6}/64";
             eth = "eth1";
           };
         };
@@ -107,8 +107,8 @@ in
               name = "eth1";
               enable = true;
               address = [
-                "${coremasterAddr.ipv6}/64"
-                "${coremasterAddr.ipv4}/24"
+                "${coreconfAddr.ipv6}/64"
+                "${coreconfAddr.ipv4}/24"
               ];
               gateway = [ "${routerAddr.ipv4}" ];
             };
@@ -161,29 +161,29 @@ in
     let
     in
     # TODO: do this for all zones
-    #scaleZone = "${nodes.coremaster.services.bind.zones."scale.lan.".file}";
-    #coremaster.succeed("named-checkzone scale.lan ${scaleZone}")
+    #scaleZone = "${nodes.coreconf.services.bind.zones."scale.lan.".file}";
+    #coreconf.succeed("named-checkzone scale.lan ${scaleZone}")
     ''
       start_all()
       router.wait_for_unit("radvd.service")
-      coremaster.wait_for_unit("ntpd.service")
-      coremaster.wait_for_unit("bind.service")
-      coremaster.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
-      coremaster.succeed("kea-dhcp6 -t /etc/kea/dhcp6-server.conf")
-      coremaster.succeed("named-checkconf ${nodes.coremaster.services.bind.configFile}")
-      client1.wait_until_succeeds("ping -c 5 ${coremasterAddr.ipv4}")
-      client1.wait_until_succeeds("ping -c 5 -6 ${coremasterAddr.ipv6}")
-      client1.wait_until_succeeds("ping -c 5 core-slave")
+      coreconf.wait_for_unit("ntpd.service")
+      coreconf.wait_for_unit("bind.service")
+      coreconf.succeed("kea-dhcp4 -t /etc/kea/dhcp4-server.conf")
+      coreconf.succeed("kea-dhcp6 -t /etc/kea/dhcp6-server.conf")
+      coreconf.succeed("named-checkconf ${nodes.coreconf.services.bind.configFile}")
+      client1.wait_until_succeeds("ping -c 5 ${coreconfAddr.ipv4}")
+      client1.wait_until_succeeds("ping -c 5 -6 ${coreconfAddr.ipv6}")
+      client1.wait_until_succeeds("ping -c 5 core-expo")
       client1.wait_until_succeeds("ip route show | grep default | grep -w ${routerAddr.ipv4}")
       # ensure that we got the correct prefix and suffix on dhcpv6
       client1.wait_until_succeeds("ip addr show dev eth1 | grep inet6 | grep ${chomp}:d8c")
       # Have to wrap drill since retcode isnt necessarily 1 on query failure
       client1.wait_until_succeeds("test ! -z \"$(drill -Q -z scale.lan SOA)\"")
-      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core-slave.scale.lan A)\"")
-      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core-slave.scale.lan AAAA)\"")
-      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coremasterAddr.ipv4})\"")
-      client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true core-slave)\"")
-      client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true core-slave)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core-expo.scale.lan A)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z core-expo.scale.lan AAAA)\"")
+      client1.wait_until_succeeds("test ! -z \"$(drill -Q -z -x ${coreconfAddr.ipv4})\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -4 --search=true core-expo)\"")
+      client1.succeed("test ! -z \"$(systemd-resolve -6 --search=true core-expo)\"")
       client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 6 --print-only 6)\"")
       client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 15 --print-only 15)\"")
       client1.succeed("test ! -z \"$(dhcptest --query --iface eth1 --quiet --request 42 --print-only 42)\"")
@@ -211,7 +211,7 @@ in
     in
     {
       router = interactiveDefaults 2222;
-      coremaster = interactiveDefaults 2223;
+      coreconf = interactiveDefaults 2223;
       client1 = interactiveDefaults 2224;
     };
 }

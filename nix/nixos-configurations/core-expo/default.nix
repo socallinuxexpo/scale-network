@@ -23,8 +23,8 @@
         nixpkgs.hostPlatform = "x86_64-linux";
 
         scale-network.facts = {
-          ipv4 = "10.128.3.20/24";
-          ipv6 = "2001:470:f026:503::20/64";
+          ipv4 = "10.0.3.20/24";
+          ipv6 = "2001:470:f026:103::20/64";
           eth = "virbr0";
         };
 
@@ -33,7 +33,7 @@
         #  https://github.com/NixOS/nixpkgs/blob/82935bfed15d680aa66d9020d4fe5c4e8dc09123/nixos/tests/systemd-networkd-dhcpserver.nix
         networking = {
           extraHosts = ''
-            10.128.3.20 core-master.scale.lan
+            10.0.3.20 core-expo.scale.lan
           '';
         };
 
@@ -59,8 +59,8 @@
               # block service that depend on network-online.target until route is avail
               linkConfig.RequiredForOnline = "routable";
               routes = [
-                { Gateway = "10.128.3.1"; }
-                { Gateway = "2001:470:f026:503::1"; }
+                { Gateway = "10.0.3.1"; }
+                { Gateway = "2001:470:f026:103::1"; }
               ];
             };
             "10-lan-eno2" = {

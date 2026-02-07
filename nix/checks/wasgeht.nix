@@ -2,7 +2,7 @@
 {
   name = "wasgeht";
 
-  nodes.coremaster = {
+  nodes.coreconf = {
     _module.args = {
       inherit inputs;
     };
@@ -28,11 +28,11 @@
     { nodes, ... }:
     ''
       start_all()
-      coremaster.wait_for_unit("wasgeht.service", None, 30)
-      coremaster.succeed("nc -vz localhost 1982")
-      coremaster.succeed("curl -v --fail http://localhost:1982")
-      coremaster.succeed("curl -v --fail http://localhost:1982/imgs")
-      coremaster.succeed("curl -v --fail http://localhost:1982/api")
-      coremaster.succeed("curl -v --fail http://localhost:1982/metrics")
+      coreconf.wait_for_unit("wasgeht.service", None, 30)
+      coreconf.succeed("nc -vz localhost 1982")
+      coreconf.succeed("curl -v --fail http://localhost:1982")
+      coreconf.succeed("curl -v --fail http://localhost:1982/imgs")
+      coreconf.succeed("curl -v --fail http://localhost:1982/api")
+      coreconf.succeed("curl -v --fail http://localhost:1982/metrics")
     '';
 }
