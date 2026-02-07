@@ -20,11 +20,16 @@ You can see all the system configurations available by running the following.
 
 ```shell-session
 > nix flake show --json 2>/dev/null | jq '.nixosConfigurations | keys.[]'
-"bootstrapImage"
-"coreMaster"
-"coreSlave"
-"devServer"
-"massflash"
+"bootstrap-image"
+"core-conf"
+"core-expo"
+"dev-server"
+"massflash-pi"
+"massflash-x86"
+"router-border"
+"router-conf"
+"router-expo"
+"router-scale-br-fmt2"
 ```
 
 ## Build and Run a VM Locally
