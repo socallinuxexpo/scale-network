@@ -27,14 +27,14 @@ let
       ''
         $ORIGIN scale.lan.
         $TTL    86400
-        @ IN SOA core-slave.scale.lan. admin.scale.lan. (
+        @ IN SOA core-expo.scale.lan. admin.scale.lan. (
         ${zoneSerial}           ; serial number
         3600                    ; refresh
         900                     ; retry
         1209600                 ; expire
         1800                    ; ttl
         )
-                        IN    NS      core-slave.scale.lan.
+                        IN    NS      core-expo.scale.lan.
                         IN    NS      core-master.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.scale.lan.records")
@@ -45,14 +45,14 @@ let
       ''
         $ORIGIN 10.in-addr.arpa.
         $TTL    86400
-        10.in-addr.arpa. IN SOA core-slave.scale.lan. admin.scale.lan. (
+        10.in-addr.arpa. IN SOA core-expo.scale.lan. admin.scale.lan. (
         ${zoneSerial}           ; serial number
         3600                    ; refresh
         900                     ; retry
         1209600                 ; expire
         1800                    ; ttl
         )
-                        IN NS      core-slave.scale.lan.
+                        IN NS      core-expo.scale.lan.
                         IN NS      core-master.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv4.arpa.records")
@@ -63,14 +63,14 @@ let
       ''
         $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
         $TTL    86400
-        @ IN SOA core-slave.scale.lan. admin.scale.lan. (
+        @ IN SOA core-expo.scale.lan. admin.scale.lan. (
         ${zoneSerial}           ; serial number
         3600                    ; refresh
         900                     ; retry
         1209600                 ; expire
         1800                    ; ttl
         )
-                        IN NS      core-slave.scale.lan.
+                        IN NS      core-expo.scale.lan.
                         IN NS      core-master.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv6.arpa.records")
