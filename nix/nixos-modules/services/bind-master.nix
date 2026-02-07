@@ -35,7 +35,7 @@ let
         1800                    ; ttl
         )
                         IN    NS      core-expo.scale.lan.
-                        IN    NS      core-master.scale.lan.
+                        IN    NS      core-conf.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.scale.lan.records")
     ]
@@ -53,7 +53,7 @@ let
         1800                    ; ttl
         )
                         IN NS      core-expo.scale.lan.
-                        IN NS      core-master.scale.lan.
+                        IN NS      core-conf.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv4.arpa.records")
     ]
@@ -71,7 +71,7 @@ let
         1800                    ; ttl
         )
                         IN NS      core-expo.scale.lan.
-                        IN NS      core-master.scale.lan.
+                        IN NS      core-conf.scale.lan.
       ''
       (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv6.arpa.records")
     ]

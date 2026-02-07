@@ -427,9 +427,9 @@ def serveralias(name):
                 "core-slave",
                 "ntpexpo",
             ]
-        case "core-master":
+        case "core-conf":
             payload = [
-                "coreconf",
+                "core-master",
                 "loghost",
                 "monitoring",
                 "ntpconf",
