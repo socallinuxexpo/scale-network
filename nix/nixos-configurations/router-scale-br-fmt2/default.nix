@@ -47,6 +47,7 @@
 
         networking.firewall.enable = false;
         networking.nftables.enable = true;
+	##FIXME## Add input, output, forward filters to match previous router config
         networking.nftables.ruleset = ''
            table ip nat {
             chain PREROUTING {
@@ -74,6 +75,45 @@
         systemd.network = {
           enable = true;
           netdevs = {
+            # 100 (SCALE-SLOW)
+            "20-vlan100" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan100";
+              };
+            };
+            "25-bridge100" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge100";
+              };
+            };
+            # 101 (SCALE-FAST)
+            "20-vlan101" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan101";
+              };
+            };
+            "25-bridge101" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge101";
+              };
+            };
+            # 102 (SCALE-Speaker)
+            "20-vlan102" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan102";
+              };
+            };
+            "25-bridge102" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge102";
+              };
+            };
             # expoInfra
             "20-vlan103" = {
               netdevConfig = {
@@ -86,6 +126,58 @@
               netdevConfig = {
                 Kind = "bridge";
                 Name = "bridge103";
+              };
+            };
+            # 104 (SCALE-Speaker)
+            "20-vlan104" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan104";
+              };
+            };
+            "25-bridge104" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge104";
+              };
+            };
+            # 105 (SCALE-Speaker)
+            "20-vlan105" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan105";
+              };
+            };
+            "25-bridge105" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge105";
+              };
+            };
+            # 107 (SCALE-Speaker)
+            "20-vlan107" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan107";
+              };
+            };
+            "25-bridge107" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge107";
+              };
+            };
+            # 110 (SCALE-Speaker)
+            "20-vlan110" = {
+              netdevConfig = {
+                Kind = "vlan";
+                Name = "vlan110";
+              };
+            };
+            "25-bridge110" = {
+              netdevConfig = {
+                Kind = "bridge";
+                Name = "bridge110";
               };
             };
           };
@@ -121,6 +213,52 @@
                 "vlan103"
               ];
             };
+            # ExScaleSlow
+            "40-vlan100" = {
+              matchConfig.Name = "vlan100";
+              networkConfig = {
+                Bridge = "bridge100";
+              };
+            };
+            "50-bridge100" = {
+              matchConfig.Name = "bridge100";
+              enable = true;
+              address = [
+                "10.0.128.1/21"
+                "2001:470:f026:100::1/64"
+              ];
+            };
+            # ExScaleFast
+            "40-vlan101" = {
+              matchConfig.Name = "vlan101";
+              networkConfig = {
+                Bridge = "bridge101";
+              };
+            };
+            "50-bridge101" = {
+              matchConfig.Name = "bridge101";
+              enable = true;
+              address = [
+                "10.0.136.1/21"
+                "2001:470:f026:101::1/64"
+              ];
+            };
+            # ExSpeaker
+            "40-vlan102" = {
+              matchConfig.Name = "vlan102";
+              networkConfig = {
+                Bridge = "bridge102";
+              };
+            };
+            "50-bridge102" = {
+              matchConfig.Name = "bridge102";
+              enable = true;
+              address = [
+                "10.0.2.1/21"
+                "2001:470:f026:102::1/64"
+              ];
+            };
+            # ExInfra
             "40-vlan103" = {
               matchConfig.Name = "vlan103";
               networkConfig = {
@@ -133,6 +271,81 @@
               address = [
                 "10.0.3.1/24"
                 "2001:470:f026:103::1/64"
+              ];
+            };
+            # ExMDF
+            "40-vlan104" = {
+              matchConfig.Name = "vlan104";
+              networkConfig = {
+                Bridge = "bridge104";
+              };
+            };
+            "50-bridge104" = {
+              matchConfig.Name = "bridge104";
+              enable = true;
+              address = [
+                "10.0.4.1/21"
+                "2001:470:f026:104::1/64"
+              ];
+            };
+            # ExAVLAN
+            "40-vlan105" = {
+              matchConfig.Name = "vlan105";
+              networkConfig = {
+                Bridge = "bridge105";
+              };
+            };
+            "50-bridge105" = {
+              matchConfig.Name = "bridge105";
+              enable = true;
+              address = [
+                "10.0.5.1/21"
+                "2001:470:f026:105::1/64"
+              ];
+            };
+            # ExSigns
+            "40-vlan107" = {
+              matchConfig.Name = "vlan107";
+              networkConfig = {
+                Bridge = "bridge107";
+              };
+            };
+            "50-bridge107" = {
+              matchConfig.Name = "bridge107";
+              enable = true;
+              address = [
+                "10.0.7.1/21"
+                "2001:470:f026:107::1/64"
+              ];
+            };
+            # ExRegistration
+            "40-vlan110" = {
+              matchConfig.Name = "vlan110";
+              networkConfig = {
+                Bridge = "bridge110";
+              };
+            };
+            "50-bridge110" = {
+              matchConfig.Name = "bridge110";
+              enable = true;
+              address = [
+                "10.0.10.1/21"
+                "2001:470:f026:110::1/64"
+              ];
+            };
+            # vendor_backbone
+            "40-vlan499" = {
+              matchConfig.Name = "vlan499";
+              networkConfig = {
+                Bridge = "bridge499";
+              };
+            };
+            "50-bridge499" = {
+              matchConfig.Name = "bridge499";
+              enable = true;
+              address = [
+                "10.1.0.1/24"
+                "2001:470:f026:499::1/64"
               ];
             };
           };
