@@ -204,16 +204,10 @@ def isvalidnoiselevel(val):
     return False
 
 
-def isinaplist(val):
-    """test for existence of the value in apuse.csv"""
-    lines = []
-    with open("aps/aps.csv", "r", encoding="utf-8") as fh:
-        lines = fh.readlines()
-    aplist = set()
-    for line in lines[1:]:
-        cols = line.split(",")
-        aplist.add(cols[0])
-    return val in aplist
+def is_in_ap_list(val: str) -> bool:
+    """Test for existence of serial number in aps.csv."""
+    df = pd.read_csv("aps/aps.csv")
+    return val in df["serial"].values
 
 
 def is_valid_switch_type(val: str) -> bool:
