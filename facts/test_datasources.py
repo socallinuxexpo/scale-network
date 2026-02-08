@@ -117,7 +117,7 @@ def test_switchtypes_tsv():
             ds.isint,
             ds.isint,
             ds.isvalidip,
-            ds.isvalidtype,
+            ds.is_valid_switch_type,
             ds.isvalidhierarchy,
             ds.isuntested,
             ds.isvalidmodel,

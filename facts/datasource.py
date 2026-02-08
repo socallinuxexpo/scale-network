@@ -216,13 +216,11 @@ def isinaplist(val):
     return val in aplist
 
 
-def isvalidtype(val):
+def is_valid_switch_type(val: str) -> bool:
     """test for valid switch type, denoted by existence of file in types dir"""
     type_path = "../switch-configuration/config/types/"
     valid = [f for f in listdir(type_path) if isfile(join(type_path, f))]
-    if val in valid:
-        return True
-    return False
+    return val in valid
 
 
 def is_valid_map_coordinate(val: int | float | str) -> bool:
