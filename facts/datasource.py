@@ -106,13 +106,11 @@ def isvalidiporempty(val):
     return isvalidip(val) or val == ""
 
 
-def isvalidmac(macaddr):
-    """test for valid colon seperate mac address"""
-    pattern = r"^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
-    result = re.match(pattern, macaddr)
-    if result:
-        return True
-    return False
+# try to avoid regex but netaddr.mac_unix_expanded would lead to
+# surprises, this is readable enough
+def is_valid_mac_address(val: str) -> bool:
+    """Test for valid colon-separated MAC address."""
+    return bool(re.match(r"^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$", val))
 
 
 def is_valid_wifi_24ghz_chan(val: int | str) -> bool:

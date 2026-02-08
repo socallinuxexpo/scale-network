@@ -37,7 +37,7 @@ def test_aps_csv():
         "count": 2,
         "cols": [
             ds.isuntested,
-            ds.isvalidmac,
+            ds.is_valid_mac_address,
         ],
     }
     result, err = ds.test_csvfile(meta)
@@ -52,7 +52,7 @@ def test_pis_csv():
         "count": 3,
         "cols": [
             ds.is_valid_asset_id,
-            ds.isvalidmac,
+            ds.is_valid_mac_address,
             ds.is_valid_v6_suffix,
         ],
     }
@@ -96,7 +96,7 @@ def test_serverlist_csv():
         "count": 5,
         "cols": [
             ds.isvalidhostname,
-            ds.isvalidmac,
+            ds.is_valid_mac_address,
             ds.isvalidiporempty,
             ds.isvalidiporempty,
             ds.isuntested,
@@ -121,7 +121,7 @@ def test_switchtypes_tsv():
             ds.is_valid_switch_hierarchy,
             ds.isuntested,
             ds.isvalidmodel,
-            ds.isvalidmac,
+            ds.is_valid_mac_address,
         ],
     }
     result, err = ds.test_tsvfile(meta)
