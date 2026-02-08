@@ -88,17 +88,9 @@ def is_valid_ipv6_address(val: str) -> bool:
         return False
 
 
-def is_valid_v6_suffix(suffix):
-    """
-    test for valid v6 suffix
-    """
-    pattern = r"^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*$"
-
-    if not re.match(pattern, suffix):
-        return False
-
-    groups = suffix.split(":")
-    return all(group and len(group) <= 4 for group in groups)
+def is_valid_ipv6_suffix(val: str) -> bool:
+    """Test for valid IPv6 suffix by prepending a dummy prefix."""
+    return is_valid_ipv6_address(f"fe80::{val}")
 
 
 def isvalidsubnet(subnet):
