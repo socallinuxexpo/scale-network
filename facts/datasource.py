@@ -188,15 +188,6 @@ def isvalidhierarchy(val):
     return False
 
 
-def isvalid_p_o_e(val):
-    """test for valid POE flag"""
-    pattern = r"^(POE)|(-)$"
-    result = re.match(pattern, val)
-    if result:
-        return True
-    return False
-
-
 def is_in_ap_list(val: str) -> bool:
     """Test for existence of serial number in aps.csv."""
     df = pd.read_csv("aps/aps.csv")
