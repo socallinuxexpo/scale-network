@@ -14,7 +14,7 @@ def test_apuse_csv():
         "header": True,
         "count": 9,
         "cols": [
-            ds.isvalidhostname,
+            ds.is_valid_hostname,
             ds.is_in_ap_list,
             ds.is_valid_ipv4_address,
             ds.is_valid_wifi_24ghz_chan,
@@ -36,7 +36,7 @@ def test_aps_csv():
         "header": True,
         "count": 2,
         "cols": [
-            ds.isuntested,
+            ds.is_untested,
             ds.is_valid_mac_address,
         ],
     }
@@ -67,7 +67,7 @@ def test_piuse_csv():
         "header": True,
         "count": 3,
         "cols": [
-            ds.isvalidhostname,
+            ds.is_valid_hostname,
             ds.is_valid_asset_id,
             ds.is_valid_pi_vlan,
         ],
@@ -83,7 +83,7 @@ def test_routerlist_csv():
         "header": True,
         "count": 2,
         "cols": [
-            ds.isvalidhostname,
+            ds.is_valid_hostname,
             ds.is_valid_ipv6_address,
         ],
     }
@@ -98,11 +98,11 @@ def test_serverlist_csv():
         "header": True,
         "count": 5,
         "cols": [
-            ds.isvalidhostname,
+            ds.is_valid_hostname,
             ds.is_valid_mac_address,
             ds.is_valid_ipv6_address,
             ds.is_valid_ipv4_address,
-            ds.isuntested,
+            ds.is_untested,
         ],
     }
     result, err = ds.test_csvfile(meta)
@@ -116,13 +116,13 @@ def test_switchtypes_tsv():
         "header": False,
         "count": "9+",
         "cols": [
-            ds.isvalidhostname,
+            ds.is_valid_hostname,
             ds.is_non_negative_int,
             ds.is_non_negative_int,
             ds.is_valid_ipv6_address,
             ds.is_valid_switch_type,
             ds.is_valid_switch_hierarchy,
-            ds.isuntested,
+            ds.is_untested,
             ds.is_valid_switch_model,
             ds.is_valid_mac_address,
         ],
@@ -141,12 +141,12 @@ def test_vlansd_tsv():
             "header": False,
             "count": "6+",
             "cols": [
-                ds.isuntested,
-                ds.isuntested,
-                ds.isuntested,
+                ds.is_untested,
+                ds.is_untested,
+                ds.is_untested,
                 ds.is_valid_ipv6_subnet,
                 ds.is_valid_ipv4_subnet,
-                ds.isuntested,
+                ds.is_untested,
             ],
         }
         result, err = ds.test_tsvfile(meta)

@@ -22,29 +22,19 @@ import pandas as pd
 # =============================================================================
 
 
-def isuntested(value):
-    # pylint: disable=unused-argument
-    """dummy function for untested values"""
+def is_untested(_val) -> bool:
+    """Dummy validator for untested fields, always passes."""
     return True
 
 
-def isvalidhostname(hostname):
-    """
-    test for valid short hostname with letters, numbers, and dashes
-    cannot begin or end with a dash
-    """
-    pattern = r"^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$"
-    result = re.match(pattern, hostname)
-    if result:
-        return True
-    return False
+def is_valid_hostname(val: str) -> bool:
+    """Test for valid short hostname: letters, numbers, dashes. No leading/trailing dash."""
+    return bool(re.match(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$", val))
 
 
-def is_valid_asset_id(asset_id):
-    """
-    test for valid asset ID, which has the same constraints as a hostname
-    """
-    return isvalidhostname(asset_id)
+def is_valid_asset_id(val: str) -> bool:
+    """Test for valid asset ID (same constraints as hostname)."""
+    return is_valid_hostname(val)
 
 
 def is_valid_switch_model(val: str) -> bool:
@@ -369,7 +359,7 @@ def validate_dataframe(
     Args:
         df: DataFrame to validate
         validators: List of validator functions, one per column.
-                   Use None or isuntested to skip validation for a column.
+                   Use None or is_untested to skip validation for a column.
         filename: Filename for error messages
         skip_header: If True, skip the first row
 
@@ -383,7 +373,7 @@ def validate_dataframe(
             # Skip if no validator or beyond available columns
             if validator is None or col_idx >= len(df.columns):
                 continue
-            if validator is isuntested:
+            if validator is is_untested:
                 continue
 
             value = df.iloc[row_idx, col_idx]
