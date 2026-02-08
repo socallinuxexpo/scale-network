@@ -115,17 +115,14 @@ def isvalidmac(macaddr):
     return False
 
 
-def isvalidwifi24chan(chan):
-    """test for valid 2.4Ghz WiFi channel"""
-    return is_non_negative_int(chan) and int(chan) in {1, 6, 11}
+def is_valid_wifi_24ghz_chan(val: int | str) -> bool:
+    """Test for valid 2.4GHz WiFi channel."""
+    return is_non_negative_int(val) and int(val) in {1, 6, 11}
 
 
-def isvalidwifi5chan(chan):
-    """
-    test for valid 5Ghz WiFi channel
-    allows DFS channels
-    """
-    return is_non_negative_int(chan) and int(chan) in {
+def is_valid_wifi_5ghz_chan(val: int | str) -> bool:
+    """Test for valid 5GHz WiFi channel, including DFS channels."""
+    return is_non_negative_int(val) and int(val) in {
         32,
         36,
         40,

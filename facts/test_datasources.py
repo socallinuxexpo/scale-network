@@ -17,8 +17,8 @@ def test_apuse_csv():
             ds.isvalidhostname,
             ds.is_in_ap_list,
             ds.isvalidip,
-            ds.isvalidwifi24chan,
-            ds.isvalidwifi5chan,
+            ds.is_valid_wifi_24ghz_chan,
+            ds.is_valid_wifi_5ghz_chan,
             ds.is_non_negative_int, # config version
             ds.is_non_negative_int, # map id
             ds.is_valid_map_coordinate,
