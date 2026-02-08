@@ -1,56 +1,140 @@
-## Last changed: 2024-03-12 19:58:57 UTC
-version 22.4R3.25;
+## Last commit: 2025-11-08 23:15:04 UTC by root
+version 23.4R2-S3.9;
 system {
     host-name br-mdf-01;
     root-authentication {
-        encrypted-password "$6$SqiCb9s1$HZ2cP5mI13JyVzL6ak9BkYd29D8H59E0qdxtnNMQrKrUUhy3pjxngpOpBJr6oPO5AWnqq7cP1fsiMBheNToir0";
+        encrypted-password "$6$EPY/BO8M$BkTgv4mhSdtIOGcij8V04rGtG5WwoEfD3TpcLUK6qimEp.M1WwI83kMhBGnr61/x/UKigVOKjWWorKHG67dnu0"; ## SECRET-DATA
     }
     login {
+        user admin {
+            uid 2000;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnRaYbdYsnVqTZNRpXxgK1LlEk9QWa/JwaYAbOZFXiC scale19x-04032022"; ## SECRET-DATA
+            }
+        }
+        user admin2 {
+            uid 2006;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5RX5BeD3WfsYvOlvjX1RhBhQiEHtPRut0c+8PlRbU8 scale22x-02022025"; ## SECRET-DATA
+            }
+        }
+        user carlyn {
+            uid 2007;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAS6QGttw0MBR9UKWfiO3dDp7J/MQdAfpkRQ2hO5oATv carlyn.lee@gmail.com"; ## SECRET-DATA
+            }
+        }
+        user conjones {
+            uid 2008;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA0JyiGQCbLtjVoi72VA0pR4GjvKqL2JeiqbsxLndZvn conjones@nixtop"; ## SECRET-DATA
+            }
+        }
+        user danny {
+            uid 2009;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/mloyevy5Qdvl4ngNRZ4xIwL2GGvg10XEF/oKrx6VE conniedarin@Connies-MacBook-Pro.local"; ## SECRET-DATA
+            }
+        }
+        user djacu {
+            uid 2010;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOFxaAICX/8f0YSTVL52MrvmGRV9EArQOmUhIgmdwt8o djacu@malachite"; ## SECRET-DATA
+            }
+        }
         user dlang {
             uid 2002;
             class super-user;
             authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFyz75cUD5pMz7bWdNVc9pLZ9QNS+scMMHHbVvZ060tYlbD2YS1FuIXcyisKYLr29/3O+/ciKOIcw/Q2pzsxgL8mO0ATJzwtvtyhWIcMhJBZNR2jbPwIeKp7Z5NBk8fMDRpWI6i9saLLMr9XtZ2B9RLewIqAAZs0vujJKauaLWVYVFQwkkqKL0WIGP/7fCf1BUHz3vrA1fQDwzhCMayNUBtYwzXtk1Cc0alSLvs1AiqEBWr/n+sduhyUERlFVgvATsH0j1AnLbESathqX4DIatVdHdkAkNaiOAWbguqLDtUiJqcU+eahPFJTeDpLqp6KNP5ZfOr2EQwXZt5mhACjHP davidlang@T470-op-07";
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCtTtJZOyg/9/hbP6IuCyjpA1L0SqMR6wWOU8uJaoa3YlN2sqUkIGne1WYc+4jR+0F2uusDQ1Beb2a9Z0XGxP7nkEIGc5ontC6R/ZUHGf8axz5LXGk9VESR6sMdOjeotSYWwcuj6kPqa0XNXy0nG08dhe8Y+QkjiDQRhjMka4OOmcjMtRAjJyfhROEMpFM18M4Fh3+8j36TatzQQWO6wZ408dQYIc6ShleVfVCvEn5fZ0lm3BRe0UW3wfNs9qupk89VrfUWAEYqvh2uSz9SJBEkGAumreu6ASq7rfPC2DyI60vIT4uaRsqSzfQyT9o1n4v8WmgUKp4kRfZ+T8jWFoUXhj82+2WCCxUlq8D1SRcXDI1OQhHNmH7okorw7TgKJPdM0f96tvgdviH3As6xP/GdnEup8HL0nqKSX8dbRggS9xvmr5SKqGN8QSrclJ+cCsUOWRctgGasf7m+Q6XFNF/8LG6wbqBxxw7TLMLkjVdppHAFoewoBau5cRKGQ++G+BU= dlang@dlang-mobile"; ## SECRET-DATA
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqPnzsYPKyURdnUpZx1nt9RFQjaz9q7m5wh525Crsho dlang@dlang-mobile"; ## SECRET-DATA
             }
         }
-        user kyle {
-            uid 2003;
+        user gene {
+            uid 2011;
             class super-user;
             authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoQAOVBAEF/HANG4eWBZ6eSoL+7RLpVTMdYC4SZTX5cQqAuxhC3QUEW0ol64eka8/6MELe7Q0UlQ7gH1GpGlB01fGYAJyb0rjVauaS4UisRrZVrP/kLH1TcOJz/AZVQQiOp/XJUCM/KIaTvTUUaadgwPeTunsofzkXQm0WKI1Zqmzs2kj3Q2Tt6P253JvsjOxUV1s7S/oRLiBO9YGkdyCnxJwY7ulgsC9MyvopPsxSm8ta+OQfApQZOoo6T38vq2JrG41bzRlHzn5Bc1Elzkzj1bViX4gnbwooCuw60BjGkunv1bpQclM81jyWUNZ+0rUc/1Id3kFWMQhT5BBcaODoNh0JD62B01iFqovSseOCMDTHvDB497DPGQmQnyb+fMfPHYlx2T3zThMUz40je9h3IniOLnvBTfoAdqwqRsJD6JZ4G/CBcrY11kCzJg5W3I8jAhLs7o90lOGVaL23DvcRMAmIT33B2BHXcUyIF45CYcJYxDuTBn1TlkXoWRF4tWE9v9YPMqYDzLQAplgMK4GRUZA4nJ+JGzzvQz6AcgiTe1YRWO3TjVfqapLTTU6vlvsefI6swyjJW5U5VmqncNQqSiaI8YQIkTCkrTKPtKX4zfj0xa/KoSObnxigsgii11lK6YgS5WbZTnSUH8xJDLjifXKA1XIRbR6Q+YhTbvF1mw==";
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBjigwV0KnnaTnFmKjjvnULa5X+hvsy2FAlu+lUUY59f gene@rainbow-planet"; ## SECRET-DATA
+            }
+        }
+        user jimd {
+            uid 2012;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEw39EeFaPgkOHaeV14d/m38YrCrxSycX1dfsPYs6epe jimd@scale"; ## SECRET-DATA
+            }
+        }
+        user jjung {
+            uid 2013;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBt5bQ9fv3vUDOFyYu2k3K2zn0hQmuyHTZF0TRPHt8bX Jeff_J"; ## SECRET-DATA
+            }
+        }
+        user kylerisse {
+            uid 2014;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKX8NM1OQECwhNTQE0qAm422uq9L0i0Y/hvPPc4tHIOX kylerisse"; ## SECRET-DATA
             }
         }
         user owen {
             uid 2004;
             class super-user;
             authentication {
-                ssh-rsa "1024 35 114870125079119497064743730551404181721672323637756765961033342070324890531075442741038312582198068761882520928459647324479322148555144455780494777680624949377326717543633178036569565385043021169776538604325865960174754107961471683552906040905706631227199019520404589625948590225853880518583702852911526808117 owen@owen.delong.sj.ca.us";
-                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com";
+                ssh-ecdsa "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com"; ## SECRET-DATA
+            }
+        }
+        user rhamel {
+            uid 2015;
+            class super-user;
+            authentication {
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVZ7n1EOezedsbphq5atGtHm11xeGpLZBzEbgV7eZdb Ryan Hamel - SCALE"; ## SECRET-DATA
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBWB23n74TJIPF7QtPrzosSYDbGWX6NvB2tn3aQodcAf Ryan Hamel - SCALE - Work MBP"; ## SECRET-DATA
             }
         }
         user rob {
             uid 2005;
             class super-user;
             authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBP0XP83nOtxnsGJ7AG+FuT7dbAEO8BrIHlPbhCGhKjFKcq8g6LWa0htx3iwHJB2VfasIVSqWAC7SwX81XfSTwpvNSNVXvrIcMNdYOpEBHx5W94iVP2ooVVsGIeK/M+Eu9toiHebtVFT45hQ8VO5DwqbG6xPgEp1PmLsPhyBwP0LyC8Q4tA2ttftC6/fJa6fa1G54c7D/euIhZnyM/ovcpYfNYTlarX/yLJoYaOEk5ByYJPYnpQtm2GQX8CdT/U14nDtJ/VjzW8kP/R6+ZsmGpxBrWp2Mn03LjL4CzTSN3cbE2CAKKSjkIcaaoohRZS+JXnxm5+TXF/6QmN0MPU3SSThKWIzOhzfMrLqOu6hsw16x9lF1eJreUZr/WysWOswM4WNoffBv6mKvVsMR8Z8tgERR8+sIxUaoVOfChR9wRoD5lcNnVxrC6rcF+rBxeY4JiPS3zpyamwteyR0n2YspT9Dl0MlZb4cWml2aBnvYk0TmoCC3eGs+2/wssL4s+64TiFC8WkK7U7RW0eYODwPJQbzNGZBjcsVlKD4whs5cNGlgjkZJzTdFt49EwIKmFnSd9Ly/NY3zhByFS/MN3Mj9I2AqMRZ/i4iT72gATE9aLle1xViGxjK7bHmHT2H1yqQhJ5bMcorpDzSZyTkyBTDDnOgh8tM+tBG204kYywQW/RQ==";
+                ssh-ed25519 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEiESod7DOT2cmT2QEYjBIrzYqTDnJLld1em3doDROq sarcasticadmin"; ## SECRET-DATA
+            }
+        }
+        user steveb {
+            uid 2016;
+            class super-user;
+            authentication {
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUeOWNKOfE8kr/i076oG7oSp9CyhI/7I7kw0U2omWN1S7UEZoV/42DYnyakemHIp4Jyg0/Yk88oM+GtQWZYwnbJDETOY7xjA0btfpFoKYHY7TU4crsdTkE2qkekaa9plYRYQi4mZ/hl0/3Qkd+y2lLUzvEFa3RHv3JYMUi5ijv4mscXqSlBwIngX6l1pU7Wz6hexxa8YdKql17UF3oFwcqLLpnvTHmbI415f/EJNy+LSuXD1Au/ajLQbgdrDaOBNFKuyTjFd1VX0LrT+SD0MwwyT0I8vPU5E2WSkhBw6y932gDTFfmtwtDRrsJjz6w6y32cs0pns0miugLWrxwrWvC2tjzhS+QmCxrR00FK6jPHC/sHv21OVh93fyd9USAu6TCbkQ/FzCzqKbfEInoYAR+RaVeePXik5KvBqFqfUt0MMycVXj+XzHjpRAduG9aFA315Bu5k6w45m473BcFgHgq4/FVn88ImfPddXLtyJZN9oHorpI9bhQhMAopGAFyxuI+VjaP11mhylrjm+3+Q87gXPqvN0he9VPDvz/P30Id1S6me5rpsoiYilhFx8xxwiga4kjVQlXmC/NzlldM86dOIMr0PtGh5kGOe3X5ePKkjfstXnvvFfFeqiqUPp40jfX+Ocs68ozFR4PRDUWSqVrPgYVPOMViTH8BHKh1vcAEGQ== steve@loot5a"; ## SECRET-DATA
             }
         }
     }
     services {
+        netconf {
+            ssh;
+        }
         ssh {
             protocol-version v2;
             sftp-server;
         }
-        netconf {
-            ssh;
-        }
+    }
+    internet-options {
+        inactive: tcp-mss 1280;
     }
     name-server {
         8.8.8.8;
         8.8.4.4;
     }
     syslog {
-        archive size 100k files 3;
+        archive {
+            size 100k;
+            files 3;
+        }
         user * {
             any emergency;
         }
@@ -67,6 +151,14 @@ system {
     }
     max-configurations-on-flash 5;
     max-configuration-rollbacks 5;
+    archival {
+        configuration {
+            transfer-on-commit;
+            archive-sites {
+                "scp://configs@irkutsk.delong.com:/home/configs/juniper-configuration-files/scale-br-mdf-01.config" password "$9$IoIElv-dsg4JYgFn6Cu0yreWX-ZGiq.fZUjH.mTQcylKX-goJDHmGDAu1Ile"; ## SECRET-DATA
+            }
+        }
+    }
     license {
         autoupdate {
             url https://ae1.juniper.net/junos/key_retrieval;
@@ -74,6 +166,14 @@ system {
     }
 }
 security {
+    ssh-known-hosts {
+        host irkutsk.delong.com,2620:0:930::200:4 {
+            ecdsa-sha2-nistp256-key AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD7kU4ZvORceL8cW9AKJ7yxM8h/9qnmmq2RPVna/4tIwiNbKxZvPZZRc0/sKxpBAd+ccC2R+l4YcAGlkCUr0b3g=;
+        }
+        host irkutsk.delong.com,192.159.10.4 {
+            ecdsa-sha2-nistp256-key AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD7kU4ZvORceL8cW9AKJ7yxM8h/9qnmmq2RPVna/4tIwiNbKxZvPZZRc0/sKxpBAd+ccC2R+l4YcAGlkCUr0b3g=;
+        }
+    }
     alg {
         dns disable;
         ftp disable;
@@ -93,16 +193,16 @@ security {
     forwarding-options {
         family {
             inet6 {
-                mode packet-based;
+                mode flow-based;
             }
         }
     }
     flow {
         allow-dns-reply;
-        tcp-session {
-            no-syn-check;
-            no-syn-check-in-tunnel;
-            no-sequence-check;
+        inactive: tcp-mss {
+            all-tcp {
+                mss 1280;
+            }
         }
     }
     nat {
@@ -188,12 +288,15 @@ interfaces {
             description "HE IPv6 Tunnel Broker";
             point-to-point;
             tunnel {
-                source 12.157.195.99;
+                source 12.157.195.98;
                 destination 66.220.18.42;
                 path-mtu-discovery;
             }
             family inet6 {
                 mtu 1420;
+                filter {
+                    output to-internet6;
+                }
                 address 2001:470:c:3d::2/64;
             }
         }
@@ -209,14 +312,9 @@ interfaces {
         }
     }
     ge-0/0/2 {
-        description "Internet Link for Akamai Cluster";
+        description "Not in Use";
         unit 0 {
-            family ethernet-switching {
-                interface-mode access;
-                vlan {
-                    members ATT;
-                }
-            }
+            family ethernet-switching;
         }
     }
     ge-0/0/3 {
@@ -240,11 +338,6 @@ interfaces {
                     members ATT;
                 }
             }
-        }
-    }
-    ge-0/0/6 {
-        unit 0 {
-            family ethernet-switching;
         }
     }
     ge-0/0/7 {
@@ -284,16 +377,26 @@ interfaces {
         unit 900 {
             description "IP Link between buildings";
             family inet {
+                inactive: filter {
+                    input b2b-comms-v4;
+                }
                 address 172.20.0.1/24;
             }
             family inet6 {
+                inactive: filter {
+                    input b2b-comms-v6;
+                }
                 address 2001:470:f026:8000::1/64;
             }
         }
         unit 999 {
             description "Linternet Link to PCOC/Encore/AT&T";
             family inet {
-                address 12.157.195.99/28;
+                filter {
+                    input from-internet4;
+                    output to-internet4;
+                }
+                address 12.157.195.98/28;
             }
         }
     }
@@ -308,6 +411,12 @@ snmp {
     }
 }
 policy-options {
+    prefix-list lan-aggregate-v4 {
+        10.0.0.0/8;
+    }
+    prefix-list lan-aggregate-v6 {
+        2001:470:f026::/48;
+    }
     policy-statement DEFAULT-ORIGINATE-v4 {
         from {
             protocol static;
@@ -320,6 +429,105 @@ policy-options {
             route-filter ::/0 exact;
         }
         then accept;
+    }
+}
+firewall {
+    family inet {
+        filter b2b-comms-v4 {
+            term b2b-pkt {
+                from {
+                    source-prefix-list {
+                        lan-aggregate-v4;
+                    }
+                    destination-prefix-list {
+                        lan-aggregate-v4;
+                    }
+                }
+                then {
+                    packet-mode;
+                    accept;
+                }
+            }
+            term allow-all {
+                then accept;
+            }
+        }
+        filter from-internet4 {
+            term v6-tun-pkt {
+                from {
+                    protocol 41;
+                }
+                then packet-mode;
+            }
+            term drop-ssh {
+                from {
+                    protocol tcp;
+                    destination-port ssh;
+                    interface irb.999;
+                }
+                then {
+                    discard;
+                }
+            }
+            term default-allow {
+                then accept;
+            }
+        }
+        filter to-internet4 {
+            term v6-tun-pkt {
+                from {
+                    protocol 41;
+                }
+                then packet-mode;
+            }
+            term fuck-quic {
+                from {
+                    protocol udp;
+                    destination-port [ http https ];
+                }
+                then {
+                    reject;
+                }
+            }
+            term default {
+                then accept;
+            }
+        }
+    }
+    family inet6 {
+        filter b2b-comms-v6 {
+            term b2b-pkt {
+                from {
+                    source-prefix-list {
+                        lan-aggregate-v6;
+                    }
+                    destination-prefix-list {
+                        lan-aggregate-v6;
+                    }
+                }
+                then {
+                    packet-mode;
+                    accept;
+                }
+            }
+            term allow-all {
+                then accept;
+            }
+        }
+        filter to-internet6 {
+            term fuck-quic {
+                from {
+                    next-header udp;
+                    destination-port [ http https ];
+                }
+                then {
+                    reject;
+                }
+            }
+            term default {
+                then accept;
+            }
+        }
     }
 }
 vlans {
