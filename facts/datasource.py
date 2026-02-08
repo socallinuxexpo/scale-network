@@ -47,11 +47,9 @@ def is_valid_asset_id(asset_id):
     return isvalidhostname(asset_id)
 
 
-def isvalidmodel(model):
-    """
-    test for valid switch model (enumerated)
-    """
-    return model in {
+def is_valid_switch_model(val: str) -> bool:
+    """Test for valid switch model (enumerated)."""
+    return val in {
         "ex2200-48p",
         "ex2200-48t",
         "ex2200-24p",

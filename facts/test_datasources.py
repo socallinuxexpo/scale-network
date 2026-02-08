@@ -123,7 +123,7 @@ def test_switchtypes_tsv():
             ds.is_valid_switch_type,
             ds.is_valid_switch_hierarchy,
             ds.isuntested,
-            ds.isvalidmodel,
+            ds.is_valid_switch_model,
             ds.is_valid_mac_address,
         ],
     }
