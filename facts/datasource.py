@@ -158,15 +158,9 @@ def isvalidwifi5chan(chan):
     }
 
 
-def is_valid_pi_vlan(vlan):
-    """test for valid PI vlan"""
-    # we currently constrain PI use to 3 existing vlans
-    # this can be extended later as needed
-    return is_non_negative_int(vlan) and int(vlan) in {
-        107,
-        110,
-        507,
-    }
+def is_valid_pi_vlan(val: int | str) -> bool:
+    """Test for valid PI VLAN: currently constrained to 107, 110, 507."""
+    return is_non_negative_int(val) and int(val) in {107, 110, 507}
 
 
 def is_non_negative_int(val: int | str) -> bool:
