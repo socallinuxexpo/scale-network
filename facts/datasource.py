@@ -179,13 +179,9 @@ def isintorempty(val):
     return val.isdigit() or val == ""
 
 
-def isvalidhierarchy(val):
-    """test for valid switch hierarchy"""
-    pattern = r"^([A-Z]+[.][0-9])$"
-    result = re.match(pattern, val)
-    if result:
-        return True
-    return False
+def is_valid_switch_hierarchy(val: str) -> bool:
+    """Test for valid switch hierarchy (e.g. ABC.1)."""
+    return bool(re.match(r"^[A-Z]+\.[0-9]$", val))
 
 
 def is_in_ap_list(val: str) -> bool:
