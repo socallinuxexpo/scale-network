@@ -19,8 +19,8 @@ def test_apuse_csv():
             ds.isvalidip,
             ds.isvalidwifi24chan,
             ds.isvalidwifi5chan,
-            ds.isint,
-            ds.isintorempty,
+            ds.is_non_negative_int, # config version
+            ds.is_non_negative_int, # map id
             ds.is_valid_map_coordinate,
             ds.is_valid_map_coordinate,
         ],
@@ -114,8 +114,8 @@ def test_switchtypes_tsv():
         "count": "9+",
         "cols": [
             ds.isvalidhostname,
-            ds.isint,
-            ds.isint,
+            ds.is_non_negative_int,
+            ds.is_non_negative_int,
             ds.isvalidip,
             ds.is_valid_switch_type,
             ds.is_valid_switch_hierarchy,

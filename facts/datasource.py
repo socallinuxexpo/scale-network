@@ -117,7 +117,7 @@ def isvalidmac(macaddr):
 
 def isvalidwifi24chan(chan):
     """test for valid 2.4Ghz WiFi channel"""
-    return isint(chan) and int(chan) in {1, 6, 11}
+    return is_non_negative_int(chan) and int(chan) in {1, 6, 11}
 
 
 def isvalidwifi5chan(chan):
@@ -125,7 +125,7 @@ def isvalidwifi5chan(chan):
     test for valid 5Ghz WiFi channel
     allows DFS channels
     """
-    return isint(chan) and int(chan) in {
+    return is_non_negative_int(chan) and int(chan) in {
         32,
         36,
         40,
@@ -162,21 +162,18 @@ def is_valid_pi_vlan(vlan):
     """test for valid PI vlan"""
     # we currently constrain PI use to 3 existing vlans
     # this can be extended later as needed
-    return isint(vlan) and int(vlan) in {
+    return is_non_negative_int(vlan) and int(vlan) in {
         107,
         110,
         507,
     }
 
 
-def isint(val):
-    """test for integer"""
+def is_non_negative_int(val: int | str) -> bool:
+    """Test for non-negative integer (0 or greater)."""
+    if isinstance(val, int):
+        return val >= 0
     return val.isdigit()
-
-
-def isintorempty(val):
-    """test for integer or empty"""
-    return val.isdigit() or val == ""
 
 
 def is_valid_switch_hierarchy(val: str) -> bool:
