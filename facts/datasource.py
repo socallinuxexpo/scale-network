@@ -70,13 +70,22 @@ def isvalidmodel(model):
     }
 
 
-def isvalidip(addr):
-    """test for valid v4 or v6 ip"""
+def is_valid_ipv4_address(val: str) -> bool:
+    """Test for valid IPv4 address."""
     try:
-        ipaddress.ip_address(addr)
+        ipaddress.IPv4Address(val)
+        return True
     except ValueError:
         return False
-    return True
+
+
+def is_valid_ipv6_address(val: str) -> bool:
+    """Test for valid IPv6 address."""
+    try:
+        ipaddress.IPv6Address(val)
+        return True
+    except ValueError:
+        return False
 
 
 def is_valid_v6_suffix(suffix):
@@ -99,11 +108,6 @@ def isvalidsubnet(subnet):
     except ValueError:
         return False
     return True
-
-
-def isvalidiporempty(val):
-    """test for valid ip or empty"""
-    return isvalidip(val) or val == ""
 
 
 # try to avoid regex but netaddr.mac_unix_expanded would lead to

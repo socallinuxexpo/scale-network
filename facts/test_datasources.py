@@ -16,11 +16,11 @@ def test_apuse_csv():
         "cols": [
             ds.isvalidhostname,
             ds.is_in_ap_list,
-            ds.isvalidip,
+            ds.is_valid_ipv4_address,
             ds.is_valid_wifi_24ghz_chan,
             ds.is_valid_wifi_5ghz_chan,
-            ds.is_non_negative_int, # config version
-            ds.is_non_negative_int, # map id
+            ds.is_non_negative_int,  # config version
+            ds.is_non_negative_int,  # map id
             ds.is_valid_map_coordinate,
             ds.is_valid_map_coordinate,
         ],
@@ -82,7 +82,10 @@ def test_routerlist_csv():
         "file": "./routers/routerlist.csv",
         "header": True,
         "count": 2,
-        "cols": [ds.isvalidhostname, ds.isvalidip],
+        "cols": [
+            ds.isvalidhostname,
+            ds.is_valid_ipv6_address,
+        ],
     }
     result, err = ds.test_csvfile(meta)
     assert result, err
@@ -97,8 +100,8 @@ def test_serverlist_csv():
         "cols": [
             ds.isvalidhostname,
             ds.is_valid_mac_address,
-            ds.isvalidiporempty,
-            ds.isvalidiporempty,
+            ds.is_valid_ipv6_address,
+            ds.is_valid_ipv4_address,
             ds.isuntested,
         ],
     }
@@ -116,7 +119,7 @@ def test_switchtypes_tsv():
             ds.isvalidhostname,
             ds.is_non_negative_int,
             ds.is_non_negative_int,
-            ds.isvalidip,
+            ds.is_valid_ipv6_address,
             ds.is_valid_switch_type,
             ds.is_valid_switch_hierarchy,
             ds.isuntested,
