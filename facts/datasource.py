@@ -93,13 +93,22 @@ def is_valid_ipv6_suffix(val: str) -> bool:
     return is_valid_ipv6_address(f"fe80::{val}")
 
 
-def isvalidsubnet(subnet):
-    """test for valid v4 or v6 subnet"""
+def is_valid_ipv4_subnet(val: str) -> bool:
+    """Test for valid IPv4 subnet."""
     try:
-        ipaddress.ip_network(subnet, strict=True)
+        ipaddress.IPv4Network(val, strict=True)
+        return True
     except ValueError:
         return False
-    return True
+
+
+def is_valid_ipv6_subnet(val: str) -> bool:
+    """Test for valid IPv6 subnet."""
+    try:
+        ipaddress.IPv6Network(val, strict=True)
+        return True
+    except ValueError:
+        return False
 
 
 # try to avoid regex but netaddr.mac_unix_expanded would lead to

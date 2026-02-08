@@ -144,8 +144,8 @@ def test_vlansd_tsv():
                 ds.isuntested,
                 ds.isuntested,
                 ds.isuntested,
-                ds.isvalidsubnet,
-                ds.isvalidsubnet,
+                ds.is_valid_ipv6_subnet,
+                ds.is_valid_ipv4_subnet,
                 ds.isuntested,
             ],
         }
