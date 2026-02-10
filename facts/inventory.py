@@ -422,14 +422,14 @@ def serveralias(name):
     """generate aliases for servers. Rendered as CNAMES"""
     payload = []
     match name.lower():
-        case "core-slave":
+        case "core-expo":
             payload = [
-                "coreexpo",
+                "core-slave",
                 "ntpexpo",
             ]
-        case "core-master":
+        case "core-conf":
             payload = [
-                "coreconf",
+                "core-master",
                 "loghost",
                 "monitoring",
                 "ntpconf",
