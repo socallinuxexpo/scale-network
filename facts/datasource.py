@@ -22,36 +22,24 @@ import pandas as pd
 # =============================================================================
 
 
-def isuntested(value):
-    # pylint: disable=unused-argument
-    """dummy function for untested values"""
+def is_untested(_val) -> bool:
+    """Dummy validator for untested fields, always passes."""
     return True
 
 
-def isvalidhostname(hostname):
-    """
-    test for valid short hostname with letters, numbers, and dashes
-    cannot begin or end with a dash
-    """
-    pattern = r"^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])$"
-    result = re.match(pattern, hostname)
-    if result:
-        return True
-    return False
+def is_valid_hostname(val: str) -> bool:
+    """Test for valid short hostname: letters, numbers, dashes. No leading/trailing dash."""
+    return bool(re.match(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$", val))
 
 
-def is_valid_asset_id(asset_id):
-    """
-    test for valid asset ID, which has the same constraints as a hostname
-    """
-    return isvalidhostname(asset_id)
+def is_valid_asset_id(val: str) -> bool:
+    """Test for valid asset ID (same constraints as hostname)."""
+    return is_valid_hostname(val)
 
 
-def isvalidmodel(model):
-    """
-    test for valid switch model (enumerated)
-    """
-    return model in {
+def is_valid_switch_model(val: str) -> bool:
+    """Test for valid switch model (enumerated)."""
+    return val in {
         "ex2200-48p",
         "ex2200-48t",
         "ex2200-24p",
@@ -70,62 +58,62 @@ def isvalidmodel(model):
     }
 
 
-def isvalidip(addr):
-    """test for valid v4 or v6 ip"""
+def is_valid_ipv4_address(val: str) -> bool:
+    """Test for valid IPv4 address."""
     try:
-        ipaddress.ip_address(addr)
-    except ValueError:
-        return False
-    return True
-
-
-def is_valid_v6_suffix(suffix):
-    """
-    test for valid v6 suffix
-    """
-    pattern = r"^[0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4})*$"
-
-    if not re.match(pattern, suffix):
-        return False
-
-    groups = suffix.split(":")
-    return all(group and len(group) <= 4 for group in groups)
-
-
-def isvalidsubnet(subnet):
-    """test for valid v4 or v6 subnet"""
-    try:
-        ipaddress.ip_network(subnet, strict=True)
-    except ValueError:
-        return False
-    return True
-
-
-def isvalidiporempty(val):
-    """test for valid ip or empty"""
-    return isvalidip(val) or val == ""
-
-
-def isvalidmac(macaddr):
-    """test for valid colon seperate mac address"""
-    pattern = r"^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"
-    result = re.match(pattern, macaddr)
-    if result:
+        ipaddress.IPv4Address(val)
         return True
-    return False
+    except ValueError:
+        return False
 
 
-def isvalidwifi24chan(chan):
-    """test for valid 2.4Ghz WiFi channel"""
-    return isint(chan) and int(chan) in {1, 6, 11}
+def is_valid_ipv6_address(val: str) -> bool:
+    """Test for valid IPv6 address."""
+    try:
+        ipaddress.IPv6Address(val)
+        return True
+    except ValueError:
+        return False
 
 
-def isvalidwifi5chan(chan):
-    """
-    test for valid 5Ghz WiFi channel
-    allows DFS channels
-    """
-    return isint(chan) and int(chan) in {
+def is_valid_ipv6_suffix(val: str) -> bool:
+    """Test for valid IPv6 suffix by prepending a dummy prefix."""
+    return is_valid_ipv6_address(f"fe80::{val}")
+
+
+def is_valid_ipv4_subnet(val: str) -> bool:
+    """Test for valid IPv4 subnet."""
+    try:
+        ipaddress.IPv4Network(val, strict=True)
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_ipv6_subnet(val: str) -> bool:
+    """Test for valid IPv6 subnet."""
+    try:
+        ipaddress.IPv6Network(val, strict=True)
+        return True
+    except ValueError:
+        return False
+
+
+# try to avoid regex but netaddr.mac_unix_expanded would lead to
+# surprises, this is readable enough
+def is_valid_mac_address(val: str) -> bool:
+    """Test for valid colon-separated MAC address."""
+    return bool(re.match(r"^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$", val))
+
+
+def is_valid_wifi_24ghz_chan(val: int | str) -> bool:
+    """Test for valid 2.4GHz WiFi channel."""
+    return is_non_negative_int(val) and int(val) in {1, 6, 11}
+
+
+def is_valid_wifi_5ghz_chan(val: int | str) -> bool:
+    """Test for valid 5GHz WiFi channel, including DFS channels."""
+    return is_non_negative_int(val) and int(val) in {
         32,
         36,
         40,
@@ -158,71 +146,34 @@ def isvalidwifi5chan(chan):
     }
 
 
-def is_valid_pi_vlan(vlan):
-    """test for valid PI vlan"""
-    # we currently constrain PI use to 3 existing vlans
-    # this can be extended later as needed
-    return isint(vlan) and int(vlan) in {
-        107,
-        110,
-        507,
-    }
+def is_valid_pi_vlan(val: int | str) -> bool:
+    """Test for valid PI VLAN: currently constrained to 107, 110, 507."""
+    return is_non_negative_int(val) and int(val) in {107, 110, 507}
 
 
-def isint(val):
-    """test for integer"""
+def is_non_negative_int(val: int | str) -> bool:
+    """Test for non-negative integer (0 or greater)."""
+    if isinstance(val, int):
+        return val >= 0
     return val.isdigit()
 
 
-def isintorempty(val):
-    """test for integer or empty"""
-    return val.isdigit() or val == ""
+def is_valid_switch_hierarchy(val: str) -> bool:
+    """Test for valid switch hierarchy (e.g. ABC.1)."""
+    return bool(re.match(r"^[A-Z]+\.[0-9]$", val))
 
 
-def isvalidhierarchy(val):
-    """test for valid switch hierarchy"""
-    pattern = r"^([A-Z]+[.][0-9])$"
-    result = re.match(pattern, val)
-    if result:
-        return True
-    return False
+def is_in_ap_list(val: str) -> bool:
+    """Test for existence of serial number in aps.csv."""
+    df = pd.read_csv("aps/aps.csv")
+    return val in df["serial"].values
 
 
-def isvalid_p_o_e(val):
-    """test for valid POE flag"""
-    pattern = r"^(POE)|(-)$"
-    result = re.match(pattern, val)
-    if result:
-        return True
-    return False
-
-
-def isvalidnoiselevel(val):
-    """test for valid noise level [Quiet, Normal, Loud]"""
-    if val in ["Quiet", "Normal", "Loud", "??"]:
-        return True
-    return False
-
-
-def isinaplist(val):
-    """test for existence of the value in apuse.csv"""
-    lines = []
-    with open("aps/aps.csv", "r", encoding="utf-8") as fh:
-        lines = fh.readlines()
-    aplist = set()
-    for line in lines[1:]:
-        cols = line.split(",")
-        aplist.add(cols[0])
-    return val in aplist
-
-
-def isvalidtype(val):
+def is_valid_switch_type(val: str) -> bool:
     """test for valid switch type, denoted by existence of file in types dir"""
     type_path = "../switch-configuration/config/types/"
     valid = [f for f in listdir(type_path) if isfile(join(type_path, f))]
-    if val in valid:
-        return True
-    return False
+    return val in valid
 
 
 def is_valid_map_coordinate(val: int | float | str) -> bool:
@@ -408,7 +359,7 @@ def validate_dataframe(
     Args:
         df: DataFrame to validate
         validators: List of validator functions, one per column.
-                   Use None or isuntested to skip validation for a column.
+                   Use None or is_untested to skip validation for a column.
         filename: Filename for error messages
         skip_header: If True, skip the first row
 
@@ -422,7 +373,7 @@ def validate_dataframe(
             # Skip if no validator or beyond available columns
             if validator is None or col_idx >= len(df.columns):
                 continue
-            if validator is isuntested:
+            if validator is is_untested:
                 continue
 
             value = df.iloc[row_idx, col_idx]
