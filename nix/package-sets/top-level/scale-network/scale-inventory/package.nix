@@ -1,19 +1,30 @@
 {
   stdenvNoCC,
-  copyPathsToStore,
   lib,
   python3,
   python313Packages,
 }:
 let
-  local_manifests = copyPathsToStore [
-    ../../../../../switch-configuration
-    ../../../../../facts
-  ];
+
+  inherit (lib.fileset)
+    toSource
+    unions
+    ;
+
+  root = ../../../../..;
+
 in
 stdenvNoCC.mkDerivation {
 
   name = "scale-inventory";
+
+  src = toSource {
+    inherit root;
+    fileset = unions [
+      (root + "/switch-configuration")
+      (root + "/facts")
+    ];
+  };
 
   propagatedBuildInputs = [
     python3
@@ -22,13 +33,8 @@ stdenvNoCC.mkDerivation {
   ];
 
   buildCommand = ''
-    mkdir $out
-    cd $out
-    mkdir .repo
-    mkdir config
-    for local_manifest in ${lib.concatMapStringsSep " " toString local_manifests}; do
-      cp -r $local_manifest .repo/$(stripHash $local_manifest; echo $strippedName)
-    done
+    mkdir $out/{.repo,config} -p
+    cp -r $src/* $out/.repo
     cd $out/.repo/facts
     python inventory.py all $out/config
   '';

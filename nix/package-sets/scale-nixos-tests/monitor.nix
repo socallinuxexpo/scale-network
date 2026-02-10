@@ -7,7 +7,6 @@
       inherit inputs;
     };
     imports = [
-      ../nixos-modules/services/monitoring.nix
       inputs.self.nixosModules.default
     ];
     virtualisation.graphics = true;

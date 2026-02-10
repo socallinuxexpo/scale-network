@@ -6,15 +6,34 @@ stages:
   - test
   - build
   - integ
-# Nix build all the things
 nix-checks:
   tags:
     - nix
   stage: test
-  # Takes more than 1 hr to build on gitlab shared runners
+  timeout: 10 minutes
+  script:
+    - nix flake check -L --allow-import-from-derivation
+verify-scale-network:
+  tags:
+    - nix
+  stage: test
+  timeout: 20 minutes
+  script:
+    - nix run .#verify-scale-network
+verify-scale-tests:
+  tags:
+    - nix
+  stage: test
+  timeout: 20 minutes
+  script:
+    - nix run .#verify-scale-tests
+verify-scale-nixos-tests:
+  tags:
+    - nix
+  stage: test
   timeout: 1 hour
   script:
-    - nix flake check
+    - nix run .#verify-scale-nixos-tests
 # This build takes a long time and should be done
 # outside of initial PR CI testing
 openwrt-ar71xx-build:

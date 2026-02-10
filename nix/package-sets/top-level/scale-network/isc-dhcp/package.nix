@@ -104,6 +104,7 @@ stdenv.mkDerivation rec {
 
     homepage = "https://www.isc.org/dhcp/";
     license = licenses.mpl20;
-    platforms = platforms.unix;
+    # Package ‘iproute2-6.15.0’ is only available on linux platforms.
+    platforms = platforms.linux;
   };
 }

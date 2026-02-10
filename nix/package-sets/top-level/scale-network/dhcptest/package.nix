@@ -1,4 +1,5 @@
 {
+  lib,
   stdenv,
   dmd,
   fetchFromGitHub,
@@ -24,4 +25,10 @@ stdenv.mkDerivation {
   installPhase = ''
     install -Dt $out/bin dhcptest
   '';
+
+  meta.platforms = [
+    "x86_64-linux"
+    "i686-linux"
+    "x86_64-darwin"
+  ];
 }
