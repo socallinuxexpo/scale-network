@@ -3,6 +3,9 @@ variables:
   GIT_DEPTH: 10
 # auto-cancel redundant pipelines feature to cancel a job
 # before it completes if a new pipeline on the same ref starts for a newer commi
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
 default:
   interruptible: true
 # Keep all jobs within these 3 stages
