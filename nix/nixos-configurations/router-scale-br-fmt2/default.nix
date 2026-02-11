@@ -79,6 +79,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan100";
+              };
             };
             "25-bridge100" = {
               netdevConfig = {
@@ -91,6 +92,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan101";
+              };
             };
             "25-bridge101" = {
               netdevConfig = {
@@ -103,7 +105,8 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan102";
-            }
+              };
+            };
             "25-bridge102" = {
               netdevConfig = {
                 Kind = "bridge";
@@ -129,6 +132,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan104";
+              };
             };
             "25-bridge104" = {
               netdevConfig = {
@@ -141,6 +145,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan105";
+              };
             };
             "25-bridge105" = {
               netdevConfig = {
@@ -153,6 +158,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan107";
+              };
             };
             "25-bridge107" = {
               netdevConfig = {
@@ -165,6 +171,7 @@
               netdevConfig = {
                 Kind = "vlan";
                 Name = "vlan110";
+              };
             };
             "25-bridge110" = {
               netdevConfig = {
