@@ -162,8 +162,14 @@ in
     };
 
     services = {
-      # TODO: This should be disable but was enabled in core originally
-      resolved.enable = false;
+      resolved = {
+        enable = true;
+        # TODO: This option changes after 25.11
+        # ref: https://github.com/jmbaur/nixos-router/blob/3e19bc54dc20bb8b21e68b2c326a925066fed295/dns.nix#L55
+        extraConfig = ''
+          DNSStubListener=no
+        '';
+      };
       bind = {
         configFile = namedConf;
         enable = true;
