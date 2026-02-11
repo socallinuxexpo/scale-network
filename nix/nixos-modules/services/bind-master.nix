@@ -167,6 +167,7 @@ in
         # TODO: This option changes after 25.11
         # ref: https://github.com/jmbaur/nixos-router/blob/3e19bc54dc20bb8b21e68b2c326a925066fed295/dns.nix#L55
         extraConfig = ''
+          DNS=127.0.0.1
           DNSStubListener=no
         '';
       };
