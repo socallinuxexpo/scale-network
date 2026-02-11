@@ -69,9 +69,6 @@ openwrt-ar71xx-build:
       - openwrt/build.log
       - openwrt/build/source-ar71xx-*/bin/targets/ath79/generic/
     expire_in: 1 week
-  rules:
-    - if: $CI_COMMIT_REF_NAME == 'master'
-      interruptible: false
 openwrt-3800ch-integ:
   variables:
     CI_DEBUG_TRACE: "false"
