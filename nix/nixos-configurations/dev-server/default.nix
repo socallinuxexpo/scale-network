@@ -19,7 +19,10 @@
         scale-network = {
           base.enable = true;
           libvirt.enable = true;
-          services.gitlab.enable = true;
+          services.gitlab = {
+            enable = true;
+            concurrent = 5;
+          };
           services.bindMaster.enable = true;
           services.keaMaster.enable = true;
           services.prometheus.enable = false;
