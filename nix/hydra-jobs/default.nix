@@ -8,6 +8,7 @@ let
 
   inherit (lib.attrsets)
     filterAttrs
+    genAttrs
     updateManyAttrsByPath
     ;
 
@@ -15,6 +16,7 @@ let
     init
     last
     map
+    subtractLists
     ;
 
   inherit (lib.trivial)
@@ -25,6 +27,7 @@ let
     legacyPackages
     legacyPackagesTests
     library
+    nixosConfigurations
     ;
 
   inherit (library.systems)
@@ -33,6 +36,10 @@ let
 
   inherit (library.attrsets)
     removeDirectoriesRecursiveAttrs
+    ;
+
+  inherit (library.path)
+    getDirectoryNames
     ;
 
   removeByPath =
@@ -101,5 +108,29 @@ in
           ]
         ]
       );
+
+  scale-nixos-systems =
+    let
+
+      all-systems = getDirectoryNames ../nixos-configurations;
+
+      # aarch64-linux list is small; curate list here
+      aarch64-linux-systems = [ "massflash-pi" ];
+
+      # currently all remaining systems are x86_64-linux
+      x86_64-linux-systems = subtractLists aarch64-linux-systems all-systems;
+
+    in
+    {
+
+      "aarch64-linux" = genAttrs aarch64-linux-systems (
+        host: nixosConfigurations.${host}.config.system.build.toplevel
+      );
+
+      "x86_64-linux" = genAttrs x86_64-linux-systems (
+        host: nixosConfigurations.${host}.config.system.build.toplevel
+      );
+
+    };
 
 }
