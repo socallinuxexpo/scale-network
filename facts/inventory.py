@@ -891,7 +891,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 
             # TODO: This should probably be broken into its own config and dynamically included since each core
             # server will only be local per building. For now we are defaulting to exInfra
-            if vlan["name"] in ["exInfra"]:
+            if vlan["name"] in ["cfInfra"]:
                 # This is only required for the subnets that will allocate dhcpv6 addresses without a relay
                 # in our case this is only ever the cf* vlan since thats where the VMs nic will be bridge to
                 # TODO: we should figure out a better way of dynamically allocating this config of the
