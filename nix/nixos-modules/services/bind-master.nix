@@ -21,61 +21,94 @@ let
   inherit (lib.options)
     mkEnableOption
     ;
+
   zoneSerial = toString inputs.self.lastModified;
-  namedScaleLan = pkgs.writeText "named.scale.lan" (
-    lib.strings.concatStrings [
+
+  namedScaleLan =
+    pkgs.runCommandNoCCLocal "named.scale.lan"
+      {
+        header = ''
+          $ORIGIN scale.lan.
+          $TTL    86400
+          @ IN SOA core-slave.scale.lan. admin.scale.lan. (
+          ${zoneSerial}           ; serial number
+          3600                    ; refresh
+          900                     ; retry
+          1209600                 ; expire
+          1800                    ; ttl
+          )
+                          IN    NS      core-expo.scale.lan.
+                          IN    NS      core-conf.scale.lan.
+        '';
+        records = "${pkgs.scale-network.scale-inventory}/config/db.scale.lan.records";
+
+        passAsFile = [
+          "header"
+          "records"
+        ];
+
+      }
       ''
-        $ORIGIN scale.lan.
-        $TTL    86400
-        @ IN SOA core-expo.scale.lan. admin.scale.lan. (
-        ${zoneSerial}           ; serial number
-        3600                    ; refresh
-        900                     ; retry
-        1209600                 ; expire
-        1800                    ; ttl
-        )
-                        IN    NS      core-expo.scale.lan.
-                        IN    NS      core-conf.scale.lan.
+        cat $headerPath > $out
+        cat $(cat $recordsPath) >> $out
+      '';
+
+  named10Rev =
+    pkgs.runCommandNoCCLocal "named-10.rev"
+      {
+        header = ''
+          $ORIGIN 10.in-addr.arpa.
+          $TTL    86400
+          10.in-addr.arpa. IN SOA core-expo.scale.lan. admin.scale.lan. (
+          ${zoneSerial}           ; serial number
+          3600                    ; refresh
+          900                     ; retry
+          1209600                 ; expire
+          1800                    ; ttl
+          )
+                          IN NS      core-expo.scale.lan.
+                          IN NS      core-conf.scale.lan.
+        '';
+        records = "${pkgs.scale-network.scale-inventory}/config/db.ipv4.arpa.records";
+
+        passAsFile = [
+          "header"
+          "records"
+        ];
+      }
       ''
-      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.scale.lan.records")
-    ]
-  );
-  named10Rev = pkgs.writeText "named-10.rev" (
-    lib.strings.concatStrings [
+        cat $headerPath > $out
+        cat $(cat $recordsPath) >> $out
+      '';
+
+  named2001Rev =
+    pkgs.runCommandNoCCLocal "named-2001.470.f026-48.rev"
+      {
+        header = ''
+          $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
+          $TTL    86400
+          @ IN SOA core-expo.scale.lan. admin.scale.lan. (
+          ${zoneSerial}           ; serial number
+          3600                    ; refresh
+          900                     ; retry
+          1209600                 ; expire
+          1800                    ; ttl
+          )
+                          IN NS      core-expo.scale.lan.
+                          IN NS      core-conf.scale.lan.
+        '';
+        records = "${pkgs.scale-network.scale-inventory}/config/db.ipv6.arpa.records";
+
+        passAsFile = [
+          "header"
+          "records"
+        ];
+      }
       ''
-        $ORIGIN 10.in-addr.arpa.
-        $TTL    86400
-        10.in-addr.arpa. IN SOA core-expo.scale.lan. admin.scale.lan. (
-        ${zoneSerial}           ; serial number
-        3600                    ; refresh
-        900                     ; retry
-        1209600                 ; expire
-        1800                    ; ttl
-        )
-                        IN NS      core-expo.scale.lan.
-                        IN NS      core-conf.scale.lan.
-      ''
-      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv4.arpa.records")
-    ]
-  );
-  named2001Rev = pkgs.writeText "named-2001.470.f026-48.rev" (
-    lib.strings.concatStrings [
-      ''
-        $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
-        $TTL    86400
-        @ IN SOA core-expo.scale.lan. admin.scale.lan. (
-        ${zoneSerial}           ; serial number
-        3600                    ; refresh
-        900                     ; retry
-        1209600                 ; expire
-        1800                    ; ttl
-        )
-                        IN NS      core-expo.scale.lan.
-                        IN NS      core-conf.scale.lan.
-      ''
-      (builtins.readFile "${pkgs.scale-network.scale-inventory}/config/db.ipv6.arpa.records")
-    ]
-  );
+        cat $headerPath > $out
+        cat $(cat $recordsPath) >> $out
+      '';
+
   namedConf = pkgs.writeText "named.conf" ''
     include "/etc/bind/rndc.key";
     controls {
