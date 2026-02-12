@@ -25,7 +25,7 @@ let
   zoneSerial = toString inputs.self.lastModified;
 
   namedScaleLan =
-    pkgs.runCommandNoCCLocal "named.scale.lan"
+    pkgs.runCommandLocal "named.scale.lan"
       {
         header = ''
           $ORIGIN scale.lan.
@@ -54,7 +54,7 @@ let
       '';
 
   named10Rev =
-    pkgs.runCommandNoCCLocal "named-10.rev"
+    pkgs.runCommandLocal "named-10.rev"
       {
         header = ''
           $ORIGIN 10.in-addr.arpa.
@@ -82,7 +82,7 @@ let
       '';
 
   named2001Rev =
-    pkgs.runCommandNoCCLocal "named-2001.470.f026-48.rev"
+    pkgs.runCommandLocal "named-2001.470.f026-48.rev"
       {
         header = ''
           $ORIGIN 6.2.0.f.0.7.4.0.1.0.0.2.ip6.arpa.
