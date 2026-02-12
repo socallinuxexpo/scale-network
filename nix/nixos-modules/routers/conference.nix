@@ -52,6 +52,32 @@ in
     # must be disabled if using systemd.network
     networking.useDHCP = false;
 
+    services.radvd = {
+      enable = true;
+      config = ''
+        interface bridge500 {
+          AdvSendAdvert on;
+          # M Flag
+          AdvManagedFlag on;
+          # O Flag
+          AdvOtherConfigFlag on;
+          prefix 2001:470:f026:500::/64 {
+            AdvOnLink on;
+          };
+        };
+        interface bridge503 {
+          AdvSendAdvert on;
+          # M Flag
+          AdvManagedFlag on;
+          # O Flag
+          AdvOtherConfigFlag on;
+          prefix 2001:470:f026:503::/64 {
+            AdvOnLink on;
+          };
+        };
+      '';
+    };
+
     systemd.network = {
       enable = true;
       netdevs = {
