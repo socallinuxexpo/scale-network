@@ -34,6 +34,13 @@ verify-scale-nixos-tests:
   timeout: 1 hour
   script:
     - nix run .#verify-scale-nixos-tests
+verify-scale-systems:
+  tags:
+    - nix
+  stage: test
+  timeout: 20 minutes
+  script:
+    - nix run .#verify-scale-systems
 # This build takes a long time and should be done
 # outside of initial PR CI testing
 openwrt-ar71xx-build:
