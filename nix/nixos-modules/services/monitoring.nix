@@ -21,12 +21,6 @@ let
     mkOption
     ;
 
-  unfilteredList = (
-    builtins.split "\n" (
-      builtins.readFile "${pkgs.scale-network.scale-inventory}/config/all-network-devices"
-    )
-  );
-  filteredList = builtins.filter (line: line != [ ] && line != "") unfilteredList;
 in
 {
   options.scale-network.services.monitoring = {

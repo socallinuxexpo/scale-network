@@ -52,21 +52,33 @@ To build and run the `loghost` system configuration on an x86_64 Linux host, run
 To see all the checks available, run:
 
 ```shell-session
-> nix flake show --json 2>/dev/null | jq '.checks | to_entries[0].value | keys.[]'
-"core"
-"duplicates-facts"
-"formatting"
-"loghost"
-"monitor"
-"openwrt-golden"
-"perl-switches"
-"pytest-facts"
-"wasgeht"
+> ls nix/package-sets/top-level | grep verify
+verify-scale-network
+verify-scale-nixos-tests
+verify-scale-systems
+verify-scale-tests
 ```
 
-Some of these are NixOS VM Tests.
-To perform a test, run:
+`verify-scale-network` builds all the packages we add to the `scale-network` scope.
+`verify-scale-nixos-tests` builds and runs all the NixOS VM tests.
+`verify-scale-systems` builds all the NixOS and MixOS configurations.
+`verify-scale-tests` builds a set of checks that verify the correctness of the repository.
+
+You can run any of these checks by running `nix run .#<verify-thing>`.
+This will evaluate and build all the derivations therein in parallel.
+If you run the command again without changing anything, it will evaluation all the derivations but will not rebuild as the derivations already exist in your Nix store.
+To rebuild all the derivations for a given verification derivation run `nix run .#<verify-thing> -- --rebuild`.
+
+_Note_: These will only build/run packages compatible with your host system.
+
+NixOS VM tests can be accessed directly through the `legacyPackagesTests` flake output like so:
 
 ```shell-session
-> nix build .#checks.<hostPlatform>.<checkName> --print-build-logs
+nix build .#legacyPackagesTests.<system>.scale-nixos-tests.<test>
+```
+
+Checks that verify the correctness of the repository can be accessed directly through the `legacyPackagesTests` flake output like so:
+
+```shell-session
+nix build .#legacyPackagesTests.<system>.scale-tests.<test>
 ```

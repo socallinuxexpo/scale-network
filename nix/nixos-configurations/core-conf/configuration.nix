@@ -9,7 +9,6 @@
     services.bindMaster.enable = true;
     services.keaMaster.enable = true;
     services.monitoring.enable = true;
-    services.mrtg.enable = false;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
     services.ssh.enable = true;
