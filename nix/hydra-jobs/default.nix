@@ -27,6 +27,7 @@ let
     legacyPackages
     legacyPackagesTests
     library
+    mixosConfigurations
     nixosConfigurations
     ;
 
@@ -120,6 +121,9 @@ in
       # currently all remaining systems are x86_64-linux
       x86_64-linux-systems = subtractLists aarch64-linux-systems all-systems;
 
+      # currently all mixos systems are x86_64-linux
+      mixos-systems = getDirectoryNames ../mixos-configurations;
+
     in
     {
 
@@ -127,9 +131,9 @@ in
         host: nixosConfigurations.${host}.config.system.build.toplevel
       );
 
-      "x86_64-linux" = genAttrs x86_64-linux-systems (
-        host: nixosConfigurations.${host}.config.system.build.toplevel
-      );
+      "x86_64-linux" =
+        genAttrs x86_64-linux-systems (host: nixosConfigurations.${host}.config.system.build.toplevel)
+        // genAttrs mixos-systems (host: mixosConfigurations.${host}.config.system.build.root);
 
     };
 
