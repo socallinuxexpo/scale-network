@@ -26,6 +26,7 @@
           ipv4 = "10.0.3.20/24";
           ipv6 = "2001:470:f026:103::20/64";
           eth = "virbr0";
+          building = "expo";
         };
 
         # disable legacy networking bits as recommended by:
