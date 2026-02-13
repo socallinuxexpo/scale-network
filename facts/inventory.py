@@ -5,6 +5,7 @@ Dynamic inventory script used to slurp in various
 SCaLE specific text files to produce a sane inventory to ansible
 """
 
+import copy
 import ipaddress
 import json
 import math
@@ -862,7 +863,9 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
     with open(f"{outputdir}/dhcp4-server.conf", "w") as f:
         f.write(json.dumps(kea_config, indent=2))
 
-    subnets6_dict = []
+    # Store 2 subnet6, 1 per building, see below
+    expo_subnets6 = []
+    conf_subnets6 = []
     for vlan in vlans:
         # Make sure to skip vlans that have no ranges
         # TODO: filtering out vlan 112 for the soda machine
@@ -891,19 +894,51 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 
             # TODO: This should probably be broken into its own config and dynamically included since each core
             # server will only be local per building. For now we are defaulting to exInfra
-            if vlan["name"] in ["exInfra"]:
-                # This is only required for the subnets that will allocate dhcpv6 addresses without a relay
-                # in our case this is only ever the cf* vlan since thats where the VMs nic will be bridge to
-                # TODO: we should figure out a better way of dynamically allocating this config of the
-                # interface so is not hardcoded
-                # https://kea.readthedocs.io/en/kea-2.2.0/arm/dhcp6-srv.html#ipv6-subnet-selection
-                subnet["interface"] = "@@INTERFACE@@"
-            subnets6_dict.append(subnet)
 
-    keav6_config["Dhcp6"]["subnet6"] = subnets6_dict
+            # This is only required for the subnets that will allocate dhcpv6 addresses without a relay
+            # in our case this is only ever the cf* vlan since thats where the VMs nic will be bridge to
+            # TODO: we should figure out a better way of dynamically allocating this config of the
+            # interface so is not hardcoded
+            # https://kea.readthedocs.io/en/kea-2.2.0/arm/dhcp6-srv.html#ipv6-subnet-selection
 
-    with open(f"{outputdir}/dhcp6-server.conf", "w") as f:
-        f.write(json.dumps(keav6_config, indent=2))
+            # This is a hack to work around the above and generate building specific configs
+            # TODO: fix this at the jinja level when refactoring this entire file where it'll be cleaner
+            # Populate building specific subnets list and break out of loop (continue), otherwise
+            # progress and append to the global dict as normal.
+            # Merge them later when we write the 2 files.
+            if vlan["name"] == "cfInfra":
+                # add the conf subnet to the expo list before the interface key
+                expo_subnets6.append(subnet)
+                conf_interface_subnet6 = copy.deepcopy(subnet)
+                conf_interface_subnet6["interface"] = "@@INTERFACE@@"
+                conf_subnets6.append(conf_interface_subnet6)
+                continue
+            if vlan["name"] == "exInfra":
+                # add the expo subnet to the conf list before the interface key
+                conf_subnets6.append(subnet)
+                expo_interface_subnet6 = copy.deepcopy(subnet)
+                expo_interface_subnet6["interface"] = "@@INTERFACE@@"
+                expo_subnets6.append(expo_interface_subnet6)
+                continue
+
+            conf_subnets6.append(subnet)
+            expo_subnets6.append(subnet)
+
+    # make copies of each config
+    expo_keav6_config = copy.deepcopy(keav6_config)
+    conf_keav6_config = copy.deepcopy(keav6_config)
+
+    # Building specific files - expo
+    expo_keav6_config["Dhcp6"]["subnet6"] = expo_subnets6
+
+    with open(f"{outputdir}/dhcp6-server-expo.conf", "w") as f:
+        f.write(json.dumps(expo_keav6_config, indent=2))
+
+    # Building specific files - conf
+    conf_keav6_config["Dhcp6"]["subnet6"] = conf_subnets6
+
+    with open(f"{outputdir}/dhcp6-server-conf.conf", "w") as f:
+        f.write(json.dumps(conf_keav6_config, indent=2))
 
 
 def generatepromconfigs(switches, pis, aps, outputdir):

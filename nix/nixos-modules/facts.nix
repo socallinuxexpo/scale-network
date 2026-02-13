@@ -26,5 +26,10 @@ in
       type = types.str;
     };
 
+    building = mkOption {
+      type = types.str;
+      default = "expo";
+    };
+
   };
 }
