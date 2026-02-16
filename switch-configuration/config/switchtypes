@@ -74,4 +74,4 @@ BallroomA	56	103	2001:470:f026:103::200:56	exMicro		C.9		Silent		ex2300-c-12p	4c
 BallroomG	57	103	2001:470:f026:103::200:57	exMicro		F.9		Silent		ex2300-c-12p	38:4f:49:15:f2:05
 Rm103		58	503	2001:470:f026:503::200:58	cfMicro		I.9		Silent		ex2300-c-12p	84:03:28:0b:f0:7a
 ConfIDF		59	503	2001:470:f026:503::200:59	cfIDF		C.1		Loud		ex4300-48p	58:00:bb:4a:2e:c0
-Rm104		60	503	2001:470:f026:503::200:60	cfMicro		I.9		Silent		ex2300-c-12p	02:00:00:00:00:00
+Rm104		60	503	2001:470:f026:503::200:60	cfMicro		I.9		Silent		ex2300-c-12p	b4:8a:5f:07:17:0c
