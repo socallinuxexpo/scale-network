@@ -16,10 +16,10 @@
 // .9 = Stub (No subordinate switches) regardless of next level up switch
 //Name		Num	MgtVL	IPv6				Type		Hierarchy	Noiselevel	Model		Mgmt MAC
 NOC		1	503	2001:470:f026:503::200:1	cfNOC		I.9		Quiet		ex4200-48p	2c:6b:f5:39:e9:00
-ConfIDF		2	503	2001:470:f026:503::200:2	cfIDF		I.1		Loud		ex4200-48p	00:26:88:60:79:00
+SpareK		2	503	2001:470:f026:503::200:2	cfIDF		I.1		Loud		ex4200-48p	00:26:88:60:79:00
 NW-IDF		3	103	2001:470:f026:103::200:3	exIDF		F.1		Loud		ex4200-48p	00:26:88:6e:ba:80
 NE-IDF		4	103	2001:470:f026:103::200:4	exIDF		C.1		Normal		ex4200-48p	00:26:88:7d:fb:00
-ExpoIDF		5	103	2001:470:f026:103::200:5	exIDF		X.1		-		ex4200-48p	00:26:88:6e:aa:80
+SpareL		5	103	2001:470:f026:103::200:5	exIDF		X.1		-		ex4200-48p	00:26:88:6e:aa:80
 Expo-Catwalk	6	103	2001:470:f026:103::200:6	Catwalk		W.1		Loud		ex4200-48p	00:26:88:7d:d3:00
 MassFlash	7	503	2001:470:f026:503::200:7	MassFlash	Z.9		Normal		ex4200-48p	00:26:88:6e:b6:80
 AVSwitch	8	503	2001:470:f026:503::200:8	cfAV		I.9		Quiet		ex4200-48p	00:26:88:7d:dd:80
