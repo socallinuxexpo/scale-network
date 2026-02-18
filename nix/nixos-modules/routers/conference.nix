@@ -52,6 +52,14 @@ in
     # must be disabled if using systemd.network
     networking.useDHCP = false;
 
+    scale-network.router.radvd = {
+      enable = true;
+      vlans = [
+        "500"
+        "503"
+      ];
+    };
+
     systemd.network = {
       enable = true;
       netdevs = {
