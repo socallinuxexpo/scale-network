@@ -25,6 +25,6 @@ in
     };
 
     users.mutableUsers = false;
-    users.extraUsers.root.hashedPassword = "$6$fdmMoUSxXGhjJYKK$iy8CUzXICDhssjiQN53/juZfxqGg/KbKf60M.tho2HUcFWnvmnhAEx55SwQWzTiI2rfnLA9Xlbz.vweS/8LD9.";
+    users.extraUsers.root.hashedPassword = "$6$overengineering$WLosSZa9..U4dwugMfLl0g0LrPkG67UlF5S3zng7pLEiyKTDGFJGzLp.VUmYpidNS.kwBtG3AY/f.DRk7Ri9b0";
   };
 }
