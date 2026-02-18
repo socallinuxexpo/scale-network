@@ -56,6 +56,8 @@ in
       enable = true;
       vlans = [
         "500"
+        "501"
+        "502"
         "503"
       ];
     };
@@ -63,20 +65,6 @@ in
     systemd.network = {
       enable = true;
       netdevs = {
-        # confInfra
-        "20-vlan503" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan503";
-          };
-          vlanConfig.Id = 503;
-        };
-        "25-bridge503" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge503";
-          };
-        };
         # conf2.4
         "20-vlan500" = {
           netdevConfig = {
@@ -91,10 +79,46 @@ in
             Name = "bridge500";
           };
         };
-        "25-bridge900" = {
+        # 501 (SCALE-FAST)
+        "20-vlan501" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan501";
+          };
+          vlanConfig.Id = 501;
+        };
+        "25-bridge501" = {
           netdevConfig = {
             Kind = "bridge";
-            Name = "bridge900";
+            Name = "bridge501";
+          };
+        };
+        # 502 (SCALE-Speaker)
+        "20-vlan502" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan502";
+          };
+          vlanConfig.Id = 502;
+        };
+        "25-bridge502" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge502";
+          };
+        };
+        # confInfra
+        "20-vlan503" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan503";
+          };
+          vlanConfig.Id = 503;
+        };
+        "25-bridge503" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge503";
           };
         };
         "25-vlan900" = {
@@ -104,10 +128,10 @@ in
           };
           vlanConfig.Id = 900;
         };
-        "20-bridge902" = {
+        "25-bridge900" = {
           netdevConfig = {
             Kind = "bridge";
-            Name = "bridge902";
+            Name = "bridge900";
           };
         };
         "20-vlan902" = {
@@ -116,6 +140,12 @@ in
             Name = "vlan902";
           };
           vlanConfig.Id = 902;
+        };
+        "20-bridge902" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge902";
+          };
         };
       };
       # Physical link to border
@@ -132,21 +162,9 @@ in
           # tag vlan on this link
           vlan = [
             "vlan500"
+            "vlan501"
+            "vlan502"
             "vlan503"
-          ];
-        };
-        "40-vlan503" = {
-          matchConfig.Name = "vlan503";
-          networkConfig = {
-            Bridge = "bridge503";
-          };
-        };
-        "50-bridge503" = {
-          matchConfig.Name = "bridge503";
-          enable = true;
-          address = [
-            "10.128.3.1/24"
-            "2001:470:f026:503::1/64"
           ];
         };
         "40-vlan500" = {
@@ -161,6 +179,50 @@ in
           address = [
             "10.128.128.1/21"
             "2001:470:f026:500::1/64"
+          ];
+        };
+        # ExScaleFast
+        "40-vlan501" = {
+          matchConfig.Name = "vlan501";
+          networkConfig = {
+            Bridge = "bridge501";
+          };
+        };
+        "50-bridge501" = {
+          matchConfig.Name = "bridge501";
+          enable = true;
+          address = [
+            "10.128.136.1/21"
+            "2001:470:f026:501::1/64"
+          ];
+        };
+        # ExSpeaker
+        "40-vlan502" = {
+          matchConfig.Name = "vlan502";
+          networkConfig = {
+            Bridge = "bridge502";
+          };
+        };
+        "50-bridge502" = {
+          matchConfig.Name = "bridge502";
+          enable = true;
+          address = [
+            "10.128.2.1/21"
+            "2001:470:f026:502::1/64"
+          ];
+        };
+        "40-vlan503" = {
+          matchConfig.Name = "vlan503";
+          networkConfig = {
+            Bridge = "bridge503";
+          };
+        };
+        "50-bridge503" = {
+          matchConfig.Name = "bridge503";
+          enable = true;
+          address = [
+            "10.128.3.1/24"
+            "2001:470:f026:503::1/64"
           ];
         };
         "30-border" = {
@@ -225,7 +287,11 @@ in
       ];
       services.dhcp4-relay."tech" = {
         enable = true;
-        downstreamInterfaces = [ "bridge500" ];
+        downstreamInterfaces = [
+          "bridge500"
+          "bridge501"
+          "bridge502"
+        ];
         upstreamInterfaces = [ "bridge503" ];
         dhcpServerIps = [ "10.128.3.20" ];
       };
