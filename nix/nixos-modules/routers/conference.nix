@@ -210,7 +210,7 @@ in
       };
       # Physical link to border
       networks = {
-        "30-trunk" = {
+        "30-copper0" = {
           # TODO probably make this a map of interfaces for trunking
           matchConfig.Name = "copper0";
           linkConfig = {
@@ -345,7 +345,7 @@ in
             "2001:470:f026:507::1/64"
           ];
         };
-        "30-border" = {
+        "30-${cfg.frrBorderInterface}" = {
           matchConfig.Name = cfg.frrBorderInterface;
           networkConfig = {
             LinkLocalAddressing = "no";
@@ -354,7 +354,7 @@ in
             "vlan900"
           ];
         };
-        "30-expo" = {
+        "30-${cfg.frrExpoInterface}" = {
           matchConfig.Name = cfg.frrExpoInterface;
           networkConfig = {
             LinkLocalAddressing = "no";
