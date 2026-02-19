@@ -384,6 +384,21 @@ in
         "bridge902" # border
         "bridge903" # conf
       ];
+
+      services.dhcp4-relay."tech" = {
+        enable = true;
+        # excluding bridge107 (exSigns) since
+        # its a ipv6 only network
+        downstreamInterfaces = [
+          "bridge100"
+          "bridge101"
+          "bridge102"
+          "bridge104"
+          "bridge110"
+        ];
+        upstreamInterfaces = [ "bridge103" ];
+        dhcpServerIps = [ "10.0.3.20" ];
+      };
     };
   };
 }
