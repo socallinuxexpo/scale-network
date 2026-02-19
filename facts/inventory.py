@@ -855,6 +855,13 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 subnet["valid-lifetime"] = 300
                 subnet["min-valid-lifetime"] = 300
                 subnet["max-valid-lifetime"] = 300
+                # ZTP should only be possible from the management vlans
+                subnet["require-client-classes"] = [
+                    "Juniper-EX-Series",
+                    "ex2300-c-series",
+                    "ex4200-series",
+                    "ex4300-series",
+                ]
             subnets_dict.append(subnet)
 
     kea_config["Dhcp4"]["subnet4"] = subnets_dict
