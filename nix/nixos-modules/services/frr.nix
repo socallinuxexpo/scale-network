@@ -48,7 +48,7 @@ in
       default = ''
         router ospf
          passive-interface default
-         network 10.0.0.0/8 area 0
+         network 172.20.0.0/16 area 0
          redistribute connected
          redistribute static
         exit
