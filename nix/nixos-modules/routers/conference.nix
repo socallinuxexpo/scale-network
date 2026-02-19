@@ -181,30 +181,30 @@ in
             Name = "bridge507";
           };
         };
-        "25-vlan900" = {
+        "25-vlan901" = {
           netdevConfig = {
             Kind = "vlan";
-            Name = "vlan900";
+            Name = "vlan901";
           };
-          vlanConfig.Id = 900;
+          vlanConfig.Id = 901;
         };
-        "25-bridge900" = {
+        "25-bridge901" = {
           netdevConfig = {
             Kind = "bridge";
-            Name = "bridge900";
+            Name = "bridge901";
           };
         };
-        "20-vlan902" = {
+        "20-vlan903" = {
           netdevConfig = {
             Kind = "vlan";
-            Name = "vlan902";
+            Name = "vlan903";
           };
-          vlanConfig.Id = 902;
+          vlanConfig.Id = 903;
         };
-        "20-bridge902" = {
+        "20-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
-            Name = "bridge902";
+            Name = "bridge903";
           };
         };
       };
@@ -351,7 +351,7 @@ in
             LinkLocalAddressing = "no";
           };
           vlan = [
-            "vlan900"
+            "vlan901"
           ];
         };
         "30-${cfg.frrExpoInterface}" = {
@@ -360,37 +360,37 @@ in
             LinkLocalAddressing = "no";
           };
           vlan = [
-            "vlan902"
+            "vlan903"
           ];
         };
-        "40-vlan900" = {
-          matchConfig.Name = "vlan900";
+        "40-vlan901" = {
+          matchConfig.Name = "vlan901";
           networkConfig = {
-            Bridge = "bridge900";
+            Bridge = "bridge901";
           };
         };
-        "40-vlan902" = {
-          matchConfig.Name = "vlan902";
+        "40-vlan903" = {
+          matchConfig.Name = "vlan903";
           networkConfig = {
-            Bridge = "bridge902";
+            Bridge = "bridge903";
           };
         };
-        "50-bridge900" = {
-          matchConfig.Name = "bridge900";
+        "50-bridge901" = {
+          matchConfig.Name = "bridge901";
           networkConfig.DHCP = false;
           address = [
-            "10.1.1.2/24"
+            "172.20.1.2/24"
           ];
           linkConfig.RequiredForOnline = "routable";
           routes = [
-            { Gateway = "10.1.1.1"; }
+            { Gateway = "172.20.1.1"; }
           ];
         };
-        "50-bridge902" = {
-          matchConfig.Name = "bridge902";
+        "50-bridge903" = {
+          matchConfig.Name = "bridge903";
           networkConfig.DHCP = false;
           address = [
-            "10.1.3.2/24"
+            "172.20.3.2/24"
           ];
         };
       };
@@ -400,10 +400,10 @@ in
 
     scale-network = {
       services.frr.enable = true;
-      services.frr.router-id = "10.1.1.2";
+      services.frr.router-id = "172.20.1.2";
       services.frr.broadcast-interface = [
-        "bridge900" # border
-        "bridge902" # expo
+        "bridge901" # border
+        "bridge903" # expo
       ];
       services.dhcp4-relay."tech" = {
         enable = true;
