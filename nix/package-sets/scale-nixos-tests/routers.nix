@@ -119,16 +119,16 @@
       print("LAYER 2")
 
       # border can ping both routers
-      border.succeed("ping -c 5 10.1.1.2")
-      border.succeed("ping -c 5 10.1.2.3")
+      border.succeed("ping -c 5 172.20.1.2")
+      border.succeed("ping -c 5 172.20.2.3")
 
       # conference can ping both routers
-      conference.succeed("ping -c 5 10.1.1.1")
-      conference.succeed("ping -c 5 10.1.3.3")
+      conference.succeed("ping -c 5 172.20.1.1")
+      conference.succeed("ping -c 5 172.20.3.3")
 
       # expo can ping both routers
-      expo.succeed("ping -c 5 10.1.2.1")
-      expo.succeed("ping -c 5 10.1.3.2")
+      expo.succeed("ping -c 5 172.20.2.1")
+      expo.succeed("ping -c 5 172.20.3.2")
 
       # layer 3
       print("LAYER 3")
@@ -138,16 +138,16 @@
       expo.wait_for_unit("frr.service")
 
       # border can reach conference-expo link
-      border.succeed("ping -c 5 10.1.3.2")
-      border.succeed("ping -c 5 10.1.3.3")
+      border.succeed("ping -c 5 172.20.3.2")
+      border.succeed("ping -c 5 172.20.3.3")
 
       # conference can reach border-expo link
-      conference.succeed("ping -c 5 10.1.2.1")
-      conference.succeed("ping -c 5 10.1.2.3")
+      conference.succeed("ping -c 5 172.20.2.1")
+      conference.succeed("ping -c 5 172.20.2.3")
 
       # expo can reach conference-border link
-      expo.succeed("ping -c 5 10.1.1.1")
-      expo.succeed("ping -c 5 10.1.1.2")
+      expo.succeed("ping -c 5 172.20.1.1")
+      expo.succeed("ping -c 5 172.20.1.2")
 
       # NAT
       print("NETCAT")
