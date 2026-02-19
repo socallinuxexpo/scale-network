@@ -64,47 +64,38 @@ in
       enable = true;
 
       netdevs = {
-        "20-bridge900" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge900";
-          };
-        };
-        "20-vlan900" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan900";
-          };
-          vlanConfig.Id = 900;
-        };
-        "25-bridge901" = {
+        "20-bridge901" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge901";
           };
         };
-        "25-vlan901" = {
+        "20-vlan901" = {
           netdevConfig = {
             Kind = "vlan";
             Name = "vlan901";
           };
           vlanConfig.Id = 901;
         };
+        "25-bridge902" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge902";
+          };
+        };
+        "25-vlan902" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan902";
+          };
+          vlanConfig.Id = 902;
+        };
       };
       networks = mkMerge [
         {
           # Physical link to conference center
-          "30-cf" = {
+          "30-${cfg.frrConferenceInterface}" = {
             matchConfig.Name = cfg.frrConferenceInterface;
-            networkConfig = {
-              LinkLocalAddressing = "no";
-            };
-            vlan = [
-              "vlan900"
-            ];
-          };
-          "30-expo" = {
-            matchConfig.Name = cfg.frrExpoInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
             };
@@ -112,11 +103,14 @@ in
               "vlan901"
             ];
           };
-          "40-vlan900" = {
-            matchConfig.Name = "vlan900";
+          "30-${cfg.frrExpoInterface}" = {
+            matchConfig.Name = cfg.frrExpoInterface;
             networkConfig = {
-              Bridge = "bridge900";
+              LinkLocalAddressing = "no";
             };
+            vlan = [
+              "vlan902"
+            ];
           };
           "40-vlan901" = {
             matchConfig.Name = "vlan901";
@@ -124,18 +118,24 @@ in
               Bridge = "bridge901";
             };
           };
-          "50-bridge900" = {
-            matchConfig.Name = "bridge900";
-            networkConfig.DHCP = false;
-            address = [
-              "10.1.1.1/24"
-            ];
+          "40-vlan902" = {
+            matchConfig.Name = "vlan902";
+            networkConfig = {
+              Bridge = "bridge902";
+            };
           };
           "50-bridge901" = {
             matchConfig.Name = "bridge901";
             networkConfig.DHCP = false;
             address = [
-              "10.1.2.1/24"
+              "172.20.1.1/24"
+            ];
+          };
+          "50-bridge902" = {
+            matchConfig.Name = "bridge902";
+            networkConfig.DHCP = false;
+            address = [
+              "172.20.2.1/24"
             ];
           };
         }
@@ -190,10 +190,10 @@ in
     '';
     scale-network = {
       services.frr.enable = true;
-      services.frr.router-id = "10.1.1.1";
+      services.frr.router-id = "172.20.1.1";
       services.frr.broadcast-interface = [
-        "bridge900" # cf
-        "bridge901" # expo
+        "bridge901" # cf
+        "bridge902" # expo
       ];
     };
   };
