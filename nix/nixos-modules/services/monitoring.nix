@@ -261,7 +261,7 @@ in
       };
     };
 
-    # Enable Alloy for AP and switch metrics scraping
+    # Enable Alloy for AP, Pi, and switch metrics scraping
     scale-network.services.alloy = {
       enable = true;
       extraConfig = ''
@@ -277,6 +277,20 @@ in
           scrape_interval = "15s"
           scrape_timeout = "10s"
           job_name = "aps"
+        }
+
+        // File-based service discovery for Pis
+        discovery.file "pis" {
+          files = ["${pkgs.scale-network.scale-inventory}/config/prom-pis.json"]
+        }
+
+        // Scrape Pi node exporter metrics
+        prometheus.scrape "pis" {
+          targets = discovery.file.pis.targets
+          forward_to = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "15s"
+          scrape_timeout = "10s"
+          job_name = "pis"
         }
 
         // File-based service discovery for switches (SNMP targets)
