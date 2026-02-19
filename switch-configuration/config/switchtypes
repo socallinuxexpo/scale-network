@@ -16,10 +16,10 @@
 // .9 = Stub (No subordinate switches) regardless of next level up switch
 //Name		Num	MgtVL	IPv6				Type		Hierarchy	Noiselevel	Model		Mgmt MAC
 NOC		1	503	2001:470:f026:503::200:1	cfNOC		I.9		Quiet		ex4200-48p	2c:6b:f5:39:e9:00
-ConfIDF		2	503	2001:470:f026:503::200:2	cfIDF		I.1		Loud		ex4200-48p	00:26:88:60:79:00
+SpareK		2	503	2001:470:f026:503::200:2	cfIDF		I.1		Loud		ex4200-48p	00:26:88:60:79:00
 NW-IDF		3	103	2001:470:f026:103::200:3	exIDF		F.1		Loud		ex4200-48p	00:26:88:6e:ba:80
 NE-IDF		4	103	2001:470:f026:103::200:4	exIDF		C.1		Normal		ex4200-48p	00:26:88:7d:fb:00
-ExpoIDF		5	103	2001:470:f026:103::200:5	exIDF		X.1		-		ex4200-48p	00:26:88:6e:aa:80
+SpareL		5	103	2001:470:f026:103::200:5	exIDF		X.1		-		ex4200-48p	00:26:88:6e:aa:80
 Expo-Catwalk	6	103	2001:470:f026:103::200:6	Catwalk		W.1		Loud		ex4200-48p	00:26:88:7d:d3:00
 MassFlash	7	503	2001:470:f026:503::200:7	MassFlash	Z.9		Normal		ex4200-48p	00:26:88:6e:b6:80
 AVSwitch	8	503	2001:470:f026:503::200:8	cfAV		I.9		Quiet		ex4200-48p	00:26:88:7d:dd:80
@@ -27,8 +27,8 @@ DECEASED1	9	503	2001:470:f026:503::200:9	cfRoom		Z.9		Normal		ex4200-48p	00:26:8
 Rm211		10	503	2001:470:f026:503::200:10	cfRoom		I.9		Loud		ex4200-48p	2c:6b:f5:39:cb:80
 Rm214		11	503	2001:470:f026:503::200:11	cfRoom		I.9		Normal		ex4200-48p	00:26:88:60:71:00
 DECEASED3	12	503	2001:470:f026:503::200:12	cfRoom		Z.9		Normal		ex4200-48p	b0:c6:9a:dc:4d:80
-Rm103		13	503	2001:470:f026:503::200:13	cfRoom		I.9		Normal		ex4200-48p	00:26:88:7a:8f:80
-Rm104		14	503	2001:470:f026:503::200:14	cfRoom		I.9		Normal		ex4200-48p	00:26:88:7d:e5:80
+SpareG		13	503	2001:470:f026:503::200:13	cfRoom		I.9		Normal		ex4200-48p	00:26:88:7a:8f:80
+SpareH		14	503	2001:470:f026:503::200:14	cfRoom		I.9		Normal		ex4200-48p	00:26:88:7d:e5:80
 Rm105		15	503	2001:470:f026:503::200:15	cfRoom		I.9		??		ex4200-48p	b0:c6:9a:db:b5:00
 Rm106		16	503	2001:470:f026:503::200:16	cfRoom		I.9		??		ex4200-48p	00:26:88:7e:3e:00
 Rm107		17	503	2001:470:f026:503::200:17	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:a6:80
@@ -54,12 +54,12 @@ ExpoC2		36	103	2001:470:f026:103::200:36	Booth		W.9		Normal		ex4200-48p	2c:6b:f5
 ExpoC3		37	103	2001:470:f026:103::200:37	Booth		W.9		Quiet		ex4200-48p	2c:6b:f5:37:cd:00
 ExpoC4		38	103	2001:470:f026:103::200:38	Booth		W.9		Normal		ex4200-48p	00:26:88:7e:1b:80
 ExpoC5		39	103	2001:470:f026:103::200:39	Booth		Z.9		Normal		ex4200-48p	00:26:88:70:d6:00
-BallroomA	40	103	2001:470:f026:103::200:40	exRoom		C.9		Quiet		ex4200-48p	b0:c6:9a:64:85:80
+SpareI		40	103	2001:470:f026:103::200:40	exRoom		C.9		Quiet		ex4200-48p	b0:c6:9a:64:85:80
 BallroomB	41	103	2001:470:f026:103::200:41	exRoom		C.9		Normal		ex4200-48p	00:26:88:70:bb:00
 BallroomC	42	103	2001:470:f026:103::200:42	exRoom		C.9		Normal		ex4200-48p	00:26:88:60:40:00
 BallroomDE	43	103	2001:470:f026:103::200:43	exRoom		F.9		Normal		ex4200-48p	00:26:88:7d:1b:80
 BallroomF	44	103	2001:470:f026:103::200:44	exRoom		F.9		Loud		ex4200-48p	00:26:88:7c:41:00
-BallroomG	45	103	2001:470:f026:103::200:45	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b1:80
+SpareJ		45	103	2001:470:f026:103::200:45	exRoom		F.9		Normal		ex4200-48p	00:26:88:6e:b1:80
 DECEASED2	46	103	2001:470:f026:103::200:46	exRoom		Z.9		Loud		ex4200-48p	00:26:88:7f:0e:00
 Rm209-210	47	503	2001:470:f026:503::200:47	cfRoom		I.9		Normal		ex4200-48p	00:26:88:6e:9f:80
 Rm101-102	48	503	2001:470:f026:503::200:48	cfRoom		I.9		??		ex4200-48p	84:18:88:ac:d7:00
@@ -67,10 +67,11 @@ BallroomH	49	103	2001:470:f026:103::200:49	exRoom		F.9		??		ex4200-48p	84:18:88:
 Rm208		50	503	2001:470:f026:503::200:50	cfRoom		I.9		??		ex4200-48p	84:18:88:ad:4e:80
 DONOTUSE	51	103	2001:470:f026:103::200:51	swatch		Z.9		Loud		ex4200-48px	ec:3e:f7:50:58:80
 RegDesk		52	103	2001:470:f026:103::200:52	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:00
-proto1		53	103	2001:470:f026:103::200:53	exIDF		F.1		Loud		ex4300-48p	58:00:bb:4a:59:e0
-proto2		54	503	2001:470:f026:503::200:54	cfIDF		I.1		Loud		ex4300-48p	38:4f:49:a0:5f:40
-proto3		55	103	2001:470:f026:103::200:55	Booth		W.9		Loud		ex4300-48p	f0:4b:3a:96:32:00
-MicroProto1	56	103	2001:470:f026:103::200:56	exMicro		C.9		Silent		ex2300-c-12p	4c:16:fc:3f:36:03
-MicroProto2	57	503	2001:470:f026:503::200:57	cfMicro		I.9		Silent		ex2300-c-12p	38:4f:49:15:f2:05
-MicroProto3	58	103	2001:470:f026:103::200:58	exMicro		Z.9		Silent		ex2300-c-12p	84:03:28:0b:f0:7a
-proto4		59	503	2001:470:f026:503::200:59	cfIDF		C.1		Loud		ex4300-48p	58:00:bb:4a:2e:c0
+ExpoIDF		53	103	2001:470:f026:103::200:53	exIDF		F.1		Loud		ex4300-48p	58:00:bb:4a:59:e0
+//retired	54	503	2001:470:f026:503::200:54	cfIDF		I.1		Loud		ex4300-48p
+//retired	55	103	2001:470:f026:103::200:55	Booth		W.9		Loud		ex4300-48p
+BallroomA	56	103	2001:470:f026:103::200:56	exMicro		C.9		Silent		ex2300-c-12p	4c:16:fc:3f:36:03
+BallroomG	57	103	2001:470:f026:103::200:57	exMicro		F.9		Silent		ex2300-c-12p	38:4f:49:15:f2:05
+Rm103		58	503	2001:470:f026:503::200:58	cfMicro		I.9		Silent		ex2300-c-12p	84:03:28:0b:f0:7a
+ConfIDF		59	503	2001:470:f026:503::200:59	cfIDF		C.1		Loud		ex4300-48p	58:00:bb:4a:2e:c0
+Rm104		60	503	2001:470:f026:503::200:60	cfMicro		I.9		Silent		ex2300-c-12p	b4:8a:5f:07:17:0c
