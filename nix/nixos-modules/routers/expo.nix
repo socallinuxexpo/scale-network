@@ -50,31 +50,31 @@ in
     systemd.network = {
       enable = true;
       netdevs = {
-        "25-bridge901" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge901";
-          };
-        };
-        "25-vlan901" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan901";
-          };
-          vlanConfig.Id = 901;
-        };
-        "20-bridge902" = {
+        "25-bridge902" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge902";
           };
         };
-        "20-vlan902" = {
+        "25-vlan902" = {
           netdevConfig = {
             Kind = "vlan";
             Name = "vlan902";
           };
           vlanConfig.Id = 902;
+        };
+        "20-bridge903" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge903";
+          };
+        };
+        "20-vlan903" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan903";
+          };
+          vlanConfig.Id = 903;
         };
       };
       networks = {
@@ -84,7 +84,7 @@ in
             LinkLocalAddressing = "no";
           };
           vlan = [
-            "vlan901"
+            "vlan902"
           ];
         };
         "30-cf" = {
@@ -93,14 +93,8 @@ in
             LinkLocalAddressing = "no";
           };
           vlan = [
-            "vlan902"
+            "vlan903"
           ];
-        };
-        "40-vlan901" = {
-          matchConfig.Name = "vlan901";
-          networkConfig = {
-            Bridge = "bridge901";
-          };
         };
         "40-vlan902" = {
           matchConfig.Name = "vlan902";
@@ -108,22 +102,28 @@ in
             Bridge = "bridge902";
           };
         };
-        "50-bridge901" = {
-          matchConfig.Name = "bridge901";
-          networkConfig.DHCP = false;
-          address = [
-            "10.1.2.3/24"
-          ];
-          linkConfig.RequiredForOnline = "routable";
-          routes = [
-            { Gateway = "10.1.2.1"; }
-          ];
+        "40-vlan903" = {
+          matchConfig.Name = "vlan903";
+          networkConfig = {
+            Bridge = "bridge903";
+          };
         };
         "50-bridge902" = {
           matchConfig.Name = "bridge902";
           networkConfig.DHCP = false;
           address = [
-            "10.1.3.3/24"
+            "172.20.2.3/24"
+          ];
+          linkConfig.RequiredForOnline = "routable";
+          routes = [
+            { Gateway = "172.20.2.1"; }
+          ];
+        };
+        "50-bridge903" = {
+          matchConfig.Name = "bridge903";
+          networkConfig.DHCP = false;
+          address = [
+            "172.20.3.3/24"
           ];
         };
       };
@@ -133,10 +133,10 @@ in
 
     scale-network = {
       services.frr.enable = true;
-      services.frr.router-id = "10.1.2.3";
+      services.frr.router-id = "172.20.2.3";
       services.frr.broadcast-interface = [
-        "bridge901" # border
-        "bridge902" # conf
+        "bridge902" # border
+        "bridge903" # conf
       ];
     };
   };
