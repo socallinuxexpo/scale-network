@@ -419,6 +419,29 @@ in
         upstreamInterfaces = [ "bridge503" ];
         dhcpServerIps = [ "10.128.3.20" ];
       };
+      services.dhcp6-relay = {
+        "tech" = {
+          enable = true;
+          downstreamInterfaces = [
+            "bridge500"
+            "bridge501"
+            "bridge502"
+            "bridge504"
+            "bridge506"
+            "bridge507"
+          ];
+          upstreamInterfaces = [ "2001:470:f026:503::20%%bridge503" ];
+        };
+        "av" = {
+          enable = true;
+          downstreamInterfaces = [
+            "bridge505"
+          ];
+          # bridge903 since we need to go to expo
+          # must use to %% to escape the % expansion by systemd
+          upstreamInterfaces = [ "2001:470:f026:105::10%%bridge903" ];
+        };
+      };
     };
 
   };
