@@ -405,19 +405,52 @@ in
         "bridge901" # border
         "bridge903" # expo
       ];
-      services.dhcp4-relay."tech" = {
-        enable = true;
-        # excluding bridge507 (cfSigns) since
-        # its a ipv6 only network
-        downstreamInterfaces = [
-          "bridge500"
-          "bridge501"
-          "bridge502"
-          "bridge504"
-          "bridge506"
-        ];
-        upstreamInterfaces = [ "bridge503" ];
-        dhcpServerIps = [ "10.128.3.20" ];
+      services.dhcp4-relay = {
+        "tech" = {
+          enable = true;
+          # excluding bridge507 (cfSigns) since
+          # its a ipv6 only network
+          downstreamInterfaces = [
+            "bridge500"
+            "bridge501"
+            "bridge502"
+            "bridge504"
+            "bridge506"
+          ];
+          upstreamInterfaces = [ "bridge503" ];
+          dhcpServerIps = [ "10.128.3.20" ];
+        };
+        "av" = {
+          enable = true;
+          downstreamInterfaces = [
+            "bridge505"
+          ];
+          upstreamInterfaces = [ "bridge903" ];
+          dhcpServerIps = [ "10.0.5.10" ];
+        };
+      };
+      # must use to %% to escape the % expansion by systemd
+      services.dhcp6-relay = {
+        "tech" = {
+          enable = true;
+          downstreamInterfaces = [
+            "2001:470:f026:500::1%%bridge500"
+            "2001:470:f026:501::1%%bridge501"
+            "2001:470:f026:502::1%%bridge502"
+            "2001:470:f026:504::1%%bridge504"
+            "2001:470:f026:506::1%%bridge506"
+            "2001:470:f026:507::1%%bridge507"
+          ];
+          upstreamInterfaces = [ "2001:470:f026:503::20%%bridge503" ];
+        };
+        "av" = {
+          enable = true;
+          downstreamInterfaces = [
+            "2001:470:f026:505::1%%bridge505"
+          ];
+          # bridge903 since we need to go to expo
+          upstreamInterfaces = [ "2001:470:f026:105::10%%bridge903" ];
+        };
       };
     };
 
