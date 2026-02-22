@@ -47,7 +47,7 @@
 
         networking.firewall.enable = false;
         networking.nftables.enable = true;
-	##FIXME## Add input, output, forward filters to match previous router config
+       ##FIXME## Add input, output, forward filters to match previous router config
         networking.nftables.ruleset = ''
            table ip nat {
             chain PREROUTING {
@@ -75,6 +75,18 @@
         systemd.network = {
           enable = true;
           netdevs = {
+            # HE Tunnel
+            "20-hetunnel" = {
+              netdevConfig = {
+                Name = "he-tunnel";
+                Kind = "sit";
+                MTUBytes = 1480;
+              };
+              tunnelConfig = {
+                Local = "192.159.10.47";
+                Remote = "66.220.18.42";
+              };
+            };
             # 100 (SCALE-SLOW)
             "20-vlan100" = {
               netdevConfig = {
@@ -182,8 +194,21 @@
             };
           };
           networks = {
+            # Tunnel to HE Tunnelborker
+            "30-hetunnel" = {
+                matchConfig.Name = "he-tunnel";
+                enable = true;
+                networkConfig = {
+                  DHCP = "no";
+                  LLDP = false;
+                  Address = [
+                    "2001:470:c:3d::2/64"
+                  ];
+                  Gateway = "2001:470:c:3d::1";
+                };
+            };
             # Keep this for troubleshooting
-            "10-backdoor" = {
+            "30-backdoor" = {
               matchConfig.Name = "backdoor0";
               enable = true;
               networkConfig = {
@@ -191,14 +216,23 @@
                 LLDP = true;
                 EmitLLDP = true;
               };
+              networkConfig.IPv6AcceptRA = true;
+              ipv6AcceptRAConfig = {
+                UseGateway = false;
+              };
               linkConfig.RequiredForOnline = "no";
             };
-            "10-copper0" = {
+            "30-copper0" = {
               matchConfig.Name = "copper0";
               networkConfig = {
                 DHCP = "yes";
                 LLDP = true;
                 EmitLLDP = true;
+                Tunnel = "he-tunnel";
+              };
+              networkConfig.IPv6AcceptRA = true;
+              ipv6AcceptRAConfig = {
+                UseGateway = false;
               };
             };
             "30-copper1" = {
