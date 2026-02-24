@@ -47,8 +47,44 @@
 
         networking.firewall.enable = false;
         networking.nftables.enable = true;
-       ##FIXME## Add input, output, forward filters to match previous router config
         networking.nftables.ruleset = ''
+           table inet filter {
+             chain INPUT {
+               type filter hook input priority filter;
+               policy drop;
+               # Show internal traffic (To the router only via the management net)
+               iifname { bridge103 } accept;
+               # Allow traffic from Owen's network
+               ip6 saddr 2620:0:930::/48 accept;
+               # Existing Flows
+               ct state established,related accept;
+               # Drop traffic to the show IPv6 network
+               ip6 daddr 2001:470:f026::/48 counter drop;
+               # PING
+               meta l4proto { icmp, ipv6-icmp } accept;
+               log prefix "NFINP-DROP: " accept;
+             }
+             chain FORWARD {
+               type filter hook forward priority filter;
+               policy drop;
+               # Show internal traffic
+               iifname { bridge100, bridge101, bridge102, bridge103, bridge104, bridge105, bridge107, bridge110 } oifname { bridge100, bridge101, bridge102, bridge103, bridge104, bridge105, bridge107, bridge110} counter accept
+               iifname { bridge100, bridge101, bridge102, bridge103, bridge104, bridge105, bridge107, bridge110 } oifname copper0 counter accept
+               # Existing Flows
+               ct state established,related accept;
+               # Owen's Network
+               ip6 saddr 2620:0:930::/48 accept;
+               # PING
+               meta l4proto { icmp, ipv6-icmp } accept;
+               # Drop inbound IPv6 traffic not matched above
+               ip6 daddr 2001:470:f026::/48 counter drop;
+               log prefix "NFFWD-DROP: " accept;
+             }
+             chain OUTPUT {
+               type filter hook output priority filter;
+               accept;
+             }
+           }
            table ip nat {
             chain PREROUTING {
               type nat hook prerouting priority dstnat; policy accept;
@@ -196,16 +232,16 @@
           networks = {
             # Tunnel to HE Tunnelborker
             "30-hetunnel" = {
-                matchConfig.Name = "he-tunnel";
-                enable = true;
-                networkConfig = {
-                  DHCP = "no";
-                  LLDP = false;
-                  Address = [
-                    "2001:470:c:3d::2/64"
-                  ];
-                  Gateway = "2001:470:c:3d::1";
-                };
+              matchConfig.Name = "he-tunnel";
+              enable = true;
+              networkConfig = {
+                DHCP = "no";
+                LLDP = false;
+                Address = [
+                  "2001:470:c:3d::2/64"
+                ];
+                Gateway = "2001:470:c:3d::1";
+              };
             };
             # Keep this for troubleshooting
             "30-backdoor" = {
