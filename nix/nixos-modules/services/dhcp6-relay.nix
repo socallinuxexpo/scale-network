@@ -66,7 +66,8 @@ in
       value = {
         description = "dhcp6-relay monitoring service for ${relayName}";
         wantedBy = [ "multi-user.target" ];
-        after = [ "network.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
 
         serviceConfig = {
           ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -6 -d --no-pid ${
