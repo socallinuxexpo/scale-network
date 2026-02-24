@@ -70,7 +70,7 @@ in
         wants = [ "network-online.target" ];
 
         serviceConfig = {
-          ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -6 -d --no-pid ${
+          ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -6 -d --no-pid -I ${
             concatMapStringsSep " " (x: "-l ${x}") relayCfg.downstreamInterfaces
           } ${concatMapStringsSep " " (x: "-u ${x}") relayCfg.upstreamInterfaces}";
           Type = "exec";
