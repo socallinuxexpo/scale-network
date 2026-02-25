@@ -59,9 +59,6 @@ in
       usbutils
       nettools
       wget
-      rustc
-      cargo
-
     ];
 
     programs.vim = {
