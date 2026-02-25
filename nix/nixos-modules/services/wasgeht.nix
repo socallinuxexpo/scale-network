@@ -70,7 +70,8 @@ in
   config = mkIf cfg.enable {
     systemd.services.wasgeht = {
       description = "wasgeht monitoring service";
-      after = [ "network.target" ];
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         User = "${cfg.user}";
