@@ -37,12 +37,12 @@ let
     options = {
       enable = mkEnableOption "SCaLE dhcp6-relay monitoring service";
 
-      listenInterfaces = mkOption {
+      downstreamInterfaces = mkOption {
         type = types.listOf types.str;
         default = [ ];
       };
 
-      dhcpServerIps = mkOption {
+      upstreamInterfaces = mkOption {
         type = types.listOf types.str;
       };
     };
@@ -70,9 +70,9 @@ in
         wants = [ "network-online.target" ];
 
         serviceConfig = {
-          ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -6 -d --no-pid ${
-            concatMapStringsSep " " (x: "-l ${x}") relayCfg.listenInterfaces
-          } ${concatMapStringsSep " " (x: "-u ${x}") relayCfg.dhcpServerIps}";
+          ExecStart = "${pkgs.scale-network.isc-dhcp}/bin/dhcrelay -6 -d --no-pid -I ${
+            concatMapStringsSep " " (x: "-l ${x}") relayCfg.downstreamInterfaces
+          } ${concatMapStringsSep " " (x: "-u ${x}") relayCfg.upstreamInterfaces}";
           Type = "exec";
           Restart = "always";
           DynamicUser = true;

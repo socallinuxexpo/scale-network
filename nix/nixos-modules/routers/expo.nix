@@ -399,19 +399,40 @@ in
         "bridge903" # conf
       ];
 
-      services.dhcp4-relay."tech" = {
-        enable = true;
-        # excluding bridge107 (exSigns) since
-        # its a ipv6 only network
-        downstreamInterfaces = [
-          "bridge100"
-          "bridge101"
-          "bridge102"
-          "bridge104"
-          "bridge110"
-        ];
-        upstreamInterfaces = [ "bridge103" ];
-        dhcpServerIps = [ "10.0.3.20" ];
+      services.dhcp4-relay = {
+        # no AV dhcp6-relay because dhcp server on the same subnet (105)
+        # as its clients
+        "tech" = {
+          enable = true;
+          # excluding bridge107 (exSigns) since
+          # its a ipv6 only network
+          downstreamInterfaces = [
+            "bridge100"
+            "bridge101"
+            "bridge102"
+            "bridge104"
+            "bridge110"
+          ];
+          upstreamInterfaces = [ "bridge103" ];
+          dhcpServerIps = [ "10.0.3.20" ];
+        };
+      };
+      # must use to %% to escape the % expansion by systemd
+      services.dhcp6-relay = {
+        # no AV dhcp6-relay because dhcp server on the same subnet (105)
+        # as its clients
+        "tech" = {
+          enable = true;
+          downstreamInterfaces = [
+            "2001:470:f026:100::1%%bridge100"
+            "2001:470:f026:101::1%%bridge101"
+            "2001:470:f026:102::1%%bridge102"
+            "2001:470:f026:104::1%%bridge104"
+            "2001:470:f026:107::1%%bridge107"
+            "2001:470:f026:110::1%%bridge110"
+          ];
+          upstreamInterfaces = [ "2001:470:f026:103::20%%bridge103" ];
+        };
       };
     };
   };
