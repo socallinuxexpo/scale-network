@@ -129,6 +129,7 @@ in
             networkConfig.DHCP = false;
             address = [
               "172.20.1.1/24"
+              "2001:470:f026:901::1/64"
             ];
           };
           "50-bridge902" = {
@@ -136,6 +137,7 @@ in
             networkConfig.DHCP = false;
             address = [
               "172.20.2.1/24"
+              "2001:470:f026:902::1/64"
             ];
           };
         }

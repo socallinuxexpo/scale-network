@@ -380,6 +380,7 @@ in
           networkConfig.DHCP = false;
           address = [
             "172.20.1.2/24"
+            "2001:470:f026:901::2/64"
           ];
           linkConfig.RequiredForOnline = "routable";
           routes = [
@@ -391,6 +392,7 @@ in
           networkConfig.DHCP = false;
           address = [
             "172.20.3.2/24"
+            "2001:470:f026:903::2/64"
           ];
         };
       };
