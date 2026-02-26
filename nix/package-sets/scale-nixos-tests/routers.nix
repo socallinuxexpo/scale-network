@@ -46,6 +46,8 @@
         virtualisation.vlans = [
           2 # border <-> conference
           4 # conference <-> expo
+          5
+          6
         ];
         scale-network = {
           base.enable = true;
@@ -53,6 +55,10 @@
             enable = true;
             frrBorderInterface = "eth1";
             frrExpoInterface = "eth2";
+            trunkInterfaces = [
+              "eth3"
+              "eth4"
+            ];
           };
         };
       };
@@ -68,6 +74,7 @@
         virtualisation.vlans = [
           3 # border <-> expo
           4 # conference <-> expo
+          7
         ];
         scale-network = {
           base.enable = true;
@@ -75,6 +82,9 @@
             enable = true;
             frrBorderInterface = "eth1";
             frrConferenceInterface = "eth2";
+            trunkInterfaces = [
+              "eth3"
+            ];
           };
         };
         networking.firewall.enable = false;
