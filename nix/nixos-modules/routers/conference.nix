@@ -407,6 +407,16 @@ in
         "bridge901" # border
         "bridge903" # expo
       ];
+      services.frr.passive-interface = [
+        "bridge500"
+        "bridge501"
+        "bridge502"
+        "bridge504"
+        "bridge505"
+        "bridge506"
+        "bridge507"
+      ];
+
       services.dhcp4-relay = {
         "tech" = {
           enable = true;

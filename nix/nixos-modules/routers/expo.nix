@@ -400,6 +400,14 @@ in
         "bridge902" # border
         "bridge903" # conf
       ];
+      services.frr.passive-interface = [
+        "bridge100"
+        "bridge101"
+        "bridge102"
+        "bridge105"
+        "bridge107"
+        "bridge110"
+      ];
 
       services.dhcp4-relay = {
         # no AV dhcp6-relay because dhcp server on the same subnet (105)

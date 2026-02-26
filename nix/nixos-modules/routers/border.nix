@@ -197,6 +197,7 @@ in
         "bridge901" # cf
         "bridge902" # expo
       ];
+      # service.frr.passive-interface add 103 and 104 later
     };
   };
 }
