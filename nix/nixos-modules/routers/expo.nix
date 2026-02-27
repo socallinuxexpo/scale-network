@@ -10,10 +10,17 @@ let
     types
     ;
 
+  inherit (lib.attrsets)
+    listToAttrs
+    nameValuePair
+    ;
+
   inherit (lib.options)
     mkEnableOption
     mkOption
     ;
+
+  genAttrs' = xs: f: listToAttrs (map f xs);
 in
 {
 
@@ -31,6 +38,13 @@ in
       default = "fiber1";
       description = ''
         FRR broadcast interface to conference
+      '';
+    };
+    trunkInterfaces = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = ''
+        Trunk Interfaces
       '';
     };
   };
@@ -205,188 +219,196 @@ in
           vlanConfig.Id = 903;
         };
       };
-      networks = {
-        "30-border" = {
-          matchConfig.Name = cfg.frrBorderInterface;
-          networkConfig = {
-            LinkLocalAddressing = "no";
+      networks =
+        let
+          trunks =
+            interface:
+            nameValuePair "30-${interface}" {
+              matchConfig.Name = "${interface}";
+              linkConfig = {
+                RequiredForOnline = "carrier";
+              };
+              networkConfig = {
+                LinkLocalAddressing = "no";
+              };
+              # tag vlan on this link
+              vlan = [
+                "vlan100"
+                "vlan101"
+                "vlan102"
+                "vlan103"
+                "vlan104"
+                "vlan105"
+                "vlan107"
+                "vlan110"
+              ];
+            };
+
+        in
+        genAttrs' cfg.trunkInterfaces trunks
+        // {
+          "30-${cfg.frrBorderInterface}" = {
+            matchConfig.Name = cfg.frrBorderInterface;
+            networkConfig = {
+              LinkLocalAddressing = "no";
+            };
+            vlan = [
+              "vlan902"
+            ];
           };
-          vlan = [
-            "vlan902"
-          ];
-        };
-        "30-cf" = {
-          matchConfig.Name = cfg.frrConferenceInterface;
-          networkConfig = {
-            LinkLocalAddressing = "no";
+          "30-${cfg.frrConferenceInterface}" = {
+            matchConfig.Name = cfg.frrConferenceInterface;
+            networkConfig = {
+              LinkLocalAddressing = "no";
+            };
+            vlan = [
+              "vlan903"
+            ];
           };
-          vlan = [
-            "vlan903"
-          ];
-        };
-        "30-copper0" = {
-          # TODO probably make this a map of interfaces for trunking
-          matchConfig.Name = "copper0";
-          linkConfig = {
-            RequiredForOnline = "carrier";
+          "40-vlan100" = {
+            matchConfig.Name = "vlan100";
+            networkConfig = {
+              Bridge = "bridge100";
+            };
           };
-          networkConfig = {
-            LinkLocalAddressing = "no";
+          "50-bridge100" = {
+            matchConfig.Name = "bridge100";
+            enable = true;
+            address = [
+              "10.0.128.1/21"
+              "2001:470:f026:100::1/64"
+            ];
           };
-          # tag vlan on this link
-          vlan = [
-            "vlan100"
-            "vlan101"
-            "vlan102"
-            "vlan103"
-            "vlan104"
-            "vlan105"
-            "vlan107"
-            "vlan110"
-          ];
-        };
-        "40-vlan100" = {
-          matchConfig.Name = "vlan100";
-          networkConfig = {
-            Bridge = "bridge100";
+          "40-vlan101" = {
+            matchConfig.Name = "vlan101";
+            networkConfig = {
+              Bridge = "bridge101";
+            };
           };
-        };
-        "50-bridge100" = {
-          matchConfig.Name = "bridge100";
-          enable = true;
-          address = [
-            "10.0.128.1/21"
-            "2001:470:f026:100::1/64"
-          ];
-        };
-        "40-vlan101" = {
-          matchConfig.Name = "vlan101";
-          networkConfig = {
-            Bridge = "bridge101";
+          "50-bridge101" = {
+            matchConfig.Name = "bridge101";
+            enable = true;
+            address = [
+              "10.0.136.1/21"
+              "2001:470:f026:101::1/64"
+            ];
           };
-        };
-        "50-bridge101" = {
-          matchConfig.Name = "bridge101";
-          enable = true;
-          address = [
-            "10.0.136.1/21"
-            "2001:470:f026:101::1/64"
-          ];
-        };
-        "40-vlan102" = {
-          matchConfig.Name = "vlan102";
-          networkConfig = {
-            Bridge = "bridge102";
+          "40-vlan102" = {
+            matchConfig.Name = "vlan102";
+            networkConfig = {
+              Bridge = "bridge102";
+            };
           };
-        };
-        "50-bridge102" = {
-          matchConfig.Name = "bridge102";
-          enable = true;
-          address = [
-            "10.0.2.1/24"
-            "2001:470:f026:102::1/64"
-          ];
-        };
-        "40-vlan103" = {
-          matchConfig.Name = "vlan103";
-          networkConfig = {
-            Bridge = "bridge103";
+          "50-bridge102" = {
+            matchConfig.Name = "bridge102";
+            enable = true;
+            address = [
+              "10.0.2.1/24"
+              "2001:470:f026:102::1/64"
+            ];
           };
-        };
-        "50-bridge103" = {
-          matchConfig.Name = "bridge103";
-          enable = true;
-          address = [
-            "10.0.3.1/24"
-            "2001:470:f026:103::1/64"
-          ];
-        };
-        "40-vlan104" = {
-          matchConfig.Name = "vlan104";
-          networkConfig = {
-            Bridge = "bridge104";
+          "40-vlan103" = {
+            matchConfig.Name = "vlan103";
+            networkConfig = {
+              Bridge = "bridge103";
+            };
           };
-        };
-        "50-bridge104" = {
-          matchConfig.Name = "bridge104";
-          enable = true;
-          address = [
-            "10.0.4.2/24"
-            "2001:470:f026:104::1/64"
-          ];
-        };
-        "40-vlan105" = {
-          matchConfig.Name = "vlan105";
-          networkConfig = {
-            Bridge = "bridge105";
+          "50-bridge103" = {
+            matchConfig.Name = "bridge103";
+            enable = true;
+            address = [
+              "10.0.3.1/24"
+              "2001:470:f026:103::1/64"
+            ];
           };
-        };
-        "50-bridge105" = {
-          matchConfig.Name = "bridge105";
-          enable = true;
-          address = [
-            "10.0.5.1/24"
-            "2001:470:f026:105::1/64"
-          ];
-        };
-        "40-vlan107" = {
-          matchConfig.Name = "vlan107";
-          networkConfig = {
-            Bridge = "bridge107";
+          "40-vlan104" = {
+            matchConfig.Name = "vlan104";
+            networkConfig = {
+              Bridge = "bridge104";
+            };
           };
-        };
-        "50-bridge107" = {
-          matchConfig.Name = "bridge107";
-          enable = true;
-          address = [
-            "2001:470:f026:107::1/64"
-          ];
-        };
-        "40-vlan110" = {
-          matchConfig.Name = "vlan110";
-          networkConfig = {
-            Bridge = "bridge110";
+          "50-bridge104" = {
+            matchConfig.Name = "bridge104";
+            enable = true;
+            address = [
+              "10.0.4.2/24"
+              "2001:470:f026:104::1/64"
+            ];
           };
-        };
-        "50-bridge110" = {
-          matchConfig.Name = "bridge110";
-          enable = true;
-          address = [
-            "10.0.10.1/24"
-            "2001:470:f026:110::1/64"
-          ];
-        };
-        "40-vlan902" = {
-          matchConfig.Name = "vlan902";
-          networkConfig = {
-            Bridge = "bridge902";
+          "40-vlan105" = {
+            matchConfig.Name = "vlan105";
+            networkConfig = {
+              Bridge = "bridge105";
+            };
           };
-        };
-        "50-bridge902" = {
-          matchConfig.Name = "bridge902";
-          networkConfig.DHCP = false;
-          address = [
-            "172.20.2.3/24"
-          ];
-          linkConfig.RequiredForOnline = "routable";
-          routes = [
-            { Gateway = "172.20.2.1"; }
-          ];
-        };
-        "40-vlan903" = {
-          matchConfig.Name = "vlan903";
-          networkConfig = {
-            Bridge = "bridge903";
+          "50-bridge105" = {
+            matchConfig.Name = "bridge105";
+            enable = true;
+            address = [
+              "10.0.5.1/24"
+              "2001:470:f026:105::1/64"
+            ];
+          };
+          "40-vlan107" = {
+            matchConfig.Name = "vlan107";
+            networkConfig = {
+              Bridge = "bridge107";
+            };
+          };
+          "50-bridge107" = {
+            matchConfig.Name = "bridge107";
+            enable = true;
+            address = [
+              "2001:470:f026:107::1/64"
+            ];
+          };
+          "40-vlan110" = {
+            matchConfig.Name = "vlan110";
+            networkConfig = {
+              Bridge = "bridge110";
+            };
+          };
+          "50-bridge110" = {
+            matchConfig.Name = "bridge110";
+            enable = true;
+            address = [
+              "10.0.10.1/24"
+              "2001:470:f026:110::1/64"
+            ];
+          };
+          "40-vlan902" = {
+            matchConfig.Name = "vlan902";
+            networkConfig = {
+              Bridge = "bridge902";
+            };
+          };
+          "50-bridge902" = {
+            matchConfig.Name = "bridge902";
+            networkConfig.DHCP = false;
+            address = [
+              "172.20.2.3/24"
+              "2001:470:f026:902::3/64"
+            ];
+            linkConfig.RequiredForOnline = "routable";
+            routes = [
+              { Gateway = "172.20.2.1"; }
+            ];
+          };
+          "40-vlan903" = {
+            matchConfig.Name = "vlan903";
+            networkConfig = {
+              Bridge = "bridge903";
+            };
+          };
+          "50-bridge903" = {
+            matchConfig.Name = "bridge903";
+            networkConfig.DHCP = false;
+            address = [
+              "172.20.3.3/24"
+              "2001:470:f026:903::3/64"
+            ];
           };
         };
-        "50-bridge903" = {
-          matchConfig.Name = "bridge903";
-          networkConfig.DHCP = false;
-          address = [
-            "172.20.3.3/24"
-          ];
-        };
-      };
     };
 
     networking.firewall.enable = false;
@@ -397,6 +419,14 @@ in
       services.frr.broadcast-interface = [
         "bridge902" # border
         "bridge903" # conf
+      ];
+      services.frr.passive-interface = [
+        "bridge100"
+        "bridge101"
+        "bridge102"
+        "bridge105"
+        "bridge107"
+        "bridge110"
       ];
 
       services.dhcp4-relay = {
