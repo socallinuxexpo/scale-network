@@ -166,15 +166,21 @@
 
       # border can reach conference-expo link
       border.wait_until_succeeds("ping -c 5 172.20.3.2", timeout=60)
+      border.wait_until_succeeds("ping -c 5 2001:470:f026:903::2", timeout=60)
       border.wait_until_succeeds("ping -c 5 172.20.3.3", timeout=60)
+      border.wait_until_succeeds("ping -c 5 2001:470:f026:903::3", timeout=60)
 
       # conference can reach border-expo link
       conference.wait_until_succeeds("ping -c 5 172.20.2.1", timeout=60)
+      conference.wait_until_succeeds("ping -c 5 2001:470:f026:902::1", timeout=60)
       conference.wait_until_succeeds("ping -c 5 172.20.2.3", timeout=60)
+      conference.wait_until_succeeds("ping -c 5 2001:470:f026:902::3", timeout=60)
 
       # expo can reach conference-border link
       expo.wait_until_succeeds("ping -c 5 172.20.1.1", timeout=60)
+      expo.wait_until_succeeds("ping -c 5 2001:470:f026:901::1", timeout=60)
       expo.wait_until_succeeds("ping -c 5 172.20.1.2", timeout=60)
+      expo.wait_until_succeeds("ping -c 5 2001:470:f026:901::2", timeout=60)
 
       # NAT
       print("NETCAT")
