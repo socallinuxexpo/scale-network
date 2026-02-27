@@ -64,7 +64,21 @@ in
       enable = true;
 
       netdevs = {
-        "20-bridge901" = {
+        # exInfra
+        "25-bridge103" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge103";
+          };
+        };
+        "25-vlan103" = {
+          netdevConfig = {
+            Kind = "vlan";
+            Name = "vlan103";
+          };
+          vlanConfig.Id = 103;
+        };
+        "25-bridge901" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge901";
@@ -113,7 +127,22 @@ in
               EmitLLDP = true;
             };
             vlan = [
+              "vlan103"
               "vlan902"
+            ];
+          };
+          "40-vlan103" = {
+            matchConfig.Name = "vlan103";
+            networkConfig = {
+              Bridge = "bridge103";
+            };
+          };
+          "50-bridge103" = {
+            matchConfig.Name = "bridge103";
+            enable = true;
+            address = [
+              "10.0.3.2/24"
+              "2001:470:f026:103::2/64"
             ];
           };
           "40-vlan901" = {
