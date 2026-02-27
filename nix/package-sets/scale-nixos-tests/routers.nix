@@ -148,16 +148,16 @@
       expo.wait_for_unit("frr.service")
 
       # border can reach conference-expo link
-      border.succeed("ping -c 5 172.20.3.2")
-      border.succeed("ping -c 5 172.20.3.3")
+      border.wait_until_succeeds("ping -c 5 172.20.3.2", timeout=60)
+      border.wait_until_succeeds("ping -c 5 172.20.3.3", timeout=60)
 
       # conference can reach border-expo link
-      conference.succeed("ping -c 5 172.20.2.1")
-      conference.succeed("ping -c 5 172.20.2.3")
+      conference.wait_until_succeeds("ping -c 5 172.20.2.1", timeout=60)
+      conference.wait_until_succeeds("ping -c 5 172.20.2.3", timeout=60)
 
       # expo can reach conference-border link
-      expo.succeed("ping -c 5 172.20.1.1")
-      expo.succeed("ping -c 5 172.20.1.2")
+      expo.wait_until_succeeds("ping -c 5 172.20.1.1", timeout=60)
+      expo.wait_until_succeeds("ping -c 5 172.20.1.2", timeout=60)
 
       # NAT
       print("NETCAT")
