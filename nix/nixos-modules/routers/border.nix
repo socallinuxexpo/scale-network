@@ -144,7 +144,7 @@ in
         (mkIf (!cfg.staticWANEnable) {
           # temporary for testing at various sites
           # will be static for show
-          "10-nat-dhcp" = {
+          "10-${cfg.WANInterface}" = {
             matchConfig.Name = cfg.WANInterface;
             enable = true;
             networkConfig = {
@@ -157,7 +157,7 @@ in
         })
 
         (mkIf cfg.staticWANEnable {
-          "10-nat-static" = {
+          "10-${cfg.WANInterface}" = {
             matchConfig.Name = cfg.WANInterface;
             networkConfig.DHCP = false;
             address = [
