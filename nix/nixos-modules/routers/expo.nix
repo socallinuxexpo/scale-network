@@ -205,13 +205,13 @@ in
           };
           vlanConfig.Id = 902;
         };
-        "20-bridge903" = {
+        "25-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge903";
           };
         };
-        "20-vlan903" = {
+        "25-vlan903" = {
           netdevConfig = {
             Kind = "vlan";
             Name = "vlan903";

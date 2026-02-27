@@ -84,7 +84,7 @@ in
             Name = "bridge901";
           };
         };
-        "20-vlan901" = {
+        "25-vlan901" = {
           netdevConfig = {
             Kind = "vlan";
             Name = "vlan901";
