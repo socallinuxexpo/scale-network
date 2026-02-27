@@ -125,6 +125,17 @@
       expo.wait_for_unit("multi-user.target")
       client.wait_for_unit("multi-user.target")
 
+      print("misc daemons check")
+
+      conference.wait_for_unit("radvd.service")
+      conference.wait_for_unit("dhcp4-relay-tech.service")
+      conference.wait_for_unit("dhcp6-relay-tech.service")
+      conference.wait_for_unit("dhcp4-relay-av.service")
+      conference.wait_for_unit("dhcp6-relay-av.service")
+      expo.wait_for_unit("radvd.service")
+      expo.wait_for_unit("dhcp4-relay-tech.service")
+      expo.wait_for_unit("dhcp6-relay-tech.service")
+
       # layer 2
       print("LAYER 2")
 
