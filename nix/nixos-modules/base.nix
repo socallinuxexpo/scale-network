@@ -22,6 +22,27 @@ in
     # default to stateVersion for current lock
     system.stateVersion = config.system.nixos.release;
 
+    system.activationScripts.syncRepo = {
+      # will run after "etc" (which updates /etc symlinks).
+      deps = [ "etc" ];
+
+      # ensure we have a local copy of scale-network and fetch
+      # this does not update the local branch in the repo, it
+      # only updates the local remote refs
+      text = ''
+        REPO_URL="https://github.com/socallinuxexpo/scale-network"
+        REPO_DIR="/root/scale-network"
+
+        if [ ! -d "$REPO_DIR" ]; then
+            echo "Cloning repository..."
+            ${lib.getExe pkgs.git} clone "$REPO_URL" "$REPO_DIR"
+        else
+            echo "Repository exists. Fetching updates..."
+            ${lib.getExe pkgs.git} -C "$REPO_DIR" fetch --all --prune
+        fi
+      '';
+    };
+
     # remove the annoying experimental warnings
     nix.extraOptions = ''
       experimental-features = nix-command flakes
