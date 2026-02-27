@@ -226,7 +226,7 @@ in
             nameValuePair "30-${interface}" {
               matchConfig.Name = "${interface}";
               linkConfig = {
-                RequiredForOnline = "carrier";
+                RequiredForOnline = "no-carrier";
               };
               networkConfig = {
                 LinkLocalAddressing = "no";
