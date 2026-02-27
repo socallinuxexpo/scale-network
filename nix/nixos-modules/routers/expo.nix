@@ -247,7 +247,7 @@ in
         in
         genAttrs' cfg.trunkInterfaces trunks
         // {
-          "30-border" = {
+          "30-${cfg.frrBorderInterface}" = {
             matchConfig.Name = cfg.frrBorderInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
@@ -256,7 +256,7 @@ in
               "vlan902"
             ];
           };
-          "30-cf" = {
+          "30-${cfg.frrConferenceInterface}" = {
             matchConfig.Name = cfg.frrConferenceInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
