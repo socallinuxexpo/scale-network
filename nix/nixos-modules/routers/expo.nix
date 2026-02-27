@@ -230,6 +230,8 @@ in
               };
               networkConfig = {
                 LinkLocalAddressing = "no";
+                LLDP = true;
+                EmitLLDP = true;
               };
               # tag vlan on this link
               vlan = [
@@ -251,6 +253,8 @@ in
             matchConfig.Name = cfg.frrBorderInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
+              LLDP = true;
+              EmitLLDP = true;
             };
             vlan = [
               "vlan902"
@@ -260,6 +264,8 @@ in
             matchConfig.Name = cfg.frrConferenceInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
+              LLDP = true;
+              EmitLLDP = true;
             };
             vlan = [
               "vlan903"

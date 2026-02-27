@@ -98,6 +98,8 @@ in
             matchConfig.Name = cfg.frrConferenceInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
+              LLDP = true;
+              EmitLLDP = true;
             };
             vlan = [
               "vlan901"
@@ -107,6 +109,8 @@ in
             matchConfig.Name = cfg.frrExpoInterface;
             networkConfig = {
               LinkLocalAddressing = "no";
+              LLDP = true;
+              EmitLLDP = true;
             };
             vlan = [
               "vlan902"
@@ -159,7 +163,11 @@ in
         (mkIf cfg.staticWANEnable {
           "10-${cfg.WANInterface}" = {
             matchConfig.Name = cfg.WANInterface;
-            networkConfig.DHCP = false;
+            networkConfig = {
+              DHCP = false;
+              LLDP = true;
+              EmitLLDP = true;
+            };
             address = [
               "172.16.1.1/24"
             ];
