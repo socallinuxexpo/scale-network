@@ -130,15 +130,21 @@
 
       # border can ping both routers
       border.succeed("ping -c 5 172.20.1.2")
+      border.succeed("ping -c 5 2001:470:f026:901::2")
       border.succeed("ping -c 5 172.20.2.3")
+      border.succeed("ping -c 5 2001:470:f026:902::3")
 
       # conference can ping both routers
       conference.succeed("ping -c 5 172.20.1.1")
+      conference.succeed("ping -c 5 2001:470:f026:901::1")
       conference.succeed("ping -c 5 172.20.3.3")
+      conference.succeed("ping -c 5 2001:470:f026:903::3")
 
       # expo can ping both routers
       expo.succeed("ping -c 5 172.20.2.1")
+      expo.succeed("ping -c 5 2001:470:f026:902::1")
       expo.succeed("ping -c 5 172.20.3.2")
+      expo.succeed("ping -c 5 2001:470:f026:903::2")
 
       # layer 3
       print("LAYER 3")
