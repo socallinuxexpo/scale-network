@@ -1020,22 +1020,47 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
 def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
     wasgehtconfig = {}
     for switch in switches:
-        wasgehtconfig[switch["name"]] = {"address": switch["ipv6"]}
+        wasgehtconfig[switch["name"]] = {
+            "checks": {
+                "ping": {
+                    "addresses": [switch["ipv6"]],
+                },
+            },
+        }
     for router in routers:
-        wasgehtconfig[router["name"]] = {"address": router["ipv6"]}
+        wasgehtconfig[router["name"]] = {
+            "checks": {
+                "ping": {
+                    "addresses": [router["ipv6"]],
+                },
+            },
+        }
     for pi in pis:
-        wasgehtconfig[pi["name"]] = {"address": pi["ipv6"]}
+        wasgehtconfig[pi["name"]] = {
+            "checks": {
+                "ping": {
+                    "addresses": [pi["ipv6"]],
+                },
+            },
+        }
     for ap in aps:
-        wasgehtconfig[ap["name"]] = {"address": ap["ipv4"]}
+        wasgehtconfig[ap["name"]] = {
+            "checks": {
+                "ping": {
+                    "addresses": [ap["ipv4"]],
+                },
+            },
+        }
     for server in servers:
-        wasgehtconfig[server["name"]] = {"address": server["ipv6"]}
-    wasgehtconfig["google88v6"] = {"address": "2001:4860:4860::8888"}
-    wasgehtconfig["google88v4"] = {"address": "8.8.8.8"}
-    wasgehtconfig["google44v6"] = {"address": "2001:4860:4860::8844"}
-    wasgehtconfig["google44v4"] = {"address": "8.8.4.4"}
-    wasgehtconfig["localhost"] = {"address": "::1"}
+        wasgehtconfig[server["name"]] = {
+            "checks": {
+                "ping": {
+                    "addresses": [server["ipv6"]],
+                },
+            },
+        }
     with open(f"{outputdir}/scale-wasgeht-config.json", "w") as f:
-        json.dump(wasgehtconfig, f)
+        json.dump(wasgehtconfig, f, indent=2)
 
 
 def generateallnetwork(switches, routers, outputdir):
