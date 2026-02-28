@@ -1069,10 +1069,73 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         }
     for server in servers:
         wasgehtconfig[server["name"]] = {
+            "tags": {
+                "type": "server",
+                "os": "nixos",
+                "role": server["role"],
+                "building": server["building"],
+                **(
+                    {"aliases": ", ".join(server["aliases"])}
+                    if server["aliases"]
+                    else {}
+                ),
+            },
             "checks": {
                 "ping": {
-                    "addresses": [server["ipv6"]],
+                    "addresses": [server["ipv6"], server["ipv4"]],
                 },
+                **(
+                    {
+                        "dns": {
+                            "server": f"{server['ipv4']}:53",
+                            "queries": [
+                                {
+                                    "name": server["fqdn"],
+                                    "type": "A",
+                                    "expect": server["ipv4"],
+                                },
+                                {
+                                    "name": server["ipv4ptr"],
+                                    "type": "PTR",
+                                    "expect": server["fqdn"],
+                                },
+                                {
+                                    "name": server["ipv6ptr"],
+                                    "type": "PTR",
+                                    "expect": server["fqdn"],
+                                },
+                                {
+                                    "name": server["fqdn"],
+                                    "type": "AAAA",
+                                    "expect": server["ipv6"],
+                                },
+                                {
+                                    "name": "a.root-servers.net",
+                                    "type": "AAAA",
+                                    "expect": "2001:503:ba3e::2:30",
+                                },
+                            ],
+                        }
+                    }
+                    if server["role"] == "core"
+                    else {}
+                ),
+                **(
+                    {
+                        "http": {
+                            "urls": [
+                                f"https://{server['fqdn']}/grafana/",
+                                f"https://{server['fqdn']}/loki/",
+                                f"https://{server['fqdn']}/mimir/",
+                                f"https://{server['fqdn']}/tempo/",
+                                f"http://{server['fqdn']}:1982",
+                            ],
+                            "skip_verify": True,
+                        }
+                    }
+                    if server["name"] == "core-conf"
+                    else {}
+                ),
             },
         }
     with open(f"{outputdir}/scale-wasgeht-config.json", "w") as f:
