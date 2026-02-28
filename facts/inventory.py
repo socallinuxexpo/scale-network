@@ -1037,10 +1037,43 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         }
         wasgehtconfig[switch["name"]] = entry
     for router in routers:
+        if router["name"] == "br-mdf-01":
+            ping_addresses = [
+                "172.20.1.1",
+                "2001:470:f026:901::1",
+                "10.0.3.2",
+                "2001:470:f026:103::2",
+                "172.20.4.1",
+                "2001:470:f026:104::1",
+            ]
+        elif router["name"] == "ex-mdf-01":
+            ping_addresses = [
+                "172.20.4.3",
+                "2001:470:f026:104::3",
+                "172.20.3.3",
+                "2001:470:f026:903::3",
+                "10.0.3.1",
+                "2001:470:f026:103::1",
+            ]
+        elif router["name"] == "cf-mdf-01":
+            ping_addresses = [
+                "172.20.1.2",
+                "2001:470:f026:901::2",
+                "172.20.3.2",
+                "2001:470:f026:903::2",
+                "10.128.3.1",
+                "2001:470:f026:503::1",
+            ]
+        else:
+            ping_addresses = [router["ipv6"]]
         wasgehtconfig[router["name"]] = {
+            "tags": {
+                "type": "router",
+                "os": "nixos",
+            },
             "checks": {
                 "ping": {
-                    "addresses": [router["ipv6"]],
+                    "addresses": ping_addresses,
                 },
             },
         }
