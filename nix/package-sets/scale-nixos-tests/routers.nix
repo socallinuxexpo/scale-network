@@ -143,7 +143,7 @@
       border.succeed("ping -c 5 172.20.1.2")
       border.succeed("ping -c 5 2001:470:f026:901::2")
       border.succeed("ping -c 5 172.20.2.3")
-      border.succeed("ping -c 5 2001:470:f026:902::3")
+      border.succeed("ping -c 5 2001:470:f026:104::3")
 
       # conference can ping both routers
       conference.succeed("ping -c 5 172.20.1.1")
@@ -153,7 +153,7 @@
 
       # expo can ping both routers
       expo.succeed("ping -c 5 172.20.2.1")
-      expo.succeed("ping -c 5 2001:470:f026:902::1")
+      expo.succeed("ping -c 5 2001:470:f026:104::1")
       expo.succeed("ping -c 5 172.20.3.2")
       expo.succeed("ping -c 5 2001:470:f026:903::2")
 
@@ -172,9 +172,9 @@
 
       # conference can reach border-expo link
       conference.wait_until_succeeds("ping -c 5 172.20.2.1", timeout=60)
-      conference.wait_until_succeeds("ping -c 5 2001:470:f026:902::1", timeout=60)
+      conference.wait_until_succeeds("ping -c 5 2001:470:f026:104::1", timeout=60)
       conference.wait_until_succeeds("ping -c 5 172.20.2.3", timeout=60)
-      conference.wait_until_succeeds("ping -c 5 2001:470:f026:902::3", timeout=60)
+      conference.wait_until_succeeds("ping -c 5 2001:470:f026:104::3", timeout=60)
 
       # expo can reach conference-border link
       expo.wait_until_succeeds("ping -c 5 172.20.1.1", timeout=60)

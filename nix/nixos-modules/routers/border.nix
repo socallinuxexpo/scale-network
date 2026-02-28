@@ -91,18 +91,18 @@ in
           };
           vlanConfig.Id = 901;
         };
-        "25-bridge902" = {
+        "25-bridge104" = {
           netdevConfig = {
             Kind = "bridge";
-            Name = "bridge902";
+            Name = "bridge104";
           };
         };
-        "25-vlan902" = {
+        "25-vlan104" = {
           netdevConfig = {
             Kind = "vlan";
-            Name = "vlan902";
+            Name = "vlan104";
           };
-          vlanConfig.Id = 902;
+          vlanConfig.Id = 104;
         };
       };
       networks = mkMerge [
@@ -128,7 +128,7 @@ in
             };
             vlan = [
               "vlan103"
-              "vlan902"
+              "vlan104"
             ];
           };
           "40-vlan103" = {
@@ -151,10 +151,10 @@ in
               Bridge = "bridge901";
             };
           };
-          "40-vlan902" = {
-            matchConfig.Name = "vlan902";
+          "40-vlan104" = {
+            matchConfig.Name = "vlan104";
             networkConfig = {
-              Bridge = "bridge902";
+              Bridge = "bridge104";
             };
           };
           "50-bridge901" = {
@@ -165,12 +165,12 @@ in
               "2001:470:f026:901::1/64"
             ];
           };
-          "50-bridge902" = {
-            matchConfig.Name = "bridge902";
+          "50-bridge104" = {
+            matchConfig.Name = "bridge104";
             networkConfig.DHCP = false;
             address = [
               "172.20.2.1/24"
-              "2001:470:f026:902::1/64"
+              "2001:470:f026:104::1/64"
             ];
           };
         }
@@ -231,8 +231,8 @@ in
       services.frr.enable = true;
       services.frr.router-id = "172.20.1.1";
       services.frr.broadcast-interface = [
+        "bridge104" # expo
         "bridge901" # cf
-        "bridge902" # expo
       ];
       # service.frr.passive-interface add 103 and 104 later
     };

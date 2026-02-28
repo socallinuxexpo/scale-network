@@ -68,7 +68,6 @@ in
         "101"
         "102"
         "103"
-        "104"
         "105"
         "107"
         "110"
@@ -134,9 +133,7 @@ in
           };
           vlanConfig.Id = 103;
         };
-        # exMDF
-        # TODO: Talk to owen to see if still needed
-        # goes to ExpoB1
+        # exMDF (conf building router vlan)
         "25-bridge104" = {
           netdevConfig = {
             Kind = "bridge";
@@ -192,19 +189,6 @@ in
           };
           vlanConfig.Id = 110;
         };
-        "25-bridge902" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge902";
-          };
-        };
-        "25-vlan902" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan902";
-          };
-          vlanConfig.Id = 902;
-        };
         "25-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
@@ -239,7 +223,6 @@ in
                 "vlan101"
                 "vlan102"
                 "vlan103"
-                "vlan104"
                 "vlan105"
                 "vlan107"
                 "vlan110"
@@ -258,7 +241,7 @@ in
             };
             vlan = [
               "vlan103"
-              "vlan902"
+              "vlan104"
             ];
           };
           "30-${cfg.frrConferenceInterface}" = {
@@ -337,9 +320,13 @@ in
           "50-bridge104" = {
             matchConfig.Name = "bridge104";
             enable = true;
+            networkConfig.DHCP = false;
             address = [
-              "10.0.4.2/24"
-              "2001:470:f026:104::1/64"
+              "172.20.2.3/24"
+              "2001:470:f026:104::3/64"
+            ];
+            routes = [
+              { Gateway = "172.20.2.1"; }
             ];
           };
           "40-vlan105" = {
@@ -383,24 +370,6 @@ in
               "2001:470:f026:110::1/64"
             ];
           };
-          "40-vlan902" = {
-            matchConfig.Name = "vlan902";
-            networkConfig = {
-              Bridge = "bridge902";
-            };
-          };
-          "50-bridge902" = {
-            matchConfig.Name = "bridge902";
-            networkConfig.DHCP = false;
-            address = [
-              "172.20.2.3/24"
-              "2001:470:f026:902::3/64"
-            ];
-            linkConfig.RequiredForOnline = "routable";
-            routes = [
-              { Gateway = "172.20.2.1"; }
-            ];
-          };
           "40-vlan903" = {
             matchConfig.Name = "vlan903";
             networkConfig = {
@@ -424,7 +393,7 @@ in
       services.frr.enable = true;
       services.frr.router-id = "172.20.2.3";
       services.frr.broadcast-interface = [
-        "bridge902" # border
+        "bridge104" # border
         "bridge903" # conf
       ];
       services.frr.passive-interface = [
@@ -447,7 +416,6 @@ in
             "bridge100"
             "bridge101"
             "bridge102"
-            "bridge104"
             "bridge110"
           ];
           upstreamInterfaces = [ "bridge103" ];
@@ -464,7 +432,6 @@ in
             "2001:470:f026:100::1%%bridge100"
             "2001:470:f026:101::1%%bridge101"
             "2001:470:f026:102::1%%bridge102"
-            "2001:470:f026:104::1%%bridge104"
             "2001:470:f026:107::1%%bridge107"
             "2001:470:f026:110::1%%bridge110"
           ];
