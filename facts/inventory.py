@@ -1048,6 +1048,11 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         }
     for pi in pis:
         wasgehtconfig[pi["name"]] = {
+            "tags": {
+                "type": "pi",
+                "os": "nixos",
+                "role": "registration" if pi["name"].startswith("pi-reg") else "sign",
+            },
             "checks": {
                 "ping": {
                     "addresses": [pi["ipv6"]],
