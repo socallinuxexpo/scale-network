@@ -257,6 +257,7 @@ in
               EmitLLDP = true;
             };
             vlan = [
+              "vlan103"
               "vlan902"
             ];
           };
