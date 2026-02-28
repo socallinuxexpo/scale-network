@@ -38,7 +38,7 @@ my $PS_Preamble = <<EOF;
 % Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
 /PageWidth { $PageWidth Inch } bind def
 /PageHeight { $PageHeight Inch } bind def
-%/StickerWidth { $StickerWidth Inch } bind def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
+%/StickerWidth { $StickerWidth Inch } def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
 /StickerHeight { $StickerHeight Inch } bind def
 /CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
 << /PageSize [ PageWidth 0.25 Inch add PageHeight $SheetCount mul ] >> setpagedevice
@@ -143,7 +143,7 @@ sub embed
   # Draw sticker cut bounding box around sticker with 0.25" radius corners
   print <<EOF;
     gsave
-    /StickerWidth { $stickwidth Inch } bind def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
+    /StickerWidth { $stickwidth Inch } def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
     0.5 0 0 0 (StickerCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
