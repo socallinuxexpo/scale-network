@@ -425,12 +425,10 @@ def serveralias(name):
     match name.lower():
         case "core-expo":
             payload = [
-                "core-slave",
                 "ntpexpo",
             ]
         case "core-conf":
             payload = [
-                "core-master",
                 "loghost",
                 "monitoring",
                 "ntpconf",
