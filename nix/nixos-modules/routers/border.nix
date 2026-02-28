@@ -169,7 +169,7 @@ in
             matchConfig.Name = "bridge104";
             networkConfig.DHCP = false;
             address = [
-              "172.20.2.1/24"
+              "172.20.4.1/24"
               "2001:470:f026:104::1/64"
             ];
           };

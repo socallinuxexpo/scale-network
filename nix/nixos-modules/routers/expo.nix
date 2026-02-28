@@ -322,11 +322,11 @@ in
             enable = true;
             networkConfig.DHCP = false;
             address = [
-              "172.20.2.3/24"
+              "172.20.4.3/24"
               "2001:470:f026:104::3/64"
             ];
             routes = [
-              { Gateway = "172.20.2.1"; }
+              { Gateway = "172.20.4.1"; }
             ];
           };
           "40-vlan105" = {
@@ -391,7 +391,7 @@ in
 
     scale-network = {
       services.frr.enable = true;
-      services.frr.router-id = "172.20.2.3";
+      services.frr.router-id = "172.20.4.3";
       services.frr.broadcast-interface = [
         "bridge104" # border
         "bridge903" # conf
