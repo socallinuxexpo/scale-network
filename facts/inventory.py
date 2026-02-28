@@ -1059,9 +1059,20 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         }
     for ap in aps:
         wasgehtconfig[ap["name"]] = {
+            "tags": {
+                "type": "ap",
+                "os": "openwrt",
+                "channels": f"{ap['wifi2']} / {ap['wifi5']}",
+                "config": ap["configver"],
+                **({"aliases": ", ".join(ap["aliases"])} if ap["aliases"] else {}),
+            },
             "checks": {
                 "ping": {
                     "addresses": [ap["ipv4"]],
+                },
+                "wifi_stations": {
+                    "address": ap["ipv4"],
+                    "radios": ["phy0-ap0", "phy1-ap0"],
                 },
             },
         }
