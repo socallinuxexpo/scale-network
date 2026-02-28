@@ -1020,13 +1020,24 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
 def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
     wasgehtconfig = {}
     for switch in switches:
-        wasgehtconfig[switch["name"]] = {
+        entry = {
+            "tags": {
+                "type": "switch",
+                "os": "junos",
+                "num": switch["num"],
+                **(
+                    {"aliases": ", ".join(switch["aliases"])}
+                    if switch["aliases"]
+                    else {}
+                ),
+            },
             "checks": {
                 "ping": {
                     "addresses": [switch["ipv6"]],
                 },
             },
         }
+        wasgehtconfig[switch["name"]] = entry
     for router in routers:
         wasgehtconfig[router["name"]] = {
             "checks": {
