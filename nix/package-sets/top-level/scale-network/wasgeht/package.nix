@@ -5,22 +5,23 @@
   makeWrapper,
   unixtools,
   rrdtool,
+  go_1_25,
 }:
 
-buildGoModule rec {
+buildGoModule.override { go = go_1_25; } rec {
   pname = "wasgeht";
-  version = "0.2.0";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "kylerisse";
     repo = "wasgeht";
     rev = "refs/tags/${version}";
-    hash = "sha256-+KLjVt5WKcngFCGyQTIoNJVKprn/7fyAiNLkxW6onN0=";
+    hash = "sha256-Yi+35tCe8mnZqs87rBGu8eGhMEPGdvieq0j/6DIh9Ho=";
   };
 
   strictDeps = true;
 
-  vendorHash = "sha256-0HDZ3llIgLMxRLNei93XrcYliBzjajU6ZPllo3/IZVY=";
+  vendorHash = "sha256-EGGsQUqGzbQvyO6nymkG/FR/9IZXAUcmGriRFuwNPMc=";
 
   ldflags = [
     "-s"
@@ -32,6 +33,10 @@ buildGoModule rec {
     makeWrapper
     rrdtool
   ];
+
+  checkPhase = ''
+    go test --short --race -v ./...
+  '';
 
   postFixup = ''
     wrapProgram $out/bin/wasgehtd --set PATH ${

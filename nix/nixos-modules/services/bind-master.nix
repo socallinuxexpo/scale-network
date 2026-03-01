@@ -30,7 +30,7 @@ let
         header = ''
           $ORIGIN scale.lan.
           $TTL    86400
-          @ IN SOA core-slave.scale.lan. admin.scale.lan. (
+          @ IN SOA core-expo.scale.lan. admin.scale.lan. (
           ${zoneSerial}           ; serial number
           3600                    ; refresh
           900                     ; retry

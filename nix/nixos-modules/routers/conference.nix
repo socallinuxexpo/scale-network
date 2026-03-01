@@ -292,7 +292,7 @@ in
             matchConfig.Name = "bridge502";
             enable = true;
             address = [
-              "10.128.2.1/21"
+              "10.128.2.1/24"
               "2001:470:f026:502::1/64"
             ];
           };
