@@ -24,6 +24,7 @@ in
 {
   options.scale-network.router.border = {
     enable = mkEnableOption "SCaLE network border router setup";
+    heTunnelEnable = mkEnableOption "IPv6 Tunnel to HE";
     staticWANEnable = mkEnableOption "WAN Interface static IP";
     WANInterface = mkOption {
       type = types.str;
@@ -63,49 +64,79 @@ in
     systemd.network = {
       enable = true;
 
-      netdevs = {
-        # exInfra
-        "25-bridge103" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge103";
+      netdevs = mkMerge [
+        (mkIf cfg.heTunnelEnable {
+          # HE Tunnel
+          "20-hetunnel" = {
+            netdevConfig = {
+              Name = "he-tunnel";
+              Kind = "sit";
+              MTUBytes = 1480;
+            };
+            tunnelConfig = {
+              Local = "192.159.10.47";
+              Remote = "66.220.18.42";
+            };
           };
-        };
-        "25-vlan103" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan103";
+        })
+        {
+          # exInfra
+          "25-bridge103" = {
+            netdevConfig = {
+              Kind = "bridge";
+              Name = "bridge103";
+            };
           };
-          vlanConfig.Id = 103;
-        };
-        "25-bridge901" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge901";
+          "25-vlan103" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "vlan103";
+            };
+            vlanConfig.Id = 103;
           };
-        };
-        "25-vlan901" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan901";
+          "25-bridge901" = {
+            netdevConfig = {
+              Kind = "bridge";
+              Name = "bridge901";
+            };
           };
-          vlanConfig.Id = 901;
-        };
-        "25-bridge104" = {
-          netdevConfig = {
-            Kind = "bridge";
-            Name = "bridge104";
+          "25-vlan901" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "vlan901";
+            };
+            vlanConfig.Id = 901;
           };
-        };
-        "25-vlan104" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan104";
+          "25-bridge104" = {
+            netdevConfig = {
+              Kind = "bridge";
+              Name = "bridge104";
+            };
           };
-          vlanConfig.Id = 104;
-        };
-      };
+          "25-vlan104" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "vlan104";
+            };
+            vlanConfig.Id = 104;
+          };
+        }
+      ];
       networks = mkMerge [
+        (mkIf cfg.heTunnelEnable {
+          "30-hetunnel" = {
+            enable = true;
+            matchConfig.Name = "he-tunnel";
+            networkConfig = {
+              DHCP = "no";
+              LLDP = false;
+              Address = [
+                "2001:470:c:3d::2/64"
+              ];
+              Gateway = "2001:470:c:3d::1";
+            };
+          };
+        })
         {
           # Physical link to conference center
           "30-${cfg.frrConferenceInterface}" = {
@@ -188,7 +219,6 @@ in
             linkConfig.RequiredForOnline = "no";
           };
         })
-
         (mkIf cfg.staticWANEnable {
           "10-${cfg.WANInterface}" = {
             matchConfig.Name = cfg.WANInterface;
