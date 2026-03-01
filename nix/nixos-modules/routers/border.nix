@@ -304,7 +304,10 @@ in
         "bridge104" # expo
         "bridge901" # cf
       ];
-      # service.frr.passive-interface add 103 and 104 later
+      services.frr.passive-interface = [
+        cfg.WANInterface
+        "bridge103"
+      ];
     };
   };
 }
