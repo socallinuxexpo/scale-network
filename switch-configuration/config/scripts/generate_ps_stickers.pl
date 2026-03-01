@@ -7,8 +7,9 @@
 # Currently output is to STDOUT. Might convert to sending to a file later.
 
 # Values for 17" wide switch labels on 24" media roll (Labels print vertically, joined horizontally 2" per label)
+use strict;
+use Data::Dumper qw/Dumper/;
 
-##FIXME## Added horrible hacks to manage labels for Micro 12 port switches
 
 my $PageWidth = 20;
 my $PageHeight = 15;
@@ -20,6 +21,13 @@ my $Radius = 0.25;
 
 my @maps = <switch-maps/*.eps>;
 my $SheetCount = ($#maps / $StickersPerPage ) + ($#maps % $StickersPerPage ? 1 : 0);
+
+my %WIDTHS = (
+        "ex2300-c-12p"	=>	"9",
+        "ex4200-48p"	=>	"14",
+        "ex4200-48px"	=>	"14",
+        "ex4300-48p"	=>	"14"
+        );
 
 my $PS_Preamble = <<EOF;
 %!PS-Adobe
@@ -38,7 +46,7 @@ my $PS_Preamble = <<EOF;
 % Assumes a $PageWidth Wide $PageHeight tall page. (Change above, according to media roll)
 /PageWidth { $PageWidth Inch } bind def
 /PageHeight { $PageHeight Inch } bind def
-%/StickerWidth { $StickerWidth Inch } def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
+%/StickerWidth { $StickerWidth Inch } def
 /StickerHeight { $StickerHeight Inch } bind def
 /CornerRadius { $Radius Inch } bind def			% Radius for Corner of sticker cut line
 << /PageSize [ PageWidth 0.25 Inch add PageHeight $SheetCount mul ] >> setpagedevice
@@ -131,19 +139,36 @@ sub embed
 {
   my $file = shift(@_);
   my $stickwidth = $StickerWidth;
-  if ($file =~ /Micro/) {
-	  $stickwidth = 9;
-  }
+  my $Model;
   open INPUT, "<$file" || die("Could not read $file: ");
   foreach(<INPUT>)
   {
+    ##FIXME## This regex could probably be improved.
+    if ($_ =~ /Model: ([\S]+)\)\)/)
+    {
+      $Model = $1;
+      print STDERR "Model String: $_ -> ($Model)\n";
+      if (!exists $WIDTHS{$Model})
+      {
+        warn("Unknown Model ($Model), assuming full rack width");
+      }
+      else
+      {
+        $stickwidth = $WIDTHS{$Model};
+      }
+    }
     print $_;
+  }
+  unless ("$Model")
+  {
+    die("Error: File $file has no Model string\n");
   }
   close INPUT;
   # Draw sticker cut bounding box around sticker with 0.25" radius corners
+  print STDERR "File: $file Model: $Model -- $stickwidth Inches wide\n";
   print <<EOF;
     gsave
-    /StickerWidth { $stickwidth Inch } def %%FIXME%% Moved StickerWidth definition into embed() routine to enable MicroSwitch
+    /StickerWidth { $stickwidth Inch } def
     0.5 0 0 0 (StickerCut) 0 /tint exch def
     findcmykcustomcolor
     false setoverprint
