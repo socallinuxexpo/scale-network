@@ -137,6 +137,33 @@ in
             };
           };
         })
+        (mkIf (!cfg.staticWANEnable) {
+          # temporary for testing at various sites
+          # will be static for show
+          "10-${cfg.WANInterface}" = {
+            matchConfig.Name = cfg.WANInterface;
+            enable = true;
+            networkConfig = {
+              DHCP = "yes";
+              LLDP = true;
+              EmitLLDP = true;
+            };
+            linkConfig.RequiredForOnline = "no";
+          };
+        })
+        (mkIf cfg.staticWANEnable {
+          "10-${cfg.WANInterface}" = {
+            matchConfig.Name = cfg.WANInterface;
+            networkConfig = {
+              DHCP = false;
+              LLDP = true;
+              EmitLLDP = true;
+            };
+            address = [
+              "172.16.1.1/24"
+            ];
+          };
+        })
         {
           # Physical link to conference center
           "30-${cfg.frrConferenceInterface}" = {
@@ -205,33 +232,6 @@ in
             ];
           };
         }
-        (mkIf (!cfg.staticWANEnable) {
-          # temporary for testing at various sites
-          # will be static for show
-          "10-${cfg.WANInterface}" = {
-            matchConfig.Name = cfg.WANInterface;
-            enable = true;
-            networkConfig = {
-              DHCP = "yes";
-              LLDP = true;
-              EmitLLDP = true;
-            };
-            linkConfig.RequiredForOnline = "no";
-          };
-        })
-        (mkIf cfg.staticWANEnable {
-          "10-${cfg.WANInterface}" = {
-            matchConfig.Name = cfg.WANInterface;
-            networkConfig = {
-              DHCP = false;
-              LLDP = true;
-              EmitLLDP = true;
-            };
-            address = [
-              "172.16.1.1/24"
-            ];
-          };
-        })
       ];
     };
 
