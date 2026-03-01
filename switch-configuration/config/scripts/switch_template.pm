@@ -11,7 +11,6 @@
 ##FIXME## Build a consistency check to match up VLANs in the vlans file(s) and
 ##FIXME## those defined in the types/* files.
 
-##FIXME## Learn v6 prefix dynamically from config files (look for 2001:470 throughout script)
 ##FIXME## Assumes v6 prefix is a /48 and many code dependencies on this assumption. Safe at least for now.
 
 
@@ -459,8 +458,6 @@ EOF
 
 sub build_interfaces_from_config
 {
-  ##FIXME## There are lots of assumptions here like all switches being 19" standard rack wide. Now we have to accommodate stupid Micro 12 port switches
-  ##FIXME## Because of short time frame for coding this, it's going to be a hellatious hack.
   ##FIXME## There are a number of places where this subroutine assumes
   ##FIXME## that all interaces are ge-0/0/*
   ##FIXME## There are special excpetions coded for FIBER ports at ge-0/1/[0-3] to partially compensate
@@ -484,7 +481,7 @@ EOF
 			"(Type: $Type)\n";
   my $portmap_PS = "%!PS-Adobe-3.0 EPSF-3.0\n%%BoundingBox: 0 0 1008 144 % 14\" x 2\"\n%\n".
             "% Generated Interface Portmap for ".
-            "Switch #$Number Name: $hostname (Type: $Type)\n%\n";
+            "Switch #$Number Name: $hostname (Type: $Type Model: $Model)\n%\n";
   $portmap_PS .= <<EOF;
 % Initialization of graphical context for portmap
 % Each portmap is roughly 14" wide by 2" high.
@@ -494,6 +491,7 @@ SwitchMapDict begin
 % Font Definitions
 /BoxFont { /Helvetica-Bold findfont 9 scalefont setfont } bind def
 /TitleFont { /Helvetica findfont 24 scalefont setfont } bind def
+/MicroTitleFont { /Helvetica findfont 18 scalefont setfont } bind def
 
 % Color Setting
 /PoEOnColor { 0 1 0 setrgbcolor } def
@@ -521,14 +519,14 @@ if ($Type =~ /Micro/) # Treat as 12-port micro switch
   $portmap_PS .= <<EOF;
 /Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add 2 Inch add def % Compute position for left edge of Fiber Ports
 /Fiber_Port_Width 2 Inch def		% Width of SFP Port
-/Center           4.5 Inch def                    % Center of box diagram
+/Center           Left_Port_Edge 4.5 Inch add def                    % Center of box diagram
 /Fiber_Bottom     Odd_Bottom def
 EOF
 } else {
   $portmap_PS.= <<EOF;
 /Fiber_Left_Edge  Port_Width 6 mul Port_Group_Gap add 3 mul Port_Width add def % Compute position for left edge of Fiber Ports
 /Fiber_Port_Width 0.583 Inch def		% Width of SFP Port
-/Center           7 Inch def                    % Center of box diagram
+/Center           Left_Port_Edge 7 Inch add def                    % Center of box diagram
 /Fiber_Bottom     Even_Bottom Box_Height add 0.1 Inch add def
 EOF
 }
@@ -546,6 +544,17 @@ $portmap_PS.= <<EOF;
   dup stringwidth pop          % Get width from font metrics (discard height) [ text ] -> [ text width ]
   2 div                        % Convert to offset from center for left edge -> [ text width/2 ]
   Center exch sub              % Subtract from Center position -> [ text Center-width/2 ]
+  % Check if we are left of the FiberLeftEdge and if so, use MicroTitleFont
+  dup (Left Text Position: ) == == Left_Port_Edge (Left Edge: ) == ==
+  dup Left_Port_Edge exch lt {}     % If not left, do nothing [ text textXpos ] -> [ text textXpos bool {} ] (bool and {} will be consumed by ifelse before else proc executes)
+  {
+    pop                        % Drop the previously computed X position for the start of text [ text width ] -> [ text ]
+    MicroTitleFont             % Select MicroTitle Font
+    0 0 0 setrgbcolor            % Title in black
+    dup stringwidth pop        % Get new text width [ text width ]
+    2 div                      % Convert to offset from center for left edge [ text width/2 ]
+    Center exch sub            % Subtract offset from center [ text textXpos ]
+  } ifelse
   Label_Ligature moveto        % Position at bottom left edge of text -> [ text ]
   show                         % Display text [ text ] -> [ ]
 } bind def
@@ -704,7 +713,7 @@ $portmap_PS.= <<EOF;
   Left Port_Width 2 div add W sub Ligature 10 sub moveto P show
 } bind def
 
-(Switch #$Number Name: $hostname (Type: $Type)) ShowTitle
+(Switch #$Number Name: $hostname (Type: $Type Model: $Model)) ShowTitle
 EOF
 
 # Preamble information to put in generator pulling EPS files together for printing
@@ -1949,12 +1958,12 @@ system {
         encrypted-password "$root_auth";
     }
     ntp {
-        server 2001:470:f026:503::20;
-        server 2001:470:f026:103::20;
+        server $PREFIX:503::20;
+        server $PREFIX:103::20;
     }
     name-server {
-        2001:470:f026:503::20;
-        2001:470:f026:103::20;
+        $PREFIX:503::20;
+        $PREFIX:103::20;
     }
 
     syslog {
