@@ -207,7 +207,46 @@ in
 
     networking.firewall.enable = false;
     networking.nftables.enable = true;
+
     networking.nftables.ruleset = ''
+       table inet filter {
+         chain INPUT {
+           type filter hook input priority filter;
+           policy drop;
+           # Show internal traffic (To the router only via the management net)
+           iifname { bridge103, backdoor0 } accept;
+           # Allow traffic from Owen's network
+           ip6 saddr 2620:0:930::/48 accept;
+           # Existing Flows
+           ct state established,related accept;
+           # PING
+           meta l4proto { icmp, ipv6-icmp } accept;
+           log prefix "NFINP-DROP: " accept;
+           # Drop traffic to the show IPv6 network
+           ip6 daddr 2001:470:f026::/48 counter drop;
+         }
+         chain FORWARD {
+           type filter hook forward priority filter;
+           policy drop;
+           # Show internal traffic
+           iifname { bridge103, bridge104, bridge901, bridge903 } oifname { bridge103, bridge104, bridge901, bridge903 } counter accept
+           iifname { bridge103, bridge104, bridge901, bridge903 } oifname ${cfg.WANInterface} counter accept
+           # Existing Flows
+           ct state established,related accept;
+           # Owen's Network
+           ip6 saddr 2620:0:930::/48 accept;
+           # Drop inbound IPv6 traffic not matched above
+           ip6 daddr 2001:470:f026::/48 counter drop;
+           # PING
+           meta l4proto { icmp, ipv6-icmp } accept;
+           log prefix "NFFWD-DROP: " accept;
+         }
+         chain OUTPUT {
+           type filter hook output priority filter;
+           accept;
+         }
+       }
+
        table ip nat {
         chain PREROUTING {
           type nat hook prerouting priority dstnat; policy accept;
@@ -227,6 +266,7 @@ in
         }
       }
     '';
+
     scale-network = {
       services.frr.enable = true;
       services.frr.router-id = "172.20.1.1";
