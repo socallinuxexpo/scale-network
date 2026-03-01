@@ -50,10 +50,14 @@
                 DHCP = "yes";
                 LLDP = true;
                 EmitLLDP = true;
+                IPv6AcceptRA = true;
               };
               dhcpV4Config = {
                 UseGateway = false;
                 UseRoutes = false;
+              };
+              ipv6AcceptRAConfig = {
+                UseGateway = false;
               };
               linkConfig.RequiredForOnline = "no";
             };

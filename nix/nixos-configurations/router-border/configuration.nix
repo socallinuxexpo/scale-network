@@ -8,6 +8,7 @@
       enable = true;
       staticWANEnable = false;
       WANInterface = "copper0";
+      heTunnelEnable = false;
       frrConferenceInterface = "fiber0";
       frrExpoInterface = "fiber1";
     };
