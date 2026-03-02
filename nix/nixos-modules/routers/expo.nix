@@ -21,6 +21,50 @@ let
     ;
 
   genAttrs' = xs: f: listToAttrs (map f xs);
+
+  trunkVlans = [
+    100
+    101
+    102
+    103
+    105
+    107
+    110
+  ];
+  borderVlans = [
+    103
+    104
+  ];
+  conferenceVlans = [ 903 ];
+
+  # Generate a VLAN netdev named vlan{id}{interface}
+  mkVlanNetdev =
+    vlanId: interface:
+    nameValuePair "25-vlan${toString vlanId}-${interface}" {
+      netdevConfig = {
+        Kind = "vlan";
+        Name = "vlan${toString vlanId}${interface}";
+      };
+      vlanConfig.Id = vlanId;
+    };
+
+  # Generate a network binding: vlan{id}{interface} → bridge{id}
+  mkVlanBridgeNetwork =
+    vlanId: interface:
+    nameValuePair "40-vlan${toString vlanId}${interface}" {
+      matchConfig.Name = "vlan${toString vlanId}${interface}";
+      networkConfig.Bridge = "bridge${toString vlanId}";
+    };
+
+  # Generate netdevs for all (vlanId, interface) combinations
+  mkVlanNetdevs =
+    vlans: interfaces:
+    listToAttrs (builtins.concatMap (iface: map (id: mkVlanNetdev id iface) vlans) interfaces);
+
+  # Generate network bindings for all (vlanId, interface) combinations
+  mkVlanBridgeNetworks =
+    vlans: interfaces:
+    listToAttrs (builtins.concatMap (iface: map (id: mkVlanBridgeNetwork id iface) vlans) interfaces);
 in
 {
 
@@ -84,26 +128,12 @@ in
             Name = "bridge100";
           };
         };
-        "25-vlan100" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan100";
-          };
-          vlanConfig.Id = 100;
-        };
         # exSCALE-FAST
         "25-bridge101" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge101";
           };
-        };
-        "25-vlan101" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan101";
-          };
-          vlanConfig.Id = 101;
         };
         # exSpeaker
         "25-bridge102" = {
@@ -112,26 +142,12 @@ in
             Name = "bridge102";
           };
         };
-        "25-vlan102" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan102";
-          };
-          vlanConfig.Id = 102;
-        };
         # exInfra
         "25-bridge103" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge103";
           };
-        };
-        "25-vlan103" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan103";
-          };
-          vlanConfig.Id = 103;
         };
         # exMDF (conf building router vlan)
         "25-bridge104" = {
@@ -140,26 +156,12 @@ in
             Name = "bridge104";
           };
         };
-        "25-vlan104" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan104";
-          };
-          vlanConfig.Id = 104;
-        };
         # exAVLAN
         "25-bridge105" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge105";
           };
-        };
-        "25-vlan105" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan105";
-          };
-          vlanConfig.Id = 105;
         };
         # exSigns
         "25-bridge107" = {
@@ -168,13 +170,6 @@ in
             Name = "bridge107";
           };
         };
-        "25-vlan107" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan107";
-          };
-          vlanConfig.Id = 107;
-        };
         # exRegistration
         "25-bridge110" = {
           netdevConfig = {
@@ -182,27 +177,16 @@ in
             Name = "bridge110";
           };
         };
-        "25-vlan110" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan110";
-          };
-          vlanConfig.Id = 110;
-        };
         "25-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge903";
           };
         };
-        "25-vlan903" = {
-          netdevConfig = {
-            Kind = "vlan";
-            Name = "vlan903";
-          };
-          vlanConfig.Id = 903;
-        };
-      };
+      }
+      // mkVlanNetdevs trunkVlans cfg.trunkInterfaces
+      // mkVlanNetdevs borderVlans [ cfg.frrBorderInterface ]
+      // mkVlanNetdevs conferenceVlans [ cfg.frrConferenceInterface ];
       networks =
         let
           trunks =
@@ -218,19 +202,14 @@ in
                 EmitLLDP = true;
               };
               # tag vlan on this link
-              vlan = [
-                "vlan100"
-                "vlan101"
-                "vlan102"
-                "vlan103"
-                "vlan105"
-                "vlan107"
-                "vlan110"
-              ];
+              vlan = map (id: "vlan${toString id}${interface}") trunkVlans;
             };
 
         in
         genAttrs' cfg.trunkInterfaces trunks
+        // mkVlanBridgeNetworks trunkVlans cfg.trunkInterfaces
+        // mkVlanBridgeNetworks borderVlans [ cfg.frrBorderInterface ]
+        // mkVlanBridgeNetworks conferenceVlans [ cfg.frrConferenceInterface ]
         // {
           "30-${cfg.frrBorderInterface}" = {
             matchConfig.Name = cfg.frrBorderInterface;
@@ -239,10 +218,7 @@ in
               LLDP = true;
               EmitLLDP = true;
             };
-            vlan = [
-              "vlan103"
-              "vlan104"
-            ];
+            vlan = map (id: "vlan${toString id}${cfg.frrBorderInterface}") borderVlans;
           };
           "30-${cfg.frrConferenceInterface}" = {
             matchConfig.Name = cfg.frrConferenceInterface;
@@ -251,15 +227,7 @@ in
               LLDP = true;
               EmitLLDP = true;
             };
-            vlan = [
-              "vlan903"
-            ];
-          };
-          "40-vlan100" = {
-            matchConfig.Name = "vlan100";
-            networkConfig = {
-              Bridge = "bridge100";
-            };
+            vlan = map (id: "vlan${toString id}${cfg.frrConferenceInterface}") conferenceVlans;
           };
           "50-bridge100" = {
             matchConfig.Name = "bridge100";
@@ -269,12 +237,6 @@ in
               "2001:470:f026:100::1/64"
             ];
           };
-          "40-vlan101" = {
-            matchConfig.Name = "vlan101";
-            networkConfig = {
-              Bridge = "bridge101";
-            };
-          };
           "50-bridge101" = {
             matchConfig.Name = "bridge101";
             enable = true;
@@ -282,12 +244,6 @@ in
               "10.0.136.1/21"
               "2001:470:f026:101::1/64"
             ];
-          };
-          "40-vlan102" = {
-            matchConfig.Name = "vlan102";
-            networkConfig = {
-              Bridge = "bridge102";
-            };
           };
           "50-bridge102" = {
             matchConfig.Name = "bridge102";
@@ -297,12 +253,6 @@ in
               "2001:470:f026:102::1/64"
             ];
           };
-          "40-vlan103" = {
-            matchConfig.Name = "vlan103";
-            networkConfig = {
-              Bridge = "bridge103";
-            };
-          };
           "50-bridge103" = {
             matchConfig.Name = "bridge103";
             enable = true;
@@ -310,12 +260,6 @@ in
               "10.0.3.1/24"
               "2001:470:f026:103::1/64"
             ];
-          };
-          "40-vlan104" = {
-            matchConfig.Name = "vlan104";
-            networkConfig = {
-              Bridge = "bridge104";
-            };
           };
           "50-bridge104" = {
             matchConfig.Name = "bridge104";
@@ -329,12 +273,6 @@ in
               { Gateway = "172.20.4.1"; }
             ];
           };
-          "40-vlan105" = {
-            matchConfig.Name = "vlan105";
-            networkConfig = {
-              Bridge = "bridge105";
-            };
-          };
           "50-bridge105" = {
             matchConfig.Name = "bridge105";
             enable = true;
@@ -343,24 +281,12 @@ in
               "2001:470:f026:105::1/64"
             ];
           };
-          "40-vlan107" = {
-            matchConfig.Name = "vlan107";
-            networkConfig = {
-              Bridge = "bridge107";
-            };
-          };
           "50-bridge107" = {
             matchConfig.Name = "bridge107";
             enable = true;
             address = [
               "2001:470:f026:107::1/64"
             ];
-          };
-          "40-vlan110" = {
-            matchConfig.Name = "vlan110";
-            networkConfig = {
-              Bridge = "bridge110";
-            };
           };
           "50-bridge110" = {
             matchConfig.Name = "bridge110";
@@ -369,12 +295,6 @@ in
               "10.0.10.1/24"
               "2001:470:f026:110::1/64"
             ];
-          };
-          "40-vlan903" = {
-            matchConfig.Name = "vlan903";
-            networkConfig = {
-              Bridge = "bridge903";
-            };
           };
           "50-bridge903" = {
             matchConfig.Name = "bridge903";
