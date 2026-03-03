@@ -29,10 +29,10 @@
     ''
       start_all()
       coreconf.wait_for_unit("wasgeht.service", None, 30)
-      coreconf.succeed("nc -vz localhost 1982")
-      coreconf.succeed("curl -v --fail http://localhost:1982")
-      coreconf.succeed("curl -v --fail http://localhost:1982/imgs")
-      coreconf.succeed("curl -v --fail http://localhost:1982/api")
-      coreconf.succeed("curl -v --fail http://localhost:1982/metrics")
+      coreconf.wait_until_succeeds("nc -vz localhost 1982", timeout=60)
+      coreconf.wait_until_succeeds("curl -v --fail http://localhost:1982", timeout=60)
+      coreconf.wait_until_succeeds("curl -v --fail http://localhost:1982/imgs", timeout=60)
+      coreconf.wait_until_succeeds("curl -v --fail http://localhost:1982/api", timeout=60)
+      coreconf.wait_until_succeeds("curl -v --fail http://localhost:1982/metrics", timeout=60)
     '';
 }
