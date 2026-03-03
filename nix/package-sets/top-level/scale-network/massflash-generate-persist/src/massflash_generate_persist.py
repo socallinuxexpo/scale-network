@@ -106,7 +106,7 @@ def main(
         with download_artifact(
             run_id=last_run.databaseId,
             artifact_name="mt798x-openwrt-build-artifacts",
-            expected_filename="mt798x-3dfd1f6-artifacts.tar.gz",
+            expected_filename="mt798x-41a1874-artifacts.tar.gz",
         ) as tarball_path:
             tarball = tarfile.open(tarball_path)
             extract_file(
@@ -118,7 +118,7 @@ def main(
         with download_artifact(
             run_id=last_run.databaseId,
             artifact_name="ath79-openwrt-build-artifacts",
-            expected_filename="ath79-3dfd1f6-artifacts.tar.gz",
+            expected_filename="ath79-41a1874-artifacts.tar.gz",
         ) as tarball_path:
             tarball = tarfile.open(tarball_path)
             extract_file(
