@@ -20,7 +20,6 @@ let
     mkEnableOption
     mkOption
     ;
-
 in
 {
   options.scale-network.services.monitoring = {
@@ -261,6 +260,13 @@ in
       };
     };
 
+    # Standalone SNMP exporter for Juniper switches
+    services.prometheus.exporters.snmp = {
+      configurationPath = ./snmp-alloy.yml;
+      enable = true;
+      port = 9116;
+    };
+
     # Enable Alloy for AP, Pi, and switch metrics scraping
     scale-network.services.alloy = {
       enable = true;
@@ -298,18 +304,47 @@ in
           files = ["${pkgs.scale-network.scale-inventory}/config/prom-switches.json"]
         }
 
-        // SNMP exporter for Juniper switches
-        prometheus.exporter.snmp "switches" {
+        // Relabel switch targets for the standalone SNMP exporter.
+        // The SNMP exporter is an HTTP service at 127.0.0.1:9116 that accepts
+        // target, module, and auth as query parameters:
+        //   GET /snmp?target=[ipv6]:161&module=if_mib,system,jnxJsSPUMonitoring&auth=Junitux
+        discovery.relabel "switches" {
           targets = discovery.file.switches.targets
+
+          rule {
+            source_labels = ["__address__"]
+            target_label  = "__param_target"
+          }
+
+          rule {
+            source_labels = ["__param_target"]
+            target_label  = "instance"
+          }
+
+          rule {
+            target_label = "__param_module"
+            replacement  = "if_mib,system,jnxJsSPUMonitoring"
+          }
+
+          rule {
+            target_label = "__param_auth"
+            replacement  = "Junitux"
+          }
+
+          rule {
+            target_label = "__address__"
+            replacement  = "127.0.0.1:9116"
+          }
         }
 
-        // Scrape SNMP metrics from switches
+        // Scrape SNMP metrics from switches via the standalone SNMP exporter
         prometheus.scrape "switches" {
-          targets = prometheus.exporter.snmp.switches.targets
-          forward_to = [prometheus.remote_write.mimir.receiver]
-          scrape_interval = "15s"
-          scrape_timeout = "10s"
-          job_name = "switches"
+          targets         = discovery.relabel.switches.output
+          forward_to      = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "60s"
+          scrape_timeout  = "30s"
+          metrics_path    = "/snmp"
+          job_name        = "switches"
         }
       '';
     };
