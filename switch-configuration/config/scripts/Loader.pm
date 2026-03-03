@@ -297,10 +297,28 @@ sub detect_switch
     }
     die("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
     
-    print "Looking for MAC $arp in switchtypes table...";
-    my @switchname = get_switch_by_mac($arp);
-    print "Got ", scalar(@switchname), " names back from get_switch_by_mac($arp)\n";
-    
+    ##FIXME## Horrible hack to accommodate fuzzy MAC matching due to toy switch
+    ## deficiencies and inconsistent base MAC offsets in Juniper devices for me
+    ## and vme interfaces.
+    ## Try xx:xx:xx:xx:xx:y0..yf and xx:xx:xx:xx:xx:Y0..Yf where Y is 0x7 or 0xf
+    ## depending on 
+    foreach my $y (0xf0, 0x80)
+    {
+      my @M = split(/:/, $arp);
+      $M[5] &= $y;
+      $M[5] |= 0x7 if ($y == 0x80);
+      foreach my $x (0x0..0xf)
+      {
+        my @MM = @M;
+        $MM[5] |= $x;
+        my $MAC = join(":", @MM);
+        print "Looking for MAC $MAC in switchtypes table...";
+        my @switchname = get_switch_by_mac($MAC);
+        print "Got ", scalar(@switchname), " names back from get_switch_by_mac($MAC)\n";
+        last if (scalar(@switchname) > 0); # Exit inner loop if we found something
+      }
+      last if (scalar(@switchname) > 0); # Exit outer loop if we found something
+    }
     if (scalar(@switchname) < 1)
     {
         print STDERR "Error: No switchtype entry matching $arp\n";
