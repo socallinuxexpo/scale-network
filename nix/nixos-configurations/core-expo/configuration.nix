@@ -4,6 +4,10 @@
 {
   scale-network = {
     base.enable = true;
+    services.alloy = {
+      enable = true;
+      remoteWrite.url = "http://10.128.3.20:3200/api/v1/push";
+    };
     services.keaMaster.enable = true;
     services.bindMaster.enable = true;
     services.ntp.enable = true;
