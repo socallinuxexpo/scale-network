@@ -40,6 +40,62 @@
         '';
 
         systemd.network = {
+          links = {
+            "3-backdoor" = {
+              matchConfig.OriginalName = "backdoor0";
+              extraConfig = ''
+                Description = "Backdoor Network";
+              '';
+            };
+            "3-fiber0" = {
+              matchConfig.OriginalName = "fiber0";
+              extraConfig = ''
+                Description = "Border Link";
+              '';
+            };
+            "3-fiber1" = {
+              matchConfig.OriginalName = "fiber1";
+              extraConfig = ''
+                Description = "Conf Link";
+              '';
+            };
+            "3-fiber2" = {
+              matchConfig.OriginalName = "fiber2";
+              extraConfig = ''
+                Description = "NE-IDF Link";
+              '';
+            };
+            "3-fiber3" = {
+              matchConfig.OriginalName = "fiber3";
+              extraConfig = ''
+                Description = "NW-IDF Link";
+              '';
+            };
+            "3-copper0" = {
+              matchConfig.OriginalName = "copper0";
+              extraConfig = ''
+                Description = "ExpoIDF Link";
+              '';
+            };
+            "3-copper1" = {
+              matchConfig.OriginalName = "copper1";
+              extraConfig = ''
+                Description = "Expo-Catwalk Link";
+              '';
+            };
+            "3-copper2" = {
+              matchConfig.OriginalName = "copper2";
+              extraConfig = ''
+                Description = "Unused Link";
+              '';
+            };
+            "3-copper3" = {
+              matchConfig.OriginalName = "copper3";
+              extraConfig = ''
+                Description = "Unused Link";
+              '';
+            };
+          };
           networks = {
             # Keep this for troubleshooting
             "10-backdoor" = {
