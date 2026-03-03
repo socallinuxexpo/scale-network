@@ -2,6 +2,8 @@
   gnumake,
   lib,
   perl,
+  perlPackages,
+  scale-network,
   stdenv,
 }:
 let
@@ -29,6 +31,12 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     gnumake
     perl
+    perlPackages.Expect
+    perlPackages.TermReadKey
+    perlPackages.NetSFTPForeign
+    scale-network.perl-net-arp
+    scale-network.perl-net-interface
+    scale-network.perl-net-ping
   ];
 
   buildPhase = ''
