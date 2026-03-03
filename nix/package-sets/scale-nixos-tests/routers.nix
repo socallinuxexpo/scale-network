@@ -108,7 +108,7 @@
           matchConfig.Name = "eth1";
           networkConfig.DHCP = false;
           address = [
-            "172.16.1.100/24"
+            "4.8.155.4/26"
           ];
         };
 
@@ -186,11 +186,11 @@
       print("NETCAT")
 
       client.execute("nc -l 1234 -k -v -n 2> netcat.log 1>&2 &", timeout=10)
-      border.succeed("nc -z 172.16.1.100 1234", timeout=10)
-      expo.succeed("nc -z 172.16.1.100 1234", timeout=10)
-      conference.succeed("nc -z 172.16.1.100 1234", timeout=10)
+      border.succeed("nc -z 4.8.155.4 1234", timeout=10)
+      expo.succeed("nc -z 4.8.155.4 1234", timeout=10)
+      conference.succeed("nc -z 4.8.155.4 1234", timeout=10)
       client.succeed("cat netcat.log 1>&2", timeout=5)
-      client.succeed("test 3 == $(grep 172.16.1.1 -c netcat.log)", timeout=5)
+      client.succeed("test 3 == $(grep 4.8.155.3 -c netcat.log)", timeout=5)
     '';
 
   interactive.sshBackdoor.enable = true;
