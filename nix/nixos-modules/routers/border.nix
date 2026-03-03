@@ -316,6 +316,18 @@ in
         cfg.WANInterface
         "bridge103"
       ];
+      services.frr.routing-config = ''
+        router ospf
+         passive-interface default
+         network 0.0.0.0/0 area 0
+         redistribute connected
+        exit
+        router ospf6
+         redistribute connected
+         redistribute kernel
+         default-information originate
+        exit
+      '';
     };
   };
 }
