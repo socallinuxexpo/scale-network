@@ -74,7 +74,7 @@ in
               MTUBytes = 1480;
             };
             tunnelConfig = {
-              Local = "192.159.10.47";
+              Local = "4.8.155.3";
               Remote = "66.220.18.42";
             };
           };
@@ -158,9 +158,17 @@ in
               DHCP = false;
               LLDP = true;
               EmitLLDP = true;
+              Tunnel = "he-tunnel";
             };
             address = [
-              "172.16.1.1/24"
+              "4.8.155.3/26"
+            ];
+            routes = [
+              {
+                Destination = "0.0.0.0/0";
+                Gateway = "4.8.155.1";
+                GatewayOnLink = true;
+              }
             ];
           };
         })
