@@ -300,7 +300,6 @@ in
 
         // SNMP exporter for Juniper switches
         prometheus.exporter.snmp "switches" {
-          config_file = "${./snmp.yml}"
           targets = discovery.file.switches.targets
         }
 
