@@ -8,7 +8,12 @@
       enable = true;
       frrBorderInterface = "fiber0";
       frrConferenceInterface = "fiber1";
-      trunkInterfaces = [ "copper0" ];
+      trunkInterfaces = [
+        "copper0"
+        "copper1"
+        "fiber2"
+        "fiber3"
+      ];
     };
     services.ssh.enable = true;
     services.alloy = {
