@@ -76,8 +76,6 @@ require Exporter;
 
 @Export = qw(
       detect_switch,
-      Login,
-      attach,
       override_switch,
       wait_offline,
     );
@@ -95,8 +93,10 @@ use Net::SFTP::Foreign;
 use Net::ARP;
 use Net::Interface;
 use Time::HiRes qw/usleep/;
+use Data::Dumper qw/Dumper/;
 use Carp;
 
+my $JDEVICE;
 
 =pod
 
@@ -122,7 +122,7 @@ Creates a new Loader object
 
 BEGIN
 {
-        $Loader::VERSION = '2.0';
+        $Loader::VERSION = '1.0';
         $Loader::line_dely = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
         $Loader::ping = new Net::Ping;
         $Loader::SSH = "/usr/bin/ssh"; # Net::SSH::Perl will be hard to integrate, skipping for now.
@@ -296,61 +296,36 @@ sub detect_switch
       next if ($arp eq "unknown");
       last if $arp;
     }
-    croak("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
+    die("Couldn't arp MAC Address for $IP on any interface\n") unless $arp;
     
-    print "Looking for MAC $arp in switchtypes table...";
-    #   Identify switch from MAC address
-    #   Unfortunately, Juniper doesn't make this easy. The VME interface doesn't have a consistent MAC address or a consistent offset from the base MAC address.
-    #   We can, however, usually get away with the following assumptions:
-    #      The base MAC address (or something close enough to it) can be assumed to be the reported MAC address with the last nibble zeroed.
-    #        (xx:xx:xx:xx:xx:yy -> xx:xx:xx:xx:xx:y0)
-    #      If we search all of the values between 0 and f for that last octet, we are unlikely to hit more than one switch.
-    #      If we search all of the values between 0 and f, the first one that hits should be a valid match to our switch.
-    #
-    # Fuzzy MAC search loop:
-    #  Get base MAC address (ish) from MAC
-    my @M = split(/:/, $arp);
-    $M[5] =~ s/^(.).$/\1/;
-    print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $arp\n";
-    my @switches;
-    foreach my $m (0..0xf)
+    ##FIXME## Horrible hack to accommodate fuzzy MAC matching due to toy switch
+    ## deficiencies and inconsistent base MAC offsets in Juniper devices for me
+    ## and vme interfaces.
+    ## Try xx:xx:xx:xx:xx:y0..yf and xx:xx:xx:xx:xx:Y0..Yf where Y is 0x7 or 0xf
+    ## depending on 
+    my @switchname;
+    foreach my $y (0xf0, 0x80)
     {
-      my @MM = @M; # Copy the base MAC
-      $MM[5] .= sprintf ("%1x", $m);
-      my $arp = join(":", @MM);
-      print STDERR "Trying against MAC $arp\n";
-      print STDERR "get_switch_by_mac($arp)\n";
-      @switches = get_switch_by_mac($arp);
-      print STDERR "get_switch_by_mac($arp) returned \"", join(",", @switches), "\"\n";
-      next if(scalar(@switches) < 1); # Try the next entry.
-      send_abort("Error: Multiple matches for MAC address \"$arp\":", @switches) if(scalar(@switches) > 1);
-      last;
-    }
-    if (scalar(@switches) < 1)
-    {
-      my @MM = @M;
-      if ($MM[5] < 0x80)
+      printf STDERR "Before the split, arp contains %s\n", $arp;
+      my @OT = split(/:/, $arp);
+      $OT[5] = hex($OT[5]);
+      printf STDERR "Before the %02lx split, \@OT contains %s\n", $y, Dumper(\@OT);
+      printf STDERR "Before the %02lx split, M[5] is %02lx\n", $y, $OT[5];
+      $OT[5] &= $y;
+      printf STDERR "After the %02lx split, M[5] is %02lx\n", $y, $OT[5];
+      foreach my $x (0x0..0xf)
       {
-        $MM[5] = "00";
-      {
-      else
-      {
-        $MM[5] = "80";
+        my @MM = @OT;
+        $MM[5] |= $x;
+	$MM[5] = sprintf("%02lx", $MM[5]); # Convert back to hex (sigh)
+        my $MAC = join(":", @MM);
+        print "Looking for MAC $MAC in switchtypes table...";
+         @switchname = get_switch_by_mac($MAC);
+        print "Got ", scalar(@switchname), " names back from get_switch_by_mac($MAC)\n";
+        last if (scalar(@switchname) > 0); # Exit inner loop if we found something
       }
-      my $arp = join(":", @MM);
-      print STDERR "Last Ditch attempt against MAC $arp\n";
-      @switches = get_switch_by_mac($arp);
-      print STDERR "get_switch_by_mac($arp) returned \"", join(",", @switches), "\"\n";
-      send_abort("Error: Multiple matches for MAC address \"$arp\":", @switches) if(scalar(@switches) > 1);
-      if (scalar(@switches < 1)
-      {
-        send_abort("No match found for MAC Address: \"$arp\".", @switches);
-      }
+      last if (scalar(@switchname) > 0); # Exit outer loop if we found something
     }
-
-    my @switchname = get_switch_by_mac($arp);
-    print "Got ", scalar(@switchname), " names back from get_switch_by_mac($arp)\n";
-    
     if (scalar(@switchname) < 1)
     {
         print STDERR "Error: No switchtype entry matching $arp\n";
@@ -396,67 +371,6 @@ sub sftp_progress
     my($sftp, $data, $offset, $size) = @_;
     #print STDERR "\t\tsftp_progress got sftp=$sftp, data=$data, offset=$offset, size=$size\n";
     print "Config: $offset / $size bytes |". "#" x int(($offset*1.0/$size*1.0) * 100.0) ."|\r";
-}
-
-=pod
-
-=over
-
-=item
-
-attach($target)
-
-=over
-
-This function will create a new Expect object and return it after connecting to
-the specified target. Handles both serial (/dev/) targets and SSH (ip address or
-hostname) targets.
-
-=over
-
-=item
-
-$target contains the IP address or /dev/<name> to use to connect to $switch
-
-=back
-
-A successful return from this function will be an Expect object attached to
-the intended target. Failure will return undef. Severre errors will croak().
-
-=back
-
-=back
-
-=cut
-
-sub attach
-{
-  my $target = shift @_;
-  my $JUNIPER = expect->new();
-  $JUNIPER->raw_pty(1);
-  if ($target =~ /^\/dev\//)
-  {
-    my $JDEVICE;
-    # Send configuration via expect directly (skip $SWITCH_COMMANDS)
-    open $JDEVICE, "+<$target" || croak("attach: Failed to open $target\n");
-    print STDERR "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";
-    push @messages, "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";
-    $JDEVICE->autoflush(1);
-    print STDERR "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
-    push @messages,  "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
-    $JUNIPER = Expect->init($JDEVICE);
-    print STDERR "Serial parameters are:\n";
-    print STDERR `stty -F $target -a`;
-  }
-  else
-  {
-    print "Attempting to launch SSH to $target using $JUNIPER\n";
-    $JUNIPER->debug(3);
-    print "Attempting spawn ssh (-l) (".$self->{"DefaultUser"}.") ($target)\n";
-    $JUNIPER->spawn($Loader::SSH, "-l", $self->{"DefaultUser"}, $target);
-    print "Spawn resulted in $JUNIPER\n";
-  }
-  return($JUNIPER);
 }
 
 =pod
@@ -553,12 +467,23 @@ sub override_switch
     }
     print STDERR "Sending configuration file ($config_file) to $Name\n";
     push @messages, "Sending configuration file ($config_file) to $Name\n";
-    my $JUNIPER = $self->attach($target) ||
-	croak("Failed to connect to $target, attach returned undef.\n");
+    my $JUNIPER = Expect->new();
     my ($pos, $err, $matched, $before, $after);
+    $JUNIPER->raw_pty(1);
     if ($target =~ /^\/dev\//)
     {
+	my $JDEVICE;
+        # Send configuration via expect directly (skip $SWITCH_COMMANDS)
+	open $JDEVICE, "+<$target" || croak("Failed to open $target for $Name\n");
+	print STDERR "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
+	push @messages, "Opened $JDEVICE against $target at FH ", fileno($JDEVICE), "\n";;
+	$JDEVICE->autoflush(1);
         open CONFIG, "<$config_file" || croak("Couldn't open $config_file for $Name: $!\n");
+	print STDERR "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
+	push @messages,  "Initializing expect on $target FH ", fileno($JDEVICE), "\n";
+	$JUNIPER = Expect->init($JDEVICE);
+	print STDERR "Serial parameters are:\n";
+	print STDERR `stty -F $target -a`;
         $self->Login($JUNIPER);
         $self->Edit($JUNIPER);
 	#$JUNIPER->send("load override terminal\n");
@@ -614,9 +539,14 @@ sub override_switch
 	print STDERR "SFTP Put $config_file\n";
 	push @messages, "SFTP Put $config_file\n";
         $sftp->put("$config_file", "/tmp/new_config.conf") ||
-                croak("Failed to send config to $target ($Name)\n");
+                croak("Failed to send config to $target ($Name)\n");;
         print "\n\n";
         print STDERR "Activating...\n";
+	print "Attempting to launch SSH to $target using $JUNIPER\n";
+	$JUNIPER->debug(3);
+	print "Attempting spawn ssh (-l) (".$self->{"DefaultUser"}.") ($target)\n";
+        $JUNIPER->spawn($Loader::SSH, "-l", $self->{"DefaultUser"}, $target);
+	print "Spawn resulted in $JUNIPER\n";
         $self->Login($JUNIPER);    # Get to the CLI prompt
         $self->Edit($JUNIPER);     # Transition from CLI to Edit Mode
 	#$JUNIPER->send("load override /tmp/new_config.conf\n");
@@ -739,14 +669,6 @@ sub override_switch
 
 =item
 
-$Loader->send_command($expect_object)
-
-=pod
-
-=over
-
-=item
-
 $Loader->Login($expect_object)
 
 =over
@@ -762,7 +684,7 @@ It does account for "%" (Root logged into shell), ">" (expected logged in), "ogi
 state will likely trigger it's error response, which will send a newline to the switch in hopes of getting
 something it understands.
 
-Will croak() on most serious errors. Does not provide a return value.
+Will die() on most serious errors. Does not provide a return value.
 
 =back
 
@@ -824,7 +746,7 @@ sub Login
         }
         elsif ($matched =~ /REMOTE HOST IDENTIFICATION/)
         {
-          croak("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
+          die("Error: Remote Host Key change detected, cannot continue. Please check ~/.ssh/known_hosts.\n");
         }
         # Handle prompt for host key not recognized
         elsif ($matched =~ /continue connecting/)
@@ -887,7 +809,7 @@ Edit($expect_object)
 
 Requires an Expect object as an argument. Expect Object should be a logged in switch ready
 to accept CLI commands. In the correct entry state, at exit, the switch will be in edit
-mode. An incorrect entry state will likely produce a croak() result.
+mode. An incorrect entry state will likely produce a die() result.
 
 Does not return a value.
 
@@ -906,7 +828,7 @@ sub Edit
         '# ');
     $before =~ s/\033/<Esc>/g;
     $after =~ s/\033/<Esc>/g;
-    croak("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
+    die("Failed to enter edit mode: ($before) ($matched) ($after) $pos $err\n") if($err);
     return;
 }
 
