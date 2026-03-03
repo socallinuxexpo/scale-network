@@ -332,7 +332,7 @@ sub detect_switch
       if ($MM[5] < 0x80)
       {
         $MM[5] = "00";
-      {
+      }
       else
       {
         $MM[5] = "80";
@@ -342,7 +342,7 @@ sub detect_switch
       @switches = get_switch_by_mac($arp);
       print STDERR "get_switch_by_mac($arp) returned \"", join(",", @switches), "\"\n";
       send_abort("Error: Multiple matches for MAC address \"$arp\":", @switches) if(scalar(@switches) > 1);
-      if (scalar(@switches < 1)
+      if (scalar(@switches) < 1)
       {
         send_abort("No match found for MAC Address: \"$arp\".", @switches);
       }
@@ -431,8 +431,10 @@ the intended target. Failure will return undef. Severre errors will croak().
 
 sub attach
 {
+  my $self = shift @_;
   my $target = shift @_;
-  my $JUNIPER = expect->new();
+  my @messages = ();
+  my $JUNIPER = Expect->new();
   $JUNIPER->raw_pty(1);
   if ($target =~ /^\/dev\//)
   {
