@@ -52,7 +52,7 @@ foreach(<TYPES>)
         if (!exists(${$Hierarchy{$hi}}{$Tier}))
         {
             debug(5, "Creating empty tier  $Hierarchy->$Tier\n");
-            ${$Hierarchy{$hi}}{$tier} = [];
+            ${$Hierarchy{$hi}}{$Tier} = [];
         }
         my $list = [ $name, $ipv6 ];
         debug(5, "Adding to tier  $Hierarchy->$Tier (".${$list}[0].",".${$list}[1].")\n");

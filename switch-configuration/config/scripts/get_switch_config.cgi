@@ -114,7 +114,7 @@ if (scalar(@switches) < 1)
   if ($MM[5] < 0x80)
   {
     $MM[5] = "7f";
-  {
+  }
   else
   {
     $MM[5] = "ff";
@@ -124,7 +124,7 @@ if (scalar(@switches) < 1)
   @switches = get_switch_by_mac($MAC);
   print STDERR "get_switch_by_mac($MAC) returned \"", join(",", @switches), "\"\n";
   send_abort("Error: Multiple matches for MAC address \"$MAC\":", @switches) if(scalar(@switches) > 1);
-  if (scalar(@switches < 1)
+  if (scalar(@switches) < 1)
   {
     send_abort("No match found for MAC Address: \"$MAC\".", @switches);
   }

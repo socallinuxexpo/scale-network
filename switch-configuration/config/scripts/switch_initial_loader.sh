@@ -78,7 +78,7 @@ if [ "$LOAD" != "load complete" ]; then
   exit 2
 fi
 CHECK=`grep 'configuration check' /var/log/script_output`
-if [ "$CHECK" != "configuration check succeeds" ]
+if [ "$CHECK" != "configuration check succeeds" ]; then
   echo "Configuration check reported \"$CHECK\" instead of success, possible config errors."
   exit 3
 fi
