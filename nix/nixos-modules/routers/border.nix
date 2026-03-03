@@ -81,7 +81,7 @@ in
         })
         {
           # exInfra
-          "25-bridge103" = {
+          "20-bridge103" = {
             netdevConfig = {
               Kind = "bridge";
               Name = "bridge103";
@@ -94,7 +94,7 @@ in
             };
             vlanConfig.Id = 103;
           };
-          "25-bridge901" = {
+          "20-bridge901" = {
             netdevConfig = {
               Kind = "bridge";
               Name = "bridge901";
@@ -107,7 +107,7 @@ in
             };
             vlanConfig.Id = 901;
           };
-          "25-bridge104" = {
+          "20-bridge104" = {
             netdevConfig = {
               Kind = "bridge";
               Name = "bridge104";
@@ -197,13 +197,7 @@ in
               "vlan104"
             ];
           };
-          "40-vlan103" = {
-            matchConfig.Name = "vlan103";
-            networkConfig = {
-              Bridge = "bridge103";
-            };
-          };
-          "50-bridge103" = {
+          "40-bridge103" = {
             matchConfig.Name = "bridge103";
             enable = true;
             address = [
@@ -211,19 +205,13 @@ in
               "2001:470:f026:103::2/64"
             ];
           };
-          "40-vlan901" = {
-            matchConfig.Name = "vlan901";
+          "50-vlan103" = {
+            matchConfig.Name = "vlan103";
             networkConfig = {
-              Bridge = "bridge901";
+              Bridge = "bridge103";
             };
           };
-          "40-vlan104" = {
-            matchConfig.Name = "vlan104";
-            networkConfig = {
-              Bridge = "bridge104";
-            };
-          };
-          "50-bridge901" = {
+          "40-bridge901" = {
             matchConfig.Name = "bridge901";
             networkConfig.DHCP = false;
             address = [
@@ -231,13 +219,25 @@ in
               "2001:470:f026:901::1/64"
             ];
           };
-          "50-bridge104" = {
+          "50-vlan901" = {
+            matchConfig.Name = "vlan901";
+            networkConfig = {
+              Bridge = "bridge901";
+            };
+          };
+          "40-bridge104" = {
             matchConfig.Name = "bridge104";
             networkConfig.DHCP = false;
             address = [
               "172.20.4.1/24"
               "2001:470:f026:104::1/64"
             ];
+          };
+          "50-vlan104" = {
+            matchConfig.Name = "vlan104";
+            networkConfig = {
+              Bridge = "bridge104";
+            };
           };
         }
       ];
@@ -252,7 +252,7 @@ in
            type filter hook input priority filter;
            policy drop;
            # Show internal traffic (To the router only via the management net)
-           iifname { bridge103, backdoor0 } accept;
+           iifname { bridge103, bridge104, backdoor0 } accept;
            # Allow traffic from Owen's network
            ip6 saddr 2620:0:930::/48 accept;
            # Existing Flows
