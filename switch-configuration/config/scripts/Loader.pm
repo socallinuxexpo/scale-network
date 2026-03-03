@@ -93,6 +93,7 @@ use Net::SFTP::Foreign;
 use Net::ARP;
 use Net::Interface;
 use Time::HiRes qw/usleep/;
+use Data::Dumper qw/Dumper/;
 use Carp;
 
 my $JDEVICE;
@@ -302,18 +303,24 @@ sub detect_switch
     ## and vme interfaces.
     ## Try xx:xx:xx:xx:xx:y0..yf and xx:xx:xx:xx:xx:Y0..Yf where Y is 0x7 or 0xf
     ## depending on 
+    my @switchname;
     foreach my $y (0xf0, 0x80)
     {
-      my @M = split(/:/, $arp);
-      $M[5] &= $y;
-      $M[5] |= 0x7 if ($y == 0x80);
+      printf STDERR "Before the split, arp contains %s\n", $arp;
+      my @OT = split(/:/, $arp);
+      $OT[5] = hex($OT[5]);
+      printf STDERR "Before the %02lx split, \@OT contains %s\n", $y, Dumper(\@OT);
+      printf STDERR "Before the %02lx split, M[5] is %02lx\n", $y, $OT[5];
+      $OT[5] &= $y;
+      printf STDERR "After the %02lx split, M[5] is %02lx\n", $y, $OT[5];
       foreach my $x (0x0..0xf)
       {
-        my @MM = @M;
+        my @MM = @OT;
         $MM[5] |= $x;
+	$MM[5] = sprintf("%02lx", $MM[5]); # Convert back to hex (sigh)
         my $MAC = join(":", @MM);
         print "Looking for MAC $MAC in switchtypes table...";
-        my @switchname = get_switch_by_mac($MAC);
+         @switchname = get_switch_by_mac($MAC);
         print "Got ", scalar(@switchname), " names back from get_switch_by_mac($MAC)\n";
         last if (scalar(@switchname) > 0); # Exit inner loop if we found something
       }
