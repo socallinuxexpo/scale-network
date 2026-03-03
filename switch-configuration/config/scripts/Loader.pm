@@ -124,7 +124,6 @@ BEGIN
 {
         $Loader::VERSION = '2.0';
         $Loader::line_delay = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
-        $Loader::ping = new Net::Ping;
         $Loader::SSH = "/usr/bin/ssh"; # Net::SSH::Perl will be hard to integrate, skipping for now.
 }
 
@@ -168,6 +167,7 @@ sub new
         STDERR->autoflush(1);   # Turn on autoflush for STDERR
         get_switchtype("anonymous");
 
+        $Loader::ping ||= Net::Ping->new();
         my $ping = Net::Ping->new("icmp"),
         print STDERR "Ping OK\n";
         my $interfaces = [ Net::Interface->interfaces() ], # List of interfaces
