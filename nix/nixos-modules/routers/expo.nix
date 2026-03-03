@@ -122,62 +122,62 @@ in
       enable = true;
       netdevs = {
         # exSCALE-SLOW
-        "25-bridge100" = {
+        "20-bridge100" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge100";
           };
         };
         # exSCALE-FAST
-        "25-bridge101" = {
+        "20-bridge101" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge101";
           };
         };
         # exSpeaker
-        "25-bridge102" = {
+        "20-bridge102" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge102";
           };
         };
         # exInfra
-        "25-bridge103" = {
+        "20-bridge103" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge103";
           };
         };
         # exMDF (conf building router vlan)
-        "25-bridge104" = {
+        "20-bridge104" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge104";
           };
         };
         # exAVLAN
-        "25-bridge105" = {
+        "20-bridge105" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge105";
           };
         };
         # exSigns
-        "25-bridge107" = {
+        "20-bridge107" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge107";
           };
         };
         # exRegistration
-        "25-bridge110" = {
+        "20-bridge110" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge110";
           };
         };
-        "25-bridge903" = {
+        "20-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge903";
@@ -229,7 +229,7 @@ in
             };
             vlan = map (id: "vlan${toString id}${cfg.frrConferenceInterface}") conferenceVlans;
           };
-          "50-bridge100" = {
+          "40-bridge100" = {
             matchConfig.Name = "bridge100";
             enable = true;
             address = [
@@ -237,7 +237,7 @@ in
               "2001:470:f026:100::1/64"
             ];
           };
-          "50-bridge101" = {
+          "40-bridge101" = {
             matchConfig.Name = "bridge101";
             enable = true;
             address = [
@@ -245,7 +245,7 @@ in
               "2001:470:f026:101::1/64"
             ];
           };
-          "50-bridge102" = {
+          "40-bridge102" = {
             matchConfig.Name = "bridge102";
             enable = true;
             address = [
@@ -253,7 +253,7 @@ in
               "2001:470:f026:102::1/64"
             ];
           };
-          "50-bridge103" = {
+          "40-bridge103" = {
             matchConfig.Name = "bridge103";
             enable = true;
             address = [
@@ -261,7 +261,7 @@ in
               "2001:470:f026:103::1/64"
             ];
           };
-          "50-bridge104" = {
+          "40-bridge104" = {
             matchConfig.Name = "bridge104";
             enable = true;
             networkConfig.DHCP = false;
@@ -273,7 +273,7 @@ in
               { Gateway = "172.20.4.1"; }
             ];
           };
-          "50-bridge105" = {
+          "40-bridge105" = {
             matchConfig.Name = "bridge105";
             enable = true;
             address = [
@@ -281,14 +281,14 @@ in
               "2001:470:f026:105::1/64"
             ];
           };
-          "50-bridge107" = {
+          "40-bridge107" = {
             matchConfig.Name = "bridge107";
             enable = true;
             address = [
               "2001:470:f026:107::1/64"
             ];
           };
-          "50-bridge110" = {
+          "40-bridge110" = {
             matchConfig.Name = "bridge110";
             enable = true;
             address = [
@@ -296,7 +296,7 @@ in
               "2001:470:f026:110::1/64"
             ];
           };
-          "50-bridge903" = {
+          "40-bridge903" = {
             matchConfig.Name = "bridge903";
             networkConfig.DHCP = false;
             address = [
