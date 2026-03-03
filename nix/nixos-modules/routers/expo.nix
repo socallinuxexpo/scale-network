@@ -127,6 +127,7 @@ in
             Kind = "bridge";
             Name = "bridge100";
           };
+          bridgeConfig.STP = true;
         };
         # exSCALE-FAST
         "20-bridge101" = {
@@ -134,6 +135,7 @@ in
             Kind = "bridge";
             Name = "bridge101";
           };
+          bridgeConfig.STP = true;
         };
         # exSpeaker
         "20-bridge102" = {
@@ -141,6 +143,7 @@ in
             Kind = "bridge";
             Name = "bridge102";
           };
+          bridgeConfig.STP = true;
         };
         # exInfra
         "20-bridge103" = {
@@ -148,6 +151,7 @@ in
             Kind = "bridge";
             Name = "bridge103";
           };
+          bridgeConfig.STP = true;
         };
         # exMDF (conf building router vlan)
         "20-bridge104" = {
@@ -155,6 +159,7 @@ in
             Kind = "bridge";
             Name = "bridge104";
           };
+          bridgeConfig.STP = true;
         };
         # exAVLAN
         "20-bridge105" = {
@@ -162,6 +167,7 @@ in
             Kind = "bridge";
             Name = "bridge105";
           };
+          bridgeConfig.STP = true;
         };
         # exSigns
         "20-bridge107" = {
@@ -169,6 +175,7 @@ in
             Kind = "bridge";
             Name = "bridge107";
           };
+          bridgeConfig.STP = true;
         };
         # exRegistration
         "20-bridge110" = {
@@ -176,12 +183,14 @@ in
             Kind = "bridge";
             Name = "bridge110";
           };
+          bridgeConfig.STP = true;
         };
         "20-bridge903" = {
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge903";
           };
+          bridgeConfig.STP = true;
         };
       }
       // mkVlanNetdevs trunkVlans cfg.trunkInterfaces
