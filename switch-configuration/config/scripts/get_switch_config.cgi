@@ -10,9 +10,10 @@
 # The script depends on having a copy of the SCALE networking Repository in a known location
 # (/var/www/scale-repo/scale-network).
 
+our $REPO;
 BEGIN {
     # Define global varialbes and placeholders
-    our $REPO = "/var/www/scale-repo/scale-network";
+    $REPO = "/var/www/scale-repo/scale-network";
 }
 my $QUERY = "";
 my $MAC = "";
@@ -92,7 +93,7 @@ get_switchtype("anonymous");
 # Fuzzy MAC search loop:
 #  Get base MAC address (ish) from MAC
 my @M = split(/:/, $MAC);
-$M[5] =~ s/^(.).$/\1/;
+$M[5] =~ s/^(.).$/$1/;
 print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $MAC\n";
 my @switches;
 foreach my $m (0..0xf)

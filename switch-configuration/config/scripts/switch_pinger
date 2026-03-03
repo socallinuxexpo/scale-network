@@ -46,16 +46,16 @@ foreach(<TYPES>)
         debug(8, "H-> $hi, T->$Tier N->$name, I->$ipv6\n");
         if (!exists($Hierarchy{$hi}))
         {
-            debug(5, "Creating empty hierarchy $Hierarchy\n");
+            debug(5, "Creating empty hierarchy $hi\n");
             $Hierarchy{$hi} = {};
         }
         if (!exists(${$Hierarchy{$hi}}{$Tier}))
         {
-            debug(5, "Creating empty tier  $Hierarchy->$Tier\n");
+            debug(5, "Creating empty tier  $hi->$Tier\n");
             ${$Hierarchy{$hi}}{$Tier} = [];
         }
         my $list = [ $name, $ipv6 ];
-        debug(5, "Adding to tier  $Hierarchy->$Tier (".${$list}[0].",".${$list}[1].")\n");
+        debug(5, "Adding to tier  $hi->$Tier (".${$list}[0].",".${$list}[1].")\n");
         push @{$Hierarchy{$hi}{$Tier}}, $list;
         debug(7, "Now: ".Dumper(%Hierarchy)."\n");
     }

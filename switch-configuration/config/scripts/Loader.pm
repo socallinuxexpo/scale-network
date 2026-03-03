@@ -72,14 +72,14 @@
 package Loader;
 
 require Exporter;
-@ISA = (Exporter);
+our @ISA = ('Exporter');
 
-@Export = qw(
-      detect_switch,
-      Login,
-      attach,
-      override_switch,
-      wait_offline,
+our @Export = qw(
+      detect_switch
+      Login
+      attach
+      override_switch
+      wait_offline
     );
 use strict;
 use lib "./scripts";
@@ -123,7 +123,7 @@ Creates a new Loader object
 BEGIN
 {
         $Loader::VERSION = '2.0';
-        $Loader::line_dely = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
+        $Loader::line_delay = 50 * 1000; # Delay 50 milliseconds between lines sent to /dev (presumably serial line)
         $Loader::ping = new Net::Ping;
         $Loader::SSH = "/usr/bin/ssh"; # Net::SSH::Perl will be hard to integrate, skipping for now.
 }
@@ -310,7 +310,7 @@ sub detect_switch
     # Fuzzy MAC search loop:
     #  Get base MAC address (ish) from MAC
     my @M = split(/:/, $arp);
-    $M[5] =~ s/^(.).$/\1/;
+    $M[5] =~ s/^(.).$/$1/;
     print STDERR "Found base MAC \"", join(":", @M)."0", "\" from $arp\n";
     my @switches;
     foreach my $m (0..0xf)

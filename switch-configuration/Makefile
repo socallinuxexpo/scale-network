@@ -11,9 +11,13 @@ all: switch-maps-outputs
 
 lint:	.lint
 
-.lint: config/scripts/*.pl
+.lint: config/scripts/*.pl config/scripts/Loader.pm config/scripts/switch_config_loader config/scripts/get_switch_config.cgi config/scripts/switch_pinger
 	cd config && \
-		find . -name '*.pl' | xargs '-I{}' perl -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
+		find . -name '*.pl' | xargs '-I{}' perl -I scripts -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw {}
+	cd config/scripts && \
+		for f in Loader.pm switch_config_loader get_switch_config.cgi switch_pinger; do \
+			perl -I. -Mstrict -Mdiagnostics -M'warnings FATAL=>q(all)' -cw $$f || exit 1; \
+		done
 	touch .lint
 
 perms:	.perms
