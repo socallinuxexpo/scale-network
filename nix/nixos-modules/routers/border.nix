@@ -200,6 +200,9 @@ in
           "40-bridge103" = {
             matchConfig.Name = "bridge103";
             enable = true;
+            networkConfig = {
+              IPv6AcceptRA = false;
+            };
             address = [
               "10.0.3.2/24"
               "2001:470:f026:103::2/64"
