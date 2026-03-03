@@ -238,6 +238,22 @@ in
             };
             vlan = map (id: "vlan${toString id}${cfg.frrConferenceInterface}") conferenceVlans;
           };
+          # server access port - vlan 103
+          "30-copper2" = {
+            matchConfig.Name = "copper2";
+            networkConfig = {
+              Bridge = "bridge103";
+              LinkLocalAddressing = "no";
+            };
+          };
+          # av access port - vlan 105
+          "30-copper3" = {
+            matchConfig.Name = "copper3";
+            networkConfig = {
+              Bridge = "bridge105";
+              LinkLocalAddressing = "no";
+            };
+          };
           "40-bridge100" = {
             matchConfig.Name = "bridge100";
             enable = true;
