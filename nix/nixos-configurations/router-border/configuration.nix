@@ -7,10 +7,10 @@
     router.border = {
       enable = true;
       staticWANEnable = true;
-      WANInterface = "copper0";
+      WANInterface = "internet0";
       heTunnelEnable = true;
-      frrConferenceInterface = "fiber0";
-      frrExpoInterface = "fiber1";
+      frrConferenceInterface = "toconf0";
+      frrExpoInterface = "toexpo0";
     };
     services.ssh.enable = true;
     services.alloy = {

@@ -6,13 +6,13 @@
     base.enable = true;
     router.expo = {
       enable = true;
-      frrBorderInterface = "fiber0";
-      frrConferenceInterface = "fiber1";
+      frrBorderInterface = "toborder0";
+      frrConferenceInterface = "toconf0";
       trunkInterfaces = [
-        "copper0"
-        "copper1"
-        "fiber2"
-        "fiber3"
+        "TRexpo0"
+        "TRcatwalk0"
+        "TRneidf0"
+        "TRnwidf0"
       ];
     };
     services.ssh.enable = true;

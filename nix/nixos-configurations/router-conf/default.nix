@@ -28,74 +28,18 @@
           # Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 15)
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:11:00.0", NAME="backdoor0"
           # Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
-          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:03:00.0", NAME="fiber0"
-          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:03:00.1", NAME="fiber1"
+          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:03:00.0", NAME="toborder0"
+          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:03:00.1", NAME="toexpo0"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:06:00.0", NAME="fiber2"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:06:00.1", NAME="fiber3"
           # Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
-          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.0", NAME="copper0"
+          SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.0", NAME="TRconfidf"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.1", NAME="copper1"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.2", NAME="copper2"
           SUBSYSTEM=="net", ACTION=="add", KERNELS=="0000:0d:00.3", NAME="copper3"
         '';
 
         systemd.network = {
-          links = {
-            "3-backdoor" = {
-              matchConfig.OriginalName = "backdoor0";
-              extraConfig = ''
-                AlternativeName = "Backdoor Network";
-              '';
-            };
-            "3-fiber0" = {
-              matchConfig.OriginalName = "fiber0";
-              extraConfig = ''
-                AlternativeName = "Border Link";
-              '';
-            };
-            "3-fiber1" = {
-              matchConfig.OriginalName = "fiber1";
-              extraConfig = ''
-                AlternativeName = "Expo Link";
-              '';
-            };
-            "3-fiber2" = {
-              matchConfig.OriginalName = "fiber2";
-              extraConfig = ''
-                AlternativeName = "Unused Link";
-              '';
-            };
-            "3-fiber3" = {
-              matchConfig.OriginalName = "fiber3";
-              extraConfig = ''
-                AlternativeName = "Unused Link";
-              '';
-            };
-            "3-copper0" = {
-              matchConfig.OriginalName = "copper0";
-              extraConfig = ''
-                AlternativeName = "ConfIDF Link";
-              '';
-            };
-            "3-copper1" = {
-              matchConfig.OriginalName = "copper1";
-              extraConfig = ''
-                AlternativeName = "Unused Link";
-              '';
-            };
-            "3-copper2" = {
-              matchConfig.OriginalName = "copper2";
-              extraConfig = ''
-                AlternativeName = "Unused Link";
-              '';
-            };
-            "3-copper3" = {
-              matchConfig.OriginalName = "copper3";
-              extraConfig = ''
-                AlternativeName = "Unused Link";
-              '';
-            };
-          };
           networks = {
             # Keep this for troubleshooting
             "10-backdoor" = {
