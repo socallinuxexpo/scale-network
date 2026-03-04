@@ -15650,7 +15650,7 @@
     }
   ],
   "preload": false,
-  "refresh": "1m",
+  "refresh": "auto",
   "schemaVersion": 41,
   "tags": [
     "linux"
@@ -15673,8 +15673,8 @@
       },
       {
         "current": {
-          "text": "aps",
-          "value": "aps"
+          "text": "integrations/unix",
+          "value": "integrations/unix"
         },
         "datasource": {
           "type": "prometheus",
@@ -15696,8 +15696,8 @@
       },
       {
         "current": {
-          "text": "av-1",
-          "value": "av-1"
+          "text": "router-border",
+          "value": "router-border"
         },
         "datasource": {
           "type": "prometheus",
@@ -15719,8 +15719,8 @@
       },
       {
         "current": {
-          "text": "10.128.3.130:9100",
-          "value": "10.128.3.130:9100"
+          "text": "router-border",
+          "value": "router-border"
         },
         "datasource": {
           "type": "prometheus",
@@ -15743,12 +15743,12 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Baremetal / Views / Node",
   "uid": "rYdddlPWk",
-  "version": 3
+  "version": 4
 }
