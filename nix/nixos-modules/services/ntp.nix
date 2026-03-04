@@ -29,5 +29,8 @@ in
         restrict 2001:470:f026::/48 kod nomodify notrap nopeer
       '';
     };
+    networking.firewall = {
+      allowedUDPPorts = [ 123 ];
+    };
   };
 }
