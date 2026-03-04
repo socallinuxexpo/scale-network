@@ -48,12 +48,12 @@ ExpoB1		30	103	2001:470:f026:103::200:30	Booth		W.9		Normal		ex4200-48p	00:26:88
 ExpoB2		31	103	2001:470:f026:103::200:31	Booth		W.9		Quiet		ex4200-48p	00:26:88:7d:f5:80
 ExpoB3		32	103	2001:470:f026:103::200:32	Booth		W.9		Normal		ex4200-48p	00:26:88:7a:76:80
 ExpoB4		33	103	2001:470:f026:103::200:33	Booth		W.9		Normal		ex4200-48p	00:26:88:7d:f8:00
-ExpoB5		34	103	2001:470:f026:103::200:34	Booth		Z.9		Loud		ex4200-48p	00:26:88:6f:1e:00
+ExpoB5		34	103	2001:470:f026:103::200:34	Booth		W.9		Loud		ex4200-48p	00:26:88:6f:1e:00
 ExpoC1		35	103	2001:470:f026:103::200:35	Booth		W.9		Loud		ex4200-48p	00:19:e2:56:23:3f
 ExpoC2		36	103	2001:470:f026:103::200:36	Booth		W.9		Normal		ex4200-48p	2c:6b:f5:39:cf:80
 ExpoC3		37	103	2001:470:f026:103::200:37	Booth		W.9		Quiet		ex4200-48p	2c:6b:f5:37:cd:00
 ExpoC4		38	103	2001:470:f026:103::200:38	Booth		W.9		Normal		ex4200-48p	00:26:88:7e:1b:80
-ExpoC5		39	103	2001:470:f026:103::200:39	Booth		Z.9		Normal		ex4200-48p	00:26:88:70:d6:00
+ExpoC5		39	103	2001:470:f026:103::200:39	Booth		W.9		Normal		ex4200-48p	00:26:88:70:d6:00
 SpareI		40	103	2001:470:f026:103::200:40	exRoom		Z.9		Quiet		ex4200-48p	b0:c6:9a:64:85:80
 BallroomB	41	103	2001:470:f026:103::200:41	exRoom		C.9		Normal		ex4200-48p	00:26:88:70:bb:00
 BallroomC	42	103	2001:470:f026:103::200:42	exRoom		C.9		Normal		ex4200-48p	00:26:88:60:40:00
@@ -67,11 +67,11 @@ BallroomH	49	103	2001:470:f026:103::200:49	exRoom		F.9		??		ex4200-48p	84:18:88:
 Rm208		50	503	2001:470:f026:503::200:50	cfRoom		I.9		??		ex4200-48p	84:18:88:ad:4e:80
 DONOTUSE	51	103	2001:470:f026:103::200:51	swatch		Z.9		Loud		ex4200-48px	ec:3e:f7:50:58:80
 RegDesk		52	103	2001:470:f026:103::200:52	registration	X.9		Normal		ex4200-48px	f4:a7:39:c8:ef:00
-ExpoIDF		53	103	2001:470:f026:103::200:53	exIDF		F.1		Loud		ex4300-48p	58:00:bb:4a:2e:c0
+ExpoIDF		53	103	2001:470:f026:103::200:53	exIDF		X.1		Loud		ex4300-48p	58:00:bb:4a:2e:c0
 //retired	54	503	2001:470:f026:503::200:54	cfIDF		I.1		Loud		ex4300-48p
 //retired	55	103	2001:470:f026:103::200:55	Booth		W.9		Loud		ex4300-48p
 BallroomA	56	103	2001:470:f026:103::200:56	exMicro		C.9		Silent		ex2300-c-12p	4c:16:fc:3f:36:03
 BallroomG	57	103	2001:470:f026:103::200:57	exMicro		F.9		Silent		ex2300-c-12p	38:4f:49:15:f2:05
 Room103		58	503	2001:470:f026:503::200:58	cfMicro		I.9		Silent		ex2300-c-12p	84:03:28:0b:f0:7a
-ConfIDF		59	503	2001:470:f026:503::200:59	cfIDF		C.1		Loud		ex4300-48p	58:00:bb:4a:59:e0
+ConfIDF		59	503	2001:470:f026:503::200:59	cfIDF		I.1		Loud		ex4300-48p	58:00:bb:4a:59:e0
 Room104		60	503	2001:470:f026:503::200:60	cfMicro		I.9		Silent		ex2300-c-12p	b4:8a:5f:07:17:0c
