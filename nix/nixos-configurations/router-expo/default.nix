@@ -86,13 +86,13 @@
             "3-copper2" = {
               matchConfig.OriginalName = "copper2";
               extraConfig = ''
-                Description = "Unused Link";
+                Description = "Tech Server Link";
               '';
             };
             "3-copper3" = {
               matchConfig.OriginalName = "copper3";
               extraConfig = ''
-                Description = "Unused Link";
+                Description = "AV Server Link";
               '';
             };
           };
