@@ -307,7 +307,7 @@ in
         // Relabel switch targets for the standalone SNMP exporter.
         // The SNMP exporter is an HTTP service at 127.0.0.1:9116 that accepts
         // target, module, and auth as query parameters:
-        //   GET /snmp?target=[ipv6]:161&module=if_mib,system,jnxJsSPUMonitoring&auth=Junitux
+        //   GET /snmp?target=[ipv6]:161&module=if_mib,system,jnxOperating&auth=Junitux
         discovery.relabel "switches" {
           targets = discovery.file.switches.targets
 
@@ -323,7 +323,7 @@ in
 
           rule {
             target_label = "__param_module"
-            replacement  = "if_mib,system,jnxJsSPUMonitoring"
+            replacement  = "if_mib,system,jnxOperating"
           }
 
           rule {

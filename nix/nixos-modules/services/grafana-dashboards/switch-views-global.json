@@ -53,7 +53,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
+        "w": 6,
         "x": 0,
         "y": 0
       },
@@ -122,8 +122,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 8,
+        "w": 6,
+        "x": 6,
         "y": 0
       },
       "id": 2,
@@ -187,8 +187,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
-        "x": 16,
+        "w": 6,
+        "x": 12,
         "y": 0
       },
       "id": 4,
@@ -223,6 +223,79 @@
         }
       ],
       "title": "Total Switches Monitored",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PAE45454D0EDB9216"
+      },
+      "description": "Average CPU utilization across all switches in the fleet",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "expr": "avg(jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"})",
+          "instant": true,
+          "legendFormat": "Avg CPU",
+          "refId": "A"
+        }
+      ],
+      "title": "Fleet Average CPU Usage",
       "type": "stat"
     },
     {
@@ -422,6 +495,212 @@
         "type": "prometheus",
         "uid": "PAE45454D0EDB9216"
       },
+      "description": "Average CPU utilization across the switch fleet over time",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "expr": "avg(jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"})",
+          "legendFormat": "Fleet Average",
+          "refId": "A"
+        }
+      ],
+      "title": "Fleet CPU Usage Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PAE45454D0EDB9216"
+      },
+      "description": "Top 10 switches by average CPU utilization",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "expr": "topk(10, avg by (switch) (jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"}))",
+          "legendFormat": "{{switch}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Top 10 Switches by CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PAE45454D0EDB9216"
+      },
       "description": "Overview of all switches with system info, uptime, and interface status",
       "fieldConfig": {
         "defaults": {
@@ -516,7 +795,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 20
       },
       "id": 5,
       "options": {
@@ -667,7 +946,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 19
+        "y": 27
       },
       "id": 9,
       "options": {
@@ -785,7 +1064,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 19
+        "y": 27
       },
       "id": 8,
       "options": {
