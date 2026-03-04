@@ -341,6 +341,10 @@ in
         "bridge104" # border
         "bridge903" # conf
       ];
+      services.frr.interface-priority = {
+        "bridge104" = 100;
+        "bridge903" = 100;
+      };
       services.frr.passive-interface = [
         "bridge100"
         "bridge101"

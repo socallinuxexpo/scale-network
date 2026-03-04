@@ -315,6 +315,10 @@ in
         "bridge104" # expo
         "bridge901" # cf
       ];
+      services.frr.interface-priority = {
+        "bridge104" = 200;
+        "bridge901" = 200;
+      };
       services.frr.passive-interface = [
         cfg.WANInterface
         "bridge103"
