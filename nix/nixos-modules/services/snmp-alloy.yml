@@ -1,5 +1,5 @@
 # Prometheus SNMP Exporter configuration
-# Modules: if_mib, system, jnxJsSPUMonitoring
+# Modules: if_mib, system, jnxOperating
 # Auth: SNMPv2c with community "Junitux"
 auths:
   Junitux:
@@ -535,67 +535,114 @@ modules:
         type: DisplayString
         help: The physical location of this node.
   # ---------------------------------------------------------------------------
-  # jnxJsSPUMonitoring - Juniper SRX SPU Monitoring (JUNIPER-SRX-SPU-MONITORING-MIB)
-  # OID base: 1.3.6.1.4.1.2636.3.39.1.12.1.1 (jnxJsSPUMonitoringMIB)
-  # Table:    1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1 (jnxJsSPUMonitoringObjectsTable)
+  # jnxOperating - Juniper Operating State (JUNIPER-MIB)
+  # OID base: 1.3.6.1.4.1.2636.3.1.13 (jnxOperatingTable)
+  # Provides CPU, memory, and temperature for EX/QFX/MX switch components
   # ---------------------------------------------------------------------------
-  jnxJsSPUMonitoring:
+  jnxOperating:
     walk:
-      - 1.3.6.1.4.1.2636.3.39.1.12.1.1
+      - 1.3.6.1.4.1.2636.3.1.13
     metrics:
-      - name: jnxJsSPUMonitoringCPUUsage
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.4
-        type: gauge
-        help: SPU CPU utilization percentage.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringMemoryUsage
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.5
-        type: gauge
-        help: SPU memory utilization percentage.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringCurrentFlowSession
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.6
-        type: gauge
-        help: Current number of flow sessions on the SPU.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringMaxFlowSession
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.7
-        type: gauge
-        help: Maximum number of flow sessions supported by the SPU.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringCurrentCPSession
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.8
-        type: gauge
-        help: Current number of CP (central point) sessions on the SPU.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringMaxCPSession
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.9
-        type: gauge
-        help: Maximum number of CP sessions supported by the SPU.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringNodeIndex
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.2
-        type: gauge
-        help: Node index for identifying SPU in a cluster.
-        indexes:
-          - labelname: jnxJsSPUMonitoringIndex
-            type: gauge
-      - name: jnxJsSPUMonitoringNodeDescr
-        oid: 1.3.6.1.4.1.2636.3.39.1.12.1.1.1.1.3
+      - name: jnxOperatingDescr
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.5
         type: DisplayString
-        help: Description of the SPU node.
+        help: Description of the operating component.
         indexes:
-          - labelname: jnxJsSPUMonitoringIndex
+          - labelname: jnxOperatingContentsIndex
             type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+      - name: jnxOperatingCPU
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.8
+        type: gauge
+        help: CPU utilization percentage of the operating component.
+        indexes:
+          - labelname: jnxOperatingContentsIndex
+            type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+        lookups:
+          - labels: [jnxOperatingContentsIndex, jnxOperatingL1Index, jnxOperatingL2Index, jnxOperatingL3Index]
+            labelname: jnxOperatingDescr
+            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+            type: DisplayString
+      - name: jnxOperatingTemp
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.7
+        type: gauge
+        help: Temperature of the operating component in degrees Celsius.
+        indexes:
+          - labelname: jnxOperatingContentsIndex
+            type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+        lookups:
+          - labels: [jnxOperatingContentsIndex, jnxOperatingL1Index, jnxOperatingL2Index, jnxOperatingL3Index]
+            labelname: jnxOperatingDescr
+            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+            type: DisplayString
+      - name: jnxOperatingBuffer
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.11
+        type: gauge
+        help: Buffer pool utilization percentage of the operating component.
+        indexes:
+          - labelname: jnxOperatingContentsIndex
+            type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+        lookups:
+          - labels: [jnxOperatingContentsIndex, jnxOperatingL1Index, jnxOperatingL2Index, jnxOperatingL3Index]
+            labelname: jnxOperatingDescr
+            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+            type: DisplayString
+      - name: jnxOperating1MinLoadAvg
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.20
+        type: gauge
+        help: 1-minute load average of the operating component.
+        indexes:
+          - labelname: jnxOperatingContentsIndex
+            type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+        lookups:
+          - labels: [jnxOperatingContentsIndex, jnxOperatingL1Index, jnxOperatingL2Index, jnxOperatingL3Index]
+            labelname: jnxOperatingDescr
+            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+            type: DisplayString
+      - name: jnxOperating5MinLoadAvg
+        oid: 1.3.6.1.4.1.2636.3.1.13.1.21
+        type: gauge
+        help: 5-minute load average of the operating component.
+        indexes:
+          - labelname: jnxOperatingContentsIndex
+            type: gauge
+          - labelname: jnxOperatingL1Index
+            type: gauge
+          - labelname: jnxOperatingL2Index
+            type: gauge
+          - labelname: jnxOperatingL3Index
+            type: gauge
+        lookups:
+          - labels: [jnxOperatingContentsIndex, jnxOperatingL1Index, jnxOperatingL2Index, jnxOperatingL3Index]
+            labelname: jnxOperatingDescr
+            oid: 1.3.6.1.4.1.2636.3.1.13.1.5
+            type: DisplayString
