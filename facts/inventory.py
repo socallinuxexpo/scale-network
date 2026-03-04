@@ -751,6 +751,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
             "reservations-global": True,
             "reservations-in-subnet": True,
             "reservations": [],
+            "control-socket": {
+                "socket-type": "unix",
+                "socket-name": "/run/kea/kea-dhcp4-ctrl.sock",
+            },
             # Finally, we list the subnets from which we will be leasing addresses.
             "subnet4": [],
             # DHCPv4 configuration ends with the next line
@@ -804,6 +808,10 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {"name": "domain-search", "data": "scale.lan"},
             ],
             "option-def": [],
+            "control-socket": {
+                "socket-type": "unix",
+                "socket-name": "/run/kea/kea-dhcp6-ctrl.sock",
+            },
             "reservations-global": True,
             "reservations-in-subnet": False,
             "reservations": [],
