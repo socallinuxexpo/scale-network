@@ -21,7 +21,7 @@
           libvirt.enable = true;
           services.gitlab = {
             enable = true;
-            concurrent = 5;
+            concurrent = 15;
           };
           services.bindMaster.enable = true;
           services.keaMaster.enable = true;
