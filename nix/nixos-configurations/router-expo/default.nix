@@ -44,55 +44,55 @@
             "3-backdoor" = {
               matchConfig.OriginalName = "backdoor0";
               extraConfig = ''
-                Alias = "Backdoor Network";
+                AlternativeName = "Backdoor Network";
               '';
             };
             "3-fiber0" = {
               matchConfig.OriginalName = "fiber0";
               extraConfig = ''
-                Alias = "Border Link";
+                AlternativeName = "Border Link";
               '';
             };
             "3-fiber1" = {
               matchConfig.OriginalName = "fiber1";
               extraConfig = ''
-                Alias = "Conf Link";
+                AlternativeName = "Conf Link";
               '';
             };
             "3-fiber2" = {
               matchConfig.OriginalName = "fiber2";
               extraConfig = ''
-                Alias = "NE-IDF Link";
+                AlternativeName = "NE-IDF Link";
               '';
             };
             "3-fiber3" = {
               matchConfig.OriginalName = "fiber3";
               extraConfig = ''
-                Alias = "NW-IDF Link";
+                AlternativeName = "NW-IDF Link";
               '';
             };
             "3-copper0" = {
               matchConfig.OriginalName = "copper0";
               extraConfig = ''
-                Alias = "ExpoIDF Link";
+                AlternativeName = "ExpoIDF Link";
               '';
             };
             "3-copper1" = {
               matchConfig.OriginalName = "copper1";
               extraConfig = ''
-                Alias = "Expo-Catwalk Link";
+                AlternativeName = "Expo-Catwalk Link";
               '';
             };
             "3-copper2" = {
               matchConfig.OriginalName = "copper2";
               extraConfig = ''
-                Alias = "Tech Server Link";
+                AlternativeName = "Tech Server Link";
               '';
             };
             "3-copper3" = {
               matchConfig.OriginalName = "copper3";
               extraConfig = ''
-                Alias = "AV Server Link";
+                AlternativeName = "AV Server Link";
               '';
             };
           };
