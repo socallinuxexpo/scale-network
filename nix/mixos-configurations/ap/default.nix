@@ -164,29 +164,34 @@ in
     process = pkgs.writeScript "create-interfaces.ash" ''
       #!/bin/sh
 
-      set -x
+      for bridge in br-lan scaleslow-br scalefast-br mgmt-br; do
+        ip link add "$bridge" type bridge stp on
+      done
 
-      ip link add br-lan type bridge stp on
-      ip link add scaleslow-br type bridge stp on
-      ip link add scalefast-br type bridge stp on
-      ip link add mgmt-br type bridge stp on
-      ip link set dev eth0 master br-lan
-      ip link set dev eth1 master br-lan
-      ip link add link br-lan name br-lan.100 type vlan id 100
-      ip link add link br-lan name br-lan.500 type vlan id 500
-      ip link add link br-lan name br-lan.101 type vlan id 101
-      ip link add link br-lan name br-lan.501 type vlan id 501
-      ip link add link br-lan name br-lan.103 type vlan id 103
-      ip link add link br-lan name br-lan.503 type vlan id 503
-      ip link set dev br-lan.100 master scaleslow-br
-      ip link set dev br-lan.500 master scaleslow-br
-      ip link set dev br-lan.101 master scalefast-br
-      ip link set dev br-lan.501 master scalefast-br
-      ip link set dev br-lan.103 master mgmt-br
-      ip link set dev br-lan.503 master mgmt-br
-      ip link set eth0 up
-      ip link set eth1 up
-      ip link set br-lan up
+      for link in eth0 eth1; do
+        ip link set dev "$link" master br-lan
+      done
+
+      for vlan_id in 100 500 101 501 103 503; do
+        ip link add link br-lan name "br-lan.''${vlan_id}" type vlan id "$vlan_id"
+      done
+
+      for vlan_id in 100 500; do
+        ip link set dev "br-lan.''${vlan_id}" master scaleslow-br
+      done
+
+      for vlan_id in 101 501; do
+        ip link set dev "br-lan.''${vlan_id}" master scalefast-br
+      done
+
+      for vlan_id in 103 503; do
+        ip link set dev "br-lan.''${vlan_id}" master mgmt-br
+      done
+
+      # mgmt-br brought up via DHCP
+      for link in eth0 eth1 br-lan scaleslow-br scalefast-br; do
+        ip link set "$link" up
+      done
     '';
   };
 }
