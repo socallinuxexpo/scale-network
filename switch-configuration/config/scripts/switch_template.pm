@@ -1980,9 +1980,14 @@ $USER_AUTHENTICATION
         ssh {
             no-passwords;
             protocol-version v2;
-        }
-        netconf {
-            ssh;
+EOF
+if ($Model !~ /ex4200/)
+{
+  $OUTPUT .= <<EOF;
+            sftp-server;
+EOF
+}
+$OUTPUT .= <<EOF;
         }
     }
     syslog {
