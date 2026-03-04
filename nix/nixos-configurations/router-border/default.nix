@@ -46,55 +46,55 @@
               matchConfig.OriginalName = "backdoor0";
               extraConfig = ''
                 Alias = "Backdoor Network
-              ''
+              '';
             };
             "3-fiber0" = {
               matchConfig.OriginalName = "fiber0";
               extraConfig = ''
                 Alias = "Conference Link";
-              ''
+              '';
             };
             "3-fiber1" = {
               matchConfig.OriginalName = "fiber1";
               extraConfig = ''
                 Alias = "Expo Link";
-              ''
+              '';
             };
             "3-fiber2" = {
               matchConfig.OriginalName = "fiber2";
               extraConfig = ''
                 Alias = "Unused Link";
-              ''
+              '';
             };
             "3-fiber3" = {
               matchConfig.OriginalName = "fiber3";
               extraConfig = ''
                 Alias = "Unused Link";
-'              '
+              '';
             };
             "3-copper0" = {
               matchConfig.OriginalName = "copper0";
               extraConfig = ''
                 Alias = "Internet Link";
-              ''
+              '';
             };
             "3-copper1" = {
               matchConfig.OriginalName = "copper1";
               extraConfig = ''
                 Alias = "Unused Link";
-              ''
+              '';
             };
             "3-copper2" = {
               matchConfig.OriginalName = "copper2";
               extraConfig = ''
                 Alias = "Unused Link";
-              ''
+              '';
             };
             "3-copper3" = {
               matchConfig.OriginalName = "copper3";
               extraConfig = ''
                 Alias = "Unused Link";
-              ''
+              '';
             };
           };
           networks = {
