@@ -347,8 +347,8 @@ in
         prometheus.scrape "switches" {
           targets         = discovery.relabel.switches.output
           forward_to      = [prometheus.remote_write.mimir.receiver]
-          scrape_interval = "60s"
-          scrape_timeout  = "30s"
+          scrape_interval = "120s"
+          scrape_timeout  = "60s"
           metrics_path    = "/snmp"
           job_name        = "switches"
         }
