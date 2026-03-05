@@ -947,6 +947,11 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         f.write(json.dumps(conf_keav6_config, indent=2))
 
 
+def _prom_exclude(name):
+    """Return True if the name should be excluded from prom configs."""
+    return re.match(r"^(deceased|donotuse|massflash|spare)", name)
+
+
 def generatepromconfigs(switches, pis, aps, outputdir):
     prom_ap_config = [
         {
@@ -954,6 +959,7 @@ def generatepromconfigs(switches, pis, aps, outputdir):
             "labels": {"ap": ap["name"]},
         }
         for ap in aps
+        if not _prom_exclude(ap["name"])
     ]
 
     with open(f"{outputdir}/prom-aps.json", "w") as f:
@@ -965,6 +971,7 @@ def generatepromconfigs(switches, pis, aps, outputdir):
             "labels": {"pi": pi["name"]},
         }
         for pi in pis
+        if not _prom_exclude(pi["name"])
     ]
 
     with open(f"{outputdir}/prom-pis.json", "w") as f:
@@ -976,6 +983,7 @@ def generatepromconfigs(switches, pis, aps, outputdir):
             "labels": {"switch": switch["name"]},
         }
         for switch in switches
+        if not _prom_exclude(switch["name"])
     ]
 
     with open(f"{outputdir}/prom-switches.json", "w") as f:
