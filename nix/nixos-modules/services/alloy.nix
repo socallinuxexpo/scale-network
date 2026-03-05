@@ -77,7 +77,7 @@ let
 
       // Scrape Kea DHCP exporter
       prometheus.scrape "kea" {
-        targets = [{"__address__" = "127.0.0.1:${toString cfg.keaExporter.port}"}]
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.keaExporter.port}", "instance" = constants.hostname}]
         forward_to = [prometheus.remote_write.mimir.receiver]
         scrape_interval = "15s"
         job_name = "kea"
@@ -87,7 +87,7 @@ let
 
       // Scrape BIND DNS exporter
       prometheus.scrape "bind" {
-        targets = [{"__address__" = "127.0.0.1:${toString cfg.bindExporter.port}"}]
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.bindExporter.port}", "instance" = constants.hostname}]
         forward_to = [prometheus.remote_write.mimir.receiver]
         scrape_interval = "15s"
         job_name = "bind"
@@ -97,7 +97,7 @@ let
 
       // Scrape FRR routing exporter
       prometheus.scrape "frr" {
-        targets = [{"__address__" = "127.0.0.1:${toString cfg.frrExporter.port}"}]
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.frrExporter.port}", "instance" = constants.hostname}]
         forward_to = [prometheus.remote_write.mimir.receiver]
         scrape_interval = "15s"
         job_name = "frr"
