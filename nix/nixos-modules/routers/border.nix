@@ -28,21 +28,21 @@ in
     staticWANEnable = mkEnableOption "WAN Interface static IP";
     WANInterface = mkOption {
       type = types.str;
-      default = "internet0";
+      default = "internetC0";
       description = ''
         Internet goes here
       '';
     };
     frrConferenceInterface = mkOption {
       type = types.str;
-      default = "toconf0";
+      default = "toconfF00";
       description = ''
         FRR interface to Conference
       '';
     };
     frrExpoInterface = mkOption {
       type = types.str;
-      default = "toexpo0";
+      default = "toexpoF1";
       description = ''
         FRR interface to Expo
       '';

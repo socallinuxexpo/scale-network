@@ -72,14 +72,14 @@ in
     enable = mkEnableOption "SCaLE network expo router setup";
     frrBorderInterface = mkOption {
       type = types.str;
-      default = "toborder0";
+      default = "toborderF0";
       description = ''
         FRR broadcast interface to border
       '';
     };
     frrConferenceInterface = mkOption {
       type = types.str;
-      default = "toconf0";
+      default = "toconfF1";
       description = ''
         FRR broadcast interface to conference
       '';

@@ -9,8 +9,8 @@
       staticWANEnable = true;
       WANInterface = "internet0";
       heTunnelEnable = true;
-      frrConferenceInterface = "toconf0";
-      frrExpoInterface = "toexpo0";
+      frrConferenceInterface = "toconfF0";
+      frrExpoInterface = "toexpoF1";
     };
     services.ssh.enable = true;
     services.alloy = {

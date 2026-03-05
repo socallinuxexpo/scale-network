@@ -6,9 +6,9 @@
     base.enable = true;
     router.conference = {
       enable = true;
-      frrBorderInterface = "toborder0";
-      frrExpoInterface = "toexpo0";
-      trunkInterfaces = [ "TRconfidf" ];
+      frrBorderInterface = "toborderF0";
+      frrExpoInterface = "toexpoF1";
+      trunkInterfaces = [ "TRconfidfC0" ];
     };
     services.ssh.enable = true;
     services.alloy = {

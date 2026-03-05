@@ -6,8 +6,8 @@
     base.enable = true;
     router.expo = {
       enable = true;
-      frrBorderInterface = "toborder0";
-      frrConferenceInterface = "toconf0";
+      frrBorderInterface = "toborderF0";
+      frrConferenceInterface = "toconfF1";
       trunkInterfaces = [
         "TRexpo0"
         "TRcatwalk0"
