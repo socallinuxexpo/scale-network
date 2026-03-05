@@ -1033,6 +1033,17 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
 
 def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
     wasgehtconfig = {}
+    wasgehtconfig["uplink"] = {
+        "checks": {
+            "ping": {"addresses": ["2001:470:c:3d::1", "4.8.155.1"]},
+            "http": {
+                "urls": [
+                    "https://www.google.com",
+                    "https://www.socallinuxexpo.org/scale/23x",
+                ]
+            },
+        }
+    }
     for switch in switches:
         entry = {
             "tags": {
