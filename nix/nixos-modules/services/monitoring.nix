@@ -143,6 +143,10 @@ in
             storage_prefix = "ruler";
           };
 
+          limits = {
+            max_global_series_per_user = 300000;
+          };
+
           alertmanager_storage = {
             storage_prefix = "alertmanager";
           };
