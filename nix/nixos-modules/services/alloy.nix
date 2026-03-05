@@ -56,6 +56,41 @@ let
         ''}
       }
     }
+    ${optionalString cfg.rsyslogdLokiScrape.enable ''
+      // Discover rsyslog log files under /persist/rsyslog/<hostname>/
+      local.file_match "rsyslog_logs" {
+        path_targets = [{"__path__" = "${cfg.rsyslogdLokiScrape.logPath}/**/*.log"}]
+      }
+
+      // Tail discovered rsyslog log files and forward to Loki
+      loki.source.file "rsyslog_logs" {
+        targets    = local.file_match.rsyslog_logs.targets
+        forward_to = [loki.relabel.rsyslog_logs.receiver]
+      }
+
+      // Extract the source hostname from the directory path and add as a label
+      loki.relabel "rsyslog_logs" {
+        forward_to = [loki.write.loki.receiver]
+
+        rule {
+          source_labels = ["filename"]
+          regex         = "${cfg.rsyslogdLokiScrape.logPath}/([^/]+)/.*\\.log"
+          target_label  = "source_host"
+        }
+
+        rule {
+          source_labels = ["filename"]
+          regex         = ".*/([^/]+)\\.log"
+          target_label  = "log_file"
+        }
+
+        rule {
+          action       = "replace"
+          replacement  = "rsyslog"
+          target_label = "job"
+        }
+      }
+    ''}
     ${optionalString cfg.loki.enable ''
 
       // Ship systemd journal logs to Loki
@@ -65,6 +100,8 @@ let
           job = "systemd-journal",
         }
       }
+    ''}
+    ${optionalString (cfg.loki.enable || cfg.rsyslogdLokiScrape.enable) ''
 
       // Write logs to Loki
       loki.write "loki" {
@@ -153,6 +190,16 @@ in
         type = types.str;
         default = "http://127.0.0.1:3100/loki/api/v1/push";
         description = "Loki push endpoint URL";
+      };
+    };
+
+    rsyslogdLokiScrape = {
+      enable = mkEnableOption "scraping rsyslog logs from /persist and shipping to Loki";
+
+      logPath = mkOption {
+        type = types.str;
+        default = "/persist/rsyslog";
+        description = "Base directory where rsyslog stores logs in per-host subdirectories";
       };
     };
 
