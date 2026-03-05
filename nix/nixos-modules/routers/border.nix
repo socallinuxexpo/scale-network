@@ -255,7 +255,7 @@ in
            type filter hook input priority filter;
            policy drop;
            # Show internal traffic (To the router only via the management net)
-           iifname { bridge103, bridge104, backdoor0 } accept;
+           iifname { bridge103, bridge104, backdoor0, lo } accept;
            # Allow traffic from Owen's network
            ip6 saddr 2620:0:930::/48 accept;
            # Existing Flows
