@@ -144,6 +144,8 @@ in
           };
 
           limits = {
+            ingestion_burst_size = 1000000;
+            ingestion_rate = 100000;
             max_global_series_per_user = 300000;
           };
 
