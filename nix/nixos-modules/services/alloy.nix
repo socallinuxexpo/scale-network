@@ -73,6 +73,36 @@ let
         }
       }
     ''}
+    ${optionalString cfg.keaExporter.enable ''
+
+      // Scrape Kea DHCP exporter
+      prometheus.scrape "kea" {
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.keaExporter.port}", "instance" = constants.hostname}]
+        forward_to = [prometheus.remote_write.mimir.receiver]
+        scrape_interval = "15s"
+        job_name = "kea"
+      }
+    ''}
+    ${optionalString cfg.bindExporter.enable ''
+
+      // Scrape BIND DNS exporter
+      prometheus.scrape "bind" {
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.bindExporter.port}", "instance" = constants.hostname}]
+        forward_to = [prometheus.remote_write.mimir.receiver]
+        scrape_interval = "15s"
+        job_name = "bind"
+      }
+    ''}
+    ${optionalString cfg.frrExporter.enable ''
+
+      // Scrape FRR routing exporter
+      prometheus.scrape "frr" {
+        targets = [{"__address__" = "127.0.0.1:${toString cfg.frrExporter.port}", "instance" = constants.hostname}]
+        forward_to = [prometheus.remote_write.mimir.receiver]
+        scrape_interval = "15s"
+        job_name = "frr"
+      }
+    ''}
     ${optionalString (cfg.extraConfig != "") ''
 
       // Extra user-provided configuration
@@ -143,6 +173,36 @@ in
         type = types.listOf types.str;
         default = [ ];
         description = "List of collectors to disable";
+      };
+    };
+
+    keaExporter = {
+      enable = mkEnableOption "Alloy scraping of local Kea DHCP exporter";
+
+      port = mkOption {
+        type = types.port;
+        default = 9547;
+        description = "Port of the local Kea exporter";
+      };
+    };
+
+    bindExporter = {
+      enable = mkEnableOption "Alloy scraping of local BIND DNS exporter";
+
+      port = mkOption {
+        type = types.port;
+        default = 9119;
+        description = "Port of the local BIND exporter";
+      };
+    };
+
+    frrExporter = {
+      enable = mkEnableOption "Alloy scraping of local FRR routing exporter";
+
+      port = mkOption {
+        type = types.port;
+        default = 9342;
+        description = "Port of the local FRR exporter";
       };
     };
 

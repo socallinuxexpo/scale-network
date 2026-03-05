@@ -38,6 +38,23 @@ in
 
     services = {
       kea = {
+        ctrl-agent = {
+          enable = true;
+          settings = {
+            http-host = "127.0.0.1";
+            http-port = 8000;
+            control-sockets = {
+              dhcp4 = {
+                socket-type = "unix";
+                socket-name = "/run/kea/kea-dhcp4-ctrl.sock";
+              };
+              dhcp6 = {
+                socket-type = "unix";
+                socket-name = "/run/kea/kea-dhcp6-ctrl.sock";
+              };
+            };
+          };
+        };
         dhcp4 =
           let
             dhcp4PopulateConfig = pkgs.runCommand "replace" { } ''

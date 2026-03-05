@@ -7,9 +7,13 @@
     services.alloy = {
       enable = true;
       remoteWrite.url = "http://10.128.3.20:3200/api/v1/push";
+      keaExporter.enable = true;
+      bindExporter.enable = true;
     };
     services.keaMaster.enable = true;
+    services.keaExporter.enable = true;
     services.bindMaster.enable = true;
+    services.bindExporter.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
     services.ssh.enable = true;

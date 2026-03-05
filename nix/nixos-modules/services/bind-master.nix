@@ -131,6 +131,10 @@ let
       max-cache-size 10%;
     };
 
+    statistics-channels {
+      inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+    };
+
     zone "." IN {
       type hint;
       file "${pkgs.dns-root-data}/root.hints";

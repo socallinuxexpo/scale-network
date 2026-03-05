@@ -6,8 +6,12 @@
     libvirt.enable = true;
 
     services.alloy.enable = true;
+    services.alloy.keaExporter.enable = true;
+    services.alloy.bindExporter.enable = true;
     services.bindMaster.enable = true;
+    services.bindExporter.enable = true;
     services.keaMaster.enable = true;
+    services.keaExporter.enable = true;
     services.monitoring.enable = true;
     services.ntp.enable = true;
     services.rsyslogd.enable = true;
