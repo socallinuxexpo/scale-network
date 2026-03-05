@@ -25,6 +25,7 @@ let
 
   inherit (lib.strings)
     concatStringsSep
+    optionalString
     ;
 in
 {
@@ -46,6 +47,12 @@ in
       description = "Passive Interface";
       type = types.listOf types.str;
       default = [ ];
+    };
+
+    interface-priority = mkOption {
+      description = "OSPF priority per interface for DR election";
+      type = types.attrsOf types.int;
+      default = { };
     };
 
     routing-config = mkOption {
@@ -89,7 +96,13 @@ in
               interface ${x}
                no ip ospf passive
                ip ospf network broadcast
+               ${optionalString (builtins.hasAttr x cfg.interface-priority) "ip ospf priority ${
+                 toString cfg.interface-priority.${x}
+               }"}
                ipv6 ospf6 network broadcast
+               ${optionalString (builtins.hasAttr x cfg.interface-priority) "ipv6 ospf6 priority ${
+                 toString cfg.interface-priority.${x}
+               }"}
                ipv6 ospf6 area 0
               exit
             '') cfg.broadcast-interface

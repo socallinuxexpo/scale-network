@@ -432,6 +432,10 @@ in
         "bridge901" # border
         "bridge903" # expo
       ];
+      services.frr.interface-priority = {
+        "bridge901" = 50;
+        "bridge903" = 50;
+      };
       services.frr.passive-interface = [
         "bridge500"
         "bridge501"
