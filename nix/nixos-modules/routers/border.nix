@@ -262,7 +262,7 @@ in
            ct state established,related accept;
            # PING
            meta l4proto { icmp, ipv6-icmp } accept;
-           log prefix "NFINP-DROP: " accept;
+           log prefix "NFINP-DROP: ";
            # Drop traffic to the show IPv6 network
            ip6 daddr 2001:470:f026::/48 counter drop;
          }
@@ -270,8 +270,8 @@ in
            type filter hook forward priority filter;
            policy drop;
            # Show internal traffic
-           iifname { bridge103, bridge104, bridge901, bridge903 } oifname { bridge103, bridge104, bridge901, bridge903 } counter accept
-           iifname { bridge103, bridge104, bridge901, bridge903 } oifname ${cfg.WANInterface} counter accept
+           iifname { bridge103, bridge104, bridge901, bridge903 } oifname { bridge103, bridge104, bridge901, bridge903, he-tunnel } counter accept
+           iifname { bridge103, bridge104, bridge901, bridge903 } oifname { ${cfg.WANInterface}, he-tunnel } counter accept
            # Existing Flows
            ct state established,related accept;
            # Owen's Network
@@ -280,7 +280,7 @@ in
            ip6 daddr 2001:470:f026::/48 counter drop;
            # PING
            meta l4proto { icmp, ipv6-icmp } accept;
-           log prefix "NFFWD-DROP: " accept;
+           log prefix "NFFWD-DROP: ";
          }
          chain OUTPUT {
            type filter hook output priority filter;
