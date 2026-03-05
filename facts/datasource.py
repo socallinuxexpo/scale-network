@@ -148,7 +148,7 @@ def is_valid_wifi_5ghz_chan(val: int | str) -> bool:
 
 def is_valid_pi_vlan(val: int | str) -> bool:
     """Test for valid PI VLAN: currently constrained to 107, 110, 507."""
-    return is_non_negative_int(val) and int(val) in {107, 110, 507}
+    return is_non_negative_int(val) and int(val) in {107, 110, 506, 507}
 
 
 def is_non_negative_int(val: int | str) -> bool:
