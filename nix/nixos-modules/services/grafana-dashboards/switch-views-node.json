@@ -90,6 +90,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "sysName{switch=\"$switch\"}",
           "format": "table",
           "instant": true,
@@ -591,8 +592,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "rate(ifHCInOctets{switch=\"$switch\"}[5m]) * 8",
+          "editorMode": "code",
+          "expr": "rate(ifHCInOctets{switch=\"$switch\"}[1h]) * 8 > 0",
           "legendFormat": "{{ifName}} ({{ifAlias}})",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -688,8 +691,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "rate(ifHCOutOctets{switch=\"$switch\"}[5m]) * 8",
+          "editorMode": "code",
+          "expr": "rate(ifHCOutOctets{switch=\"$switch\"}[1h]) * 8 > 0",
           "legendFormat": "{{ifName}} ({{ifAlias}})",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -797,8 +802,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "rate(ifHCInUcastPkts{switch=\"$switch\"}[5m]) + rate(ifHCOutUcastPkts{switch=\"$switch\"}[5m])",
+          "editorMode": "code",
+          "expr": "rate(ifHCInUcastPkts{switch=\"$switch\"}[1h]) + rate(ifHCOutUcastPkts{switch=\"$switch\"}[1h]) > 0",
           "legendFormat": "{{ifName}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -893,8 +900,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "rate(ifHCInMulticastPkts{switch=\"$switch\"}[5m]) + rate(ifHCOutMulticastPkts{switch=\"$switch\"}[5m])",
+          "editorMode": "code",
+          "expr": "rate(ifHCInMulticastPkts{switch=\"$switch\"}[1h]) + rate(ifHCOutMulticastPkts{switch=\"$switch\"}[1h]) > 0",
           "legendFormat": "{{ifName}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -989,8 +998,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "rate(ifHCInBroadcastPkts{switch=\"$switch\"}[5m]) + rate(ifHCOutBroadcastPkts{switch=\"$switch\"}[5m])",
+          "editorMode": "code",
+          "expr": "rate(ifHCInBroadcastPkts{switch=\"$switch\"}[1h]) + rate(ifHCOutBroadcastPkts{switch=\"$switch\"}[1h]) > 0",
           "legendFormat": "{{ifName}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -998,7 +1009,7 @@
       "type": "timeseries"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1006,219 +1017,224 @@
         "y": 27
       },
       "id": 15,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "description": "Error rates per interface (inbound + outbound)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.001
+                  },
+                  {
+                    "color": "red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "pps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 28
+          },
+          "id": 16,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max",
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PAE45454D0EDB9216"
+              },
+              "editorMode": "code",
+              "expr": "rate(ifInErrors{switch=\"$switch\"}[1h]) + rate(ifOutErrors{switch=\"$switch\"}[1h]) > 0",
+              "legendFormat": "{{ifName}} ({{ifAlias}})",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Interface Errors",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "description": "Discard rates per interface (inbound + outbound)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "line+area"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "transparent",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.001
+                  },
+                  {
+                    "color": "red",
+                    "value": 10
+                  }
+                ]
+              },
+              "unit": "pps"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 28
+          },
+          "id": 17,
+          "options": {
+            "legend": {
+              "calcs": [
+                "mean",
+                "max",
+                "lastNotNull"
+              ],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PAE45454D0EDB9216"
+              },
+              "editorMode": "code",
+              "expr": "rate(ifInDiscards{switch=\"$switch\"}[1h]) + rate(ifOutDiscards{switch=\"$switch\"}[1h]) > 0",
+              "legendFormat": "{{ifName}} ({{ifAlias}})",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Interface Discards",
+          "type": "timeseries"
+        }
+      ],
       "title": "Errors & Discards",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
-      "description": "Error rates per interface (inbound + outbound)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": 0
-              },
-              {
-                "color": "yellow",
-                "value": 0.001
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          },
-          "unit": "pps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 28
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "rate(ifInErrors{switch=\"$switch\"}[5m]) + rate(ifOutErrors{switch=\"$switch\"}[5m])",
-          "legendFormat": "{{ifName}} ({{ifAlias}})",
-          "refId": "A"
-        }
-      ],
-      "title": "Interface Errors",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
-      "description": "Discard rates per interface (inbound + outbound)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "line+area"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "transparent",
-                "value": 0
-              },
-              {
-                "color": "yellow",
-                "value": 0.001
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          },
-          "unit": "pps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 28
-      },
-      "id": 17,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "rate(ifInDiscards{switch=\"$switch\"}[5m]) + rate(ifOutDiscards{switch=\"$switch\"}[5m])",
-          "legendFormat": "{{ifName}} ({{ifAlias}})",
-          "refId": "A"
-        }
-      ],
-      "title": "Interface Discards",
-      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1226,7 +1242,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 28
       },
       "id": 18,
       "panels": [],
@@ -1272,7 +1288,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 29
       },
       "id": 19,
       "options": {
@@ -1297,8 +1313,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "(rate(ifHCInOctets{switch=\"$switch\"}[5m]) * 8 / (ifHighSpeed{switch=\"$switch\"} * 1000000)) * 100 > 0",
+          "editorMode": "code",
+          "expr": "(rate(ifHCInOctets{switch=\"$switch\"}[1h]) * 8 / (ifHighSpeed{switch=\"$switch\"} * 1000000)) * 100 > 0",
           "legendFormat": "{{ifName}} In",
+          "range": true,
           "refId": "A"
         },
         {
@@ -1306,8 +1324,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "(rate(ifHCOutOctets{switch=\"$switch\"}[5m]) * 8 / (ifHighSpeed{switch=\"$switch\"} * 1000000)) * 100 > 0",
+          "editorMode": "code",
+          "expr": "(rate(ifHCOutOctets{switch=\"$switch\"}[1h]) * 8 / (ifHighSpeed{switch=\"$switch\"} * 1000000)) * 100 > 0",
           "legendFormat": "{{ifName}} Out",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -1319,10 +1339,8 @@
   "refresh": "auto",
   "schemaVersion": 41,
   "tags": [
-    "snmp",
     "switches",
-    "detail",
-    "scale"
+    "detail"
   ],
   "templating": {
     "list": [
@@ -1360,5 +1378,5 @@
   "timezone": "browser",
   "title": "Switch / Views / Node",
   "uid": "switch-detail",
-  "version": 7
+  "version": 11
 }

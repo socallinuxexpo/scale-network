@@ -91,7 +91,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up == 1)",
+          "editorMode": "code",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 1)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -160,7 +161,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up == 0) OR vector(0)",
+          "editorMode": "code",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -235,13 +237,14 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up == 1) / count(up) * 100",
+          "editorMode": "code",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 1) / count(up{job=~\"aps|integrations/unix|pis|switches\"}) * 100",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "Overall Uptime %",
+      "title": "Total Uptime %",
       "type": "stat"
     },
     {
@@ -304,7 +307,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 24,
         "x": 0,
         "y": 5
@@ -354,23 +357,22 @@
           "expr": "count(up{job=\"aps\"} == 1)",
           "legendFormat": "Access Points",
           "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "editorMode": "code",
+          "expr": "count(up{job=\"pis\"} == 1)",
+          "hide": false,
+          "legendFormat": "Raspberry PIs",
+          "range": true,
+          "refId": "D"
         }
       ],
       "title": "Uptime Over Time",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 14
-      },
-      "id": 6,
-      "panels": [],
-      "title": "Routers & Services",
-      "type": "row"
     },
     {
       "datasource": {
@@ -428,6 +430,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"integrations/unix\"} == 1)",
           "instant": true,
           "legendFormat": "__auto",
@@ -497,6 +500,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"integrations/unix\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
@@ -578,150 +582,8 @@
           "refId": "A"
         }
       ],
-      "title": "Server Uptime %",
+      "title": "Servers Uptime %",
       "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
-      "description": "Status of each server and router instance",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Status"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "red",
-                        "index": 1,
-                        "text": "Offline"
-                      },
-                      "1": {
-                        "color": "green",
-                        "index": 0,
-                        "text": "Online"
-                      }
-                    },
-                    "type": "value"
-                  }
-                ]
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "applyToRow": false,
-                  "type": "color-background"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 19
-      },
-      "id": 10,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Host"
-          }
-        ]
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "up{job=\"integrations/unix\"}",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "refId": "A"
-        }
-      ],
-      "title": "Server Status Grid",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": false,
-              "__name__": true,
-              "instance": false,
-              "job": true
-            },
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Value": "Status",
-              "instance": "Host"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 27
-      },
-      "id": 11,
-      "panels": [],
-      "title": "Network Switches",
-      "type": "row"
     },
     {
       "datasource": {
@@ -752,7 +614,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 28
+        "y": 19
       },
       "id": 12,
       "options": {
@@ -779,6 +641,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"switches\"} == 1)",
           "instant": true,
           "legendFormat": "__auto",
@@ -821,7 +684,7 @@
         "h": 4,
         "w": 8,
         "x": 8,
-        "y": 28
+        "y": 19
       },
       "id": 13,
       "options": {
@@ -848,6 +711,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"switches\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
@@ -896,7 +760,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 28
+        "y": 19
       },
       "id": 14,
       "options": {
@@ -937,155 +801,6 @@
         "type": "prometheus",
         "uid": "PAE45454D0EDB9216"
       },
-      "description": "Online/offline status of each network switch",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Status"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "red",
-                        "index": 1,
-                        "text": "Offline"
-                      },
-                      "1": {
-                        "color": "green",
-                        "index": 0,
-                        "text": "Online"
-                      }
-                    },
-                    "type": "value"
-                  }
-                ]
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "applyToRow": false,
-                  "type": "color-background"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 32
-      },
-      "id": 16,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Host"
-          }
-        ]
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "up{job=\"switches\"}",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "__auto",
-          "refId": "A"
-        }
-      ],
-      "title": "Switch Status Grid",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "__name__": true,
-              "instance": false,
-              "job": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "Time": 0,
-              "Value": 5,
-              "__name__": 1,
-              "instance": 4,
-              "job": 2,
-              "switch": 3
-            },
-            "renameByName": {
-              "Value": "Status",
-              "instance": "Address",
-              "switch": "ID"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 40
-      },
-      "id": 17,
-      "panels": [],
-      "title": "WiFi Access Points",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
       "description": "Number of WiFi access points currently online",
       "fieldConfig": {
         "defaults": {
@@ -1110,7 +825,7 @@
         "h": 4,
         "w": 8,
         "x": 0,
-        "y": 41
+        "y": 23
       },
       "id": 18,
       "options": {
@@ -1143,7 +858,7 @@
           "refId": "A"
         }
       ],
-      "title": "APs Online",
+      "title": "Access Points Online",
       "type": "stat"
     },
     {
@@ -1179,7 +894,7 @@
         "h": 4,
         "w": 8,
         "x": 8,
-        "y": 41
+        "y": 23
       },
       "id": 19,
       "options": {
@@ -1206,13 +921,14 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"aps\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "APs Offline",
+      "title": "Access Points Offline",
       "type": "stat"
     },
     {
@@ -1254,7 +970,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 41
+        "y": 23
       },
       "id": 20,
       "options": {
@@ -1287,7 +1003,7 @@
           "refId": "A"
         }
       ],
-      "title": "AP Uptime %",
+      "title": "Access Points Uptime %",
       "type": "stat"
     },
     {
@@ -1295,18 +1011,11 @@
         "type": "prometheus",
         "uid": "PAE45454D0EDB9216"
       },
-      "description": "Online/offline status of each WiFi access point",
+      "description": "Number of WiFi access points currently online",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
           },
           "mappings": [],
           "thresholds": {
@@ -1317,70 +1026,34 @@
                 "value": 0
               }
             ]
-          }
+          },
+          "unit": "short"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Status"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "red",
-                        "index": 1,
-                        "text": "Offline"
-                      },
-                      "1": {
-                        "color": "green",
-                        "index": 0,
-                        "text": "Online"
-                      }
-                    },
-                    "type": "value"
-                  }
-                ]
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "applyToRow": false,
-                  "type": "color-background"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 24,
+        "h": 4,
+        "w": 8,
         "x": 0,
-        "y": 45
+        "y": 27
       },
-      "id": 21,
+      "id": 22,
       "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "show": false
+          "fields": "",
+          "values": false
         },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Host"
-          }
-        ]
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "12.1.1",
       "targets": [
@@ -1389,34 +1062,591 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "up{job=\"aps\"}",
-          "format": "table",
+          "editorMode": "code",
+          "expr": "count(up{job=\"pis\"} == 1)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
         }
       ],
-      "title": "AP Status Grid",
-      "transformations": [
+      "title": "Raspberry PIs Online",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PAE45454D0EDB9216"
+      },
+      "description": "Number of WiFi access points currently offline",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 27
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
         {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "__name__": true,
-              "job": true
-            },
-            "includeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "Value": "Status",
-              "ap": "ID",
-              "instance": "Address"
-            }
-          }
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "editorMode": "code",
+          "expr": "count(up{job=\"pis\"} == 0) OR vector(0)",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "A"
         }
       ],
-      "type": "table"
+      "title": "Raspberry PIs Offline",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PAE45454D0EDB9216"
+      },
+      "description": "Percentage of WiFi access points currently online",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 27
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "editorMode": "code",
+          "expr": "count(up{job=\"pis\"} == 1) / count(up{job=\"pis\"}) * 100",
+          "instant": true,
+          "legendFormat": "__auto",
+          "refId": "A"
+        }
+      ],
+      "title": "Raspberry PIs Uptime %",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 6,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "description": "Status of each server and router instance",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Status"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "red",
+                            "index": 1,
+                            "text": "Offline"
+                          },
+                          "1": {
+                            "color": "green",
+                            "index": 0,
+                            "text": "Online"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "applyToRow": false,
+                      "type": "color-background"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 28
+          },
+          "id": 10,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "Host"
+              }
+            ]
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PAE45454D0EDB9216"
+              },
+              "expr": "up{job=\"integrations/unix\"}",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "refId": "A"
+            }
+          ],
+          "title": "Server Status Grid",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": false,
+                  "__name__": true,
+                  "instance": false,
+                  "job": true
+                },
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Value": "Status",
+                  "instance": "Host"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "Routers & Services",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 11,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "description": "Online/offline status of each network switch",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Status"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "red",
+                            "index": 1,
+                            "text": "Offline"
+                          },
+                          "1": {
+                            "color": "green",
+                            "index": 0,
+                            "text": "Online"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "applyToRow": false,
+                      "type": "color-background"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 36
+          },
+          "id": 16,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "ID"
+              }
+            ]
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PAE45454D0EDB9216"
+              },
+              "expr": "up{job=\"switches\"}",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "refId": "A"
+            }
+          ],
+          "title": "Switch Status Grid",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true,
+                  "instance": false,
+                  "job": true
+                },
+                "includeByName": {},
+                "indexByName": {
+                  "Time": 0,
+                  "Value": 5,
+                  "__name__": 1,
+                  "instance": 4,
+                  "job": 2,
+                  "switch": 3
+                },
+                "renameByName": {
+                  "Value": "Status",
+                  "instance": "Address",
+                  "switch": "ID"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "Network Switches",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 17,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PAE45454D0EDB9216"
+          },
+          "description": "Online/offline status of each WiFi access point",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Status"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "red",
+                            "index": 1,
+                            "text": "Offline"
+                          },
+                          "1": {
+                            "color": "green",
+                            "index": 0,
+                            "text": "Online"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "applyToRow": false,
+                      "type": "color-background"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 69
+          },
+          "id": 21,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": []
+          },
+          "pluginVersion": "12.1.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "PAE45454D0EDB9216"
+              },
+              "expr": "up{job=\"aps\"}",
+              "format": "table",
+              "instant": true,
+              "legendFormat": "__auto",
+              "refId": "A"
+            }
+          ],
+          "title": "AP Status Grid",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true,
+                  "job": true
+                },
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Value": "Status",
+                  "ap": "ID",
+                  "instance": "Address"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "WiFi Access Points",
+      "type": "row"
     }
   ],
   "preload": false,
@@ -1424,8 +1654,7 @@
   "schemaVersion": 41,
   "tags": [
     "uptime",
-    "availability",
-    "overview"
+    "fleet"
   ],
   "templating": {
     "list": []
@@ -1438,5 +1667,5 @@
   "timezone": "browser",
   "title": "Uptime / Views / Global",
   "uid": "uptime-global",
-  "version": 7
+  "version": 34
 }

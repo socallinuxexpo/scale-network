@@ -15653,7 +15653,8 @@
   "refresh": "auto",
   "schemaVersion": 41,
   "tags": [
-    "linux"
+    "baremetal",
+    "detail"
   ],
   "templating": {
     "list": [
@@ -15750,5 +15751,5 @@
   "timezone": "browser",
   "title": "Baremetal / Views / Node",
   "uid": "rYdddlPWk",
-  "version": 4
+  "version": 7
 }
