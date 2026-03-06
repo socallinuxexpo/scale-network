@@ -972,7 +972,10 @@ def _building_from_vlans(vlans, ipv6=None, ipv4=None):
 
 def _prom_exclude(name):
     """Return True if the name should be excluded from prom configs."""
-    return re.match(r"^(deceased|donotuse|expob5|expoc4|expoc5|massflash|pi-massflash|pi-reghelp1|pi-reghelp2|spare)", name)
+    return re.match(
+        r"^(deceased|donotuse|expob5|expoc4|expoc5|massflash|pi-massflash|pi-reghelp1|pi-reghelp2|spare)",
+        name,
+    )
 
 
 def generatepromconfigs(switches, pis, aps, outputdir):
