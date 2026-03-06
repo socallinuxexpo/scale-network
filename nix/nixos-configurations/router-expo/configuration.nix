@@ -21,6 +21,7 @@
       remoteWrite.url = "http://10.128.3.20:3200/api/v1/push";
     };
     users.djacu.enable = true;
+    users.dlang.enable = true;
     users.erikreinert.enable = true;
     users.jared.enable = true;
     users.jsh.enable = true;

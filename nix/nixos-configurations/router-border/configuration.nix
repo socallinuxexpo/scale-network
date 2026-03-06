@@ -19,6 +19,7 @@
     };
 
     users.djacu.enable = true;
+    users.dlang.enable = true;
     users.erikreinert.enable = true;
     users.jared.enable = true;
     users.jsh.enable = true;
