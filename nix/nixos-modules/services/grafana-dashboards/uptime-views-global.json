@@ -162,7 +162,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 0)",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -1667,5 +1667,5 @@
   "timezone": "browser",
   "title": "Uptime / Views / Global",
   "uid": "uptime-global",
-  "version": 34
+  "version": 35
 }
