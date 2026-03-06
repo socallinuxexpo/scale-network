@@ -1298,6 +1298,18 @@ sub VV_init_firewall
                     accept;
                 }
             }
+            term ntp {
+                from {
+                    destination-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    destination-port ntp;
+                }
+                then {
+                    accept;
+                }
+            }
             term dhcp {
                 from {
                     destination-address {
@@ -1305,6 +1317,14 @@ sub VV_init_firewall
                         10.128.3.0/24;
                     }
                     destination-port [ bootps dhcp ];
+                }
+            }
+            term graphana {
+                from {
+                    destination-address {
+                        10.0.3.20;
+                    }
+                    destination-port [ https ];
                 }
             }
             term no-rfc1918 {
@@ -1350,6 +1370,30 @@ sub VV_init_firewall
                         10.128.3.0/24;
                     }
                     source-port [ bootps dhcp ];
+                }
+                then {
+                    accept;
+                }
+            }
+            term ntp {
+                from {
+                    source-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    source-port [ ntp ];
+                }
+                then {
+                    accept;
+                }
+            }
+            term graphana {
+                from {
+                    source-address {
+                        10.0.3.0/24;
+                        10.128.3.0/24;
+                    }
+                    source-port [ https ];
                 }
                 then {
                     accept;
@@ -1425,6 +1469,30 @@ sub VV_init_firewall
                     accept;
                 }
           }
+          term ntp {
+                from {
+                    destination-address {
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
+                    }
+                    destination-port [ bootps ntp ];
+                }
+                then {
+                    accept;
+                }
+          }
+          term graphana {
+                from {
+                    destination-address {
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
+                    }
+                    destination-port [ bootps https ];
+                }
+                then {
+                    accept;
+                }
+          }
           term no-local {
                 from {
                     destination-address {
@@ -1475,6 +1543,30 @@ sub VV_init_firewall
                         $PREFIX:503::/64;
                     }
                     source-port [ bootps dhcp ];
+                }
+                then {
+                    accept;
+                }
+          }
+          term ntp {
+                from {
+                    source-address {
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
+                    }
+                    source-port [ ntp ];
+                }
+                then {
+                    accept;
+                }
+          }
+          term graphana {
+                from {
+                    source-address {
+                        $PREFIX:103::/64;
+                        $PREFIX:503::/64;
+                    }
+                    source-port [ https ];
                 }
                 then {
                     accept;
