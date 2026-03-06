@@ -30,6 +30,7 @@ let
     105
     107
     110
+    499
   ];
   borderVlans = [
     103
@@ -115,6 +116,7 @@ in
         "105"
         "107"
         "110"
+        "499"
       ];
     };
 
@@ -182,6 +184,14 @@ in
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge110";
+          };
+          bridgeConfig.STP = true;
+        };
+        # Vendor Backbone
+        "20-bridge499" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge499";
           };
           bridgeConfig.STP = true;
         };
@@ -294,9 +304,6 @@ in
               "172.20.4.3/24"
               "2001:470:f026:104::3/64"
             ];
-            routes = [
-              { Gateway = "172.20.4.1"; }
-            ];
           };
           "40-bridge105" = {
             matchConfig.Name = "bridge105";
@@ -321,6 +328,14 @@ in
               "2001:470:f026:110::1/64"
             ];
           };
+          "40-bridge499" = {
+            matchConfig.Name = "bridge499";
+            enable = true;
+            address = [
+              "10.1.0.1/24"
+              "2001:470:f026:499::1/64"
+            ];
+          };
           "40-bridge903" = {
             matchConfig.Name = "bridge903";
             networkConfig.DHCP = false;
@@ -339,10 +354,12 @@ in
       services.frr.router-id = "172.20.4.3";
       services.frr.broadcast-interface = [
         "bridge104" # border
+        "bridge499" # vendor_backbone
         "bridge903" # conf
       ];
       services.frr.interface-priority = {
         "bridge104" = 100;
+        "bridge499" = 200;
         "bridge903" = 100;
       };
       services.frr.passive-interface = [
@@ -366,6 +383,7 @@ in
             "bridge101"
             "bridge102"
             "bridge110"
+            "bridge499"
           ];
           upstreamInterfaces = [ "bridge103" ];
           dhcpServerIps = [ "10.0.3.20" ];
@@ -383,6 +401,7 @@ in
             "2001:470:f026:102::1%%bridge102"
             "2001:470:f026:107::1%%bridge107"
             "2001:470:f026:110::1%%bridge110"
+            "2001:470:f026:499::1%%bridge499"
           ];
           upstreamInterfaces = [ "2001:470:f026:103::20%%bridge103" ];
         };
