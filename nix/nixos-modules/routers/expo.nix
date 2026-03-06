@@ -116,6 +116,7 @@ in
         "105"
         "107"
         "110"
+        "499"
       ];
     };
 
@@ -183,6 +184,14 @@ in
           netdevConfig = {
             Kind = "bridge";
             Name = "bridge110";
+          };
+          bridgeConfig.STP = true;
+        };
+        # Vendor Backbone
+        "20-bridge499" = {
+          netdevConfig = {
+            Kind = "bridge";
+            Name = "bridge499";
           };
           bridgeConfig.STP = true;
         };
@@ -320,6 +329,14 @@ in
             address = [
               "10.0.10.1/24"
               "2001:470:f026:110::1/64"
+            ];
+          };
+          "40-bridge499" = {
+            matchConfig.Name = "bridge499";
+            enable = true;
+            address = [
+              "10.1.0.1/24"
+              "2001:470:f026:499::1/64"
             ];
           };
           "40-bridge903" = {
