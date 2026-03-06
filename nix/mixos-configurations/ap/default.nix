@@ -134,7 +134,7 @@ in
     action = "respawn";
     process = toString [
       (lib.getExe pkgs.prometheus-node-exporter)
-      ""
+      "--collector.wifi"
     ];
   };
 
