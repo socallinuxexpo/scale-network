@@ -25,6 +25,12 @@ let
     optionalString
     ;
 
+  # Generate glob patterns for accepted log files
+  # Each pattern becomes /persist/rsyslog/*/pattern.log
+  log_target_list = map
+    (pattern: "${cfg.rsyslogdLokiScrape.logPath}/*/${pattern}")
+    cfg.rsyslogdLokiScrape.acceptedLogPatterns;
+
   # Generate the Alloy configuration file
   alloyConfig = pkgs.writeText "config.alloy" ''
     // Prometheus exporter for host metrics (CPU, memory, disk, network, systemd)
@@ -59,7 +65,9 @@ let
     ${optionalString cfg.rsyslogdLokiScrape.enable ''
       // Discover rsyslog log files under /persist/rsyslog/<hostname>/
       local.file_match "rsyslog_logs" {
-        path_targets = [{"__path__" = "${cfg.rsyslogdLokiScrape.logPath}/**/*.log"}]
+        path_targets = [${
+          lib.concatMapStringsSep ", " (tgt: "{\"__path__\" = \"${tgt}\"}") log_target_list
+        }]
       }
 
       // Tail discovered rsyslog log files and forward to Loki
@@ -200,6 +208,53 @@ in
         type = types.str;
         default = "/persist/rsyslog";
         description = "Base directory where rsyslog stores logs in per-host subdirectories";
+      };
+
+      acceptedLogPatterns = mkOption {
+        type = types.listOf types.str;
+        default = [
+          # Observability stack logs
+          "alloy.log"
+          "loki.log"
+          # "mimir.log" # ... pretty big > 2gb
+          # "tempo.log" # not used now
+          # "grafana-start.log" # is this useful for loki if grafana issues
+
+          # Service-specific exporters
+          "bind_exporter.log"
+          "kea-exporter.log"
+          "snmp_exporter.log"
+
+          # Core network services
+          "named.log"          # DNS server
+          "kea-ctrl-agent.log" # DHCP control
+          "kea-dhcp4.log"      # DHCPv4
+          "kea-dhcp6.log"      # DHCPv6
+          "wasgehtd.log"       # Custom monitoring
+
+          # Switch logs (Juniper)
+          "kernel.log"         # Switch kernel messages
+          "eventd.log"         # Switch events
+          "pfed.log"           # Packet forwarding engine
+          "rpd.log"            # Routing protocol daemon
+
+          # Access point logs (OpenWRT)
+          "hostapd.log"        # WiFi authentication
+          "netifd.log"         # Network interface daemon
+          "apinger.log"        # AP monitoring
+
+          # Catch-all messages (can be massive)
+          # "messages.log"     # Uncomment if needed, but note it can be very large
+        ];
+        description = ''
+          List of log file patterns to scrape from each host directory.
+          Supports glob patterns (e.g., "kea-*.log").
+
+          Notably excluded by default:
+          - sshd*.log (too verbose)
+          - stats-*.log (AP metrics, better handled differently)
+          - messages.log (can be multi-GB, uncomment if critical)
+        '';
       };
     };
 
