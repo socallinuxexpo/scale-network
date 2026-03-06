@@ -328,6 +328,7 @@ in
          passive-interface default
          network 0.0.0.0/0 area 0
          redistribute connected
+         default-information originate
         exit
         router ospf6
          redistribute connected
