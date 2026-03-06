@@ -324,6 +324,9 @@ def populateswitches(switchesfile):
                     "num": elems[1],
                     "ipv6": elems[3],
                     "ipv6ptr": ip6toptr(elems[3]),
+                    "switchtype": elems[4],
+                    "hierarchy": elems[5],
+                    "model": elems[7],
                     "fqdn": name.lower() + ".scale.lan",
                     "aliases": roomalias(name),
                 }
@@ -381,6 +384,9 @@ def populateaps(aps_file, apuse_file):
                 "configver": str(row["config_ver"]),
                 "fqdn": name + ".scale.lan",
                 "aliases": [row["serial"].lower()],
+                "map_id": str(row["map_id"]),
+                "map_x": str(row["map_x"]),
+                "map_y": str(row["map_y"]),
             }
         )
     return aps
@@ -467,11 +473,10 @@ def populateservers(serversfile, vlans):
             continue
 
         vlan = ""
-        building = ""
+        building = _building_from_vlans(vlans, ipv6=ipv6)
         for vln in vlans:
             if ipv6.find(vln["ipv6prefix"]) == 0:
                 vlan = vln["name"]
-                building = vln["building"]
 
         servers.append(
             {
@@ -947,6 +952,24 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
         f.write(json.dumps(conf_keav6_config, indent=2))
 
 
+def _building_from_vlans(vlans, ipv6=None, ipv4=None):
+    """Look up building name from VLAN list by matching an IPv6 or IPv4 address."""
+    for vlan in vlans:
+        if ipv6:
+            net = ipaddress.ip_network(
+                f"{vlan['ipv6prefix']}/{vlan['ipv6bitmask']}", strict=False
+            )
+            if ipaddress.ip_address(ipv6) in net:
+                return vlan["building"]
+        if ipv4 and vlan["ipv4prefix"] != "0.0.0.0":
+            net = ipaddress.ip_network(
+                f"{vlan['ipv4prefix']}/{vlan['ipv4bitmask']}", strict=False
+            )
+            if ipaddress.ip_address(ipv4) in net:
+                return vlan["building"]
+    return ""
+
+
 def _prom_exclude(name):
     """Return True if the name should be excluded from prom configs."""
     return re.match(r"^(deceased|donotuse|massflash|spare|expob5|expoc4|expoc5)", name)
@@ -1031,7 +1054,7 @@ switch{{ item['num'] }}  IN  CNAME   {{item['fqdn'] }}.
     return True
 
 
-def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
+def generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir):
     wasgehtconfig = {}
     wasgehtconfig["uplink"] = {
         "checks": {
@@ -1045,11 +1068,16 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
         }
     }
     for switch in switches:
+        if switch["hierarchy"].startswith("Z"):
+            continue
         entry = {
             "tags": {
                 "type": "switch",
                 "os": "junos",
                 "num": switch["num"],
+                "switchtype": switch["switchtype"],
+                "model": switch["model"],
+                "building": _building_from_vlans(vlans, ipv6=switch["ipv6"]),
                 **(
                     {"aliases": ", ".join(switch["aliases"])}
                     if switch["aliases"]
@@ -1097,6 +1125,7 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
             "tags": {
                 "type": "router",
                 "os": "nixos",
+                "building": _building_from_vlans(vlans, ipv6=router["ipv6"]),
             },
             "checks": {
                 "ping": {
@@ -1105,11 +1134,14 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
             },
         }
     for pi in pis:
+        if pi["name"] == "pi-massflash" or pi["name"].startswith("pi-reghelp"):
+            continue
         wasgehtconfig[pi["name"]] = {
             "tags": {
                 "type": "pi",
                 "os": "nixos",
                 "role": "registration" if pi["name"].startswith("pi-reg") else "sign",
+                "building": _building_from_vlans(vlans, ipv6=pi["ipv6"]),
             },
             "checks": {
                 "ping": {
@@ -1124,6 +1156,10 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir):
                 "os": "openwrt",
                 "channels": f"{ap['wifi2']} / {ap['wifi5']}",
                 "config": ap["configver"],
+                "building": _building_from_vlans(vlans, ipv4=ap["ipv4"]),
+                "map_id": ap["map_id"],
+                "map_x": ap["map_x"],
+                "map_y": ap["map_y"],
                 **({"aliases": ", ".join(ap["aliases"])} if ap["aliases"] else {}),
             },
             "checks": {
@@ -1256,14 +1292,14 @@ def main():
     elif subcomm == "prom":
         generatepromconfigs(switches, pis, aps, outputdir)
     elif subcomm == "wasgeht":
-        generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
+        generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir)
     elif subcomm == "allnet":
         generateallnetwork(switches, routers, outputdir)
     elif subcomm == "all":
         generatekeaconfig(servers, aps, vlans, outputdir)
         generatezones(switches, routers, pis, aps, servers, outputdir)
         generatepromconfigs(switches, pis, aps, outputdir)
-        generatewasgehtconfig(switches, routers, pis, aps, servers, outputdir)
+        generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir)
         generateallnetwork(switches, routers, outputdir)
     elif subcomm == "debug":
         # overload outputdir as 2nd debug parameter
