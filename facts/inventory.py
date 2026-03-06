@@ -1134,6 +1134,8 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir
             },
         }
     for pi in pis:
+        if pi["name"] == "pi-massflash" or pi["name"].startswith("pi-reghelp"):
+            continue
         wasgehtconfig[pi["name"]] = {
             "tags": {
                 "type": "pi",
