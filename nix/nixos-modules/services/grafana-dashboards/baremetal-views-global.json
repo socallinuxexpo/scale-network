@@ -345,7 +345,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(rate(node_network_receive_bytes_total{device=~\"eno.*|enp.*\", job=\"$job\"}[$__rate_interval])*8 > 0)",
+          "expr": "sum(rate(node_network_receive_bytes_total{device=~\"en.*|copper.*|fiber.*\", job=\"$job\"}[$__rate_interval])*8 > 0)",
           "legendFormat": "Receive",
           "range": true,
           "refId": "A"
@@ -356,7 +356,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "sum(rate(node_network_transmit_bytes_total{device=~\"eno.*|enp.*\", job=\"$job\"}[$__rate_interval])*8 > 0)",
+          "expr": "sum(rate(node_network_transmit_bytes_total{device=~\"en.*|copper.*|fiber.*\", job=\"$job\"}[$__rate_interval])*8 > 0)",
           "hide": false,
           "instant": false,
           "legendFormat": "Transmit",
@@ -1767,7 +1767,6 @@
           },
           "links": [],
           "mappings": [],
-          "max": 100,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1824,9 +1823,12 @@
     }
   ],
   "preload": false,
-  "refresh": "5s",
+  "refresh": "auto",
   "schemaVersion": 41,
-  "tags": [],
+  "tags": [
+    "baremetal",
+    "fleet"
+  ],
   "templating": {
     "list": [
       {
@@ -1875,5 +1877,5 @@
   "timezone": "browser",
   "title": "Baremetal / Views / Global",
   "uid": "39e4df9c-cce5-4315-af87-8d41bcbcd749",
-  "version": 12
+  "version": 18
 }

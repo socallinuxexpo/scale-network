@@ -82,6 +82,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "count(up{job=\"switches\"} == 1)",
           "instant": true,
           "legendFormat": "Switches Up",
@@ -151,7 +152,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up{job=\"switches\"} == 0)",
+          "editorMode": "code",
+          "expr": "count(up{job=\"switches\"} == 0)  OR vector(0)",
           "instant": true,
           "legendFormat": "Switches Down",
           "refId": "A"
@@ -289,7 +291,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "avg(jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"})",
+          "editorMode": "code",
+          "expr": "avg(jnxOperatingCPU{job=\"switches\"})",
           "instant": true,
           "legendFormat": "Avg CPU",
           "refId": "A"
@@ -327,6 +330,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
@@ -357,8 +363,8 @@
         "overrides": [
           {
             "matcher": {
-              "id": "byName",
-              "options": "Egress"
+              "id": "byRegexp",
+              "options": "/.*Egress.*/"
             },
             "properties": [
               {
@@ -370,7 +376,7 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 4
@@ -379,13 +385,13 @@
       "options": {
         "legend": {
           "calcs": [
-            "mean",
-            "max",
             "lastNotNull"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -400,8 +406,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "sum(rate(ifHCInOctets[5m])) * 8",
-          "legendFormat": "Ingress",
+          "editorMode": "code",
+          "expr": "sum by (switch) (rate(ifHCInOctets[5m]) + rate(ifHCOutOctets[5m])) * 8",
+          "legendFormat": "{{switch}}",
+          "range": true,
           "refId": "A"
         },
         {
@@ -409,8 +417,11 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "sum(rate(ifHCOutOctets[5m])) * 8",
-          "legendFormat": "Egress",
+          "editorMode": "code",
+          "expr": "sum by (switch) (rate(ifHCOutOctets[5m])) * 8",
+          "hide": true,
+          "legendFormat": "{{switch}} - Egress",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -426,7 +437,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-BlYlRd"
+            "mode": "continuous-GrYlRd"
           },
           "mappings": [],
           "min": 0,
@@ -444,7 +455,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 12,
         "y": 4
@@ -481,6 +492,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "topk(10, sum by (switch) (rate(ifHCInOctets[5m]) + rate(ifHCOutOctets[5m])) * 8)",
           "instant": true,
           "legendFormat": "{{switch}}",
@@ -535,7 +547,6 @@
             }
           },
           "mappings": [],
-          "max": 100,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -562,7 +573,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 12
+        "y": 13
       },
       "id": 11,
       "options": {
@@ -589,8 +600,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "avg(jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"})",
+          "editorMode": "code",
+          "expr": "avg(jnxOperatingCPU{job=\"switches\"})",
           "legendFormat": "Fleet Average",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -642,7 +655,6 @@
             }
           },
           "mappings": [],
-          "max": 100,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
@@ -661,16 +673,12 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 13
       },
       "id": 12,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "lastNotNull"
-          ],
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -688,204 +696,15 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "topk(10, avg by (switch) (jnxOperatingCPU{job=\"switches\", jnxOperatingDescr=~\"Routing Engine.*\"}))",
+          "editorMode": "code",
+          "expr": "avg by (switch) (jnxOperatingCPU{job=\"switches\"})",
           "legendFormat": "{{switch}}",
+          "range": true,
           "refId": "A"
         }
       ],
-      "title": "Top 10 Switches by CPU Usage",
+      "title": "Fleet Switches by CPU Usage",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
-      "description": "Overview of all switches with system info, uptime, and interface status",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Uptime"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dtdurations"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Interfaces Up"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Interfaces Down"
-            },
-            "properties": [
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green",
-                      "value": 0
-                    },
-                    {
-                      "color": "red",
-                      "value": 1
-                    }
-                  ]
-                }
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 20
-      },
-      "id": 5,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "Switch"
-          }
-        ]
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "sysUpTime / 100",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "{{switch}}",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "count by (switch) (ifOperStatus == 1)",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "{{switch}}",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "expr": "count by (switch) (ifOperStatus == 2)",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "{{switch}}",
-          "refId": "C"
-        }
-      ],
-      "title": "Switch Status Table",
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "job": true
-            },
-            "includeByName": {},
-            "indexByName": {
-              "Time": 1,
-              "Value #A": 4,
-              "Value #B": 5,
-              "Value #C": 6,
-              "instance": 2,
-              "job": 3,
-              "switch": 0
-            },
-            "renameByName": {
-              "Value #A": "Uptime",
-              "Value #B": "Interfaces Up",
-              "Value #C": "Interfaces Down",
-              "instance": "Address",
-              "switch": "Switch"
-            }
-          }
-        }
-      ],
-      "type": "table"
     },
     {
       "datasource": {
@@ -946,7 +765,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 21
       },
       "id": 9,
       "options": {
@@ -974,6 +793,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "topk(10, rate(ifInDiscards[5m]) + rate(ifOutDiscards[5m]))",
           "format": "table",
           "instant": true,
@@ -1064,7 +884,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 21
       },
       "id": 8,
       "options": {
@@ -1092,6 +912,7 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
+          "editorMode": "code",
           "expr": "topk(10, rate(ifInErrors[5m]) + rate(ifOutErrors[5m]))",
           "format": "table",
           "instant": true,
@@ -1125,7 +946,7 @@
     }
   ],
   "preload": false,
-  "refresh": "5s",
+  "refresh": "auto",
   "schemaVersion": 41,
   "tags": [
     "snmp",
@@ -1144,5 +965,5 @@
   "timezone": "browser",
   "title": "Switch / Views / Global",
   "uid": "switch-fleet-overview",
-  "version": 8
+  "version": 35
 }
