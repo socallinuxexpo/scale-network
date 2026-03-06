@@ -381,6 +381,9 @@ def populateaps(aps_file, apuse_file):
                 "configver": str(row["config_ver"]),
                 "fqdn": name + ".scale.lan",
                 "aliases": [row["serial"].lower()],
+                "map_id": str(row["map_id"]),
+                "map_x": str(row["map_x"]),
+                "map_y": str(row["map_y"]),
             }
         )
     return aps
@@ -1145,6 +1148,9 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir
                 "channels": f"{ap['wifi2']} / {ap['wifi5']}",
                 "config": ap["configver"],
                 "building": _building_from_vlans(vlans, ipv4=ap["ipv4"]),
+                "map_id": ap["map_id"],
+                "map_x": ap["map_x"],
+                "map_y": ap["map_y"],
                 **({"aliases": ", ".join(ap["aliases"])} if ap["aliases"] else {}),
             },
             "checks": {
