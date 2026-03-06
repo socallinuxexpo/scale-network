@@ -386,6 +386,7 @@ in
             "bridge101"
             "bridge102"
             "bridge110"
+            "bridge499"
           ];
           upstreamInterfaces = [ "bridge103" ];
           dhcpServerIps = [ "10.0.3.20" ];
@@ -403,6 +404,7 @@ in
             "2001:470:f026:102::1%%bridge102"
             "2001:470:f026:107::1%%bridge107"
             "2001:470:f026:110::1%%bridge110"
+            "2001:470:f026:499::1%%bridge499"
           ];
           upstreamInterfaces = [ "2001:470:f026:103::20%%bridge103" ];
         };
