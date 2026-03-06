@@ -359,6 +359,9 @@ def test_populateswitches():
                     "ipv6": "2001:470:f325:103::200:16",
                     # pylint: disable=line-too-long
                     "ipv6ptr": "6.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.1.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
+                    "switchtype": "Catwalk",
+                    "hierarchy": "W.1",
+                    "model": "ex4200-48p",
                     "aliases": [],
                 },
                 {
@@ -368,6 +371,9 @@ def test_populateswitches():
                     "ipv6": "2001:470:f325:503::200:17",
                     # pylint: disable=line-too-long
                     "ipv6ptr": "7.1.0.0.0.0.2.0.0.0.0.0.0.0.0.0.3.0.5.0.5.2.3.f.0.7.4.0.1.0.0.2.ip6.arpa",
+                    "switchtype": "cfRoom",
+                    "hierarchy": "I.9",
+                    "model": "ex4200-48p",
                     "aliases": ["rm209", "rm210"],
                 },
             ],
@@ -414,6 +420,9 @@ def test_populateaps():
                     "wifi5": "36",
                     "configver": "0",
                     "aliases": ["n7a-0093"],
+                    "map_id": "0",
+                    "map_x": "50",
+                    "map_y": "50",
                 },
                 {
                     "name": "101-b",
@@ -425,6 +434,9 @@ def test_populateaps():
                     "wifi5": "165",
                     "configver": "0",
                     "aliases": ["n8c-0002"],
+                    "map_id": "0",
+                    "map_x": "50",
+                    "map_y": "50",
                 },
             ],
         ]
@@ -462,6 +474,9 @@ def test_populateservers():
         {
             "name": "cfInfra",
             "ipv6prefix": "2001:470:f325:503::",
+            "ipv6bitmask": "64",
+            "ipv4prefix": "10.128.3.0",
+            "ipv4bitmask": "24",
             "building": "Conference",
         }
     ]
