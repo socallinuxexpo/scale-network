@@ -324,6 +324,9 @@ def populateswitches(switchesfile):
                     "num": elems[1],
                     "ipv6": elems[3],
                     "ipv6ptr": ip6toptr(elems[3]),
+                    "switchtype": elems[4],
+                    "hierarchy": elems[5],
+                    "model": elems[7],
                     "fqdn": name.lower() + ".scale.lan",
                     "aliases": roomalias(name),
                 }
@@ -1065,11 +1068,15 @@ def generatewasgehtconfig(switches, routers, pis, aps, servers, vlans, outputdir
         }
     }
     for switch in switches:
+        if switch["hierarchy"].startswith("Z"):
+            continue
         entry = {
             "tags": {
                 "type": "switch",
                 "os": "junos",
                 "num": switch["num"],
+                "switchtype": switch["switchtype"],
+                "model": switch["model"],
                 "building": _building_from_vlans(vlans, ipv6=switch["ipv6"]),
                 **(
                     {"aliases": ", ".join(switch["aliases"])}
