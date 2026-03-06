@@ -949,7 +949,7 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
 
 def _prom_exclude(name):
     """Return True if the name should be excluded from prom configs."""
-    return re.match(r"^(deceased|donotuse|massflash|spare)", name)
+    return re.match(r"^(deceased|donotuse|massflash|spare|expob5|expoc4|expoc5)", name)
 
 
 def generatepromconfigs(switches, pis, aps, outputdir):
