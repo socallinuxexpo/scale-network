@@ -357,10 +357,12 @@ in
       services.frr.router-id = "172.20.4.3";
       services.frr.broadcast-interface = [
         "bridge104" # border
+        "bridge499" # vendor_backbone
         "bridge903" # conf
       ];
       services.frr.interface-priority = {
         "bridge104" = 100;
+        "bridge499" = 200;
         "bridge903" = 100;
       };
       services.frr.passive-interface = [
