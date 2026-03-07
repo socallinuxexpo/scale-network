@@ -1323,6 +1323,7 @@ sub VV_init_firewall
                 from {
                     destination-address {
                         10.0.3.20;
+                        10.128.3.20;
                     }
                     destination-port [ https ];
                 }
