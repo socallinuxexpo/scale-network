@@ -83,7 +83,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=\"switches\"} == 1)",
+          "expr": "count(up{job=\"switches_system\"} == 1)",
           "instant": true,
           "legendFormat": "Switches Up",
           "refId": "A"
@@ -153,7 +153,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=\"switches\"} == 0)  OR vector(0)",
+          "expr": "count(up{job=\"switches_system\"} == 0)  OR vector(0)",
           "instant": true,
           "legendFormat": "Switches Down",
           "refId": "A"
@@ -218,7 +218,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up{job=\"switches\"})",
+          "editorMode": "code",
+          "expr": "count(up{job=\"switches_system\"})",
           "instant": true,
           "legendFormat": "Total",
           "refId": "A"
@@ -292,7 +293,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "avg(jnxOperatingCPU{job=\"switches\"})",
+          "expr": "avg(jnxOperatingCPU{job=\"switches_jnx_operating\"})",
           "instant": true,
           "legendFormat": "Avg CPU",
           "refId": "A"
@@ -407,22 +408,10 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "sum by (switch) (rate(ifHCInOctets[5m]) + rate(ifHCOutOctets[5m])) * 8",
+          "expr": "sum by (switch) (rate(ifHCInOctets[10m]) + rate(ifHCOutOctets[10m])) * 8",
           "legendFormat": "{{switch}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "editorMode": "code",
-          "expr": "sum by (switch) (rate(ifHCOutOctets[5m])) * 8",
-          "hide": true,
-          "legendFormat": "{{switch}} - Egress",
-          "range": true,
-          "refId": "B"
         }
       ],
       "title": "Fleet-wide Traffic",
@@ -493,7 +482,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "topk(10, sum by (switch) (rate(ifHCInOctets[5m]) + rate(ifHCOutOctets[5m])) * 8)",
+          "expr": "topk(10, sum by (switch) (rate(ifHCInOctets[10m]) + rate(ifHCOutOctets[10m])) * 8)",
           "instant": true,
           "legendFormat": "{{switch}}",
           "refId": "A"
@@ -601,7 +590,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "avg(jnxOperatingCPU{job=\"switches\"})",
+          "expr": "avg(jnxOperatingCPU)",
           "legendFormat": "Fleet Average",
           "range": true,
           "refId": "A"
@@ -697,7 +686,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "avg by (switch) (jnxOperatingCPU{job=\"switches\"})",
+          "expr": "avg by (switch) (jnxOperatingCPU)",
           "legendFormat": "{{switch}}",
           "range": true,
           "refId": "A"
@@ -705,125 +694,6 @@
       ],
       "title": "Fleet Switches by CPU Usage",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
-      },
-      "description": "Interfaces with the highest discard rates across the fleet",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "yellow",
-                "value": 0.001
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          },
-          "unit": "pps"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Discard Rate"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 21
-      },
-      "id": 9,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Discard Rate"
-          }
-        ]
-      },
-      "pluginVersion": "12.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
-          },
-          "editorMode": "code",
-          "expr": "topk(10, rate(ifInDiscards[5m]) + rate(ifOutDiscards[5m]))",
-          "format": "table",
-          "instant": true,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "title": "Top 10 Interfaces by Discards",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "__name__": true,
-              "ifAlias": true,
-              "ifIndex": true,
-              "instance": true,
-              "job": true
-            },
-            "renameByName": {
-              "Value": "Discard Rate",
-              "ifDescr": "Description",
-              "ifName": "Interface",
-              "switch": "Switch"
-            }
-          }
-        }
-      ],
-      "type": "table"
     },
     {
       "datasource": {
@@ -882,8 +752,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 24,
+        "x": 0,
         "y": 21
       },
       "id": 8,
@@ -913,7 +783,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "topk(10, rate(ifInErrors[5m]) + rate(ifOutErrors[5m]))",
+          "expr": "topk(10, rate(ifInErrors[10m]) + rate(ifOutErrors[10m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "",
@@ -965,5 +835,5 @@
   "timezone": "browser",
   "title": "Switch / Views / Global",
   "uid": "switch-fleet-overview",
-  "version": 35
+  "version": 47
 }

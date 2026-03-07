@@ -92,7 +92,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 1)",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches_system\"} == 1)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -162,7 +162,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 0) OR vector(0)",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches_system\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -238,7 +238,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches\"} == 1) / count(up{job=~\"aps|integrations/unix|pis|switches\"}) * 100",
+          "expr": "count(up{job=~\"aps|integrations/unix|pis|switches_system\"} == 1) / count(up{job=~\"aps|integrations/unix|pis|switches_system\"}) * 100",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -345,8 +345,10 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up{job=\"switches\"} == 1)",
+          "editorMode": "code",
+          "expr": "count(up{job=~\"switches_system\"} == 1)",
           "legendFormat": "Switches",
+          "range": true,
           "refId": "B"
         },
         {
@@ -642,7 +644,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=\"switches\"} == 1)",
+          "expr": "count(up{job=\"switches_system\"} == 1) or vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -712,7 +714,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "editorMode": "code",
-          "expr": "count(up{job=\"switches\"} == 0) OR vector(0)",
+          "expr": "count(up{job=\"switches_system\"} == 0) OR vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -787,7 +789,8 @@
             "type": "prometheus",
             "uid": "PAE45454D0EDB9216"
           },
-          "expr": "count(up{job=\"switches\"} == 1) / count(up{job=\"switches\"}) * 100",
+          "editorMode": "code",
+          "expr": "(count(up{job=\"switches_system\"} == 1) / count(up{job=\"switches_system\"}) * 100) or vector(0)",
           "instant": true,
           "legendFormat": "__auto",
           "refId": "A"
@@ -1442,7 +1445,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 36
+            "y": 33
           },
           "id": 16,
           "options": {
@@ -1470,7 +1473,8 @@
                 "type": "prometheus",
                 "uid": "PAE45454D0EDB9216"
               },
-              "expr": "up{job=\"switches\"}",
+              "editorMode": "code",
+              "expr": "up{job=\"switches_system\"}",
               "format": "table",
               "instant": true,
               "legendFormat": "__auto",
@@ -1592,7 +1596,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 69
+            "y": 85
           },
           "id": 21,
           "options": {
@@ -1667,5 +1671,5 @@
   "timezone": "browser",
   "title": "Uptime / Views / Global",
   "uid": "uptime-global",
-  "version": 35
+  "version": 44
 }
