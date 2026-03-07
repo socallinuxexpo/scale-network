@@ -237,6 +237,11 @@ in
           "eventd.log"         # Switch events
           "pfed.log"           # Packet forwarding engine
           "rpd.log"            # Routing protocol daemon
+          "snmpd.log"          # SNMP daemon errors
+          "mib2d.log"          # MIB-II daemon errors
+          "chassisd.log"       # Chassis daemon (hardware failures)
+          "mgd.log"            # Management daemon (config changes, errors committing)
+          "lldpd.log"          # LLDP Neighor discovery
 
           # Access point logs (OpenWRT)
           "hostapd.log"        # WiFi authentication
