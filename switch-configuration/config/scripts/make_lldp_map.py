@@ -173,6 +173,9 @@ with open('network.diag', 'w') as out:
     # Include all edges (tree and non-tree), deduplicated
     all_edges = [(u, v) for u, v in G.edges]
     seen = set()
+    # Mark external-to-starting edges as already written so they are not duplicated here
+    for e in externals:
+        seen.add(frozenset([e, starting]))
     for u, v in all_edges:
         edge = frozenset([u, v])
         if edge in seen:
