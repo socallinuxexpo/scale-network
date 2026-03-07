@@ -28,7 +28,7 @@ let
   # Generate glob patterns for accepted log files
   # Each pattern becomes /persist/rsyslog/*/pattern.log
   log_target_list = map
-    (pattern: "${cfg.rsyslogdLokiScrape.logPath}/*/${pattern}")
+    (pattern: "${cfg.rsyslogdLokiScrape.logPath}/**/${pattern}")
     cfg.rsyslogdLokiScrape.acceptedLogPatterns;
 
   # Generate the Alloy configuration file
