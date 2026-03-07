@@ -89,50 +89,10 @@ modules:
           5: dormant
           6: notPresent
           7: lowerLayerDown
-      - name: ifInDiscards
-        oid: 1.3.6.1.2.1.2.2.1.13
-        type: counter
-        help: The number of inbound packets discarded even though no errors were detected.
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
       - name: ifInErrors
         oid: 1.3.6.1.2.1.2.2.1.14
         type: counter
         help: The number of inbound packets that contained errors.
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-      - name: ifOutDiscards
-        oid: 1.3.6.1.2.1.2.2.1.19
-        type: counter
-        help: The number of outbound packets discarded even though no errors were detected.
         indexes:
           - labelname: ifIndex
             type: gauge
@@ -210,46 +170,6 @@ modules:
             labelname: ifName
             oid: 1.3.6.1.2.1.31.1.1.1.1
             type: DisplayString
-      - name: ifHCInMulticastPkts
-        oid: 1.3.6.1.2.1.31.1.1.1.8
-        type: counter
-        help: The number of multicast packets delivered to a higher layer (64-bit counter).
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-      - name: ifHCInBroadcastPkts
-        oid: 1.3.6.1.2.1.31.1.1.1.9
-        type: counter
-        help: The number of broadcast packets delivered to a higher layer (64-bit counter).
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
       - name: ifHCOutOctets
         oid: 1.3.6.1.2.1.31.1.1.1.10
         type: counter
@@ -274,46 +194,6 @@ modules:
         oid: 1.3.6.1.2.1.31.1.1.1.11
         type: counter
         help: The total number of unicast packets requested to be transmitted (64-bit counter).
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-      - name: ifHCOutMulticastPkts
-        oid: 1.3.6.1.2.1.31.1.1.1.12
-        type: counter
-        help: The total number of multicast packets requested to be transmitted (64-bit counter).
-        indexes:
-          - labelname: ifIndex
-            type: gauge
-        lookups:
-          - labels: [ifIndex]
-            labelname: ifAlias
-            oid: 1.3.6.1.2.1.31.1.1.1.18
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifDescr
-            oid: 1.3.6.1.2.1.2.2.1.2
-            type: DisplayString
-          - labels: [ifIndex]
-            labelname: ifName
-            oid: 1.3.6.1.2.1.31.1.1.1.1
-            type: DisplayString
-      - name: ifHCOutBroadcastPkts
-        oid: 1.3.6.1.2.1.31.1.1.1.13
-        type: counter
-        help: The total number of broadcast packets requested to be transmitted (64-bit counter).
         indexes:
           - labelname: ifIndex
             type: gauge

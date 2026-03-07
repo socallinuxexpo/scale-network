@@ -7,6 +7,67 @@
 let
   cfg = config.scale-network.services.monitoring;
 
+  mimirRules = pkgs.writeText "rules.yml" (
+    builtins.toJSON {
+      groups = [
+        {
+          name = "server-alerts";
+          rules = [
+            {
+              alert = "ServerDown";
+              expr = ''count(up{job="integrations/unix"} == 0) > 0'';
+              "for" = "5m";
+              labels = {
+                severity = "critical";
+              };
+              annotations = {
+                summary = "One or more servers are down";
+              };
+            }
+            {
+              alert = "SwitchDown";
+              expr = ''count(up{job="switches_system"} == 0) > 0'';
+              "for" = "5m";
+              labels = {
+                severity = "critical";
+              };
+              annotations = {
+                summary = "One or more switches are down";
+              };
+            }
+            {
+              alert = "ApDown";
+              expr = ''count(up{job="aps"} == 0) > 0'';
+              "for" = "5m";
+              labels = {
+                severity = "critical";
+              };
+              annotations = {
+                summary = "One or more aps are down";
+              };
+            }
+            {
+              alert = "PiDown";
+              expr = ''count(up{job="pis"} == 0) > 0'';
+              "for" = "5m";
+              labels = {
+                severity = "critical";
+              };
+              annotations = {
+                summary = "One or more pis are down";
+              };
+            }
+          ];
+        }
+      ];
+    }
+  );
+
+  mimirRulesDir = pkgs.runCommand "mimir-rules" { } ''
+    mkdir -p $out/anonymous
+    cp ${mimirRules} $out/anonymous/rules.yml
+  '';
+
   inherit (lib)
     types
     ;
@@ -38,6 +99,7 @@ in
       14250 # tempo-jaeger-grpc
       14268 # tempo-jaeger-thrift-http
       3000 # grafana-http
+      9093 # alertmanager-http
       3100 # loki-http
       3200 # mimir-http
       3300 # tempo-http
@@ -139,14 +201,23 @@ in
             };
           };
 
+          ruler = {
+            alertmanager_url = "http://127.0.0.1:9093";
+            enable_api = true;
+            evaluation_interval = "1m";
+          };
+
           ruler_storage = {
-            storage_prefix = "ruler";
+            backend = "local";
+            local = {
+              directory = mimirRulesDir;
+            };
           };
 
           limits = {
             ingestion_burst_size = 1000000;
             ingestion_rate = 100000;
-            max_global_series_per_user = 300000;
+            max_global_series_per_user = 600000;
           };
 
           alertmanager_storage = {
@@ -261,8 +332,37 @@ in
               access = "proxy";
               url = "http://127.0.0.1:3300";
             }
+            {
+              name = "Alertmanager";
+              type = "alertmanager";
+              access = "proxy";
+              url = "http://127.0.0.1:9093";
+            }
           ];
         };
+      };
+    };
+
+    # Alertmanager for receiving and routing alerts from Mimir
+    services.prometheus.alertmanager = {
+      enable = true;
+      port = 9093;
+      extraFlags = [
+        "--web.external-url=https://${cfg.fqdn}/alertmanager/"
+        "--web.route-prefix=/"
+      ];
+      configuration = {
+        route = {
+          receiver = "default";
+          group_wait = "30s";
+          group_interval = "5m";
+          repeat_interval = "4h";
+        };
+        receivers = [
+          {
+            name = "default";
+          }
+        ];
       };
     };
 
@@ -311,14 +411,16 @@ in
         }
 
         // Relabel switch targets for the standalone SNMP exporter.
-        // The SNMP exporter is an HTTP service at 127.0.0.1:9116 that accepts
-        // target, module, and auth as query parameters:
-        //   GET /snmp?target=[ipv6]:161&module=if_mib,system,jnxOperating&auth=Junitux
-        discovery.relabel "switches" {
+        // Each module gets its own relabel + scrape to avoid overwhelming the
+        // SNMP exporter with 39 concurrent multi-module walks.
+        discovery.relabel "switches_if_mib" {
           targets = discovery.file.switches.targets
 
+          // Strip brackets and port from IPv6 addresses (e.g. [2001:db8::1]:161 -> 2001:db8::1)
           rule {
             source_labels = ["__address__"]
+            regex         = "\\[(.+?)\\](?::\\d+)?"
+            replacement   = "$1"
             target_label  = "__param_target"
           }
 
@@ -329,7 +431,7 @@ in
 
           rule {
             target_label = "__param_module"
-            replacement  = "if_mib,system,jnxOperating"
+            replacement  = "if_mib"
           }
 
           rule {
@@ -343,14 +445,96 @@ in
           }
         }
 
-        // Scrape SNMP metrics from switches via the standalone SNMP exporter
-        prometheus.scrape "switches" {
-          targets         = discovery.relabel.switches.output
+        discovery.relabel "switches_system" {
+          targets = discovery.file.switches.targets
+
+          rule {
+            source_labels = ["__address__"]
+            regex         = "\\[(.+?)\\](?::\\d+)?"
+            replacement   = "$1"
+            target_label  = "__param_target"
+          }
+
+          rule {
+            source_labels = ["__param_target"]
+            target_label  = "instance"
+          }
+
+          rule {
+            target_label = "__param_module"
+            replacement  = "system"
+          }
+
+          rule {
+            target_label = "__param_auth"
+            replacement  = "Junitux"
+          }
+
+          rule {
+            target_label = "__address__"
+            replacement  = "127.0.0.1:9116"
+          }
+        }
+
+        discovery.relabel "switches_jnx_operating" {
+          targets = discovery.file.switches.targets
+
+          rule {
+            source_labels = ["__address__"]
+            regex         = "\\[(.+?)\\](?::\\d+)?"
+            replacement   = "$1"
+            target_label  = "__param_target"
+          }
+
+          rule {
+            source_labels = ["__param_target"]
+            target_label  = "instance"
+          }
+
+          rule {
+            target_label = "__param_module"
+            replacement  = "jnxOperating"
+          }
+
+          rule {
+            target_label = "__param_auth"
+            replacement  = "Junitux"
+          }
+
+          rule {
+            target_label = "__address__"
+            replacement  = "127.0.0.1:9116"
+          }
+        }
+
+        // Scrape SNMP system metrics (SNMPv2-MIB)
+        prometheus.scrape "switches_system" {
+          targets         = discovery.relabel.switches_system.output
+          forward_to      = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "30s"
+          scrape_timeout  = "15s"
+          metrics_path    = "/snmp"
+          job_name        = "switches_system"
+        }
+
+        // Scrape SNMP Juniper operating metrics (JUNIPER-MIB)
+        prometheus.scrape "switches_jnx_operating" {
+          targets         = discovery.relabel.switches_jnx_operating.output
+          forward_to      = [prometheus.remote_write.mimir.receiver]
+          scrape_interval = "60s"
+          scrape_timeout  = "30s"
+          metrics_path    = "/snmp"
+          job_name        = "switches_jnx_operating"
+        }
+
+        // Scrape SNMP interface metrics (IF-MIB)
+        prometheus.scrape "switches_if_mib" {
+          targets         = discovery.relabel.switches_if_mib.output
           forward_to      = [prometheus.remote_write.mimir.receiver]
           scrape_interval = "120s"
           scrape_timeout  = "60s"
           metrics_path    = "/snmp"
-          job_name        = "switches"
+          job_name        = "switches_if_mib"
         }
       '';
     };
@@ -399,6 +583,9 @@ in
         };
         locations."/mimir/" = {
           proxyPass = "http://127.0.0.1:3200/";
+        };
+        locations."/alertmanager/" = {
+          proxyPass = "http://127.0.0.1:9093/";
         };
         locations."/tempo/" = {
           proxyPass = "http://127.0.0.1:3300/";
