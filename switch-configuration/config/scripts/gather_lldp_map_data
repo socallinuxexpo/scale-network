@@ -1,0 +1,23 @@
+#!/bin/bash
+#This goes through all switches in switchtypes, connects to them and gets a LLDP dump of what's connected to them.
+
+shopt -s lastpipe
+
+(
+  grep -v ipv6 ../../facts/routers/routerlist.csv |sed s/,/' '/ |while read name ip
+  do
+    ssh -n -o ConnectTimeout=10 $ip 'networkctl lldp  |grep -v -e SYSTEM-NAME -e "^Capability" -e "- Bridge;" -e "neighbor.s. listed" -e "^$" |while read iface server junk; do echo "$iface $server"; done' |while read iface neighbor
+    do
+      echo  "$name $iface $neighbor"
+    done
+  done 
+  
+  grep -v "^/" switchtypes |while read name num m ip type h n model mac
+  do
+    ssh -n -o ConnectTimeout=10 $ip 'show lldp neighbors' |grep "^g" |while read line
+    do
+      echo  "$name $line"
+    done
+  done |sed s/"\/"/-/g| tr "[A-Z]" "[a-z]" | while read host if p id rest; do name=`echo "$rest"|sed s/"^.* "//`; notname=`echo "$rest" |sed s/" [^ ]*$"//`; echo "$host $if $name"; done
+) |sed -f scripts/make_lldp_map.sed | tee map.parts
+
