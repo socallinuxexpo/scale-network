@@ -9,17 +9,17 @@
 # interference floor instead of the arbitrary -120 dBm.
 #
 # USAGE
-#   python3 channel_planner.py <ssid> <data_file> [options]
+#   python3 analyze-scan.py <ssid> <data_file> [options]
 #
 # EXAMPLES
 #   # Show plan + before/after statistics
-#   python3 channel_planner.py "scale-public-slow" scan-results.txt
+#   python3 analyze-scan.py "scale-public-slow" scan-results.txt
 #
 #   # Generate plan and update CSV with suggested channels
-#   python3 channel_planner.py "scale-public-slow" scan-results.txt --update apuse.csv
+#   python3 analyze-scan.py "scale-public-slow" scan-results.txt --update apuse.csv
 #
 #   # Show this help
-#   python3 channel_planner.py --help
+#   python3 analyze-scan.py --help
 #
 # OUTPUT
 #   - Current (Before) interference stats based on existing channels from data file
