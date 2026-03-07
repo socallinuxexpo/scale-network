@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 # WiFi Channel Planner - Effective dBm Power-Sum Method (with real Noise Floor)
 #
 # PURPOSE
