@@ -163,7 +163,8 @@ def ssh_scan_host(host, ssid, radio=None, connect_timeout=5.0, cmd_timeout=60,
             if verbose:
                 print(f"    Scanning {iface}...", file=sys.stderr)
             stdin, stdout, stderr = client.exec_command(cmd, timeout=cmd_timeout)
-            for line in iter(stdout.readline, ''):
+            for raw_line in iter(stdout.readline, b''):
+                line = raw_line.decode(errors='ignore')
                 output_lines.append(f"{host} {line.rstrip()}")
             stderr_out = stderr.read().decode(errors='ignore')
             if stderr_out:
