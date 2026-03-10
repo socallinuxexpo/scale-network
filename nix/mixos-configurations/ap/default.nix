@@ -132,7 +132,10 @@ in
 
   init.prometheus-node-exporter = {
     action = "respawn";
-    process = lib.getExe pkgs.prometheus-node-exporter;
+    process = toString [
+      (lib.getExe pkgs.prometheus-node-exporter)
+      "--collector.wifi"
+    ];
   };
 
   init.apinger = {
