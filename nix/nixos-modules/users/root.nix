@@ -19,7 +19,7 @@ in
   config = mkIf cfg.enable {
     security.sudo = {
       extraConfig = ''
-        Defaults rootpw
+#        Defaults rootpw
         Defaults lecture="never"
       '';
     };
