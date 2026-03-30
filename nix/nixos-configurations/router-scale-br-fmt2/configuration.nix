@@ -24,4 +24,6 @@
     users.root.enable = true;
     users.erikreinert.enable = true;
   };
+  security.pam.sshAgentAuth.enable = true;
+  security.pam.services.sudo.sshAgentAuth = true;
 }
