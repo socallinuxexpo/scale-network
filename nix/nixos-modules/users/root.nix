@@ -17,9 +17,13 @@ in
   options.scale-network.users.root.enable = mkEnableOption "user root and sudo configs";
 
   config = mkIf cfg.enable {
+
+    security.pam.sshAgentAuth.enable = true;
+    security.pam.services.sudo.sshAgentAuth = true;
+
     security.sudo = {
       extraConfig = ''
-        Defaults rootpw
+#        Defaults rootpw
         Defaults lecture="never"
       '';
     };
