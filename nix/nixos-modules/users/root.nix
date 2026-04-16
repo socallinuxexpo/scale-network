@@ -25,7 +25,7 @@ in
       extraConfig = ''
 #        Defaults rootpw
         Defaults lecture="never"
-	Defaults env_keep+=SSH_AUTH_SOCK
+        Defaults env_keep+=SSH_AUTH_SOCK
       '';
     };
 
