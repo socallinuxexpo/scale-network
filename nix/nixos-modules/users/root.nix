@@ -18,13 +18,14 @@ in
 
   config = mkIf cfg.enable {
 
-    security.pam.sshAgentAuth.enable = true;
-    security.pam.services.sudo.sshAgentAuth = true;
+    security.pam.rssh.enable = true;
+    security.pam.services.sudo.rssh = true;
 
     security.sudo = {
       extraConfig = ''
 #        Defaults rootpw
         Defaults lecture="never"
+	Defaults env_keep+=SSH_AUTH_SOCK
       '';
     };
 
