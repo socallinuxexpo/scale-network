@@ -17,6 +17,10 @@ in
   options.scale-network.users.root.enable = mkEnableOption "user root and sudo configs";
 
   config = mkIf cfg.enable {
+
+    security.pam.rssh.enable = true;
+    security.pam.services.sudo.rssh = true;
+
     security.sudo = {
       extraConfig = ''
         Defaults rootpw
