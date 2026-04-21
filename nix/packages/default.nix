@@ -27,5 +27,6 @@ mapAttrs (const (pkgs: {
     perl-net-arp
     perl-net-interface
     perl-net-ping
+    rperf
     ;
 })) inputs.self.legacyPackages
