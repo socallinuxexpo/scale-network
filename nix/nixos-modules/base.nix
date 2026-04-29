@@ -74,6 +74,7 @@ in
       pciutils
       psmisc # fuser
       silver-searcher
+      smartmontools
       strace
       tcpdump
       tmux
