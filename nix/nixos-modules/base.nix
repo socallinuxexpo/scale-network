@@ -86,7 +86,7 @@ in
     programs.vim = {
       enable = true;
       defaultEditor = true;
-      package = (pkgs.vim_configurable.override { }).customize {
+      package = (pkgs.vim-full.override { }).customize {
         name = "vim";
         # Install plugins for syntax highlighting of nix files
         vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {

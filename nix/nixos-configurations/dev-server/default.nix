@@ -1,5 +1,5 @@
 {
-  release = "unstable";
+  release = "2511";
 
   modules =
     {
@@ -15,6 +15,9 @@
 
       config = {
         nixpkgs.hostPlatform = "x86_64-linux";
+
+        # need to be 6.18 to avoid https://copy.fail/
+        boot.kernelPackages = pkgs.linuxPackages_6_18;
 
         scale-network = {
           base.enable = true;
