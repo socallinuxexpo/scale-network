@@ -8,6 +8,7 @@
     services.alloy.enable = true;
     services.alloy.keaExporter.enable = true;
     services.alloy.bindExporter.enable = true;
+    services.alloy.rsyslogdLokiScrape.enable = true;
     services.bindMaster.enable = true;
     services.bindExporter.enable = true;
     services.keaMaster.enable = true;
