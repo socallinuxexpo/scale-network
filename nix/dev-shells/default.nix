@@ -50,6 +50,7 @@ mapAttrs (const (
       nettools
       unixtools.ping
       iperf3
+      scale-network.rperf
       ncurses
       ncurses.dev
       pkg-config
