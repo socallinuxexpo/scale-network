@@ -73,7 +73,7 @@ in
       openssl
       pciutils
       psmisc # fuser
-      silver-searcher
+      ripgrep
       smartmontools
       strace
       tcpdump
