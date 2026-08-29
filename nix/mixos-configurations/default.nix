@@ -13,7 +13,7 @@ mapAttrs (
       inputs.openwrt-one-nix.mixosModules.default
       {
         nixpkgs = {
-          nixpkgs = inputs.nixpkgs-2511;
+          nixpkgs = inputs.nixpkgs-unstable;
           overlays = [ inputs.self.overlays.default ];
         };
       }
