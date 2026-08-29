@@ -15,7 +15,10 @@ mapAttrs (
         nixpkgs.pkgs = import inputs.nixpkgs {
           localSystem = "x86_64-linux";
           crossSystem = "aarch64-linux";
-          overlays = [ inputs.self.overlays.default ];
+          overlays = [
+            inputs.self.overlays.default
+            inputs.openwrt-one-nix.overlays.default
+          ];
         };
       }
     ];
