@@ -80,19 +80,12 @@ in
     system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-tests
   );
 
-  scale-nixos-tests =
-    pipe
-      (defaultSystems (
-        system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-nixos-tests
-      ))
-      (
-        map removeByPath [
-          [
-            "aarch64-linux"
-            "core"
-          ]
-        ]
-      );
+  # only test on x86-64-linux for nixos-tests
+  scale-nixos-tests = filterAttrs (system: _: system == "x86_64-linux") (
+    defaultSystems (
+      system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-nixos-tests
+    )
+  );
 
   scale-nixos-systems =
     let
