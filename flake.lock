@@ -20,18 +20,36 @@
         "type": "github"
       }
     },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "mixos": {
       "inputs": {
+        "flake-compat": "flake-compat",
         "nixpkgs": [
           "nixpkgs-unstable"
-        ]
+        ],
+        "pyproject-nix": "pyproject-nix"
       },
       "locked": {
-        "lastModified": 1770100437,
-        "narHash": "sha256-yBogPMHJe/QKBBmzHfwExxbgmOLq4lt55QQcQQhSmzo=",
+        "lastModified": 1787960352,
+        "narHash": "sha256-KwmW4atHmn2qZUuQklKzFwcQD9MzmsiugJbrGR0oYwo=",
         "owner": "jmbaur",
         "repo": "mixos",
-        "rev": "da6eb6caeafe006484eea36d54a4b41f2a6b7f51",
+        "rev": "243b5cff8dbccd3c41e0887e5f06b013d89e67d1",
         "type": "github"
       },
       "original": {
@@ -97,16 +115,37 @@
         ]
       },
       "locked": {
-        "lastModified": 1772738740,
-        "narHash": "sha256-vi8HO4p2hjCGNNMLRxSCSltUSMdyjiCQk6K7dLIN4NQ=",
+        "lastModified": 1786230546,
+        "narHash": "sha256-j46Ee4CLteMd4IZHExxmmx8e0nF6d23Ew/H00CQ0uRA=",
         "owner": "jmbaur",
         "repo": "openwrt-one.nix",
-        "rev": "3ca9f38ee927f436bd464c11f6e02a1520df9a4c",
+        "rev": "58c5aebfbb8f2c25be323f637a700216cd419cca",
         "type": "github"
       },
       "original": {
         "owner": "jmbaur",
         "repo": "openwrt-one.nix",
+        "type": "github"
+      }
+    },
+    "pyproject-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "mixos",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786031528,
+        "narHash": "sha256-cROiHKO3UbIKqF5FG5NikvydzlfIj4EcR1Cty9qOVt4=",
+        "owner": "pyproject-nix",
+        "repo": "pyproject.nix",
+        "rev": "1b1485546d85f6f6c7aadb10c4923dbc09633263",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pyproject-nix",
+        "repo": "pyproject.nix",
         "type": "github"
       }
     },
