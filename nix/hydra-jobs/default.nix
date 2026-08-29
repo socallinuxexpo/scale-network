@@ -73,14 +73,6 @@ in
             "aarch64-linux"
             "dhcptest"
           ]
-          [
-            "x86_64-darwin"
-            "dhcptest"
-          ]
-          [
-            "x86_64-darwin"
-            "isc-dhcp"
-          ]
         ]
       );
 
@@ -96,15 +88,7 @@ in
       (
         map removeByPath [
           [
-            "aarch64-darwin"
-            "core"
-          ]
-          [
             "aarch64-linux"
-            "core"
-          ]
-          [
-            "x86_64-darwin"
             "core"
           ]
         ]
