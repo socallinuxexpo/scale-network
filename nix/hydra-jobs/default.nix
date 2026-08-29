@@ -110,7 +110,7 @@ in
 
       "x86_64-linux" =
         genAttrs x86_64-linux-systems (host: nixosConfigurations.${host}.config.system.build.toplevel)
-        // genAttrs mixos-systems (host: mixosConfigurations.${host}.config.system.build.root);
+        // genAttrs mixos-systems (host: mixosConfigurations.${host}.config.system.build.toplevel);
 
     };
 
