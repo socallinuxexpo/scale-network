@@ -20,7 +20,7 @@ def mac2eui64(mac, prefix=None):
     else:
         try:
             net = ipaddress.ip_network(prefix, strict=False)
-            euil = int("0x{0}".format(eui64), 16)
+            euil = int(f"0x{eui64}", 16)
             return str(net[euil])
         except:  # noqa: E722
             return

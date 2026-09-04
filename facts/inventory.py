@@ -84,7 +84,7 @@ def gen_vlans(vlan_range, nameprefix, v6cidr, v4cidr, building):
 
         vlan_config = {
             "id": str(i),
-            "name": f"{nameprefix}{str(i)}",
+            "name": f"{nameprefix}{i!s}",
             "v6cidr": f"{v6prefix}/64",
             "v4cidr": f"{v4prefix}/24",
             "description": f"Dynamic vlan {i}",
@@ -764,8 +764,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {
                     "socket-type": "http",
                     "socket-address": "127.0.0.1",
-                    "socket-port": 8000
-                }
+                    "socket-port": 8000,
+                },
             ],
             # Finally, we list the subnets from which we will be leasing addresses.
             "subnet4": [],
@@ -828,8 +828,8 @@ def generatekeaconfig(servers, aps, vlans, outputdir):
                 {
                     "socket-type": "http",
                     "socket-address": "127.0.0.1",
-                    "socket-port": 8001
-                }
+                    "socket-port": 8001,
+                },
             ],
             "reservations-global": True,
             "reservations-in-subnet": False,
@@ -1330,7 +1330,7 @@ def main():
             "aps": aps,
             "pis": pis,
         }
-        if debug_variable in valid_debug_variables.keys():
+        if debug_variable in valid_debug_variables:
             print(json.dumps(valid_debug_variables[debug_variable]))
         else:
             print(f"invalid debug variable {debug_variable}")
