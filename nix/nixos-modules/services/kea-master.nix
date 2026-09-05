@@ -36,6 +36,13 @@ in
       kea
     ];
 
+    # testing omitting basic auth
+    systemd.services.kea-dhcp4-server.serviceConfig.ExecStart = lib.mkForce
+      "${config.services.kea.package}/bin/kea-dhcp4 -X -c /etc/kea/dhcp4-server.conf";
+
+    systemd.services.kea-dhcp6.serviceConfig.ExecStart = lib.mkForce
+      "${config.services.kea.package}/bin/kea-dhcp6 -X -c /etc/kea/dhcp6-server.conf";
+
     services = {
       kea = {
         dhcp4 =
