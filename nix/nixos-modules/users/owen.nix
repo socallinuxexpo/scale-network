@@ -23,7 +23,7 @@ in
         uid = 2006;
         extraGroups = [ "wheel" ];
         openssh.authorizedKeys.keys = [
-          "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBjjcUJLTENGrV6K/nrPOswcBVMMuS4sLSs0UyTRw8wU87PDUzJz8Ht2SgHqeEQJdRm1+b6iLsx2uKOf+/pU8qE= root@kiev.delong.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINT9FKHdDbHRQ2JiuNl2fzJFOZcHrB3fLwEAQN/8B+wQ owen@kiev-544.local"
         ];
       };
     };

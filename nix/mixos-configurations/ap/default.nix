@@ -10,7 +10,6 @@ in
 {
   imports = [ ./options.nix ];
 
-  nixpkgs.buildPlatform = "x86_64-linux";
   hardware.openwrt-one.enable = true;
 
   bin = [

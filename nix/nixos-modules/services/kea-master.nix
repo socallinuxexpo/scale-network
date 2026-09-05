@@ -36,25 +36,15 @@ in
       kea
     ];
 
+    # testing omitting basic auth
+    systemd.services.kea-dhcp4-server.serviceConfig.ExecStart = lib.mkForce
+      "${config.services.kea.package}/bin/kea-dhcp4 -X -c /etc/kea/dhcp4-server.conf";
+
+    systemd.services.kea-dhcp6.serviceConfig.ExecStart = lib.mkForce
+      "${config.services.kea.package}/bin/kea-dhcp6 -X -c /etc/kea/dhcp6-server.conf";
+
     services = {
       kea = {
-        ctrl-agent = {
-          enable = true;
-          settings = {
-            http-host = "127.0.0.1";
-            http-port = 8000;
-            control-sockets = {
-              dhcp4 = {
-                socket-type = "unix";
-                socket-name = "/run/kea/kea-dhcp4-ctrl.sock";
-              };
-              dhcp6 = {
-                socket-type = "unix";
-                socket-name = "/run/kea/kea-dhcp6-ctrl.sock";
-              };
-            };
-          };
-        };
         dhcp4 =
           let
             dhcp4PopulateConfig = pkgs.runCommand "replace" { } ''

@@ -23,5 +23,12 @@ mapAttrs (const (
     programs.ruff-check.enable = true;
     programs.mdformat.enable = true;
     programs.yamlfmt.enable = true;
+
+    settings.formatter.ruff-check.options = [
+      "--ignore"
+      "EXE001"
+      "--ignore"
+      "SIM115"
+    ];
   })
 )) inputs.self.legacyPackages

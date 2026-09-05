@@ -1,15 +1,14 @@
 """Generate a massflash "persist" directory for use by massflash."""
 
 import contextlib
-from pathlib import Path
-
-import tarfile
 import shutil
-import typer
-from typing_extensions import Annotated
-import tempfile
 import subprocess
+import tarfile
+import tempfile
+from pathlib import Path
+from typing import Annotated
 
+import typer
 from pydantic import BaseModel
 
 __version__ = "1.0"
