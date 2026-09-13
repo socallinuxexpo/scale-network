@@ -1,5 +1,5 @@
 {
-  release = "2511";
+  release = "unstable";
 
   modules =
     {

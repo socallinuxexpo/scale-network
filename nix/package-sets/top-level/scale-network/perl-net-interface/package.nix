@@ -11,6 +11,8 @@ perlPackages.buildPerlPackage {
     hash = "sha256-e+RGk14BPQ7dPTcfkvuQo7s4q+mVYoidgXiVMSnlNQg=";
   };
 
+  env.NIX_CFLAGS_COMPILE = toString [ "-Wno-error=incompatible-pointer-types" ];
+
   patches = [ ./net-interface-remove-grep-af-inet.patch ];
 
   doCheck = false;

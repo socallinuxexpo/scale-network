@@ -35,7 +35,7 @@ class UniquenessRegistry:
         for value in df.iloc[:, col_idx]:
             self.register(field_type, value, source)
 
-    def get_collisions(self, field_type: str = None) -> dict[str, list[str]]:
+    def get_collisions(self, field_type: str | None = None) -> dict[str, list[str]]:
         """
         Return values that appear multiple times.
 
@@ -60,7 +60,7 @@ class UniquenessRegistry:
 
         return collisions
 
-    def check(self, field_type: str = None) -> tuple[bool, str]:
+    def check(self, field_type: str | None = None) -> tuple[bool, str]:
         """
         Check for collisions.
 

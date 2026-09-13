@@ -3,11 +3,9 @@
 Tests for cross-file uniqueness validation.
 """
 
-import pandas as pd
-
 import datasource as ds
+import pandas as pd
 from uniqueness import UniquenessRegistry
-
 
 # =============================================================================
 # Helper Functions

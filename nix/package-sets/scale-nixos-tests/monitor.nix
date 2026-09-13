@@ -2,19 +2,38 @@
 {
   name = "monitor";
 
-  nodes.coreconf = {
-    _module.args = {
-      inherit inputs;
+  nodes.coreconf =
+    { pkgs, ... }:
+    let
+      # openssl rand -hex 32
+      grafana_secret_key = pkgs.writeText "grafana_secret_key" ''
+        622b660576f45180c6e7b54bd9e2aa5190574c09c2bb8707a6495d5d1d349f38
+      '';
+      # password file is just a string
+      grafana_admin_password = pkgs.writeText "grafana_admin_password" ''
+        scale
+      '';
+    in
+    {
+      _module.args = {
+        inherit inputs;
+      };
+      imports = [
+        inputs.self.nixosModules.default
+      ];
+      virtualisation.graphics = true;
+      scale-network.services = {
+        monitoring.enable = true;
+        alloy.enable = true;
+      };
+
+      systemd.tmpfiles.rules = [
+        # Syntax: L+  <path_to_symlink>  -  -  -  -  <source_target_file>
+        "L+ /persist/etc/grafana/secret_key - - - - ${grafana_secret_key}"
+        "L+ /persist/etc/grafana/admin_password - - - - ${grafana_admin_password}"
+      ];
+
     };
-    imports = [
-      inputs.self.nixosModules.default
-    ];
-    virtualisation.graphics = true;
-    scale-network.services = {
-      monitoring.enable = true;
-      alloy.enable = true;
-    };
-  };
 
   nodes.client1 =
     { pkgs, ... }:

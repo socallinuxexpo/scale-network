@@ -16,7 +16,6 @@ from os.path import isfile, join
 
 import pandas as pd
 
-
 # =============================================================================
 # Validator Functions
 # =============================================================================
@@ -176,7 +175,7 @@ def is_valid_switch_type(val: str) -> bool:
     return val in valid
 
 
-def is_valid_map_coordinate(val: int | float | str) -> bool:
+def is_valid_map_coordinate(val: float | str) -> bool:
     """
     test for valid map coordinate:
     must be 0-100 and limited to 2 decimal places.

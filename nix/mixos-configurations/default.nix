@@ -12,9 +12,13 @@ mapAttrs (
       ./${directory}
       inputs.openwrt-one-nix.mixosModules.default
       {
-        nixpkgs = {
-          nixpkgs = inputs.nixpkgs-2511;
-          overlays = [ inputs.self.overlays.default ];
+        nixpkgs.pkgs = import inputs.nixpkgs {
+          localSystem = "x86_64-linux";
+          crossSystem = "aarch64-linux";
+          overlays = [
+            inputs.self.overlays.default
+            inputs.openwrt-one-nix.overlays.default
+          ];
         };
       }
     ];
