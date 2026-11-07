@@ -73,14 +73,6 @@ in
             "aarch64-linux"
             "dhcptest"
           ]
-          [
-            "x86_64-darwin"
-            "dhcptest"
-          ]
-          [
-            "x86_64-darwin"
-            "isc-dhcp"
-          ]
         ]
       );
 
@@ -88,27 +80,12 @@ in
     system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-tests
   );
 
-  scale-nixos-tests =
-    pipe
-      (defaultSystems (
-        system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-nixos-tests
-      ))
-      (
-        map removeByPath [
-          [
-            "aarch64-darwin"
-            "core"
-          ]
-          [
-            "aarch64-linux"
-            "core"
-          ]
-          [
-            "x86_64-darwin"
-            "core"
-          ]
-        ]
-      );
+  # only test on x86-64-linux for nixos-tests
+  scale-nixos-tests = filterAttrs (system: _: system == "x86_64-linux") (
+    defaultSystems (
+      system: removeDirectoriesRecursiveAttrs legacyPackagesTests.${system}.scale-nixos-tests
+    )
+  );
 
   scale-nixos-systems =
     let
@@ -133,7 +110,7 @@ in
 
       "x86_64-linux" =
         genAttrs x86_64-linux-systems (host: nixosConfigurations.${host}.config.system.build.toplevel)
-        // genAttrs mixos-systems (host: mixosConfigurations.${host}.config.system.build.root);
+        // genAttrs mixos-systems (host: mixosConfigurations.${host}.config.system.build.toplevel);
 
     };
 

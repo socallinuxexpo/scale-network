@@ -307,6 +307,11 @@ in
             root_url = "https://%(domain)s/grafana/";
             serve_from_sub_path = true;
           };
+          security = {
+            secret_key = "$__file{/persist/etc/grafana/secret_key}";
+            # bootstrap admin user pass
+            admin_password = "$__file{/persist/etc/grafana/admin_password}";
+          };
         };
 
         provision = {

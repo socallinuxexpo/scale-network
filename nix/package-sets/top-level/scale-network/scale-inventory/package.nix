@@ -2,7 +2,7 @@
   stdenvNoCC,
   lib,
   python3,
-  python313Packages,
+  python3Packages,
 }:
 let
 
@@ -28,8 +28,8 @@ stdenvNoCC.mkDerivation {
 
   propagatedBuildInputs = [
     python3
-    python313Packages.jinja2
-    python313Packages.pandas
+    python3Packages.jinja2
+    python3Packages.pandas
   ];
 
   buildCommand = ''

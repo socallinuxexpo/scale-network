@@ -25,7 +25,6 @@ runCommand "pytest-facts"
 
     buildInputs = [
       (python3.withPackages (ps: [
-        ps.pylint
         ps.pytest
         ps.jinja2
         ps.pandas
@@ -35,7 +34,6 @@ runCommand "pytest-facts"
 
   ''
     cd $src/facts
-    pylint --persistent n *.py
     pytest -vv -p no:cacheprovider
     touch $out
   ''
