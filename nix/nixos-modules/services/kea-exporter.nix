@@ -23,8 +23,8 @@ in
       enable = true;
       port = 9547;
       targets = [
-        "http://127.0.0.1:8000"
-        "http://127.0.0.1:8001"
+        "/run/kea/kea-dhcp4-ctrl.sock"
+        "/run/kea/kea-dhcp6-ctrl.sock"
       ];
     };
   };
