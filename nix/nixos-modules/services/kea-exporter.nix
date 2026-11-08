@@ -21,6 +21,7 @@ in
   config = mkIf cfg.enable {
     services.prometheus.exporters.kea = {
       enable = true;
+      listenAddress = "127.0.0.1";
       port = 9547;
       targets = [
         "/run/kea/kea-dhcp4-ctrl.sock"
