@@ -30,6 +30,12 @@ in
     services.rsyslogd = {
       enable = true;
       defaultConfig = ''
+        # Permissions for dynamically created dirs/files
+        # (default DirCreateMode is 0700)
+        $umask 0000
+        $DirCreateMode 0755
+        $FileCreateMode 0644
+
         module(load="imtcp")
         input(type="imtcp" port="514")
 

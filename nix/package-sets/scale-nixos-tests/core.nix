@@ -86,6 +86,7 @@ in
         scale-network = {
           # we are testing these the services from core
           services.keaMaster.enable = true;
+          services.keaExporter.enable = true;
           services.bindMaster.enable = true;
           services.ntp.enable = true;
 
@@ -168,6 +169,7 @@ in
       router.wait_for_unit("radvd.service")
       coreconf.wait_for_unit("ntpd.service")
       coreconf.wait_for_unit("bind.service")
+      coreconf.wait_for_unit("prometheus-kea-exporter.service", None, 30)
       coreconf.wait_until_succeeds("kea-dhcp4 -X -t /etc/kea/dhcp4-server.conf", timeout=10)
       coreconf.wait_until_succeeds("kea-dhcp6 -X -t /etc/kea/dhcp6-server.conf", timeout=10)
       coreconf.wait_until_succeeds("named-checkconf ${nodes.coreconf.services.bind.configFile}", timeout=10)
