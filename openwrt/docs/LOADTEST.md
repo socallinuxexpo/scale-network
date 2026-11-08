@@ -16,7 +16,7 @@ iperf3 -s
 
 ## Client
 
-Run the `net_laodtest.sh` script, defaults should be fine but you can overwrite the IP
+Run the `net_loadtest.sh` script, defaults should be fine but you can overwrite the IP
 and the port number if need be:
 
 ```
