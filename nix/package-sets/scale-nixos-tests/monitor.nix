@@ -58,6 +58,9 @@
 
       coreconf.wait_for_unit("grafana.service", None, 30)
       coreconf.wait_for_unit("alloy.service", None, 30)
+      coreconf.wait_for_unit("tempo.service", None, 30)
+      coreconf.wait_for_unit("loki.service", None, 30)
+      coreconf.wait_for_unit("prometheus-snmp-exporter.service", None, 30)
       coreconf.wait_until_succeeds("nc -vz localhost 3000")
 
       # Wait for Loki to be ready, then verify it receives the rsyslog logs
