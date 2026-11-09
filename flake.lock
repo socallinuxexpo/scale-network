@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781152676,
-        "narHash": "sha256-RxWs5ND31KzTG7wvMM+PMfUjyNpmIEr999lqNARaM5o=",
+        "lastModified": 1792526520,
+        "narHash": "sha256-3hSJlv8mUVnZPMWK2+CM7a9O+nR6Z4mCh27NfLCmTPc=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "ff8702b4de27f72b4c78573dfb89ec74e36abdf1",
+        "rev": "cedd626e11b635470fa6f9fdb8ad79b0075dd7f9",
         "type": "github"
       },
       "original": {
@@ -40,47 +40,31 @@
       "inputs": {
         "flake-compat": "flake-compat",
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "nixpkgs"
         ],
         "pyproject-nix": "pyproject-nix"
       },
       "locked": {
-        "lastModified": 1787960352,
-        "narHash": "sha256-KwmW4atHmn2qZUuQklKzFwcQD9MzmsiugJbrGR0oYwo=",
-        "owner": "jmbaur",
-        "repo": "mixos",
-        "rev": "243b5cff8dbccd3c41e0887e5f06b013d89e67d1",
-        "type": "github"
+        "lastModified": 1794264987,
+        "narHash": "sha256-i/VP9mIOu9c1azY9VLiwd1sFjEhFILfXZCGSLNtXB5M=",
+        "ref": "refs/heads/main",
+        "rev": "026c1d02ba6588c2f39e6173343ea6598b88c2c9",
+        "revCount": 420,
+        "type": "git",
+        "url": "https://codeberg.org/jmbaur/mixos"
       },
       "original": {
-        "owner": "jmbaur",
-        "repo": "mixos",
-        "type": "github"
-      }
-    },
-    "nixpkgs-2511": {
-      "locked": {
-        "lastModified": 1778003029,
-        "narHash": "sha256-q/nkKLDtHIyLjZpKhWk3cSK5IYsFqtMd6UtXF3ddjgA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "0c88e1f2bdb93d5999019e99cb0e61e1fe2af4c5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-25.11",
-        "repo": "nixpkgs",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/jmbaur/mixos"
       }
     },
     "nixpkgs-lib": {
       "locked": {
-        "lastModified": 1762045811,
-        "narHash": "sha256-ObaNaUu4Ey117f3UWMQL7CN/QBEUPM9MiwGSG9piCL0=",
+        "lastModified": 1794109015,
+        "narHash": "sha256-+yRdJkdTgJGZS9tpW4Tq8G40vBIcDL4Yvj/LlxffXzQ=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "e171c13eb1bfa148a2e5ed435768d5e89e235d0f",
+        "rev": "ab7155c4be187820a150cc1762e0e5f1a8df90f1",
         "type": "github"
       },
       "original": {
@@ -91,11 +75,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1787498568,
-        "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
+        "lastModified": 1794042290,
+        "narHash": "sha256-ziZn2PvCJE5JEEpqTdxXwJpPB+L3YqoCpTAMCzyaP3U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "56c02bc00adcf003215cc4bd996d6efaf4cff188",
+        "rev": "f4a03c008967841f2a0b3cb7c436fc6fc31671f6",
         "type": "github"
       },
       "original": {
@@ -107,40 +91,39 @@
     },
     "openwrt-one-nix": {
       "inputs": {
-        "mixos": [
-          "mixos"
-        ],
+        "mixos": "mixos",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1786230546,
-        "narHash": "sha256-j46Ee4CLteMd4IZHExxmmx8e0nF6d23Ew/H00CQ0uRA=",
-        "owner": "jmbaur",
-        "repo": "openwrt-one.nix",
-        "rev": "58c5aebfbb8f2c25be323f637a700216cd419cca",
-        "type": "github"
+        "lastModified": 1794265433,
+        "narHash": "sha256-3yNDVPBIJrSdkW8TY31PEbM7OMbamrz9gefTjXUgY0I=",
+        "ref": "refs/heads/main",
+        "rev": "5caafe129686503f6fdfbf42f7882c8c8b61fe43",
+        "revCount": 58,
+        "type": "git",
+        "url": "https://codeberg.org/jmbaur/openwrt-one.nix"
       },
       "original": {
-        "owner": "jmbaur",
-        "repo": "openwrt-one.nix",
-        "type": "github"
+        "type": "git",
+        "url": "https://codeberg.org/jmbaur/openwrt-one.nix"
       }
     },
     "pyproject-nix": {
       "inputs": {
         "nixpkgs": [
+          "openwrt-one-nix",
           "mixos",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1786031528,
-        "narHash": "sha256-cROiHKO3UbIKqF5FG5NikvydzlfIj4EcR1Cty9qOVt4=",
+        "lastModified": 1793820880,
+        "narHash": "sha256-NUMabnvaL/0Ah9WM9pBMXEp+dQjMSYjezZ/fNjXouLQ=",
         "owner": "pyproject-nix",
         "repo": "pyproject.nix",
-        "rev": "1b1485546d85f6f6c7aadb10c4923dbc09633263",
+        "rev": "d43f0e74444c1f266c640fc49ce6ce6fb69d33c3",
         "type": "github"
       },
       "original": {
@@ -152,11 +135,13 @@
     "root": {
       "inputs": {
         "disko": "disko",
-        "mixos": "mixos",
+        "mixos": [
+          "openwrt-one-nix",
+          "mixos"
+        ],
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "nixpkgs-2511": "nixpkgs-2511",
         "nixpkgs-lib": "nixpkgs-lib",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "openwrt-one-nix": "openwrt-one-nix",
@@ -170,11 +155,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1726734507,
-        "narHash": "sha256-VUH5O5AcOSxb0uL/m34dDkxFKP6WLQ6y4I1B4+N3L2w=",
+        "lastModified": 1791885023,
+        "narHash": "sha256-C3alQ2MEt0zVrUSho5NUDo3jmhbff72++bfwoqT9Omo=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "ee41a466c2255a3abe6bc50fc6be927cdee57a9f",
+        "rev": "0d6d739a833ba9a9c93034862e4a7b061a062a1c",
         "type": "github"
       },
       "original": {

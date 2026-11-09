@@ -12,7 +12,7 @@ in
 
   hardware.openwrt-one.enable = true;
 
-  bin = [
+  packages = [
     pkgs.hostapd
     pkgs.iw
     pkgs.libgpiod
@@ -82,23 +82,22 @@ in
     '';
   };
 
-  init.ssh-keygen = {
-    action = "wait";
-    process = pkgs.writeScript "ssh-keygen" ''
+  services.sshd = {
+    run = pkgs.writeScript "sshd-run" ''
       #!/bin/sh
 
       if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
         ssh-keygen -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
       fi
+
+      exec ${lib.getExe' pkgs.openssh "sshd"};
     '';
   };
 
-  init.sshd = {
-    action = "respawn";
-    process = lib.getExe' pkgs.openssh "sshd";
-  };
-
-  init.syslogd.process = "/bin/syslogd -n -D -L -R loghost.scale.lan";
+  services.syslogd.run = pkgs.writeScript "syslogd-run" ''
+    #!/bin/sh
+    exec /bin/syslogd -n -D -L -R loghost.scale.lan
+  '';
 
   init.shell = {
     tty = "ttyS0";
