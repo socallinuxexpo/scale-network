@@ -8,14 +8,14 @@
   go_1_25,
 }:
 
-buildGoModule.override { go = go_1_25; } rec {
+buildGoModule (finalAttrs: {
   pname = "wasgeht";
   version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "kylerisse";
     repo = "wasgeht";
-    rev = "refs/tags/${version}";
+    rev = "refs/tags/${finalAttrs.version}";
     hash = "sha256-Yi+35tCe8mnZqs87rBGu8eGhMEPGdvieq0j/6DIh9Ho=";
   };
 
@@ -54,4 +54,4 @@ buildGoModule.override { go = go_1_25; } rec {
     maintainers = with maintainers; [ ];
     mainProgram = "wasgehtd";
   };
-}
+})
