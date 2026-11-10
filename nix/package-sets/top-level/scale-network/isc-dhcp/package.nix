@@ -1,7 +1,6 @@
 {
   stdenv,
   fetchurl,
-  fetchpatch,
   perl,
   file,
   nettools,
@@ -58,8 +57,11 @@ stdenv.mkDerivation rec {
   ]
   ++ lib.optional (stdenv.hostPlatform != stdenv.buildPlatform) "BUILD_CC=$(CC_FOR_BUILD)";
 
-  env.NIX_CFLAGS_COMPILE = builtins.toString [
+  env.NIX_CFLAGS_COMPILE = toString [
     "-std=gnu17"
+    # needed for gcc >= 16
+    "-Wno-error=discarded-qualifiers"
+    "-Wno-error=unused-but-set-variable"
   ];
 
   installFlags = [ "DESTDIR=\${out}" ];
