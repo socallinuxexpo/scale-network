@@ -300,3 +300,15 @@ advisory check at most, no extra image). A combined without-patch rebuild
 happens only when someone sets `SOURCE_PATCH_MODE=trial`. Prefer
 package-level rebuilds on a reused tree; bisect only if the combined
 test fails.
+
+## Carried patches
+
+| Patch | Why | Runtime test | Known landing (advisory) |
+| --- | --- | --- | --- |
+| 001-wifi-scripts-iwinfo-wait-for-own-scan.patch | `iwinfo <if> scan` accepted the other radio's scan-done event (backport of openwrt 62d9f2d4f22a) | `wifi_scan_spin_test.sh` `TESTS=B` (early return / 2.4 GHz cells on the 5 GHz scan) | 62d9f2d4f22a |
+| 002-ucode-update-to-master-2026-10-28.patch | ucode `nl80211.waitfor()` busy-spin (100% CPU `iwinfo scan` hang at SCALE 23x (March 2026)) and event-socket overrun recovery; master's ucode package | `wifi_scan_spin_test.sh` `TESTS=A` (waitfor spin / hang) | a4e922953c8d (both 520d9f4c and 0bfb7b97) |
+
+Drop a patch when its runtime test PASSes on an image built without it
+(`SKIP_SOURCE_PATCHES=…`), regardless of whether that landing commit is
+in `OPENWRT_VER`. Confirm flagged patches with one combined without-patch
+build, not one image per patch; see the flow above.
