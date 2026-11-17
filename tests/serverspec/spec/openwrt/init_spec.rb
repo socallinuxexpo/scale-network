@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 require_relative '../shared/openwrt/init.rb'
+require_relative '../shared/openwrt/wifi_lua_metrics.rb'
 
 
 KERNEL = command("uname -a").stdout.chomp
@@ -11,4 +12,8 @@ puts "\nImage info:\n#{KERNEL}\n#{SCALE_REL}\n#{OPENWRT_REL}"
 
 describe "shared" do
   include_examples "openwrt"
+end
+
+describe "wifi lua metrics" do
+  include_examples "openwrt wifi lua metrics"
 end

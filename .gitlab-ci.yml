@@ -54,7 +54,18 @@ openwrt-ar71xx-build:
     name: sarcasticadmin/openwrt-build@sha256:bab6de3f66f5365d866de646bb9fd1f2000061d1a5fe8a07b6a714661a9a9a63
   script:
     - cd ${CI_PROJECT_DIR}/openwrt
-    - TARGET=ar71xx make templates build-img 2>&1 | tee build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
+    # --- source patches (explicit only; a source-check flag never starts trial) ---
+    # Set pipeline variables SOURCE_PATCH_MODE=apply|check|trial and optional
+    # SKIP_SOURCE_PATCHES. Default apply (all patches, no extra build).
+    - export SOURCE_PATCH_MODE="${SOURCE_PATCH_MODE:-apply}"
+    - export SKIP_SOURCE_PATCHES="${SKIP_SOURCE_PATCHES:-}"
+    - |
+      if [ "$SOURCE_PATCH_MODE" = check ]; then
+        TARGET=ar71xx make check-source-patches 2>&1 | tee build.log
+      else
+        TARGET=ar71xx make templates build-img 2>&1 | tee build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
+      fi
+    # --- end source patches ---
   artifacts:
     paths:
       - openwrt/build.log

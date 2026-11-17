@@ -38,3 +38,17 @@ if [ -f Makefile.bak ]
 then
     rm Makefile.bak
 fi
+
+# Source patches: a bump of OPENWRT_VER or OPENWRT_PKG_VERSION can land a
+# fix, make a patch stop applying, or fix the bug another way. See
+# source-patches/README.md.
+# Do not build one without-patch image per patch, and do not "make clean"
+# a reusable built tree just to skip patches (that wipes the toolchain).
+echo "After bumping OPENWRT_VER or OPENWRT_PKG_VERSION, run: make check-source-patches"
+echo "A flagged check does not start a without-patch build. To confirm,"
+echo "set SOURCE_PATCH_MODE=trial explicitly, with one image that has ALL"
+echo "carried patches skipped (SKIP_SOURCE_PATCHES=001,002,packages/001,...)."
+echo "Prefer a package-level rebuild on an existing tree; run each patch's"
+echo "RUNTIME_TEST on a device (the deciding verdict). Bisect only if that"
+echo "combined test FAILs. Feed patches also need 'make clean-feeds' if the"
+echo "extract already exists."

@@ -1,0 +1,77 @@
+From: David Lang <david@lang.hm>
+Subject: [PATCH] prometheus-node-exporter-lua: drop quality and signal metrics
+
+SCALE local carry of a packages-feed change that removes
+wifi_network_quality and wifi_network_signal_dbm from the wifi.lua
+collector, and bumps PKG_RELEASE from 1 to 2.
+
+Those metrics are not radio measurements. libiwinfo
+nl80211_fill_signal() integer-averages NL80211_STA_INFO_SIGNAL across
+associated stations; nl80211_get_quality() clamps that average to
+[-110, -40] dBm and adds 110 (quality_max is a constant 70); wifi.lua
+then scaled quality to 0-100. The result is meaningless: 0 or -255
+with no clients, a strong client hides a weak one, and quality
+saturates at -40 dBm. Per-station signal (the wifi_stations collector
+or the syslog collector) is the useful figure. bitrate and noise stay.
+
+Applied to the packages feed (sarcasticadmin/opkgs @ OPENWRT_PKG_VERSION,
+currently 2db11f3) after `feeds update` and before `feeds install`.
+
+The deciding drop signal is the on-device behavioral test
+(wifi_lua_metrics_test.sh) passing on an image built without this
+patch (SOURCE_PATCH_MODE=trial SKIP_SOURCE_PATCHES=packages/001), not
+the presence of any upstream commit.
+
+Retiring the existing overlay (860258f), the golden copy, and the
+.gitignore negation is a follow-up and is not part of this change.
+The server-side Alloy drop (31df527, c33984f) should stay as a
+backstop for old images.
+
+---
+
+diff --git a/utils/prometheus-node-exporter-lua/Makefile b/utils/prometheus-node-exporter-lua/Makefile
+index 37c6f7d..0f77389 100644
+--- a/utils/prometheus-node-exporter-lua/Makefile
++++ b/utils/prometheus-node-exporter-lua/Makefile
+@@ -5,7 +5,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=prometheus-node-exporter-lua
+ PKG_VERSION:=2025.11.22
+-PKG_RELEASE:=1
++PKG_RELEASE:=2
+ 
+ PKG_MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
+ PKG_LICENSE:=Apache-2.0
+diff --git a/utils/prometheus-node-exporter-lua/files/usr/lib/lua/prometheus-collectors/wifi.lua b/utils/prometheus-node-exporter-lua/files/usr/lib/lua/prometheus-collectors/wifi.lua
+index 4b1e8f4..6a00e8d 100644
+--- a/utils/prometheus-node-exporter-lua/files/usr/lib/lua/prometheus-collectors/wifi.lua
++++ b/utils/prometheus-node-exporter-lua/files/usr/lib/lua/prometheus-collectors/wifi.lua
+@@ -2,10 +2,8 @@ local ubus = require "ubus"
+ local iwinfo = require "iwinfo"
+ 
+ local function scrape()
+-  local metric_wifi_network_quality = metric("wifi_network_quality","gauge")
+   local metric_wifi_network_bitrate = metric("wifi_network_bitrate","gauge")
+   local metric_wifi_network_noise = metric("wifi_network_noise_dbm","gauge")
+-  local metric_wifi_network_signal = metric("wifi_network_signal_dbm","gauge")
+ 
+   local u = ubus.connect()
+   local status = u:call("network.wireless", "status", {})
+@@ -26,17 +24,8 @@ local function scrape()
+           device = dev,
+         }
+ 
+-        local qc = iw.quality(ifname) or 0
+-        local qm = iw.quality_max(ifname) or 0
+-        local quality = 0
+-        if qc > 0 and qm > 0 then
+-          quality = math.floor((100 / qm) * qc)
+-        end
+-
+-        metric_wifi_network_quality(labels, quality)
+         metric_wifi_network_noise(labels, iw.noise(ifname) or 0)
+         metric_wifi_network_bitrate(labels, iw.bitrate(ifname) or 0)
+-        metric_wifi_network_signal(labels, iw.signal(ifname) or -255)
+       end
+     end
+   end
