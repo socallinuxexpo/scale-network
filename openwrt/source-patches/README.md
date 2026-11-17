@@ -300,3 +300,14 @@ advisory check at most, no extra image). A combined without-patch rebuild
 happens only when someone sets `SOURCE_PATCH_MODE=trial`. Prefer
 package-level rebuilds on a reused tree; bisect only if the combined
 test fails.
+
+## Carried patches
+
+| Patch | Why | Runtime test | Known landing (advisory) |
+| --- | --- | --- | --- |
+| 003-hostapd-rnr-same-ssid-neighbors.patch | Beacon RNR (IE 201) skipped same-SSID neighbor APs (hostapd matched on short_ssid instead of own BSSID) | `hostapd_rnr_same_ssid_test.sh` | none yet (hostap submission pending; upstream-form 391d276 is local) |
+
+Drop this patch when its runtime test PASSes on an image built without it
+(`SOURCE_PATCH_MODE=trial SKIP_SOURCE_PATCHES=003`), regardless of
+upstream status. Confirm only when trial mode is set explicitly; see
+the flow above.
