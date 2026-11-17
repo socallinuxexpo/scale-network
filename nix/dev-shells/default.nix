@@ -68,7 +68,7 @@ mapAttrs (const (
       scale-network.perl-net-arp
       scale-network.perl-net-interface
       scale-network.perl-net-ping
-      ghostscript
+      ghostscript_headless
     ];
   in
   {
