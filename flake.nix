@@ -4,15 +4,13 @@
   inputs = {
     disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
     disko.url = "github:nix-community/disko";
-    nixpkgs-2511.url = "github:NixOS/nixpkgs/nixos-25.11";
-    mixos.url = "github:jmbaur/mixos";
-    mixos.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    mixos.follows = "openwrt-one-nix/mixos";
     nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.follows = "nixpkgs-unstable";
-    openwrt-one-nix.inputs.mixos.follows = "mixos";
     openwrt-one-nix.inputs.nixpkgs.follows = "nixpkgs";
-    openwrt-one-nix.url = "github:jmbaur/openwrt-one.nix";
+    openwrt-one-nix.url = "git+https://codeberg.org/jmbaur/openwrt-one.nix";
+    openwrt-one-nix.inputs.mixos.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
