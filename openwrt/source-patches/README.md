@@ -300,3 +300,16 @@ advisory check at most, no extra image). A combined without-patch rebuild
 happens only when someone sets `SOURCE_PATCH_MODE=trial`. Prefer
 package-level rebuilds on a reused tree; bisect only if the combined
 test fails.
+
+## Carried patches
+
+| Patch | Why | Runtime test | Known landing (advisory) |
+| --- | --- | --- | --- |
+| feeds/packages/001-prometheus-lua-drop-quality-signal.patch | wifi.lua exported wifi_network_quality and wifi_network_signal_dbm, which are libiwinfo averages of station signal (0 or -255 with no clients) | `wifi_lua_metrics_test.sh` | none yet |
+
+Drop this patch when its runtime test PASSes on an image built without it
+(`SOURCE_PATCH_MODE=trial SKIP_SOURCE_PATCHES=packages/001`), regardless of
+upstream status. Confirm only when trial mode is set explicitly; see
+the flow above. Retiring the overlay, golden copy, and `.gitignore`
+negation is a follow-up; the server-side Alloy drop should stay as a
+backstop for old images.

@@ -1,0 +1,8 @@
+# Sidecar for 001-prometheus-lua-drop-quality-signal.patch
+# See source-patches/README.md. RUNTIME_TEST detects the bug's behavior,
+# not the presence of this patch or of any particular upstream commit.
+DESCRIPTION=drop meaningless wifi_network_quality and wifi_network_signal_dbm (libiwinfo averages/clamps station signal)
+TARGET=feed:packages
+LUAC_FILES=utils/prometheus-node-exporter-lua/files/usr/lib/lua/prometheus-collectors/wifi.lua
+UPSTREAM_NOTES=not submitted upstream. Advisory; drop when the runtime test PASSes without this patch.
+RUNTIME_TEST=tests/serverspec/spec/files/wifi_lua_metrics_test.sh
