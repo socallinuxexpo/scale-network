@@ -263,16 +263,6 @@ in
             };
           };
 
-          ingester = {
-            max_block_duration = "5m";
-          };
-
-          compactor = {
-            compaction = {
-              block_retention = "48h";
-            };
-          };
-
           block_builder = {
             wal = {
               path = "/var/lib/tempo/block-builder/traces";
