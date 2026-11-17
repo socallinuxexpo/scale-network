@@ -1,0 +1,104 @@
+From: David Lang <david@lang.hm>
+Subject: [PATCH] wifi-scripts: iwinfo: wait for the results of the scan it
+ triggered
+
+SCALE local backport of openwrt.git 62d9f2d4f22a ("wifi-scripts: iwinfo:
+wait for the results of the scan it triggered", John Crispin, 2026-10-10),
+adapted to the iwinfo.uc at OPENWRT_VER 41a1874c (printf/exit error path).
+
+nl80211.waitfor() returns the first NEW_SCAN_RESULTS/SCAN_ABORTED event of
+ANY interface, so `iwinfo phy1-ap0 scan` returned as soon as the 2.4 GHz
+radio finished a scan and printed phy1's stale/partial scan cache. Drain
+already-queued scan events before triggering and skip events whose dev is
+not the scanned interface, keeping the 5 s overall timeout.
+
+The drain uses waitfor(..., 0) and needs ucode with 520d9f4c (see
+002-ucode-update-to-master-2026-10-28.patch); with the old waitfor() a
+0 timeout does not return reliably.
+
+PKG_RELEASE is bumped to 101 so images carrying this are identifiable.
+Drop this patch when OPENWRT_VER contains 62d9f2d4f22a.
+
+The deciding drop signal is the on-device behavioral test
+(wifi_scan_spin_test.sh TESTS=B) passing on an image built without this
+patch (SKIP_SOURCE_PATCHES=001), not the presence of that commit.
+---
+diff --git a/package/network/config/wifi-scripts/Makefile b/package/network/config/wifi-scripts/Makefile
+index 52edd1b5..a69467ff 100644
+--- a/package/network/config/wifi-scripts/Makefile
++++ b/package/network/config/wifi-scripts/Makefile
+@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=wifi-scripts
+ PKG_VERSION:=1.0
+-PKG_RELEASE:=1
++PKG_RELEASE:=101
+ PKG_LICENSE:=GPL-2.0
+ 
+ PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+diff --git a/package/network/config/wifi-scripts/files-ucode/usr/share/ucode/iwinfo.uc b/package/network/config/wifi-scripts/files-ucode/usr/share/ucode/iwinfo.uc
+index b2eb8cfd..9623ddb2 100644
+--- a/package/network/config/wifi-scripts/files-ucode/usr/share/ucode/iwinfo.uc
++++ b/package/network/config/wifi-scripts/files-ucode/usr/share/ucode/iwinfo.uc
+@@ -551,6 +551,41 @@ function scan_extension(ext, cell) {
+ 	}
+ };
+ 
++const scan_done_cmds = [
++	nl80211.const.NL80211_CMD_NEW_SCAN_RESULTS,
++	nl80211.const.NL80211_CMD_SCAN_ABORTED
++];
++
++function clock_ms() {
++	let t = clock(true);
++	return t[0] * 1000 + t[1] / 1000000;
++}
++
++// Drop scan events that are already queued on the event socket (e.g. from
++// a scan on another radio) and clear the timeout error of the drain.
++// Needs ucode with 520d9f4c ("nl80211: fix waitfor() busy-spinning on
++// non-blocking event socket") so that a timeout of 0 does not block.
++function scan_events_drain() {
++	while (nl80211.waitfor(scan_done_cmds, 0))
++		;
++	nl80211.error();
++}
++
++// Wait for the scan event of the interface that was scanned; events of
++// other interfaces/radios are skipped.
++function scan_done_wait(dev, timeout_ms) {
++	let deadline = clock_ms() + timeout_ms;
++	let left;
++
++	while ((left = deadline - clock_ms()) > 0) {
++		let res = nl80211.waitfor(scan_done_cmds, left);
++		if (!res || res.msg?.dev == dev)
++			return res;
++	}
++
++	return null;
++}
++
+ export function scan(dev) {
+ 	const rsn_cipher = [ 'NONE', 'WEP-40', 'TKIP', 'WRAP', 'CCMP', 'WEP-104', 'AES-OCB', 'CKIP', 'GCMP', 'GCMP-256', 'CCMP-256' ];
+ 	const ht_chan_offset = [ 'no secondary', 'above', '[reserved]', 'below' ];
+@@ -564,16 +599,15 @@ export function scan(dev) {
+ 		scan_ssids: [ '' ],
+ 	};
+ 
++	scan_events_drain();
++
+ 	let res = nl80211.request(nl80211.const.NL80211_CMD_TRIGGER_SCAN, 0, params);
+ 	if (res === false) {
+ 		printf("Unable to trigger scan: " + nl80211.error() + "\n");
+ 		exit(1);
+ 	}
+ 
+-	res = nl80211.waitfor([
+-		nl80211.const.NL80211_CMD_NEW_SCAN_RESULTS,
+-		nl80211.const.NL80211_CMD_SCAN_ABORTED
+-	], 5000);
++	res = scan_done_wait(dev, 5000);
+ 
+ 	if (!res) {
+ 		printf("Netlink error while awaiting scan results: " + nl80211.error() + "\n");

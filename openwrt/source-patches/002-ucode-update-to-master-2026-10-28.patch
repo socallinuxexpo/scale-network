@@ -1,0 +1,564 @@
+From: David Lang <david@lang.hm>
+Subject: [PATCH] ucode: update to Git HEAD (2026-10-28) from openwrt master
+
+Carry openwrt.git master's package/utils/ucode/Makefile verbatim
+(3e6064bbbf6f "ucode: update to Git HEAD (2026-10-28)", ucode-lang/ucode
+dfc64d41) on top of OPENWRT_VER 41a1874c, which ships ucode f7c2b97a
+(2025-12-01). Needed for the nl80211 event fixes:
+
+  520d9f4c nl80211: fix waitfor() busy-spinning on non-blocking event socket
+  e6bf0a9d nl80211: fix listener.request() dropping multicast events
+  05328e33 nl80211: fix memory leak in waitfor() on repeated matching events
+  e4a16597 nl80211: don't report waitfor() match on event parse failure
+  0bfb7b97 nl80211: recover the event listener from receive buffer overruns
+  395cfeea (and follow-ups in the same series)
+
+520d9f4c is the fix for the `iwinfo <if> scan` hang (100% CPU busy-spin)
+seen on the SCALE 23x (March 2026) APs.
+
+The four local patches of 41a1874c are dropped, as master does:
+  100-add-include-for-older-kernels     upstream as 3d999b21f4ba
+  110-uloop-allow-reusing-the-existing-environment  upstream as f8c2d64f546c
+  111-uloop-add-optional-setup-callback-to-process  superseded upstream by
+      1ed0e1b405fe (pass a function instead of the path); nothing in the
+      41a1874c tree calls uloop.process()
+  121-fs-add-read_nb-method-for-non-blocking-reads  not upstream; nothing
+      in the 41a1874c tree uses fs read_nb()
+
+Note PKG_ABI_VERSION changes 20230711 -> 20261009 (struct uc_vm grew,
+hostapd embeds it), so every libucode user (hostapd/wpad, rpcd, uhttpd,
+udebug, uclient, ucode-mod-*) is rebuilt against the new headers; the
+image is built from source so that is automatic.
+
+The first full mt798x build found source-compatibility requirements
+in the old libucode users (three packages); carry their minimal upstream fixes with this
+ucode update so they are also toggled off with it:
+  udebug 6726e98: explicitly include <fcntl.h> (new ucode public headers
+      no longer supply it indirectly, after ucode 9ba6ea14).
+  uhttpd ca796d7: a switch default for the new STATUS_BREAK VM status
+      (otherwise -Werror=switch fails the build).
+  rpcd a6c6b63: the same STATUS_BREAK switch default in rpcd's ucode.c.
+Both are upstream backports, not toolchain workarounds.
+
+Drop this patch when OPENWRT_VER contains 3e6064bbbf6f (or newer ucode).
+
+The deciding drop signal is the on-device behavioral test
+(wifi_scan_spin_test.sh TESTS=A) passing on an image built without this
+patch (SKIP_SOURCE_PATCHES=002), not the presence of that commit. The
+known OpenWrt landing of both 520d9f4c and 0bfb7b97 is a4e922953c8d.
+---
+diff --git a/package/utils/ucode/patches/100-add-include-for-older-kernels.patch b/package/utils/ucode/patches/100-add-include-for-older-kernels.patch
+deleted file mode 100644
+index f047bed9..00000000
+--- a/package/utils/ucode/patches/100-add-include-for-older-kernels.patch
++++ /dev/null
+@@ -1,20 +0,0 @@
+-From 165d395ffa2a22e293160b24d4791302a156eab8 Mon Sep 17 00:00:00 2001
+-From: Rosen Penev <rosenp@gmail.com>
+-Date: Mon, 8 Dec 2025 12:48:01 -0800
+-Subject: add include for older kernels
+-
+-in6.h is needed for some macros. Seems newer kernels include this implicitly.
+----
+- lib/socket.c | 1 +
+- 1 file changed, 1 insertion(+)
+-
+---- a/lib/socket.c
+-+++ b/lib/socket.c
+-@@ -77,6 +77,7 @@
+- #include "ucode/platform.h"
+- 
+- #if defined(__linux__)
+-+# include <linux/in6.h>
+- # include <linux/if_packet.h>
+- # include <linux/filter.h>
+- 
+diff --git a/package/utils/ucode/patches/110-uloop-allow-reusing-the-existing-environment.patch b/package/utils/ucode/patches/110-uloop-allow-reusing-the-existing-environment.patch
+deleted file mode 100644
+index 867b4347..00000000
+--- a/package/utils/ucode/patches/110-uloop-allow-reusing-the-existing-environment.patch
++++ /dev/null
+@@ -1,57 +0,0 @@
+-From: Felix Fietkau <nbd@nbd.name>
+-Date: Wed, 8 Oct 2025 19:11:46 +0200
+-Subject: [PATCH] uloop: allow reusing the existing environment
+-
+-When passing null as environment argument, reuse existing environ.
+-This makes it possible to avoid having to duplicate and convert it
+-by passing the output of getenv().
+-
+-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+----
+-
+---- a/lib/uloop.c
+-+++ b/lib/uloop.c
+-@@ -1016,7 +1016,22 @@ uc_uloop_process(uc_vm_t *vm, size_t nar
+- 
+- 	if (pid == 0) {
+- 		argp = calloc(ucv_array_length(arguments) + 2, sizeof(char *));
+--		envp = calloc(ucv_object_length(env_arg) + 1, sizeof(char *));
+-+		envp = environ;
+-+
+-+		if (env_arg) {
+-+			envp = calloc(ucv_object_length(env_arg) + 1, sizeof(char *));
+-+			i = 0;
+-+			ucv_object_foreach(env_arg, envk, envv) {
+-+				buf = xprintbuf_new();
+-+
+-+				ucv_stringbuf_printf(buf, "%s=", envk);
+-+				ucv_to_stringbuf(vm, buf, envv, false);
+-+
+-+				envp[i++] = buf->buf;
+-+
+-+				free(buf);
+-+			}
+-+		}
+- 
+- 		if (!argp || !envp)
+- 			_exit(-1);
+-@@ -1026,19 +1041,6 @@ uc_uloop_process(uc_vm_t *vm, size_t nar
+- 		for (i = 0; i < ucv_array_length(arguments); i++)
+- 			argp[i+1] = ucv_to_string(vm, ucv_array_get(arguments, i));
+- 
+--		i = 0;
+--
+--		ucv_object_foreach(env_arg, envk, envv) {
+--			buf = xprintbuf_new();
+--
+--			ucv_stringbuf_printf(buf, "%s=", envk);
+--			ucv_to_stringbuf(vm, buf, envv, false);
+--
+--			envp[i++] = buf->buf;
+--
+--			free(buf);
+--		}
+--
+- 		execvpe((const char *)ucv_string_get(executable),
+- 		        (char * const *)argp, (char * const *)envp);
+- 
+diff --git a/package/utils/ucode/patches/111-uloop-add-optional-setup-callback-to-process.patch b/package/utils/ucode/patches/111-uloop-add-optional-setup-callback-to-process.patch
+deleted file mode 100644
+index cbde2951..00000000
+--- a/package/utils/ucode/patches/111-uloop-add-optional-setup-callback-to-process.patch
++++ /dev/null
+@@ -1,85 +0,0 @@
+-From: Felix Fietkau <nbd@nbd.name>
+-Date: Wed, 8 Oct 2025 22:06:46 +0200
+-Subject: [PATCH] uloop: add optional setup callback to process()
+-
+-Add optional setup callback as 5th argument to uloop.process() that is
+-invoked in the child process after fork() but before exec().
+-
+-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+----
+-
+---- a/lib/uloop.c
+-+++ b/lib/uloop.c
+-@@ -961,8 +961,9 @@ uc_uloop_process_cb(struct uloop_process
+-  *
+-  * This function creates a process instance for executing external programs.
+-  * It takes the executable path string, an optional string array as the argument
+-- * vector, an optional dictionary describing environment variables, and a
+-- * callback function to be invoked when the invoked process ends.
+-+ * vector, an optional dictionary describing environment variables, a
+-+ * callback function to be invoked when the invoked process ends, and an optional
+-+ * setup callback to be invoked in the child process after fork().
+-  *
+-  * @function module:uloop#process
+-  *
+-@@ -979,6 +980,11 @@ uc_uloop_process_cb(struct uloop_process
+-  * @param {Function} callback
+-  * The callback function to be invoked when the invoked process ends.
+-  *
+-+ * @param {Function} [setup]
+-+ * Optional. A callback function to be invoked in the child process after fork()
+-+ * but before exec(). This can be used to set up file descriptors, change working
+-+ * directory, or perform other initialization.
+-+ *
+-  * @returns {?module:uloop.process}
+-  * Returns a process instance for executing external programs.
+-  * Returns `null` on error, e.g. due to `exec()` failure or invalid arguments.
+-@@ -988,6 +994,16 @@ uc_uloop_process_cb(struct uloop_process
+-  * const myProcess = uloop.process("/bin/ls", ["-l", "/tmp"], null, (code) => {
+-  *     printf(`Process exited with code ${code}\n`);
+-  * });
+-+ *
+-+ * // With setup callback to redirect stderr
+-+ * const myProcess = uloop.process("/bin/ls", ["-l", "/tmp"], null, (code) => {
+-+ *     printf(`Process exited with code ${code}\n`);
+-+ * }, () => {
+-+ *     const fs = require('fs');
+-+ *     const errlog = fs.open('/tmp/error.log', 'w');
+-+ *     fs.dup2(errlog.fileno(), 2);
+-+ *     errlog.close();
+-+ * });
+-  */
+- static uc_value_t *
+- uc_uloop_process(uc_vm_t *vm, size_t nargs)
+-@@ -996,6 +1012,7 @@ uc_uloop_process(uc_vm_t *vm, size_t nar
+- 	uc_value_t *arguments = uc_fn_arg(1);
+- 	uc_value_t *env_arg = uc_fn_arg(2);
+- 	uc_value_t *callback = uc_fn_arg(3);
+-+	uc_value_t *setup_cb = uc_fn_arg(4);
+- 	uc_uloop_process_t *process;
+- 	uc_stringbuf_t *buf;
+- 	char **argp, **envp;
+-@@ -1005,7 +1022,8 @@ uc_uloop_process(uc_vm_t *vm, size_t nar
+- 	if (ucv_type(executable) != UC_STRING ||
+- 	    (arguments && ucv_type(arguments) != UC_ARRAY) ||
+- 	    (env_arg && ucv_type(env_arg) != UC_OBJECT) ||
+--	    !ucv_is_callable(callback)) {
+-+	    !ucv_is_callable(callback) ||
+-+	    (setup_cb && !ucv_is_callable(setup_cb))) {
+- 		err_return(EINVAL);
+- 	}
+- 
+-@@ -1015,6 +1033,13 @@ uc_uloop_process(uc_vm_t *vm, size_t nar
+- 		err_return(errno);
+- 
+- 	if (pid == 0) {
+-+		if (setup_cb) {
+-+			uc_vm_stack_push(vm, ucv_get(setup_cb));
+-+
+-+			if (uc_uloop_vm_call(vm, false, 0))
+-+				ucv_put(uc_vm_stack_pop(vm));
+-+		}
+-+
+- 		argp = calloc(ucv_array_length(arguments) + 2, sizeof(char *));
+- 		envp = environ;
+- 
+diff --git a/package/utils/ucode/patches/121-fs-add-read_nb-method-for-non-blocking-reads.patch b/package/utils/ucode/patches/121-fs-add-read_nb-method-for-non-blocking-reads.patch
+deleted file mode 100644
+index 483a6315..00000000
+--- a/package/utils/ucode/patches/121-fs-add-read_nb-method-for-non-blocking-reads.patch
++++ /dev/null
+@@ -1,137 +0,0 @@
+-From: Felix Fietkau <nbd@nbd.name>
+-Date: Wed, 8 Oct 2025 23:03:05 +0200
+-Subject: [PATCH] fs: add read_nb() method for non-blocking reads
+-
+-Add file handle method for reading from non-blocking file descriptors.
+-Designed for use with uloop, bypasses stdio buffering, handles EAGAIN/EINTR.
+-
+-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+----
+-
+---- a/lib/fs.c
+-+++ b/lib/fs.c
+-@@ -675,6 +675,116 @@ uc_fs_read(uc_vm_t *vm, size_t nargs)
+- }
+- 
+- /**
+-+ * Reads data from a non-blocking file descriptor.
+-+ *
+-+ * This function is designed for use with uloop file descriptor monitoring.
+-+ * When called from within a uloop handle callback (after ULOOP_READ event),
+-+ * it reads available data from the non-blocking file descriptor.
+-+ *
+-+ * Performs a single read() operation directly on the file descriptor,
+-+ * bypassing stdio buffering. Properly handles EAGAIN and EINTR errors.
+-+ *
+-+ * Returns a string containing the data read, up to the specified limit.
+-+ *
+-+ * Returns an empty string if no data is available (EAGAIN/EWOULDBLOCK).
+-+ *
+-+ * Returns `null` if an error occurred.
+-+ *
+-+ * @function module:fs.file#read_nb
+-+ *
+-+ * @param {number} [limit=4096]
+-+ * Maximum number of bytes to read. Defaults to 4096 if not specified.
+-+ *
+-+ * @returns {?string}
+-+ *
+-+ * @example
+-+ * import * as uloop from 'uloop';
+-+ * import { fdopen } from 'fs';
+-+ *
+-+ * uloop.init();
+-+ *
+-+ * let sock = connect_socket(...);
+-+ * let fp = fdopen(sock, "r");
+-+ *
+-+ * uloop.handle(fp, (events) => {
+-+ *   if (events & uloop.ULOOP_READ) {
+-+ *     let data = fp.read_nb();
+-+ *     if (data === null) {
+-+ *       print("Error reading\n");
+-+ *     } else if (length(data) > 0) {
+-+ *       print("Received: ", data, "\n");
+-+ *     }
+-+ *   }
+-+ * }, uloop.ULOOP_READ);
+-+ *
+-+ * uloop.run();
+-+ */
+-+static uc_value_t *
+-+uc_fs_read_nb(uc_vm_t *vm, size_t nargs)
+-+{
+-+	uc_value_t *limit_val = uc_fn_arg(0);
+-+	FILE **fp = uc_fn_this("fs.file");
+-+	char *buf = NULL;
+-+	ssize_t n_read;
+-+	uc_value_t *rv;
+-+	size_t limit = 4096;
+-+	int fd;
+-+
+-+	if (!fp || !*fp)
+-+		err_return(EBADF);
+-+
+-+	if (limit_val) {
+-+		int64_t limit_arg;
+-+
+-+		if (ucv_type(limit_val) != UC_INTEGER)
+-+			err_return(EINVAL);
+-+
+-+		limit_arg = ucv_int64_get(limit_val);
+-+
+-+		if (limit_arg <= 0)
+-+			return NULL;
+-+
+-+		limit = (size_t)limit_arg;
+-+	}
+-+
+-+	fd = fileno(*fp);
+-+
+-+	if (fd == -1)
+-+		err_return(errno);
+-+
+-+	buf = malloc(limit);
+-+
+-+	if (!buf)
+-+		err_return(ENOMEM);
+-+
+-+	while (true) {
+-+		n_read = read(fd, buf, limit);
+-+
+-+		if (n_read >= 0)
+-+			break;
+-+
+-+		if (errno == EINTR)
+-+			continue;
+-+
+-+		if (errno == EAGAIN || errno == EWOULDBLOCK) {
+-+			free(buf);
+-+			return ucv_string_new_length("", 0);
+-+		}
+-+
+-+		free(buf);
+-+		err_return(errno);
+-+	}
+-+
+-+	if (!n_read)
+-+		return NULL;
+-+
+-+	rv = ucv_string_new_length(buf, (size_t)n_read);
+-+	free(buf);
+-+
+-+	return rv;
+-+}
+-+
+-+/**
+-  * Writes a chunk of data to the file handle.
+-  *
+-  * In case the given data is not a string, it is converted to a string before
+-@@ -2991,6 +3101,7 @@ static const uc_function_list_t proc_fns
+- 
+- static const uc_function_list_t file_fns[] = {
+- 	{ "read",		uc_fs_read },
+-+	{ "read_nb",	uc_fs_read_nb },
+- 	{ "write",		uc_fs_write },
+- 	{ "seek",		uc_fs_seek },
+- 	{ "tell",		uc_fs_tell },
+diff --git a/package/utils/ucode/Makefile b/package/utils/ucode/Makefile
+index abc0c31e..97357b3d 100644
+--- a/package/utils/ucode/Makefile
++++ b/package/utils/ucode/Makefile
+@@ -11,14 +11,14 @@ PKG_NAME:=ucode
+ PKG_RELEASE:=1
+ 
+ PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_URL=https://github.com/jow-/ucode.git
+-PKG_SOURCE_DATE:=2025-12-01
+-PKG_SOURCE_VERSION:=f7c2b97a82e8b505bf4b2c0d8883b5116e1960f9
+-PKG_MIRROR_HASH:=7de6a6d5b3c7392624bccefdc03e2dc61f097b414989eeced29ecc3e020bbd0b
++PKG_SOURCE_URL=https://github.com/ucode-lang/ucode.git
++PKG_SOURCE_DATE:=2026-10-28
++PKG_SOURCE_VERSION:=dfc64d41fd720163ac21d9feb9cb224d1a80fd75
++PKG_MIRROR_HASH:=149deff35eca0d0aad2ff308023355def8453e71338cba3033483a13de63733f
+ PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
+ PKG_LICENSE:=ISC
+ 
+-PKG_ABI_VERSION:=20230711
++PKG_ABI_VERSION:=20261009
+ PKG_BUILD_DEPENDS:=libmd
+ HOST_BUILD_DEPENDS:=libjson-c/host
+ 
+@@ -53,7 +53,11 @@ CMAKE_HOST_OPTIONS += \
+ 	-DULOOP_SUPPORT=OFF \
+ 	-DDEBUG_SUPPORT=ON \
+ 	-DLOG_SUPPORT=OFF \
+-	-DDIGEST_SUPPORT=OFF
++	-DZLIB_SUPPORT=ON \
++	-DDIGEST_SUPPORT=OFF \
++	-DFFI_SUPPORT=OFF \
++	-DNETADDR_SUPPORT=OFF \
++	-DSERIAL_SUPPORT=OFF
+ 
+ 
+ define Package/ucode/default
+@@ -136,6 +140,10 @@ $(eval $(call UcodeModule, \
+ 	debug, DEBUG_SUPPORT, +libubox +libucode, \
+ 	The debug plugin module provides runtime debugging and introspection facilities.))
+ 
++$(eval $(call UcodeModule, \
++	ffi, FFI_SUPPORT, +libffi, \
++	The ffi plugin module allows ucode scripts to call C functions in shared libraries through libffi.))
++
+ $(eval $(call UcodeModule, \
+ 	fs, FS_SUPPORT, , \
+ 	The filesystem plugin module allows interaction with the local file system.))
+@@ -148,6 +156,10 @@ $(eval $(call UcodeModule, \
+ 	math, MATH_SUPPORT, , \
+ 	The math plugin provides access to various <math.h> procedures.))
+ 
++$(eval $(call UcodeModule, \
++	netaddr, NETADDR_SUPPORT, , \
++	The netaddr plugin provides IPv4, IPv6 and MAC address parsing and calculation.))
++
+ $(eval $(call UcodeModule, \
+ 	nl80211, NL80211_SUPPORT, +libnl-tiny +libubox, \
+ 	The nl80211 plugin provides access to the Linux wireless 802.11 netlink API.))
+@@ -160,6 +172,10 @@ $(eval $(call UcodeModule, \
+ 	rtnl, RTNL_SUPPORT, +libnl-tiny +libubox, \
+ 	The rtnl plugin provides access to the Linux routing netlink API.))
+ 
++$(eval $(call UcodeModule, \
++	serial, SERIAL_SUPPORT, , \
++	The serial plugin provides termios, modem control line and serial port configuration access.))
++
+ $(eval $(call UcodeModule, \
+ 	socket, SOCKET_SUPPORT, , \
+ 	The socket plugin provides access to IPv4, IPv6, Unix and packet socket APIs.))
+@@ -184,6 +200,14 @@ $(eval $(call UcodeModule, \
+ 	digest, DIGEST_SUPPORT, , \
+ 	The digest module allows ucode scripts to use libmd digests.))
+ 
++$(eval $(call UcodeModule, \
++	io, IO_SUPPORT, , \
++	The io module allows direct file descriptor read/write (including non-blocking).))
++
++$(eval $(call UcodeModule, \
++	zlib, ZLIB_SUPPORT, +zlib, \
++	The zlib module allows ucode scripts to de/compress gzip and zlib formats.))
++
+ $(eval $(call BuildPackage,libucode))
+ $(eval $(call BuildPackage,ucode))
+ 
+
+diff --git a/package/libs/udebug/patches/100-lib-ucode-add-missing-fcntl.h-include.patch b/package/libs/udebug/patches/100-lib-ucode-add-missing-fcntl.h-include.patch
+new file mode 100644
+index 0000000..40469b7
+--- /dev/null
++++ b/package/libs/udebug/patches/100-lib-ucode-add-missing-fcntl.h-include.patch
+@@ -0,0 +1,24 @@
++From 6726e98ad69402e79b6d0b305012ace857ca0786 Mon Sep 17 00:00:00 2001
++From: Felix Fietkau <nbd@nbd.name>
++Date: Fri, 25 Sep 2026 13:05:25 +0200
++Subject: [PATCH] lib-ucode: add missing fcntl.h include
++
++Needed for open(), openat(), the O_* flags and AT_REMOVEDIR.
++
++Signed-off-by: Felix Fietkau <nbd@nbd.name>
++---
++ lib-ucode.c | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/lib-ucode.c b/lib-ucode.c
++index fbdd8bd..5a13fb4 100644
++--- a/lib-ucode.c
+++++ b/lib-ucode.c
++@@ -1,6 +1,7 @@
++ #define _GNU_SOURCE
++ #include <math.h>
++ #include <ctype.h>
+++#include <fcntl.h>
++ 
++ #include <libubox/utils.h>
++ #include <libubox/usock.h>
+diff --git a/package/network/services/uhttpd/patches/100-ucode-add-fallback-to-avoid-compilation-error.patch b/package/network/services/uhttpd/patches/100-ucode-add-fallback-to-avoid-compilation-error.patch
+new file mode 100644
+index 0000000..5b06125
+--- /dev/null
++++ b/package/network/services/uhttpd/patches/100-ucode-add-fallback-to-avoid-compilation-error.patch
+@@ -0,0 +1,37 @@
++From ca796d7dec5697a2d1a7a42be79677f239b64282 Mon Sep 17 00:00:00 2001
++From: Felix Fietkau <nbd@nbd.name>
++Date: Mon, 19 Oct 2026 18:54:31 +0200
++Subject: [PATCH] ucode: add fallback to avoid compilation error
++
++Do not fail on missing STATUS_BREAK check
++
++Signed-off-by: Felix Fietkau <nbd@nbd.name>
++---
++ ucode.c | 7 ++++---
++ 1 file changed, 4 insertions(+), 3 deletions(-)
++
++diff --git a/ucode.c b/ucode.c
++index bbb9b00..0bd321b 100644
++--- a/ucode.c
+++++ b/ucode.c
++@@ -285,9 +285,6 @@ uh_ucode_state_init(struct ucode_prefix *ucode)
++ 	ucv_put(v);
++ 
++ 	switch (status) {
++-	case STATUS_OK:
++-		break;
++-
++ 	case STATUS_EXIT:
++ 		fprintf(stderr, "Error: The ucode handler invoked exit(%d)\n", exitcode);
++ 		exit(exitcode ? exitcode : 1);
++@@ -299,6 +296,10 @@ uh_ucode_state_init(struct ucode_prefix *ucode)
++ 	case ERROR_RUNTIME:
++ 		fprintf(stderr, "Error: Runtime error while executing ucode handler\n");
++ 		exit(2);
+++
+++	case STATUS_OK:
+++	default:
+++		break;
++ 	}
++ 
++ 	v = ucv_object_get(uc_vm_scope_get(vm), UH_UCODE_CB, NULL);
+diff --git a/package/system/rpcd/patches/100-ucode-add-compatibility-to-newer-ucode-version.patch b/package/system/rpcd/patches/100-ucode-add-compatibility-to-newer-ucode-version.patch
+new file mode 100644
+index 0000000..f6e5849
+--- /dev/null
++++ b/package/system/rpcd/patches/100-ucode-add-compatibility-to-newer-ucode-version.patch
+@@ -0,0 +1,27 @@
++From a6c6b63 Mon Sep 17 00:00:00 2001
++From: Felix Fietkau <nbd@nbd.name>
++Date: Fri, 25 Sep 2026 13:12:42 +0200
++Subject: [PATCH] ucode: add compatibility to newer ucode version
++
++It adds STATUS_BREAK for breakpoints. Add a default switch/case fallback
++to avoid running into the unhandled case warning/error.
++
++Signed-off-by: Felix Fietkau <nbd@nbd.name>
++---
++ ucode.c | 3 +++
++ 1 file changed, 3 insertions(+)
++
++diff --git a/ucode.c b/ucode.c
++index 86a732d..891253a 100644
++--- a/ucode.c
+++++ b/ucode.c
++@@ -985,6 +985,9 @@ rpc_ucode_script_execute(struct ubus_context *ctx, const char *path, uc_program_
++ 	case ERROR_RUNTIME:
++ 		fprintf(stderr, "Runtime error while executing ucode script %s\n", path);
++ 		break;
+++
+++	default:
+++		break;
++ 	}
++ 
++ 	uc_vm_free(&script->vm);

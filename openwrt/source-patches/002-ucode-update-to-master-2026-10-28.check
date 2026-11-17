@@ -1,0 +1,8 @@
+# Sidecar for 002-ucode-update-to-master-2026-10-28.patch
+# See source-patches/README.md. RUNTIME_TEST detects the bug's behavior,
+# not the presence of this patch or of any particular upstream commit.
+DESCRIPTION=ucode nl80211.waitfor() busy-spin and event-socket overrun recovery
+UPSTREAM_OPENWRT=a4e922953c8d036a43ed002dc765fdcb0ee469fe
+UPSTREAM_NOTES=advisory only; ucode 520d9f4c (busy-spin) and 0bfb7b97 (ENOBUFS). First OpenWrt pin with both is a4e922953c8d; this patch carries master's package at 3e6064bbbf6f (ucode dfc64d41). Includes udebug 6726e98, uhttpd ca796d7 and rpcd a6c6b63 source compatibility backports required by the new public headers/VM status.
+RUNTIME_TEST=tests/serverspec/spec/files/wifi_scan_spin_test.sh
+RUNTIME_TEST_ENV=TESTS=A

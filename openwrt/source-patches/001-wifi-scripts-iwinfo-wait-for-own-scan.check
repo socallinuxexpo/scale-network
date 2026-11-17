@@ -1,0 +1,8 @@
+# Sidecar for 001-wifi-scripts-iwinfo-wait-for-own-scan.patch
+# See source-patches/README.md. RUNTIME_TEST detects the bug's behavior,
+# not the presence of this patch or of any particular upstream commit.
+DESCRIPTION=iwinfo.uc accepted the other radio's scan-done event
+UPSTREAM_OPENWRT=62d9f2d4f22a5d126403304923bb8ac509fec8fd
+UPSTREAM_NOTES=advisory only; backport of openwrt 62d9f2d4f22a
+RUNTIME_TEST=tests/serverspec/spec/files/wifi_scan_spin_test.sh
+RUNTIME_TEST_ENV=TESTS=B
