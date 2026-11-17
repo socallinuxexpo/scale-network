@@ -1,0 +1,6 @@
+# Sidecar for 003-hostapd-rnr-same-ssid-neighbors.patch
+# See source-patches/README.md. RUNTIME_TEST detects the bug's behavior,
+# not the presence of this patch or of any particular upstream commit.
+DESCRIPTION=beacon RNR (IE 201) omitted same-SSID neighbor APs
+UPSTREAM_NOTES=not submitted to hostap@lists.infradead.org yet; upstream-form commit 391d276139c77c8648af6322458026c3fa0c7824 is local only. Advisory; no OpenWrt landing.
+RUNTIME_TEST=tests/serverspec/spec/files/hostapd_rnr_same_ssid_test.sh

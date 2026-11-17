@@ -1,0 +1,92 @@
+From: David Lang <david@lang.hm>
+Subject: [PATCH] hostapd: RNR: skip own BSS by BSSID, not by short SSID
+
+SCALE local carry of the hostapd change that skips only this BSS's own
+BSSID when building beacon RNR (IE 201), instead of every neighbor with
+the same short SSID.
+
+Stock hostapd_eid_nr_db() and hostapd_eid_nr_db_len() (src/ap/ieee802_11.c)
+drop every nr_db entry whose short_ssid matches this AP, so same-ESS
+neighbors never appear in the beacon Reduced Neighbor Report. Skip only
+the entry whose BSSID equals hapd->own_addr.
+
+Adds package/network/services/hostapd/patches/900-scale-rnr-same-ssid-neighbors.patch
+(verified at fuzz 0 on hostapd ca266cc2 plus OpenWrt 41a1874c's 63 hostapd
+patches) and bumps PKG_RELEASE to 101.
+
+Not submitted to the hostap mailing list yet. The upstream-form commit
+is 391d276139c77c8648af6322458026c3fa0c7824 on local branch
+rnr-allow-same-ssid-neighbors. There is no OpenWrt PR.
+
+The deciding drop signal is the on-device behavioral test
+(hostapd_rnr_same_ssid_test.sh) passing on an image built without this
+patch (SOURCE_PATCH_MODE=trial SKIP_SOURCE_PATCHES=003), not the
+presence of any upstream commit.
+
+The scale-network branch wifi-kvr-mapper-ssid (959a419) assumes this fix.
+
+---
+ package/network/services/hostapd/Makefile     |  2 +-
+ .../900-scale-rnr-same-ssid-neighbors.patch   | 40 +++++++++++++++++++
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 package/network/services/hostapd/patches/900-scale-rnr-same-ssid-neighbors.patch
+
+diff --git a/package/network/services/hostapd/Makefile b/package/network/services/hostapd/Makefile
+index 3e14929..69eb4ec 100644
+--- a/package/network/services/hostapd/Makefile
++++ b/package/network/services/hostapd/Makefile
+@@ -5,7 +5,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=hostapd
+-PKG_RELEASE:=1
++PKG_RELEASE:=101
+ 
+ PKG_SOURCE_URL:=https://w1.fi/hostap.git
+ PKG_SOURCE_PROTO:=git
+diff --git a/package/network/services/hostapd/patches/900-scale-rnr-same-ssid-neighbors.patch b/package/network/services/hostapd/patches/900-scale-rnr-same-ssid-neighbors.patch
+new file mode 100644
+index 0000000..e3ff09c
+--- /dev/null
++++ b/package/network/services/hostapd/patches/900-scale-rnr-same-ssid-neighbors.patch
+@@ -0,0 +1,40 @@
++From: David Lang <david@lang.hm>
++Subject: [PATCH] hostapd: RNR: skip own BSS by BSSID, not by short SSID
++
++hostapd_eid_nr_db_len() and hostapd_eid_nr_db() skip every neighbor
++database entry whose short SSID matches the reporting BSS, meaning to
++skip only the BSS's own entry (added by hostapd_neighbor_set_own_report).
++That also drops every same-ESS neighbor AP from the Reduced Neighbor
++Report (beacon IE 201), which are the entries that matter for roaming.
++Skip only the entry whose BSSID equals hapd->own_addr.
++
++SCaLE local patch; upstream submission to hostap pending.
++
++--- a/src/ap/ieee802_11.c
+++++ b/src/ap/ieee802_11.c
++@@ -7924,7 +7924,11 @@
++ 		if (!nr->nr || wpabuf_len(nr->nr) < 12)
++ 			continue;
++ 
++-		if (nr->short_ssid == hapd->conf->ssid.short_ssid)
+++		/* Skip this BSS's own nr_db entry (hostapd_neighbor_set_own_report).
+++		 * Match by BSSID, not short_ssid: same-ESS remote APs must remain
+++		 * eligible for RNR; only avoid advertising ourselves. Other colocated
+++		 * BSS BSSIDs stay eligible. */
+++		if (ether_addr_equal(nr->bssid, hapd->own_addr))
++ 			continue;
++ 
++ 		/* Start a new element */
++@@ -8281,7 +8285,11 @@
++ 		if (!nr->nr || wpabuf_len(nr->nr) < 12)
++ 			continue;
++ 
++-		if (nr->short_ssid == hapd->conf->ssid.short_ssid)
+++		/* Skip this BSS's own nr_db entry (hostapd_neighbor_set_own_report).
+++		 * Match by BSSID, not short_ssid: same-ESS remote APs must remain
+++		 * eligible for RNR; only avoid advertising ourselves. Other colocated
+++		 * BSS BSSIDs stay eligible. */
+++		if (ether_addr_equal(nr->bssid, hapd->own_addr))
++ 			continue;
++ 
++ 		/* Start a new element */

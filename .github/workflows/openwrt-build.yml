@@ -1,6 +1,24 @@
 name: openwrt-build
 on:
   workflow_dispatch:
+    # --- source patches (explicit only; a source-check flag never starts trial) ---
+    # Cron/schedule has no inputs, so SOURCE_PATCH_MODE stays at the Makefile
+    # default (apply): all patches, cheap advisory check at most, no extra build.
+    inputs:
+      source_patch_mode:
+        description: 'SOURCE_PATCH_MODE: apply (default, all patches), check (source check only), trial (without-patch build; set skip_source_patches or leave empty to skip flagged ones)'
+        required: false
+        default: apply
+        type: choice
+        options:
+          - apply
+          - check
+          - trial
+      skip_source_patches:
+        description: 'SKIP_SOURCE_PATCHES for trial (e.g. 001,002). Ignored unless source_patch_mode=trial.'
+        required: false
+        default: ''
+        # --- end source patches ---
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron: '15 3 * * 0'
@@ -26,7 +44,19 @@ jobs:
           # Make tee pipeline raises in case of fail
           set -o pipefail
           cd openwrt
-          TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
+          # --- source patches (explicit only) ---
+          # workflow_dispatch inputs; empty on cron → apply. Never auto-trial.
+          MODE="${{ github.event.inputs.source_patch_mode }}"
+          MODE="${MODE:-apply}"
+          SKIP="${{ github.event.inputs.skip_source_patches }}"
+          export SOURCE_PATCH_MODE="$MODE"
+          export SKIP_SOURCE_PATCHES="$SKIP"
+          if [ "$MODE" = check ]; then
+            TARGET=${{ matrix.target }} make check-source-patches 2>&1 | tee ${{ matrix.target }}-build.log
+          else
+            TARGET=${{ matrix.target }} make templates build-img package 2>&1 | tee ${{ matrix.target }}-build.log
+          fi
+          # --- end source patches ---
       - name: 'Upload openwrt build artifact tarball'
         uses: actions/upload-artifact@v4.6.0
         with:
